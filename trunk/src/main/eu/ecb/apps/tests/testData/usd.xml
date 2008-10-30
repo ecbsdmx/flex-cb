@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CompactData xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message https://stats.ecb.int/stats/vocabulary/sdmx/2.0/SDMXMessage.xsd">
+	<Header>
+		<ID>EXR-HIST_2007-04-26</ID>
+		<Test>false</Test>
+		<Name xml:lang="en">Euro foreign exchange reference rates</Name>
+		  <Prepared>2007-04-26T14:25:11</Prepared>
+		<Sender id="4F0">
+			<Name xml:lang="en">European Central Bank</Name>
+		</Sender>
+		<DataSetAgency>ECB</DataSetAgency>
+		<DataSetID>ECB_EXR_WEB</DataSetID>
+		<Extracted>2007-04-26T14:25:11</Extracted>
+	</Header>
+	<DataSet xmlns="http://www.ecb.int/vocabulary/stats/exr/1" xsi:schemaLocation="http://www.ecb.int/vocabulary/stats/exr/1 https://stats.ecb.int/stats/vocabulary/exr/1/2006-09-04/sdmx-compact.xsd">
+		<Group CURRENCY="USD" CURRENCY_DENOM="EUR" EXR_TYPE="SP00" EXR_SUFFIX="A" DECIMALS="4" UNIT="USD" UNIT_MULT="0" TITLE_COMPL="ECB reference exchange rate, US dollar/Euro, 2:15 pm (C.E.T.)" />
+		<Series FREQ="D" CURRENCY="USD" CURRENCY_DENOM="EUR" EXR_TYPE="SP00" EXR_SUFFIX="A" TIME_FORMAT="P1D" COLLECTION="A">
+			<Obs TIME_PERIOD="1999-01-04" OBS_VALUE="1.1789" OBS_STATUS="A" OBS_CONF="F" />
+			<Obs TIME_PERIOD="1999-01-05" OBS_VALUE="1.1790" OBS_STATUS="A" OBS_CONF="F" />
+			<Obs TIME_PERIOD="1999-01-06" OBS_VALUE="1.1743" OBS_STATUS="A" OBS_CONF="F" />
+			<Obs TIME_PERIOD="1999-01-07" OBS_VALUE="1.1632" OBS_STATUS="A" OBS_CONF="F" />
+			<Obs TIME_PERIOD="1999-01-08" OBS_VALUE="1.1659" OBS_STATUS="A" OBS_CONF="F" />
+			<Obs TIME_PERIOD="1999-01-11" OBS_VALUE="1.1569" OBS_STATUS="A" OBS_CONF="F" />
+		</Series>
+	</DataSet>
+</CompactData>
