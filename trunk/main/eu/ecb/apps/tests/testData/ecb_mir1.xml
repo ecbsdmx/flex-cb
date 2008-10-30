@@ -1,0 +1,2949 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Structure 
+	xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message" 
+	xmlns:message="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message https://stats.ecb.int/stats/vocabulary/sdmx/2.0/SDMXMessage.xsd http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure https://stats.ecb.int/stats/vocabulary/sdmx/2.0/SDMXStructure.xsd">
+	<Header>
+		<ID>IREF000506</ID>
+		<Test>false</Test>
+		<Name xml:lang="en">ECB structural definitions</Name>
+		<Prepared>2006-10-25T14:26:00</Prepared>
+		<Sender id="4F0"/>
+	</Header>
+	<message:CodeLists xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure">
+		<CodeList agencyID="ECB" id="CL_AMOUNT_CAT">
+			<Name>Amount category code list</Name>
+			<Code value="0">
+				<Description>Up to and including EUR 1 million</Description>
+			</Code>
+			<Code value="1">
+				<Description>Over EUR 1 million</Description>
+			</Code>
+			<Code value="A">
+				<Description>Total</Description>
+			</Code>
+		</CodeList>
+		<CodeList agencyID="ECB" id="CL_AREA_EE">
+			<Name>Area code list</Name>
+			<Code value="1A">
+				<Description>International organisations</Description>
+			</Code>
+			<Code value="1B">
+				<Description>UN organisations</Description>
+			</Code>
+			<Code value="1C">
+				<Description>International Monetary Fund</Description>
+			</Code>
+			<Code value="1D">
+				<Description>World Trade Organisation</Description>
+			</Code>
+			<Code value="1E">
+				<Description>International Bank for Reconstruction and Development</Description>
+			</Code>
+			<Code value="1F">
+				<Description>International Development Association</Description>
+			</Code>
+			<Code value="1G">
+				<Description>Other UN Organisations (includes 1H, 1J-1T)</Description>
+			</Code>
+			<Code value="1H">
+				<Description>UNESCO (United Nations Educational, Scientific and Cultural Organisation)</Description>
+			</Code>
+			<Code value="1J">
+				<Description>FAO (Food and Agriculture Organisation)</Description>
+			</Code>
+			<Code value="1K">
+				<Description>WHO (World Health Organisation)</Description>
+			</Code>
+			<Code value="1L">
+				<Description>IFAD (International Fund for Agricultural Development)</Description>
+			</Code>
+			<Code value="1M">
+				<Description>IFC (International Finance Corporation)</Description>
+			</Code>
+			<Code value="1N">
+				<Description>MIGA (Multilateral Investment Guarantee Agency)</Description>
+			</Code>
+			<Code value="1O">
+				<Description>UNICEF (United Nations Children Fund)</Description>
+			</Code>
+			<Code value="1P">
+				<Description>UNHCR (United Nations High Commissioner for Refugees)</Description>
+			</Code>
+			<Code value="1Q">
+				<Description>UNRWA (United Nations Relief and Works Agency for Palestine)</Description>
+			</Code>
+			<Code value="1R">
+				<Description>IAEA (International Atomic Energy Agency)</Description>
+			</Code>
+			<Code value="1S">
+				<Description>ILO (International Labour Organisation)</Description>
+			</Code>
+			<Code value="1T">
+				<Description>ITU (International Telecommunication Union)</Description>
+			</Code>
+			<Code value="1Z">
+				<Description>Rest of UN Organisations n.i.e.</Description>
+			</Code>
+			<Code value="4A">
+				<Description>European Community Institutions, Organs and Organisms</Description>
+			</Code>
+			<Code value="4B">
+				<Description>EMS (European Monetary System)</Description>
+			</Code>
+			<Code value="4C">
+				<Description>European Investment Bank</Description>
+			</Code>
+			<Code value="4D">
+				<Description>European Commission</Description>
+			</Code>
+			<Code value="4E">
+				<Description>European Development Fund</Description>
+			</Code>
+			<Code value="4F">
+				<Description>European Central Bank</Description>
+			</Code>
+			<Code value="4G">
+				<Description>EIF (European Investment Fund)</Description>
+			</Code>
+			<Code value="4H">
+				<Description>European Community of Steel and Coal</Description>
+			</Code>
+			<Code value="4J">
+				<Description>Other EC Institutions, Organs and Organisms covered by General budget</Description>
+			</Code>
+			<Code value="4K">
+				<Description>European Parliament</Description>
+			</Code>
+			<Code value="4L">
+				<Description>European Council</Description>
+			</Code>
+			<Code value="4M">
+				<Description>Court of Justice</Description>
+			</Code>
+			<Code value="4N">
+				<Description>Court of Auditors</Description>
+			</Code>
+			<Code value="4P">
+				<Description>Economic and Social Committee</Description>
+			</Code>
+			<Code value="4Q">
+				<Description>Committee of Regions</Description>
+			</Code>
+			<Code value="4Z">
+				<Description>Other European Community Institutions, Organs and Organisms</Description>
+			</Code>
+			<Code value="5A">
+				<Description>Organisation for Economic Cooperation and Development</Description>
+			</Code>
+			<Code value="5B">
+				<Description>Bank for International Settlements</Description>
+			</Code>
+			<Code value="5C">
+				<Description>Inter-American Development Bank</Description>
+			</Code>
+			<Code value="5D">
+				<Description>African Development Bank</Description>
+			</Code>
+			<Code value="5E">
+				<Description>Asian Development Bank</Description>
+			</Code>
+			<Code value="5F">
+				<Description>European Bank for Reconstruction and Development</Description>
+			</Code>
+			<Code value="5G">
+				<Description>IIC (Inter-American Investment Corporation)</Description>
+			</Code>
+			<Code value="5H">
+				<Description>NIB (Nordic Investment Bank)</Description>
+			</Code>
+			<Code value="5J">
+				<Description>IBEC (International Bank for Economic Co-operation)</Description>
+			</Code>
+			<Code value="5K">
+				<Description>IIB (International Investment Bank)</Description>
+			</Code>
+			<Code value="5L">
+				<Description>CDB (Caribbean Development Bank)</Description>
+			</Code>
+			<Code value="5M">
+				<Description>AMF (Arab Monetary Fund)</Description>
+			</Code>
+			<Code value="5N">
+				<Description>BADEA (Banque arabe pour le développement économique en Afrique)</Description>
+			</Code>
+			<Code value="5P">
+				<Description>CASDB (Central African States Development Bank)</Description>
+			</Code>
+			<Code value="5Q">
+				<Description>African Development Fund</Description>
+			</Code>
+			<Code value="5R">
+				<Description>Asian Development Fund</Description>
+			</Code>
+			<Code value="5S">
+				<Description>Fonds spécial unifié de développement</Description>
+			</Code>
+			<Code value="5T">
+				<Description>CABEI (Central American Bank for Economic Integration)</Description>
+			</Code>
+			<Code value="5U">
+				<Description>ADC (Andean Development Corporation)</Description>
+			</Code>
+			<Code value="5V">
+				<Description>Other International Organisations (financial institutions)</Description>
+			</Code>
+			<Code value="5Z">
+				<Description>Other International Financial Organisations n.i.e.</Description>
+			</Code>
+			<Code value="6A">
+				<Description>Other International Organisations (non-financial institutions)</Description>
+			</Code>
+			<Code value="6B">
+				<Description>NATO (North Atlantic Treaty Organisation)</Description>
+			</Code>
+			<Code value="6C">
+				<Description>Council of Europe</Description>
+			</Code>
+			<Code value="6D">
+				<Description>ICRC (International Committee of the Red Cross)</Description>
+			</Code>
+			<Code value="6E">
+				<Description>ESA (European Space Agency)</Description>
+			</Code>
+			<Code value="6F">
+				<Description>EPO (European Patent Office)</Description>
+			</Code>
+			<Code value="6G">
+				<Description>EUROCONTROL (European Organisation for the Safety of Air Navigation)</Description>
+			</Code>
+			<Code value="6H">
+				<Description>EUTELSAT (European Telecommunications Satellite Organisation)</Description>
+			</Code>
+			<Code value="6J">
+				<Description>INTELSAT (International Telecommunications Satellite Organisation)</Description>
+			</Code>
+			<Code value="6K">
+				<Description>EBU/UER (European Broadcasting Union/Union européenne de radio-télévision)</Description>
+			</Code>
+			<Code value="6L">
+				<Description>EUMETSAT (European Organisation for the Exploitation of Meteorological Satellites)</Description>
+			</Code>
+			<Code value="6M">
+				<Description>ESO (European Southern Observatory)</Description>
+			</Code>
+			<Code value="6N">
+				<Description>ECMWF (European Centre for Medium-Range Weather Forecasts)</Description>
+			</Code>
+			<Code value="6O">
+				<Description>EMBL (European Molecular Biology Laboratory)</Description>
+			</Code>
+			<Code value="6P">
+				<Description>CERN (European Organisation for Nuclear Research)</Description>
+			</Code>
+			<Code value="6Q">
+				<Description>IOM (International Organisation for Migration)</Description>
+			</Code>
+			<Code value="6Y">
+				<Description>Other International Organisations (financial institutions)</Description>
+			</Code>
+			<Code value="6Z">
+				<Description>Other International Non-Financial Organisations n.i.e.</Description>
+			</Code>
+			<Code value="7Z">
+				<Description>International Organisations excluding Eur.Community Institutions (4A)</Description>
+			</Code>
+			<Code value="A0">
+				<Description>Other EEA countries (all countries excluding the reference area)</Description>
+			</Code>
+			<Code value="A1">
+				<Description>World (all entities)</Description>
+			</Code>
+			<Code value="A2">
+				<Description>EUR12 (Intra Eur12)</Description>
+			</Code>
+			<Code value="A3">
+				<Description>Belgo-Luxembourg Economic Union</Description>
+			</Code>
+			<Code value="A4">
+				<Description>Extra EUR12</Description>
+			</Code>
+			<Code value="A5">
+				<Description>European Free Trade Association</Description>
+			</Code>
+			<Code value="A6">
+				<Description>European Economic Area</Description>
+			</Code>
+			<Code value="A7">
+				<Description>Extra EEA</Description>
+			</Code>
+			<Code value="A8">
+				<Description>OECD countries</Description>
+			</Code>
+			<Code value="A9">
+				<Description>Countries from Central and Eastern Europe</Description>
+			</Code>
+			<Code value="AD">
+				<Description>Andorra</Description>
+			</Code>
+			<Code value="AE">
+				<Description>United Arab Emirates</Description>
+			</Code>
+			<Code value="AF">
+				<Description>Afghanistan</Description>
+			</Code>
+			<Code value="AG">
+				<Description>Antigua and Barbuda</Description>
+			</Code>
+			<Code value="AI">
+				<Description>Anguilla</Description>
+			</Code>
+			<Code value="AL">
+				<Description>Albania</Description>
+			</Code>
+			<Code value="AM">
+				<Description>Armenia</Description>
+			</Code>
+			<Code value="AN">
+				<Description>Netherlands Antilles</Description>
+			</Code>
+			<Code value="AO">
+				<Description>Angola</Description>
+			</Code>
+			<Code value="AQ">
+				<Description>Antarctica</Description>
+			</Code>
+			<Code value="AR">
+				<Description>Argentina</Description>
+			</Code>
+			<Code value="AS">
+				<Description>American Samoa</Description>
+			</Code>
+			<Code value="AT">
+				<Description>Austria</Description>
+			</Code>
+			<Code value="AU">
+				<Description>Australia</Description>
+			</Code>
+			<Code value="AW">
+				<Description>Aruba</Description>
+			</Code>
+			<Code value="AX">
+				<Description>Aland Islands</Description>
+			</Code>
+			<Code value="AZ">
+				<Description>Azerbaijan</Description>
+			</Code>
+			<Code value="B1">
+				<Description>North American Free Trade Association</Description>
+			</Code>
+			<Code value="B2">
+				<Description>Latin America</Description>
+			</Code>
+			<Code value="B3">
+				<Description>Countries for the Association of South-East Asian Nations</Description>
+			</Code>
+			<Code value="B4">
+				<Description>Organization of Petroleum Exporting Countries</Description>
+			</Code>
+			<Code value="B5">
+				<Description>African, Caribbean and Pacific countries (Lomé convention)</Description>
+			</Code>
+			<Code value="B6">
+				<Description>African ACP countries</Description>
+			</Code>
+			<Code value="B7">
+				<Description>Caribbean ACP countries</Description>
+			</Code>
+			<Code value="B8">
+				<Description>Pacific ACP countries</Description>
+			</Code>
+			<Code value="B9">
+				<Description>Core Newly Industrializing Countries</Description>
+			</Code>
+			<Code value="BA">
+				<Description>Bosnia and Herzegovina</Description>
+			</Code>
+			<Code value="BB">
+				<Description>Barbados</Description>
+			</Code>
+			<Code value="BD">
+				<Description>Bangladesh</Description>
+			</Code>
+			<Code value="BE">
+				<Description>Belgium</Description>
+			</Code>
+			<Code value="BF">
+				<Description>Burkina Faso</Description>
+			</Code>
+			<Code value="BG">
+				<Description>Bulgaria</Description>
+			</Code>
+			<Code value="BH">
+				<Description>Bahrain</Description>
+			</Code>
+			<Code value="BI">
+				<Description>Burundi</Description>
+			</Code>
+			<Code value="BJ">
+				<Description>Benin</Description>
+			</Code>
+			<Code value="BM">
+				<Description>Bermuda</Description>
+			</Code>
+			<Code value="BN">
+				<Description>Brunei Darussalam</Description>
+			</Code>
+			<Code value="BO">
+				<Description>Bolivia</Description>
+			</Code>
+			<Code value="BR">
+				<Description>Brazil</Description>
+			</Code>
+			<Code value="BS">
+				<Description>Bahamas</Description>
+			</Code>
+			<Code value="BT">
+				<Description>Bhutan</Description>
+			</Code>
+			<Code value="BV">
+				<Description>Bouvet Island</Description>
+			</Code>
+			<Code value="BW">
+				<Description>Botswana</Description>
+			</Code>
+			<Code value="BY">
+				<Description>Belarus</Description>
+			</Code>
+			<Code value="BZ">
+				<Description>Belize</Description>
+			</Code>
+			<Code value="C1">
+				<Description>Asian NICs of the second wave of industrialization</Description>
+			</Code>
+			<Code value="C2">
+				<Description>Latin American NICs of the second wave of industrialization</Description>
+			</Code>
+			<Code value="C3">
+				<Description>Mediterranean Basin countries</Description>
+			</Code>
+			<Code value="C4">
+				<Description>Offshore financial centers</Description>
+			</Code>
+			<Code value="C5">
+				<Description>French Franc zone</Description>
+			</Code>
+			<Code value="C6">
+				<Description>Community of Independant States</Description>
+			</Code>
+			<Code value="C7">
+				<Description>Maghreb countries</Description>
+			</Code>
+			<Code value="C8">
+				<Description>Mashrek Countries</Description>
+			</Code>
+			<Code value="C9">
+				<Description>Mercado comun de los paises del cono sur</Description>
+			</Code>
+			<Code value="CA">
+				<Description>Canada</Description>
+			</Code>
+			<Code value="CC">
+				<Description>Cocos (Keeling) Islands</Description>
+			</Code>
+			<Code value="CD">
+				<Description>Democratic Republic of the Congo</Description>
+			</Code>
+			<Code value="CF">
+				<Description>Central African Republic</Description>
+			</Code>
+			<Code value="CG">
+				<Description>Congo</Description>
+			</Code>
+			<Code value="CH">
+				<Description>Switzerland</Description>
+			</Code>
+			<Code value="CI">
+				<Description>Côte d`Ivoire</Description>
+			</Code>
+			<Code value="CK">
+				<Description>Cook Islands</Description>
+			</Code>
+			<Code value="CL">
+				<Description>Chile</Description>
+			</Code>
+			<Code value="CM">
+				<Description>Cameroon</Description>
+			</Code>
+			<Code value="CN">
+				<Description>China</Description>
+			</Code>
+			<Code value="CO">
+				<Description>Colombia</Description>
+			</Code>
+			<Code value="CR">
+				<Description>Costa Rica</Description>
+			</Code>
+			<Code value="CS">
+				<Description>Serbia and Montenegro</Description>
+			</Code>
+			<Code value="CU">
+				<Description>Cuba</Description>
+			</Code>
+			<Code value="CV">
+				<Description>Cape Verde</Description>
+			</Code>
+			<Code value="CX">
+				<Description>Christmas Island</Description>
+			</Code>
+			<Code value="CY">
+				<Description>Cyprus</Description>
+			</Code>
+			<Code value="CZ">
+				<Description>Czech Republic</Description>
+			</Code>
+			<Code value="D0">
+				<Description>EU (changing composition)</Description>
+			</Code>
+			<Code value="D1">
+				<Description>Asia-Pacific Economic Co-operation</Description>
+			</Code>
+			<Code value="D2">
+				<Description>EU-15</Description>
+			</Code>
+			<Code value="D3">
+				<Description>EU 25</Description>
+			</Code>
+			<Code value="D4">
+				<Description>Extra EUR15</Description>
+			</Code>
+			<Code value="D5">
+				<Description>Extra-EU 25</Description>
+			</Code>
+			<Code value="D6">
+				<Description>Candidate Countries (CCs)</Description>
+			</Code>
+			<Code value="D7">
+				<Description>Mediterranean countries in the Euro-Mediterranean Partnership</Description>
+			</Code>
+			<Code value="D8">
+				<Description>New EU Member States 2004 (CY,CZ,EE,HU,LV,LT,MT,PL,SK,SI)</Description>
+			</Code>
+			<Code value="DE">
+				<Description>Germany</Description>
+			</Code>
+			<Code value="DJ">
+				<Description>Djibouti</Description>
+			</Code>
+			<Code value="DK">
+				<Description>Denmark</Description>
+			</Code>
+			<Code value="DM">
+				<Description>Dominica</Description>
+			</Code>
+			<Code value="DO">
+				<Description>Dominican Republic</Description>
+			</Code>
+			<Code value="DZ">
+				<Description>Algeria</Description>
+			</Code>
+			<Code value="E1">
+				<Description>Europe</Description>
+			</Code>
+			<Code value="E2">
+				<Description>Other European countries (not EU nor EFTA)</Description>
+			</Code>
+			<Code value="E3">
+				<Description>Baltic countries</Description>
+			</Code>
+			<Code value="E4">
+				<Description>Africa</Description>
+			</Code>
+			<Code value="E5">
+				<Description>North Africa countries</Description>
+			</Code>
+			<Code value="E6">
+				<Description>Central and South Africa countries</Description>
+			</Code>
+			<Code value="E7">
+				<Description>America</Description>
+			</Code>
+			<Code value="E8">
+				<Description>North American countries</Description>
+			</Code>
+			<Code value="E9">
+				<Description>Central American countries</Description>
+			</Code>
+			<Code value="EC">
+				<Description>Ecuador</Description>
+			</Code>
+			<Code value="EE">
+				<Description>Estonia</Description>
+			</Code>
+			<Code value="EG">
+				<Description>Egypt</Description>
+			</Code>
+			<Code value="EH">
+				<Description>Western Sahara</Description>
+			</Code>
+			<Code value="ER">
+				<Description>Eritrea</Description>
+			</Code>
+			<Code value="ES">
+				<Description>Spain</Description>
+			</Code>
+			<Code value="ET">
+				<Description>Ethiopia</Description>
+			</Code>
+			<Code value="F1">
+				<Description>South American countries</Description>
+			</Code>
+			<Code value="F2">
+				<Description>Asia</Description>
+			</Code>
+			<Code value="F3">
+				<Description>Near and Middle East countries</Description>
+			</Code>
+			<Code value="F4">
+				<Description>Gulf Arabian Countries</Description>
+			</Code>
+			<Code value="F5">
+				<Description>Other Near and Middle East countries</Description>
+			</Code>
+			<Code value="F6">
+				<Description>Other Asian countries</Description>
+			</Code>
+			<Code value="F7">
+				<Description>Australia, Oceania and other territories</Description>
+			</Code>
+			<Code value="F8">
+				<Description>Australian Oceania</Description>
+			</Code>
+			<Code value="F9">
+				<Description>American Oceania</Description>
+			</Code>
+			<Code value="FI">
+				<Description>Finland</Description>
+			</Code>
+			<Code value="FJ">
+				<Description>Fiji</Description>
+			</Code>
+			<Code value="FK">
+				<Description>Falkland Islands (Malvinas)</Description>
+			</Code>
+			<Code value="FM">
+				<Description>Micronesia, Federated States of</Description>
+			</Code>
+			<Code value="FO">
+				<Description>Faroe Islands</Description>
+			</Code>
+			<Code value="FR">
+				<Description>France</Description>
+			</Code>
+			<Code value="G1">
+				<Description>New Zealand Oceania</Description>
+			</Code>
+			<Code value="G2">
+				<Description>Polar regions</Description>
+			</Code>
+			<Code value="GA">
+				<Description>Gabon</Description>
+			</Code>
+			<Code value="GB">
+				<Description>United Kingdom</Description>
+			</Code>
+			<Code value="GD">
+				<Description>Grenada</Description>
+			</Code>
+			<Code value="GE">
+				<Description>Georgia</Description>
+			</Code>
+			<Code value="GF">
+				<Description>French Guiana</Description>
+			</Code>
+			<Code value="GG">
+				<Description>Guernsey (No official ISO 3166-1 country code, exceptionnally reserved code elements)</Description>
+			</Code>
+			<Code value="GH">
+				<Description>Ghana</Description>
+			</Code>
+			<Code value="GI">
+				<Description>Gibraltar</Description>
+			</Code>
+			<Code value="GL">
+				<Description>Greenland</Description>
+			</Code>
+			<Code value="GM">
+				<Description>Gambia</Description>
+			</Code>
+			<Code value="GN">
+				<Description>Guinea</Description>
+			</Code>
+			<Code value="GP">
+				<Description>Guadeloupe</Description>
+			</Code>
+			<Code value="GQ">
+				<Description>Equatorial Guinea</Description>
+			</Code>
+			<Code value="GR">
+				<Description>Greece</Description>
+			</Code>
+			<Code value="GS">
+				<Description>South Georgia and the South Sandwich Islands</Description>
+			</Code>
+			<Code value="GT">
+				<Description>Guatemala</Description>
+			</Code>
+			<Code value="GU">
+				<Description>Guam</Description>
+			</Code>
+			<Code value="GW">
+				<Description>Guinea-Bissau</Description>
+			</Code>
+			<Code value="GY">
+				<Description>Guyana</Description>
+			</Code>
+			<Code value="H0">
+				<Description>EEA except the euro area and reference area</Description>
+			</Code>
+			<Code value="HK">
+				<Description>Hong Kong</Description>
+			</Code>
+			<Code value="HM">
+				<Description>Heard Island and McDonald Islands</Description>
+			</Code>
+			<Code value="HN">
+				<Description>Honduras</Description>
+			</Code>
+			<Code value="HR">
+				<Description>Croatia</Description>
+			</Code>
+			<Code value="HT">
+				<Description>Haiti</Description>
+			</Code>
+			<Code value="HU">
+				<Description>Hungary</Description>
+			</Code>
+			<Code value="I1">
+				<Description>Euro 11</Description>
+			</Code>
+			<Code value="I2">
+				<Description>Euro 12</Description>
+			</Code>
+			<Code value="I3">
+				<Description>Euro 13</Description>
+			</Code>
+			<Code value="ID">
+				<Description>Indonesia</Description>
+			</Code>
+			<Code value="IE">
+				<Description>Ireland</Description>
+			</Code>
+			<Code value="IL">
+				<Description>Israel</Description>
+			</Code>
+			<Code value="IM">
+				<Description>Isle of Man</Description>
+			</Code>
+			<Code value="IN">
+				<Description>India</Description>
+			</Code>
+			<Code value="IO">
+				<Description>British Indian Ocean territory</Description>
+			</Code>
+			<Code value="IQ">
+				<Description>Iraq</Description>
+			</Code>
+			<Code value="IR">
+				<Description>Iran, Islamic Republic of</Description>
+			</Code>
+			<Code value="IS">
+				<Description>Iceland</Description>
+			</Code>
+			<Code value="IT">
+				<Description>Italy</Description>
+			</Code>
+			<Code value="J1">
+				<Description>Extra-Euro 11</Description>
+			</Code>
+			<Code value="J2">
+				<Description>Extra-Euro 12</Description>
+			</Code>
+			<Code value="JE">
+				<Description>Jersey (No official ISO 3166-1 country code, exceptionnally reserved code elements)</Description>
+			</Code>
+			<Code value="JM">
+				<Description>Jamaica</Description>
+			</Code>
+			<Code value="JO">
+				<Description>Jordan</Description>
+			</Code>
+			<Code value="JP">
+				<Description>Japan</Description>
+			</Code>
+			<Code value="K1">
+				<Description>EU Member States not belonging to Euro 11</Description>
+			</Code>
+			<Code value="K2">
+				<Description>EU Member States not belonging to Euro 12</Description>
+			</Code>
+			<Code value="KE">
+				<Description>Kenya</Description>
+			</Code>
+			<Code value="KG">
+				<Description>Kyrgyzstan</Description>
+			</Code>
+			<Code value="KH">
+				<Description>Cambodia</Description>
+			</Code>
+			<Code value="KI">
+				<Description>Kiribati</Description>
+			</Code>
+			<Code value="KM">
+				<Description>Comoros</Description>
+			</Code>
+			<Code value="KN">
+				<Description>Saint Kitts and Nevis</Description>
+			</Code>
+			<Code value="KP">
+				<Description>Korea, Democratic People`s Republic of</Description>
+			</Code>
+			<Code value="KR">
+				<Description>Korea, Republic of</Description>
+			</Code>
+			<Code value="KW">
+				<Description>Kuwait</Description>
+			</Code>
+			<Code value="KY">
+				<Description>Cayman Islands</Description>
+			</Code>
+			<Code value="KZ">
+				<Description>Kazakstan</Description>
+			</Code>
+			<Code value="L0">
+				<Description>Other EU member states (all countries except the reference area)</Description>
+			</Code>
+			<Code value="L1">
+				<Description>Other Euro 11 member states (all countries except the reference area)</Description>
+			</Code>
+			<Code value="L2">
+				<Description>Other Euro 12 member states (all countries except the reference area)</Description>
+			</Code>
+			<Code value="LA">
+				<Description>Lao People`s Democratic Republic</Description>
+			</Code>
+			<Code value="LB">
+				<Description>Lebanon</Description>
+			</Code>
+			<Code value="LC">
+				<Description>Saint Lucia</Description>
+			</Code>
+			<Code value="LI">
+				<Description>Liechtenstein</Description>
+			</Code>
+			<Code value="LK">
+				<Description>Sri Lanka</Description>
+			</Code>
+			<Code value="LR">
+				<Description>Liberia</Description>
+			</Code>
+			<Code value="LS">
+				<Description>Lesotho</Description>
+			</Code>
+			<Code value="LT">
+				<Description>Lithuania</Description>
+			</Code>
+			<Code value="LU">
+				<Description>Luxembourg</Description>
+			</Code>
+			<Code value="LV">
+				<Description>Latvia</Description>
+			</Code>
+			<Code value="LY">
+				<Description>Libyan Arab Jamahiriya</Description>
+			</Code>
+			<Code value="M0">
+				<Description>All areas other than EU 15 and reference/home area</Description>
+			</Code>
+			<Code value="M1">
+				<Description>All areas other than Euro 11 and reference/home area</Description>
+			</Code>
+			<Code value="M2">
+				<Description>All areas other than Euro 12 and reference/home area</Description>
+			</Code>
+			<Code value="MA">
+				<Description>Morocco</Description>
+			</Code>
+			<Code value="MC">
+				<Description>Monaco</Description>
+			</Code>
+			<Code value="MD">
+				<Description>Moldova, Republic of</Description>
+			</Code>
+			<Code value="MG">
+				<Description>Madagascar</Description>
+			</Code>
+			<Code value="MH">
+				<Description>Marshall islands</Description>
+			</Code>
+			<Code value="MK">
+				<Description>Macedonia, The Former Yugoslav Republic of</Description>
+			</Code>
+			<Code value="ML">
+				<Description>Mali</Description>
+			</Code>
+			<Code value="MM">
+				<Description>Myanmar</Description>
+			</Code>
+			<Code value="MN">
+				<Description>Mongolia</Description>
+			</Code>
+			<Code value="MO">
+				<Description>Macau</Description>
+			</Code>
+			<Code value="MP">
+				<Description>Northern Mariana Islands</Description>
+			</Code>
+			<Code value="MQ">
+				<Description>Martinique</Description>
+			</Code>
+			<Code value="MR">
+				<Description>Mauritania</Description>
+			</Code>
+			<Code value="MS">
+				<Description>Montserrat</Description>
+			</Code>
+			<Code value="MT">
+				<Description>Malta</Description>
+			</Code>
+			<Code value="MU">
+				<Description>Mauritius</Description>
+			</Code>
+			<Code value="MV">
+				<Description>Maldives</Description>
+			</Code>
+			<Code value="MW">
+				<Description>Malawi</Description>
+			</Code>
+			<Code value="MX">
+				<Description>Mexico</Description>
+			</Code>
+			<Code value="MY">
+				<Description>Malaysia</Description>
+			</Code>
+			<Code value="MZ">
+				<Description>Mozambique</Description>
+			</Code>
+			<Code value="N1">
+				<Description>Intra-Euro 11 not allocated</Description>
+			</Code>
+			<Code value="N2">
+				<Description>Intra-Euro 12 not allocated</Description>
+			</Code>
+			<Code value="NA">
+				<Description>Namibia</Description>
+			</Code>
+			<Code value="NC">
+				<Description>New Caledonia</Description>
+			</Code>
+			<Code value="NE">
+				<Description>Niger</Description>
+			</Code>
+			<Code value="NF">
+				<Description>Norfolk Island</Description>
+			</Code>
+			<Code value="NG">
+				<Description>Nigeria</Description>
+			</Code>
+			<Code value="NI">
+				<Description>Nicaragua</Description>
+			</Code>
+			<Code value="NL">
+				<Description>Netherlands</Description>
+			</Code>
+			<Code value="NO">
+				<Description>Norway</Description>
+			</Code>
+			<Code value="NP">
+				<Description>Nepal</Description>
+			</Code>
+			<Code value="NR">
+				<Description>Nauru</Description>
+			</Code>
+			<Code value="NU">
+				<Description>Niue</Description>
+			</Code>
+			<Code value="NZ">
+				<Description>New Zealand</Description>
+			</Code>
+			<Code value="O1">
+				<Description>Extra-Euro 11 not allocated</Description>
+			</Code>
+			<Code value="O2">
+				<Description>Extra-Euro 12 not allocated</Description>
+			</Code>
+			<Code value="OM">
+				<Description>Oman</Description>
+			</Code>
+			<Code value="P1">
+				<Description>World not allocated (Euro 11)</Description>
+			</Code>
+			<Code value="P2">
+				<Description>World not allocated (Euro 12)</Description>
+			</Code>
+			<Code value="PA">
+				<Description>Panama</Description>
+			</Code>
+			<Code value="PE">
+				<Description>Peru</Description>
+			</Code>
+			<Code value="PF">
+				<Description>French Polynesia</Description>
+			</Code>
+			<Code value="PG">
+				<Description>Papua New Guinea</Description>
+			</Code>
+			<Code value="PH">
+				<Description>Philippines</Description>
+			</Code>
+			<Code value="PK">
+				<Description>Pakistan</Description>
+			</Code>
+			<Code value="PL">
+				<Description>Poland</Description>
+			</Code>
+			<Code value="PM">
+				<Description>Saint Pierre and Miquelon</Description>
+			</Code>
+			<Code value="PN">
+				<Description>Pitcairn</Description>
+			</Code>
+			<Code value="PR">
+				<Description>Puerto Rico</Description>
+			</Code>
+			<Code value="PS">
+				<Description>Palestinian Territory, Occupied</Description>
+			</Code>
+			<Code value="PT">
+				<Description>Portugal</Description>
+			</Code>
+			<Code value="PW">
+				<Description>Palau</Description>
+			</Code>
+			<Code value="PY">
+				<Description>Paraguay</Description>
+			</Code>
+			<Code value="QA">
+				<Description>Qatar</Description>
+			</Code>
+			<Code value="R1">
+				<Description>West Germany</Description>
+			</Code>
+			<Code value="R2">
+				<Description>East Germany</Description>
+			</Code>
+			<Code value="RE">
+				<Description>Réunion</Description>
+			</Code>
+			<Code value="RO">
+				<Description>Romania</Description>
+			</Code>
+			<Code value="RU">
+				<Description>Russian Federation</Description>
+			</Code>
+			<Code value="RW">
+				<Description>Rwanda</Description>
+			</Code>
+			<Code value="S1">
+				<Description>EU15 excluding LU</Description>
+			</Code>
+			<Code value="S2">
+				<Description>EU12 including West Germany</Description>
+			</Code>
+			<Code value="SA">
+				<Description>Saudi Arabia</Description>
+			</Code>
+			<Code value="SB">
+				<Description>Solomon Islands</Description>
+			</Code>
+			<Code value="SC">
+				<Description>Seychelles</Description>
+			</Code>
+			<Code value="SD">
+				<Description>Sudan</Description>
+			</Code>
+			<Code value="SE">
+				<Description>Sweden</Description>
+			</Code>
+			<Code value="SG">
+				<Description>Singapore</Description>
+			</Code>
+			<Code value="SH">
+				<Description>Saint Helena</Description>
+			</Code>
+			<Code value="SI">
+				<Description>Slovenia</Description>
+			</Code>
+			<Code value="SJ">
+				<Description>Svalbard and Jan Mayen</Description>
+			</Code>
+			<Code value="SK">
+				<Description>Slovakia</Description>
+			</Code>
+			<Code value="SL">
+				<Description>Sierra Leone</Description>
+			</Code>
+			<Code value="SM">
+				<Description>San Marino</Description>
+			</Code>
+			<Code value="SN">
+				<Description>Senegal</Description>
+			</Code>
+			<Code value="SO">
+				<Description>Somalia</Description>
+			</Code>
+			<Code value="SR">
+				<Description>Suriname</Description>
+			</Code>
+			<Code value="ST">
+				<Description>Sao Tome and Principe</Description>
+			</Code>
+			<Code value="SV">
+				<Description>El Salvador</Description>
+			</Code>
+			<Code value="SY">
+				<Description>Syrian Arab Republic</Description>
+			</Code>
+			<Code value="SZ">
+				<Description>Swaziland</Description>
+			</Code>
+			<Code value="T1">
+				<Description>Euro 11 excluding LU</Description>
+			</Code>
+			<Code value="TC">
+				<Description>Turks and Caicos Islands</Description>
+			</Code>
+			<Code value="TD">
+				<Description>Chad</Description>
+			</Code>
+			<Code value="TF">
+				<Description>French Southern Territories</Description>
+			</Code>
+			<Code value="TG">
+				<Description>Togo</Description>
+			</Code>
+			<Code value="TH">
+				<Description>Thailand</Description>
+			</Code>
+			<Code value="TJ">
+				<Description>Tajikistan</Description>
+			</Code>
+			<Code value="TK">
+				<Description>Tokelau</Description>
+			</Code>
+			<Code value="TL">
+				<Description>Timor-Leste</Description>
+			</Code>
+			<Code value="TM">
+				<Description>Turkmenistan</Description>
+			</Code>
+			<Code value="TN">
+				<Description>Tunisia</Description>
+			</Code>
+			<Code value="TO">
+				<Description>Tonga</Description>
+			</Code>
+			<Code value="TR">
+				<Description>Turkey</Description>
+			</Code>
+			<Code value="TT">
+				<Description>Trinidad and Tobago</Description>
+			</Code>
+			<Code value="TV">
+				<Description>Tuvalu</Description>
+			</Code>
+			<Code value="TW">
+				<Description>Taiwan, Province of China</Description>
+			</Code>
+			<Code value="TZ">
+				<Description>Tanzania, United Republic of</Description>
+			</Code>
+			<Code value="U0">
+				<Description>EU excluding the euro area and reference area</Description>
+			</Code>
+			<Code value="U2">
+				<Description>Euro area (changing composition)</Description>
+			</Code>
+			<Code value="U3">
+				<Description>EU Member States not belonging to MU</Description>
+			</Code>
+			<Code value="U4">
+				<Description>Extra MU</Description>
+			</Code>
+			<Code value="U5">
+				<Description>Other MU member states (all countries except the reference area)</Description>
+			</Code>
+			<Code value="U6">
+				<Description>Domestic (home or reference area)</Description>
+			</Code>
+			<Code value="U7">
+				<Description>MU and the reference area</Description>
+			</Code>
+			<Code value="U8">
+				<Description>All areas other than MU and ref./home area</Description>
+			</Code>
+			<Code value="U9">
+				<Description>All areas other than EU and ref./home area</Description>
+			</Code>
+			<Code value="UA">
+				<Description>Ukraine</Description>
+			</Code>
+			<Code value="UG">
+				<Description>Uganda</Description>
+			</Code>
+			<Code value="UM">
+				<Description>United States Minor outlying islands</Description>
+			</Code>
+			<Code value="US">
+				<Description>United States</Description>
+			</Code>
+			<Code value="UY">
+				<Description>Uruguay</Description>
+			</Code>
+			<Code value="UZ">
+				<Description>Uzbekistan</Description>
+			</Code>
+			<Code value="VA">
+				<Description>Holy See (Vatican City State)</Description>
+			</Code>
+			<Code value="VC">
+				<Description>Saint Vincent and the Grenadines</Description>
+			</Code>
+			<Code value="VE">
+				<Description>Venezuela</Description>
+			</Code>
+			<Code value="VG">
+				<Description>Virgin Islands, British</Description>
+			</Code>
+			<Code value="VI">
+				<Description>Virgin Islands, U.S.</Description>
+			</Code>
+			<Code value="VN">
+				<Description>Viet Nam</Description>
+			</Code>
+			<Code value="VU">
+				<Description>Vanuatu</Description>
+			</Code>
+			<Code value="W1">
+				<Description>Gaza and Jericho</Description>
+			</Code>
+			<Code value="W2">
+				<Description>Intra-MU not allocated</Description>
+			</Code>
+			<Code value="W4">
+				<Description>Extra-MU not allocated</Description>
+			</Code>
+			<Code value="W5">
+				<Description>Extra-EU 25 not allocated</Description>
+			</Code>
+			<Code value="W6">
+				<Description>Residual for BOP &amp; IIP step 3 ECB needs (J2-DK-GB-SE-4A-D8-CH-CA-US-JP-C4-7Z)</Description>
+			</Code>
+			<Code value="WF">
+				<Description>Wallis and Futuna</Description>
+			</Code>
+			<Code value="WS">
+				<Description>Samoa</Description>
+			</Code>
+			<Code value="X0">
+				<Description>Not applicable</Description>
+			</Code>
+			<Code value="YE">
+				<Description>Yemen</Description>
+			</Code>
+			<Code value="YT">
+				<Description>Mayotte</Description>
+			</Code>
+			<Code value="YU">
+				<Description>Yugoslavia</Description>
+			</Code>
+			<Code value="Z0">
+				<Description>World not allocated (EUR12)</Description>
+			</Code>
+			<Code value="Z1">
+				<Description>World not allocated (EUR15)</Description>
+			</Code>
+			<Code value="Z2">
+				<Description>Intra EUR12 not allocated</Description>
+			</Code>
+			<Code value="Z3">
+				<Description>World not allocated (MU)</Description>
+			</Code>
+			<Code value="Z4">
+				<Description>Extra EUR12 not allocated</Description>
+			</Code>
+			<Code value="Z5">
+				<Description>World not allocated (geographically)</Description>
+			</Code>
+			<Code value="Z6">
+				<Description>Intra EUR15 not allocated</Description>
+			</Code>
+			<Code value="Z7">
+				<Description>Equally-shared control of UCIs (ultimate controlling institutional units of a foreign affiliate) of more than one EU member state</Description>
+			</Code>
+			<Code value="Z8">
+				<Description>Extra EUR15 not allocated</Description>
+			</Code>
+			<Code value="Z9">
+				<Description>Rest of the World</Description>
+			</Code>
+			<Code value="ZA">
+				<Description>South Africa</Description>
+			</Code>
+			<Code value="ZM">
+				<Description>Zambia</Description>
+			</Code>
+			<Code value="ZW">
+				<Description>Zimbabwe</Description>
+			</Code>
+		</CodeList>
+		<CodeList agencyID="ECB" id="CL_BS_COUNT_SECTOR">
+			<Name>Balance sheet counterpart sector code list</Name>
+			<Code value="0000">
+				<Description>Unspecified sector</Description>
+			</Code>
+			<Code value="0099">
+				<Description>IMF</Description>
+			</Code>
+			<Code value="00BK">
+				<Description>Banks (ROW excl. MU)</Description>
+			</Code>
+			<Code value="00NB">
+				<Description>non-banks (ROW excl MU)</Description>
+			</Code>
+			<Code value="00NR">
+				<Description>Other non-banks residents than general government (ROW)</Description>
+			</Code>
+			<Code value="0100">
+				<Description>MFI Sector (1000), General Government (2100) &amp; other residents (2200)</Description>
+			</Code>
+			<Code value="1000">
+				<Description>MFIs</Description>
+			</Code>
+			<Code value="1100">
+				<Description>Credit institutions subject to minimum reserve requirements,ECB &amp; NCBs</Description>
+			</Code>
+			<Code value="1110">
+				<Description>ECB</Description>
+			</Code>
+			<Code value="1120">
+				<Description>NCB</Description>
+			</Code>
+			<Code value="1130">
+				<Description>Credit institutions (all credit institutions, according to EU Law)</Description>
+			</Code>
+			<Code value="1200">
+				<Description>Central banks and post office banks (as defined in BAD directive)</Description>
+			</Code>
+			<Code value="1300">
+				<Description>Credit institutions (all credit institutions, according to National Law)</Description>
+			</Code>
+			<Code value="2000">
+				<Description>Non-MFIs</Description>
+			</Code>
+			<Code value="2100">
+				<Description>General Government</Description>
+			</Code>
+			<Code value="2110">
+				<Description>Central Government</Description>
+			</Code>
+			<Code value="2120">
+				<Description>Other General Government</Description>
+			</Code>
+			<Code value="2121">
+				<Description>State Government</Description>
+			</Code>
+			<Code value="2122">
+				<Description>Local Authorities</Description>
+			</Code>
+			<Code value="2123">
+				<Description>Social security Funds</Description>
+			</Code>
+			<Code value="2200">
+				<Description>Other residents (non MFIs)</Description>
+			</Code>
+			<Code value="2210">
+				<Description>Other financial institutions</Description>
+			</Code>
+			<Code value="2220">
+				<Description>Insurance, Pensions Funds</Description>
+			</Code>
+			<Code value="2230">
+				<Description>Non-Financial corporations &amp; Households (S.11 &amp; S.14 &amp; S.15)</Description>
+			</Code>
+			<Code value="2240">
+				<Description>Non-Financial corporations (S.11)</Description>
+			</Code>
+			<Code value="2250">
+				<Description>Households &amp; individual enterprises (S.14 &amp; S.15)</Description>
+			</Code>
+			<Code value="2251">
+				<Description>Households (S.14)</Description>
+			</Code>
+			<Code value="2252">
+				<Description>Non-Profit institutions serving Households (S.15)</Description>
+			</Code>
+			<Code value="2300">
+				<Description>Other residents and other general govnt. (2120 &amp; 2200)</Description>
+			</Code>
+			<Code value="3000">
+				<Description>Other MFIs not subject to minimum reserve requirements and Non-MFIs</Description>
+			</Code>
+		</CodeList>
+		<CodeList agencyID="ECB" id="CL_BS_ITEM">
+			<Name>Balance sheet item code list</Name>
+			<Code value="A10">
+				<Description>Cash</Description>
+			</Code>
+			<Code value="A11">
+				<Description>Cash (net of Euro)</Description>
+			</Code>
+			<Code value="A20">
+				<Description>Loans</Description>
+			</Code>
+			<Code value="A21">
+				<Description>Consumer credit</Description>
+			</Code>
+			<Code value="A22">
+				<Description>Loans for house purchasing</Description>
+			</Code>
+			<Code value="A23">
+				<Description>Loans for other purposes</Description>
+			</Code>
+			<Code value="A24">
+				<Description>Loans - o/w Transfer of foreign currency reserves</Description>
+			</Code>
+			<Code value="A25">
+				<Description>A21 plus A23</Description>
+			</Code>
+			<Code value="A28">
+				<Description>Loans securitised through an FVC</Description>
+			</Code>
+			<Code value="A29">
+				<Description>Loans securitised without an FVC</Description>
+			</Code>
+			<Code value="A2A">
+				<Description>Loans other than bank overdrafts [A20-A2Z]</Description>
+			</Code>
+			<Code value="A2B">
+				<Description>Consumer credit excl. bank overdrafts [A21-A2Z]</Description>
+			</Code>
+			<Code value="A2C">
+				<Description>Loans for house purchases excl. bank overdrafts [A22-A2Z]</Description>
+			</Code>
+			<Code value="A2D">
+				<Description>Loans for other purposes excl. bank overdrafts [A23-A2Z]</Description>
+			</Code>
+			<Code value="A2E">
+				<Description>Loans - Excess of inter MFIs Loans over Deposits</Description>
+			</Code>
+			<Code value="A2F">
+				<Description>Overnight loans (assets), for non-euro area member states only</Description>
+			</Code>
+			<Code value="A2G">
+				<Description>Intra-day loans (assets)</Description>
+			</Code>
+			<Code value="A2H">
+				<Description>Loans other than intraday (A20 - A2G)</Description>
+			</Code>
+			<Code value="A2M">
+				<Description>Actual Loans reported net of excess of inter MFIs Loans (A20-A2E)</Description>
+			</Code>
+			<Code value="A2Z">
+				<Description>Bank overdrafts (i.e. debit balances on current accounts)</Description>
+			</Code>
+			<Code value="A30">
+				<Description>Securities other than shares</Description>
+			</Code>
+			<Code value="A40">
+				<Description>Sum of A41 (money mkt paper) and A42 (MMF shares/units)</Description>
+			</Code>
+			<Code value="A41">
+				<Description>Money market paper</Description>
+			</Code>
+			<Code value="A42">
+				<Description>MMF shares/units</Description>
+			</Code>
+			<Code value="A50">
+				<Description>Shares and other equities</Description>
+			</Code>
+			<Code value="A51">
+				<Description>Shares and other equities - o/w quoted shares</Description>
+			</Code>
+			<Code value="A52">
+				<Description>Shares and other equities - o/w investment fund (non MMF) shares</Description>
+			</Code>
+			<Code value="A60">
+				<Description>Fixed assets</Description>
+			</Code>
+			<Code value="A70">
+				<Description>Remaining assets</Description>
+			</Code>
+			<Code value="A71">
+				<Description>Remaining assets - o/w accruals on loans</Description>
+			</Code>
+			<Code value="A72">
+				<Description>Remaining assets - o/w transit items</Description>
+			</Code>
+			<Code value="A73">
+				<Description>Remaining assets - o/w suspence items</Description>
+			</Code>
+			<Code value="A74">
+				<Description>Remaining assets - o/w financial derivatives</Description>
+			</Code>
+			<Code value="A75">
+				<Description>Remaining assets - o/w intra-Eurosystem net assets due to banknotes distribution</Description>
+			</Code>
+			<Code value="A76">
+				<Description>Remaining assets - o/w prepayment for insurance premiums and reserves for outstanding claims</Description>
+			</Code>
+			<Code value="A7C">
+				<Description>Remaining Assets and Cash of which euro</Description>
+			</Code>
+			<Code value="A80">
+				<Description>External assets (net)</Description>
+			</Code>
+			<Code value="AC1">
+				<Description>Gold and gold receivables</Description>
+			</Code>
+			<Code value="AC2">
+				<Description>Receivables from the IMF</Description>
+			</Code>
+			<Code value="AC4">
+				<Description>Receivable from the IMF - of which claims arising from contributions to financing and other facilities (e.g., PRGF, ESAF)</Description>
+			</Code>
+			<Code value="AT1">
+				<Description>Securities [A30 plus A50]</Description>
+			</Code>
+			<Code value="AT2">
+				<Description>Loans [A20] and securities [AT1]</Description>
+			</Code>
+			<Code value="AT3">
+				<Description>Loans[A20],SecurOtherThanShares[A30],MMP &amp; MMFsShares/units[A40]</Description>
+			</Code>
+			<Code value="AT4">
+				<Description>Cash[A10],Loan[A20],Shar&amp;othEquit[A50],FixdAsset[A60],RemainAsset[A70]</Description>
+			</Code>
+			<Code value="AT5">
+				<Description>Cash, Loans, Securities and Money market paper [A10 plus AT3]</Description>
+			</Code>
+			<Code value="AT6">
+				<Description>Securities other than shares (A30) and MMP and MMFs Shares/Units (A40)</Description>
+			</Code>
+			<Code value="AT7">
+				<Description>Cash (A10), Fixed Assets (A60) and Remaining Assets A(70)</Description>
+			</Code>
+			<Code value="AT8">
+				<Description>Loans/A20,SecuritiesOtherThanShares/A30,MMP&amp;MMFs Shares/Units(A40)&amp;al.</Description>
+			</Code>
+			<Code value="AT9">
+				<Description>Loans and Securities [AT2] and net external assets [A80]</Description>
+			</Code>
+			<Code value="ATC">
+				<Description>Securities other than shares and Money market paper [A30 &amp; A41]</Description>
+			</Code>
+			<Code value="AXG">
+				<Description>External assets</Description>
+			</Code>
+			<Code value="CRN">
+				<Description>Credit - National definition corresponding to AT2</Description>
+			</Code>
+			<Code value="L10">
+				<Description>Currency in circulation</Description>
+			</Code>
+			<Code value="L11">
+				<Description>Banknotes</Description>
+			</Code>
+			<Code value="L12">
+				<Description>Currency in circulation - o/w coin</Description>
+			</Code>
+			<Code value="L1C">
+				<Description>Currency actually put into circulation [L10 plus L75 minus A75]</Description>
+			</Code>
+			<Code value="L20">
+				<Description>Deposit liabilities</Description>
+			</Code>
+			<Code value="L21">
+				<Description>Overnight deposits</Description>
+			</Code>
+			<Code value="L22">
+				<Description>Deposits with agreed maturity</Description>
+			</Code>
+			<Code value="L23">
+				<Description>Deposits redeemable at notice</Description>
+			</Code>
+			<Code value="L24">
+				<Description>Repurchase agreements</Description>
+			</Code>
+			<Code value="L25">
+				<Description>Other deposits not part of minimum reserve system (IMF purposes)</Description>
+			</Code>
+			<Code value="L2A">
+				<Description>Deposits/agreed maturity &amp; redeemable at notice [L22 plus L23]</Description>
+			</Code>
+			<Code value="L2B">
+				<Description>Deposits overnight,agreed maturity &amp; redeemable at notice[L21,L22,L23]</Description>
+			</Code>
+			<Code value="L2C">
+				<Description>Deposits liabilities included in M3</Description>
+			</Code>
+			<Code value="L2D">
+				<Description>Deposits liabilities not included in M3</Description>
+			</Code>
+			<Code value="L2E">
+				<Description>Deposits - Excess of inter MFIs Deposits over Loans</Description>
+			</Code>
+			<Code value="L2M">
+				<Description>Actual Deposits reported net of excess of inter MFIs Deposits (L20-L2E)</Description>
+			</Code>
+			<Code value="L30">
+				<Description>Money Market Funds shares/units</Description>
+			</Code>
+			<Code value="L40">
+				<Description>Debt security issued</Description>
+			</Code>
+			<Code value="L4Y">
+				<Description>Debt security issued excluding the non-resident holdings for maturity less than 2 years</Description>
+			</Code>
+			<Code value="L50">
+				<Description>Money market paper issued</Description>
+			</Code>
+			<Code value="L60">
+				<Description>Capital and reserves</Description>
+			</Code>
+			<Code value="L61">
+				<Description>Capital and reserves (net)</Description>
+			</Code>
+			<Code value="L62">
+				<Description>Capital and reserves - o/w provisions</Description>
+			</Code>
+			<Code value="L70">
+				<Description>Remaining liabilities</Description>
+			</Code>
+			<Code value="L71">
+				<Description>Remaining liabilities - o/w accruals on deposits</Description>
+			</Code>
+			<Code value="L72">
+				<Description>Remaining liabilities - o/w transit items</Description>
+			</Code>
+			<Code value="L73">
+				<Description>Remaining liabilities - o/w suspence items</Description>
+			</Code>
+			<Code value="L74">
+				<Description>Remaining liabilities - o/w financial derivatives</Description>
+			</Code>
+			<Code value="L75">
+				<Description>Remaining liabilities - o/w intra-Eurosystem net liabilities due to banknotes distribution</Description>
+			</Code>
+			<Code value="L76">
+				<Description>Remaining liabilities - o/w net equity of households in pension funds</Description>
+			</Code>
+			<Code value="L80">
+				<Description>MMFs shares &amp; MMP</Description>
+			</Code>
+			<Code value="L8Z">
+				<Description>MMFs shares &amp; MMP including the holdings of MMF Shares/units by non-euro area residents</Description>
+			</Code>
+			<Code value="L90">
+				<Description>Excess of inter-MFIs liabilities</Description>
+			</Code>
+			<Code value="LC1">
+				<Description>Counterpart of SDRs</Description>
+			</Code>
+			<Code value="LE0">
+				<Description>Electronic money - Total</Description>
+			</Code>
+			<Code value="LE1">
+				<Description>Electronic money o/w hardware based e-money</Description>
+			</Code>
+			<Code value="LE2">
+				<Description>Electronic money o/w software based e-money</Description>
+			</Code>
+			<Code value="LLT">
+				<Description>Longer-term financial liabilities not included in monetary aggregates - National definition</Description>
+			</Code>
+			<Code value="LR0">
+				<Description>Reserve base</Description>
+			</Code>
+			<Code value="LSA">
+				<Description>Lump-sum allowance applied by CIs subj.to minimum reserve requirements</Description>
+			</Code>
+			<Code value="LT1">
+				<Description>Deposit/agreed maturity,redeem.at notice,debt securities [L2A,L40]</Description>
+			</Code>
+			<Code value="LT2">
+				<Description>Dep/agr.matur,redeem.at not.,debt securities,cap. &amp; res(net) [LT1,L61]</Description>
+			</Code>
+			<Code value="LT3">
+				<Description>Repurchase agreem.,debt securities,MMFs shares/units,MMP [L24,L40,L80]</Description>
+			</Code>
+			<Code value="LT4">
+				<Description>Deposits[L20],Debt secur.issued[L40] &amp; Money market paper issued[L50]</Description>
+			</Code>
+			<Code value="LT5">
+				<Description>Curren[L10],MMFshare/units[L30],Capital&amp;resrv[L60],Remain.liabil [L70]</Description>
+			</Code>
+			<Code value="LT6">
+				<Description>Deposits [L20] plus Money market paper [L50]</Description>
+			</Code>
+			<Code value="LTC">
+				<Description>Debt securities issued [L40] plus Money market paper [L50]</Description>
+			</Code>
+			<Code value="LTY">
+				<Description>Repurchase agreement, debt securities, MMFs s/u, and MMP including non-residential holdings of MMP and debt securities</Description>
+			</Code>
+			<Code value="LTZ">
+				<Description>Repurchase agreement, debt securities, MMFs shares/units, MMP [L24,L40,L8Z] (discontinued)</Description>
+			</Code>
+			<Code value="LXG">
+				<Description>External liabilities</Description>
+			</Code>
+			<Code value="M10">
+				<Description>Monetary aggregate M1</Description>
+			</Code>
+			<Code value="M20">
+				<Description>Monetary aggregate M2</Description>
+			</Code>
+			<Code value="M2C">
+				<Description>Monetary aggregate M2 excluding currency in circulation</Description>
+			</Code>
+			<Code value="M30">
+				<Description>Monetary aggregate M3</Description>
+			</Code>
+			<Code value="M3C">
+				<Description>Monetary aggregate M3 excluding currency in circulation</Description>
+			</Code>
+			<Code value="M3Y">
+				<Description>M3 including the non-resident holdings of money market paper and debt securities up to 2 years of maturity [M20 &amp; LTY]</Description>
+			</Code>
+			<Code value="M3Z">
+				<Description>M3 including the non-resident holdings of MMF shares/units, money market paper &amp; debt sec. up to 2 yrs of maturity [M20 &amp; LTZ] (disc.)</Description>
+			</Code>
+			<Code value="N00">
+				<Description>Total Assets/Liabilities (net)</Description>
+			</Code>
+			<Code value="N01">
+				<Description>AT5-LT4</Description>
+			</Code>
+			<Code value="N10">
+				<Description>Narrow money (M1) - National definition</Description>
+			</Code>
+			<Code value="N20">
+				<Description>Intermediate money (M2) - National definition</Description>
+			</Code>
+			<Code value="N30">
+				<Description>Broad money (M3) - National definition</Description>
+			</Code>
+			<Code value="R31">
+				<Description>Residuals of other counterparts of M3</Description>
+			</Code>
+			<Code value="T00">
+				<Description>Total Assets/Liabilities</Description>
+			</Code>
+			<Code value="X01">
+				<Description>International reserves held outside the central bank (IMF purposes)</Description>
+			</Code>
+		</CodeList>
+		<CodeList agencyID="ECB" id="CL_BS_REP_SECTOR">
+			<Name>Balance sheet reference sector breakdown code list</Name>
+			<Code value="A">
+				<Description>Other MFIs (Credit institutions, Money market funds and Other institutions)</Description>
+			</Code>
+			<Code value="B">
+				<Description>Credit and other institutions (MFI except MMFs and central banks)</Description>
+			</Code>
+			<Code value="C">
+				<Description>NCBs and ECB</Description>
+			</Code>
+			<Code value="E">
+				<Description>ECB</Description>
+			</Code>
+			<Code value="F">
+				<Description>Other MFIs excluding Credit institutions (Money market funds and Other institutions)</Description>
+			</Code>
+			<Code value="G">
+				<Description>Central Government</Description>
+			</Code>
+			<Code value="L">
+				<Description>Electronic money institutions</Description>
+			</Code>
+			<Code value="M">
+				<Description>MFIs (excl. ECB)</Description>
+			</Code>
+			<Code value="N">
+				<Description>NCBs</Description>
+			</Code>
+			<Code value="R">
+				<Description>Credit institutions</Description>
+			</Code>
+			<Code value="S">
+				<Description>Payments institutions</Description>
+			</Code>
+			<Code value="T">
+				<Description>Total, credit institutions and payment institutions</Description>
+			</Code>
+			<Code value="U">
+				<Description>MFIs (with ECB)</Description>
+			</Code>
+			<Code value="V">
+				<Description>Central Government and MFIs (with ECB) [G plus U]</Description>
+			</Code>
+			<Code value="W">
+				<Description>Credit institutions legally incorporated in the reporting country</Description>
+			</Code>
+			<Code value="X">
+				<Description>Branches of euro area-based credit institutions</Description>
+			</Code>
+			<Code value="Y">
+				<Description>Branches of EEA-based credit institutions (outside the euro area)</Description>
+			</Code>
+			<Code value="Z">
+				<Description>Branches of non-EEA based banks</Description>
+			</Code>
+		</CodeList>
+		<CodeList agencyID="ECB" id="CL_COLLECTION">
+			<Name xml:lang="en">Collection indicator code list</Name>
+			<Code value="A">
+				<Description xml:lang="EN">Average of observations through period</Description>
+			</Code>
+			<Code value="B">
+				<Description xml:lang="en">Beginning of period</Description>
+			</Code>
+			<Code value="E">
+				<Description xml:lang="en">End of period</Description>
+			</Code>
+			<Code value="H">
+				<Description xml:lang="en">Highest in period</Description>
+			</Code>
+			<Code value="L">
+				<Description xml:lang="en">Lowest in period</Description>
+			</Code>
+			<Code value="M">
+				<Description xml:lang="en">Middle of period</Description>
+			</Code>
+			<Code value="S">
+				<Description xml:lang="en">Summed through period</Description>
+			</Code>
+			<Code value="U">
+				<Description xml:lang="en">Unknown</Description>
+			</Code>
+			<Code value="V">
+				<Description xml:lang="en">Other</Description>
+			</Code>
+			<Code value="Y">
+				<Description xml:lang="en">Annualised summed</Description>
+			</Code>
+		</CodeList>
+		<CodeList agencyID="ECB" id="CL_CURRENCY">
+			<Name xml:lang="en">Currency code list</Name>
+			<Code value="ALL">
+				<Description xml:lang="en">Albanian lek</Description>
+			</Code>
+			<Code value="ARS">
+				<Description xml:lang="en">Argentine peso</Description>
+			</Code>
+			<Code value="ATS">
+				<Description xml:lang="en">Austrian schilling</Description>
+			</Code>
+			<Code value="AUD">
+				<Description xml:lang="en">Australian dollar</Description>
+			</Code>
+			<Code value="BAM">
+				<Description xml:lang="en">Bosnia-Hezergovinian convertible mark</Description>
+			</Code>
+			<Code value="BEF">
+				<Description xml:lang="en">Belgian franc</Description>
+			</Code>
+			<Code value="BEL">
+				<Description xml:lang="en">Belgian franc (financial)</Description>
+			</Code>
+			<Code value="BGN">
+				<Description xml:lang="en">Bulgarian lev</Description>
+			</Code>
+			<Code value="BRL">
+				<Description xml:lang="en">Brazilian real</Description>
+			</Code>
+			<Code value="CAD">
+				<Description xml:lang="en">Canadian dollar</Description>
+			</Code>
+			<Code value="CHF">
+				<Description xml:lang="en">Swiss franc</Description>
+			</Code>
+			<Code value="CLP">
+				<Description xml:lang="en">Chilean peso</Description>
+			</Code>
+			<Code value="CNY">
+				<Description xml:lang="en">Chinese yuan renminbi</Description>
+			</Code>
+			<Code value="COP">
+				<Description xml:lang="en">Colombian peso</Description>
+			</Code>
+			<Code value="CSD">
+				<Description xml:lang="en">Serbian dinar</Description>
+			</Code>
+			<Code value="CYP">
+				<Description xml:lang="en">Cyprus pound</Description>
+			</Code>
+			<Code value="CZK">
+				<Description xml:lang="en">Czech koruna</Description>
+			</Code>
+			<Code value="DEM">
+				<Description xml:lang="en">German mark</Description>
+			</Code>
+			<Code value="DKK">
+				<Description xml:lang="en">Danish krone</Description>
+			</Code>
+			<Code value="DZD">
+				<Description xml:lang="en">Algerian dinar</Description>
+			</Code>
+			<Code value="EEK">
+				<Description xml:lang="en">Estonian kroon</Description>
+			</Code>
+			<Code value="EGP">
+				<Description xml:lang="en">Egyptian pound</Description>
+			</Code>
+			<Code value="ESP">
+				<Description xml:lang="en">Spanish peseta</Description>
+			</Code>
+			<Code value="EUR">
+				<Description xml:lang="en">Euro</Description>
+			</Code>
+			<Code value="FIM">
+				<Description xml:lang="en">Finnish markka</Description>
+			</Code>
+			<Code value="FRF">
+				<Description xml:lang="en">French franc</Description>
+			</Code>
+			<Code value="GBP">
+				<Description xml:lang="en">UK pound sterling</Description>
+			</Code>
+			<Code value="GRD">
+				<Description xml:lang="en">Greek drachma</Description>
+			</Code>
+			<Code value="HKD">
+				<Description xml:lang="en">Hong Kong dollar</Description>
+			</Code>
+			<Code value="HRK">
+				<Description xml:lang="en">Croatian kuna</Description>
+			</Code>
+			<Code value="HUF">
+				<Description xml:lang="en">Hungarian forint</Description>
+			</Code>
+			<Code value="IDR">
+				<Description xml:lang="en">Indonesian rupiah</Description>
+			</Code>
+			<Code value="IEP">
+				<Description xml:lang="en">Irish pound</Description>
+			</Code>
+			<Code value="ILS">
+				<Description xml:lang="en">Israeli shekel</Description>
+			</Code>
+			<Code value="INR">
+				<Description xml:lang="en">Indian rupee</Description>
+			</Code>
+			<Code value="IQD">
+				<Description xml:lang="en">Iraqi dinar</Description>
+			</Code>
+			<Code value="IRR">
+				<Description xml:lang="en">Iranian rial</Description>
+			</Code>
+			<Code value="ISK">
+				<Description xml:lang="en">Iceland krona</Description>
+			</Code>
+			<Code value="ITL">
+				<Description xml:lang="en">Italian lira</Description>
+			</Code>
+			<Code value="JOD">
+				<Description xml:lang="en">Jordanian dinar</Description>
+			</Code>
+			<Code value="JPY">
+				<Description xml:lang="en">Japanese yen</Description>
+			</Code>
+			<Code value="KPW">
+				<Description xml:lang="en">Korean won (North)</Description>
+			</Code>
+			<Code value="KRW">
+				<Description xml:lang="en">Korean won (Republic)</Description>
+			</Code>
+			<Code value="KWD">
+				<Description xml:lang="en">Kuwait dinar</Description>
+			</Code>
+			<Code value="LBP">
+				<Description xml:lang="en">Lebanese pound</Description>
+			</Code>
+			<Code value="LKR">
+				<Description xml:lang="en">Sri Lanka rupee</Description>
+			</Code>
+			<Code value="LTL">
+				<Description xml:lang="en">Lithuanian litas</Description>
+			</Code>
+			<Code value="LUF">
+				<Description xml:lang="en">Luxembourg franc</Description>
+			</Code>
+			<Code value="LVL">
+				<Description xml:lang="en">Latvian lats</Description>
+			</Code>
+			<Code value="LYD">
+				<Description xml:lang="en">Libyan dinar</Description>
+			</Code>
+			<Code value="MAD">
+				<Description xml:lang="en">Moroccan dirham</Description>
+			</Code>
+			<Code value="MKD">
+				<Description xml:lang="en">Macedonian denar</Description>
+			</Code>
+			<Code value="MTL">
+				<Description xml:lang="en">Maltese lira</Description>
+			</Code>
+			<Code value="MXN">
+				<Description xml:lang="en">Mexican peso</Description>
+			</Code>
+			<Code value="MYR">
+				<Description xml:lang="en">Malaysian ringgit</Description>
+			</Code>
+			<Code value="NLG">
+				<Description xml:lang="en">Netherlands guilder</Description>
+			</Code>
+			<Code value="NOK">
+				<Description xml:lang="en">Norwegian krone</Description>
+			</Code>
+			<Code value="NZD">
+				<Description xml:lang="en">New Zealand dollar</Description>
+			</Code>
+			<Code value="PEN">
+				<Description xml:lang="en">Peru nuevo sol</Description>
+			</Code>
+			<Code value="PHP">
+				<Description xml:lang="en">Philippine peso</Description>
+			</Code>
+			<Code value="PKR">
+				<Description xml:lang="en">Pakistan rupee</Description>
+			</Code>
+			<Code value="PLN">
+				<Description xml:lang="en">Polish zloty (new)</Description>
+			</Code>
+			<Code value="PTE">
+				<Description xml:lang="en">Portugese escudo</Description>
+			</Code>
+			<Code value="ROL">
+				<Description xml:lang="en">Romanian leu</Description>
+			</Code>
+			<Code value="RON">
+				<Description xml:lang="en">Romanian leu (new)</Description>
+			</Code>
+			<Code value="RUB">
+				<Description xml:lang="en">rouble (new)</Description>
+			</Code>
+			<Code value="SAR">
+				<Description xml:lang="en">Saudi riyal</Description>
+			</Code>
+			<Code value="SEK">
+				<Description xml:lang="en">Swedish krona</Description>
+			</Code>
+			<Code value="SGD">
+				<Description xml:lang="en">Singapore dollar</Description>
+			</Code>
+			<Code value="SIT">
+				<Description xml:lang="en">Slovenian tolar</Description>
+			</Code>
+			<Code value="SKK">
+				<Description xml:lang="en">Slovak koruna</Description>
+			</Code>
+			<Code value="SYP">
+				<Description xml:lang="en">Syrian pound</Description>
+			</Code>
+			<Code value="THB">
+				<Description xml:lang="en">Thai bhat</Description>
+			</Code>
+			<Code value="TND">
+				<Description xml:lang="en">Tunisian dinar</Description>
+			</Code>
+			<Code value="TRL">
+				<Description xml:lang="en">Turkish lira</Description>
+			</Code>
+			<Code value="TRY">
+				<Description xml:lang="en">Turkish lira (new)</Description>
+			</Code>
+			<Code value="TWD">
+				<Description xml:lang="en">New Taiwan dollar</Description>
+			</Code>
+			<Code value="UAH">
+				<Description xml:lang="en">Ukraine hryvnia</Description>
+			</Code>
+			<Code value="USD">
+				<Description xml:lang="en">US dollar</Description>
+			</Code>
+			<Code value="VEB">
+				<Description xml:lang="en">Venezuela bolivar</Description>
+			</Code>
+			<Code value="XAG">
+				<Description xml:lang="en">Silver</Description>
+			</Code>
+			<Code value="XDR">
+				<Description xml:lang="en">Special Drawing Rights (SDR)</Description>
+			</Code>
+			<Code value="XEU">
+				<Description xml:lang="en">European Currency Unit (E.C.U.)</Description>
+			</Code>
+			<Code value="Z01">
+				<Description xml:lang="en">All currencies combined</Description>
+			</Code>
+			<Code value="Z02">
+				<Description xml:lang="en">Euro and MU national currencies</Description>
+			</Code>
+			<Code value="Z03">
+				<Description xml:lang="en">Other EU currencies combined</Description>
+			</Code>
+			<Code value="Z04">
+				<Description xml:lang="en">Other currencies than EU combined</Description>
+			</Code>
+			<Code value="Z05">
+				<Description xml:lang="en">All currencies other than EU, EUR, USD, CHF, JPY</Description>
+			</Code>
+			<Code value="Z06">
+				<Description xml:lang="en">Non-MU currencies combined</Description>
+			</Code>
+			<Code value="Z07">
+				<Description xml:lang="en">All currencies other than domestic, Euro and MU currencies</Description>
+			</Code>
+			<Code value="Z08">
+				<Description xml:lang="en">EER narrow group of currencies including also Greece until 01 january 2001</Description>
+			</Code>
+			<Code value="Z09">
+				<Description xml:lang="en">EER broad group of currencies including also Greece until 01 january 2001</Description>
+			</Code>
+			<Code value="Z0Z">
+				<Description xml:lang="en">Not applicable</Description>
+			</Code>
+			<Code value="Z10">
+				<Description xml:lang="en">EER-12 group of currencies</Description>
+			</Code>
+			<Code value="Z11">
+				<Description xml:lang="en">EER broad group of currencies (excluding Greece)</Description>
+			</Code>
+			<Code value="Z12">
+				<Description xml:lang="en">Euro and Euro Area countries currencies (including Greece)</Description>
+			</Code>
+			<Code value="Z13">
+				<Description xml:lang="en">Other EU currencies combined (MU12; excluding GRD)</Description>
+			</Code>
+			<Code value="Z14">
+				<Description xml:lang="en">Other currencies than EU15 combined</Description>
+			</Code>
+			<Code value="Z15">
+				<Description xml:lang="en">All currencies other than EU15, EUR, USD, CHF, JPY</Description>
+			</Code>
+			<Code value="Z16">
+				<Description xml:lang="en">Non-MU12 currencies combined</Description>
+			</Code>
+			<Code value="Z17">
+				<Description xml:lang="en">ECB EER-12 group of currencies and Euro Area countries currencies</Description>
+			</Code>
+			<Code value="Z18">
+				<Description xml:lang="en">ECB EER broad group of currencies and Euro Area countries currencies</Description>
+			</Code>
+			<Code value="Z21">
+				<Description xml:lang="en">ECB EER broad group, regional breakdown, industrialised countries</Description>
+			</Code>
+			<Code value="Z22">
+				<Description xml:lang="en">ECB EER broad group, regional breakdown, non-Japan Asia</Description>
+			</Code>
+			<Code value="Z23">
+				<Description xml:lang="en">ECB EER broad group, regional breakdown, Latin America</Description>
+			</Code>
+			<Code value="Z24">
+				<Description xml:lang="en">ECB EER broad group, regional breakdown, Central and Eastern Europe (CEEC)</Description>
+			</Code>
+			<Code value="Z25">
+				<Description xml:lang="en">ECB EER broad group, regional breakdown, other countries</Description>
+			</Code>
+			<Code value="Z30">
+				<Description xml:lang="en">EER-23 group of currencies</Description>
+			</Code>
+			<Code value="Z31">
+				<Description xml:lang="en">EER-42 group of currencies</Description>
+			</Code>
+			<Code value="Z37">
+				<Description xml:lang="en">ECB EER-23 group of currencies and Euro Area countries currencies</Description>
+			</Code>
+			<Code value="Z38">
+				<Description xml:lang="en">ECB EER-42 group of currencies and Euro Area countries currencies</Description>
+			</Code>
+			<Code value="Z41">
+				<Description xml:lang="en">All currencies other than domestic</Description>
+			</Code>
+			<Code value="Z44">
+				<Description xml:lang="en">Other currencies than EU15 and domestic</Description>
+			</Code>
+			<Code value="Z45">
+				<Description xml:lang="en">All currencies other than EU15, EUR, USD, CHF, JPY and domestic</Description>
+			</Code>
+			<Code value="Z50">
+				<Description xml:lang="en">ECB EER-24 group of currencies (AU, CA, CN, DK, HK, JP, NO, SG, KR, SE, CH, GB, US, CY, CZ, EE, HU, LV, LT, MT, PL, SK, BG, RO)</Description>
+			</Code>
+			<Code value="Z51">
+				<Description xml:lang="en">ECB EER-44 group of currencies (AU, CA, CN, DK, HK, JP, NO, SG, KR, SE, CH, GB, US, CY, CZ, EE, HU, LV, LT, MT, PL, SK, BG, RO, NZ, DZ, AR, BR, HR, IN, ID, IL, MY, MX, MA, PH, RU, ZA, TW, TH, TR, IS, CL, VE)</Description>
+			</Code>
+			<Code value="Z52">
+				<Description xml:lang="en">Euro and Euro area country currencies (FR, BE, LU, NL, DE, IT, IE, PT, ES, FI, AT, GR, SI)</Description>
+			</Code>
+			<Code value="Z53">
+				<Description xml:lang="en">Non-euro area 13 currencies combined (FR, BE, LU, NL, DE, IT, IE, PT, ES, FI, AT, GR, SI)</Description>
+			</Code>
+			<Code value="Z56">
+				<Description xml:lang="en">ECB EER-12 group of currencies and Euro area country currencies (FR, BE, LU, NL, DE, IT, IE, PT, ES, FI, AT, GR, SI, AU, CA, DK, HK, JP, NO, SG, KR, SE, CH, GB, US)</Description>
+			</Code>
+			<Code value="Z57">
+				<Description xml:lang="en">ECB EER-24 group of currencies and Euro area country currencies (FR, BE, LU, NL, DE, IT, IE, PT, ES, FI, AT, GR, SI, AU, CA, CN, DK, HK, JP, NO, SG, KR, SE, CH, GB, US, CY, CZ, EE, HU, LV, LT, MT, PL, SK, BG, RO)</Description>
+			</Code>
+			<Code value="Z58">
+				<Description xml:lang="en">ECB EER-44 group of currencies and Euro area country currencies (FR, BE, LU, NL, DE, IT, IE, PT, ES, FI, AT, GR, SI, AU, CA, CN, DK, HK, JP, NO, SG, KR, SE, CH, GB, US, CY, CZ, EE, HU, LV, LT, MT, PL, SK, BG, RO, NZ, DZ, AR, BR, HR, IN, ID, IL, MY, MX, MA, PH, RU, ZA, TW, TH, TR, IS, CL, VE)</Description>
+			</Code>
+			<Code value="ZAR">
+				<Description xml:lang="en">South African Rand</Description>
+			</Code>
+		</CodeList>
+		<CodeList agencyID="ECB" id="CL_DATA_TYPE_MIR">
+			<Name>Data type for MFI Interest Rates data code list</Name>
+			<Code value="B">
+				<Description>Business volume (outstanding amount / new business)</Description>
+			</Code>
+			<Code value="C">
+				<Description>Annual percentage rate of charge (APRC)</Description>
+			</Code>
+			<Code value="I">
+				<Description>Interest rate component of euro area level change</Description>
+			</Code>
+			<Code value="J">
+				<Description>Weight component of euro area level change</Description>
+			</Code>
+			<Code value="K">
+				<Description>Combined interest rate and weight component</Description>
+			</Code>
+			<Code value="R">
+				<Description>Annualised agreed rate (AAR) / Narrowly defined effective rate (NDER)</Description>
+			</Code>
+			<Code value="V">
+				<Description>Coefficient of variation</Description>
+			</Code>
+		</CodeList>
+		<CodeList agencyID="ECB" id="CL_DECIMALS">
+			<Name xml:lang="en">Decimals codelist</Name>
+			<Code value="0">
+				<Description xml:lang="en">Zero</Description>
+			</Code>
+			<Code value="1">
+				<Description xml:lang="en">One</Description>
+			</Code>
+			<Code value="2">
+				<Description xml:lang="en">Two</Description>
+			</Code>
+			<Code value="3">
+				<Description xml:lang="en">Three</Description>
+			</Code>
+			<Code value="4">
+				<Description xml:lang="en">Four</Description>
+			</Code>
+			<Code value="5">
+				<Description xml:lang="en">Five</Description>
+			</Code>
+			<Code value="6">
+				<Description xml:lang="en">Six</Description>
+			</Code>
+			<Code value="7">
+				<Description xml:lang="en">Seven</Description>
+			</Code>
+			<Code value="8">
+				<Description xml:lang="en">Eight</Description>
+			</Code>
+			<Code value="9">
+				<Description xml:lang="en">Nine</Description>
+			</Code>
+		</CodeList>
+		<CodeList agencyID="ECB" id="CL_FREQ">
+			<Name xml:lang="en">Frequency code list</Name>
+			<Code value="A">
+				<Description xml:lang="en">Annual</Description>
+			</Code>
+			<Code value="B">
+				<Description xml:lang="en">Business</Description>
+			</Code>
+			<Code value="D">
+				<Description xml:lang="en">Daily</Description>
+			</Code>
+			<Code value="E">
+				<Description xml:lang="en">Event (not supported)</Description>
+			</Code>
+			<Code value="H">
+				<Description xml:lang="en">Half-yearly</Description>
+			</Code>
+			<Code value="M">
+				<Description xml:lang="en">Monthly</Description>
+			</Code>
+			<Code value="Q">
+				<Description xml:lang="en">Quarterly</Description>
+			</Code>
+			<Code value="W">
+				<Description xml:lang="en">Weekly</Description>
+			</Code>
+		</CodeList>
+		<CodeList agencyID="ECB" id="CL_IR_BUS_COV">
+			<Name>Interest rate business coverage code list</Name>
+			<Code value="N">
+				<Description>New business</Description>
+			</Code>
+			<Code value="O">
+				<Description>Outstanding amount</Description>
+			</Code>
+			<Code value="Z">
+				<Description>Unspecified</Description>
+			</Code>
+		</CodeList>
+		<CodeList agencyID="ECB" id="CL_MATURITY_ORIG">
+			<Name>Original maturity code list</Name>
+			<Code value="A">
+				<Description>Total</Description>
+			</Code>
+			<Code value="B">
+				<Description>Short-Term</Description>
+			</Code>
+			<Code value="C">
+				<Description>Long-Term</Description>
+			</Code>
+			<Code value="D">
+				<Description>Up to 3 months</Description>
+			</Code>
+			<Code value="E">
+				<Description>Over 3 months</Description>
+			</Code>
+			<Code value="F">
+				<Description>Up to 1 year</Description>
+			</Code>
+			<Code value="G">
+				<Description>Over 1 and up to 2 years</Description>
+			</Code>
+			<Code value="H">
+				<Description>Over 2 years</Description>
+			</Code>
+			<Code value="I">
+				<Description>Over 1 and up to 5 years</Description>
+			</Code>
+			<Code value="J">
+				<Description>Over 5 years</Description>
+			</Code>
+			<Code value="K">
+				<Description>Over 1 year</Description>
+			</Code>
+			<Code value="L">
+				<Description>Up to two years</Description>
+			</Code>
+			<Code value="M">
+				<Description>Agreed maturity up to 2 years and redeemable at notice up to 3 months</Description>
+			</Code>
+			<Code value="N">
+				<Description>Agreed maturity over 2 years and redeemable at notice over 3 months</Description>
+			</Code>
+			<Code value="O">
+				<Description>Over 5 and up to 10 years</Description>
+			</Code>
+			<Code value="P">
+				<Description>Over 10 years</Description>
+			</Code>
+			<Code value="X">
+				<Description>Not applicable</Description>
+			</Code>
+			<Code value="Z">
+				<Description>Not allocated / Unspecified</Description>
+			</Code>
+		</CodeList>
+		<CodeList agencyID="ECB" id="CL_OBS_CONF">
+			<Name xml:lang="en">Observation confidentiality code list</Name>
+			<Code value="C">
+				<Description xml:lang="en">Confidential statistical information</Description>
+			</Code>
+			<Code value="D">
+				<Description xml:lang="en">Secondary confidentiality set by the sender, not for publication</Description>
+			</Code>
+			<Code value="F">
+				<Description xml:lang="en">Free (free for publication)</Description>
+			</Code>
+			<Code value="N">
+				<Description xml:lang="en">Not for publication, restricted for internal use only</Description>
+			</Code>
+			<Code value="R">
+				<Description xml:lang="en">Discontinued from 13 October 2006</Description>
+			</Code>
+		</CodeList>
+		<CodeList agencyID="ECB" id="CL_OBS_STATUS">
+			<Name xml:lang="en">Observation status code list</Name>
+			<Code value="A">
+				<Description xml:lang="en">Normal value</Description>
+			</Code>
+			<Code value="B">
+				<Description xml:lang="en">Break</Description>
+			</Code>
+			<Code value="E">
+				<Description xml:lang="en">Estimated value</Description>
+			</Code>
+			<Code value="F">
+				<Description xml:lang="en">Forecast value</Description>
+			</Code>
+			<Code value="H">
+				<Description xml:lang="en">Missing value; holiday or weekend</Description>
+			</Code>
+			<Code value="L">
+				<Description xml:lang="en">Missing value; data exist but were not collected</Description>
+			</Code>
+			<Code value="M">
+				<Description xml:lang="en">Missing value; data cannot exist</Description>
+			</Code>
+			<Code value="P">
+				<Description xml:lang="en">Provisional value</Description>
+			</Code>
+			<Code value="Q">
+				<Description xml:lang="en">Missing value; suppressed</Description>
+			</Code>
+			<Code value="S">
+				<Description xml:lang="en">Strike</Description>
+			</Code>
+		</CodeList>
+		<CodeList agencyID="ECB" id="CL_UNIT">
+			<Name xml:lang="en">Unit code list</Name>
+			<Code value="ARS">
+				<Description xml:lang="en">Argentine peso</Description>
+			</Code>
+			<Code value="ATS">
+				<Description xml:lang="en">Austrian schilling</Description>
+			</Code>
+			<Code value="AUD">
+				<Description xml:lang="en">Australian dollar</Description>
+			</Code>
+			<Code value="BEF">
+				<Description xml:lang="en">Belgian franc</Description>
+			</Code>
+			<Code value="BEL">
+				<Description xml:lang="en">Belgian franc (financial)</Description>
+			</Code>
+			<Code value="BGN">
+				<Description xml:lang="en">Bulgarian lev</Description>
+			</Code>
+			<Code value="BRL">
+				<Description xml:lang="en">Brazilian real</Description>
+			</Code>
+			<Code value="CAD">
+				<Description xml:lang="en">Canadian dollar</Description>
+			</Code>
+			<Code value="CHF">
+				<Description xml:lang="en">Swiss franc</Description>
+			</Code>
+			<Code value="CLP">
+				<Description xml:lang="en">Chilean peso</Description>
+			</Code>
+			<Code value="CNY">
+				<Description xml:lang="en">Chinese yuan renminbi</Description>
+			</Code>
+			<Code value="COP">
+				<Description xml:lang="en">Colombian peso</Description>
+			</Code>
+			<Code value="CYP">
+				<Description xml:lang="en">Cypriot pound</Description>
+			</Code>
+			<Code value="CZK">
+				<Description xml:lang="en">Czech koruna</Description>
+			</Code>
+			<Code value="DAYS">
+				<Description xml:lang="en">Days</Description>
+			</Code>
+			<Code value="DEM">
+				<Description xml:lang="en">German mark</Description>
+			</Code>
+			<Code value="DKK">
+				<Description xml:lang="en">Danish krone</Description>
+			</Code>
+			<Code value="DZD">
+				<Description xml:lang="en">Algerian dinar</Description>
+			</Code>
+			<Code value="EEK">
+				<Description xml:lang="en">Estonian kroon</Description>
+			</Code>
+			<Code value="EGP">
+				<Description xml:lang="en">Egyptian pound</Description>
+			</Code>
+			<Code value="ESP">
+				<Description xml:lang="en">Spanish peseta</Description>
+			</Code>
+			<Code value="EUR">
+				<Description xml:lang="en">Euro</Description>
+			</Code>
+			<Code value="FIM">
+				<Description xml:lang="en">Finnish markka</Description>
+			</Code>
+			<Code value="FRF">
+				<Description xml:lang="en">French franc</Description>
+			</Code>
+			<Code value="GBP">
+				<Description xml:lang="en">UK pound sterling</Description>
+			</Code>
+			<Code value="GRD">
+				<Description xml:lang="en">Greek drachma</Description>
+			</Code>
+			<Code value="HKD">
+				<Description xml:lang="en">Hong Kong dollar</Description>
+			</Code>
+			<Code value="HOURS">
+				<Description xml:lang="en">Hours</Description>
+			</Code>
+			<Code value="HRK">
+				<Description xml:lang="en">Croatian kuna</Description>
+			</Code>
+			<Code value="HUF">
+				<Description xml:lang="en">Hungarian forint</Description>
+			</Code>
+			<Code value="IDR">
+				<Description xml:lang="en">Indonesian rupiah</Description>
+			</Code>
+			<Code value="IEP">
+				<Description xml:lang="en">Irish pound</Description>
+			</Code>
+			<Code value="ILS">
+				<Description xml:lang="en">Israeli shekel</Description>
+			</Code>
+			<Code value="INR">
+				<Description xml:lang="en">Indian rupee</Description>
+			</Code>
+			<Code value="IQD">
+				<Description xml:lang="en">Iraqi dinar</Description>
+			</Code>
+			<Code value="IRR">
+				<Description xml:lang="en">Iranian rial</Description>
+			</Code>
+			<Code value="ISK">
+				<Description xml:lang="en">Iceland krona</Description>
+			</Code>
+			<Code value="ITL">
+				<Description xml:lang="en">Italian lira</Description>
+			</Code>
+			<Code value="JOD">
+				<Description xml:lang="en">Jordanian dinar</Description>
+			</Code>
+			<Code value="JPY">
+				<Description xml:lang="en">Japanese yen</Description>
+			</Code>
+			<Code value="KILO">
+				<Description xml:lang="en">Kilograms</Description>
+			</Code>
+			<Code value="KLITRE">
+				<Description xml:lang="en">Kilolitres</Description>
+			</Code>
+			<Code value="KPW">
+				<Description xml:lang="en">Korean won (North)</Description>
+			</Code>
+			<Code value="KRW">
+				<Description xml:lang="en">Korean won (Republic)</Description>
+			</Code>
+			<Code value="KWD">
+				<Description xml:lang="en">Kuwait dinar</Description>
+			</Code>
+			<Code value="LBP">
+				<Description xml:lang="en">Lebanese pound</Description>
+			</Code>
+			<Code value="LITRES">
+				<Description xml:lang="en">Litres</Description>
+			</Code>
+			<Code value="LKR">
+				<Description xml:lang="en">Sri Lanka rupee</Description>
+			</Code>
+			<Code value="LTL">
+				<Description xml:lang="en">Lithuanian litas</Description>
+			</Code>
+			<Code value="LUF">
+				<Description xml:lang="en">Luxembourg franc</Description>
+			</Code>
+			<Code value="LVL">
+				<Description xml:lang="en">Latvian lats</Description>
+			</Code>
+			<Code value="LYD">
+				<Description xml:lang="en">Libyan dinar</Description>
+			</Code>
+			<Code value="MAD">
+				<Description xml:lang="en">Moroccan dirham</Description>
+			</Code>
+			<Code value="MAN-DY">
+				<Description xml:lang="en">Man Days</Description>
+			</Code>
+			<Code value="MAN-YR">
+				<Description xml:lang="en">Man Years</Description>
+			</Code>
+			<Code value="MONTHS">
+				<Description xml:lang="en">Months</Description>
+			</Code>
+			<Code value="MTL">
+				<Description xml:lang="en">Maltese lira</Description>
+			</Code>
+			<Code value="MXN">
+				<Description xml:lang="en">Mexican peso</Description>
+			</Code>
+			<Code value="MXP">
+				<Description xml:lang="en">Mexican peso (old)</Description>
+			</Code>
+			<Code value="MYR">
+				<Description xml:lang="en">Malaysian ringgit</Description>
+			</Code>
+			<Code value="NATCUR">
+				<Description xml:lang="en">National currency</Description>
+			</Code>
+			<Code value="NLG">
+				<Description xml:lang="en">Netherlands guilder</Description>
+			</Code>
+			<Code value="NOK">
+				<Description xml:lang="en">Nowegian krone</Description>
+			</Code>
+			<Code value="NZD">
+				<Description xml:lang="en">New Zealand dollar</Description>
+			</Code>
+			<Code value="OUNCES">
+				<Description xml:lang="en">Ounces</Description>
+			</Code>
+			<Code value="PC">
+				<Description xml:lang="en">Percent</Description>
+			</Code>
+			<Code value="PCPA">
+				<Description xml:lang="en">Percent per annum</Description>
+			</Code>
+			<Code value="PCT">
+				<Description xml:lang="en">Percentage of change</Description>
+			</Code>
+			<Code value="PEN">
+				<Description xml:lang="en">Peru nuevo sol</Description>
+			</Code>
+			<Code value="PERS">
+				<Description xml:lang="en">Persons</Description>
+			</Code>
+			<Code value="PHP">
+				<Description xml:lang="en">Philippine peso</Description>
+			</Code>
+			<Code value="PKR">
+				<Description xml:lang="en">Pakistan rupee</Description>
+			</Code>
+			<Code value="PLN">
+				<Description xml:lang="en">Polish zloty (new)</Description>
+			</Code>
+			<Code value="PM">
+				<Description xml:lang="en">Per thousand</Description>
+			</Code>
+			<Code value="POINTS">
+				<Description xml:lang="en">Points</Description>
+			</Code>
+			<Code value="PTE">
+				<Description xml:lang="en">Portugese escudo</Description>
+			</Code>
+			<Code value="PURE_NUMB">
+				<Description xml:lang="en">Pure number</Description>
+			</Code>
+			<Code value="ROL">
+				<Description xml:lang="en">Romanian leu</Description>
+			</Code>
+			<Code value="RON">
+				<Description xml:lang="en">Romanian leu (new)</Description>
+			</Code>
+			<Code value="RUB">
+				<Description xml:lang="en">Rouble (new)</Description>
+			</Code>
+			<Code value="SAR">
+				<Description xml:lang="en">Saudi riyal</Description>
+			</Code>
+			<Code value="SEK">
+				<Description xml:lang="en">Swedish krona</Description>
+			</Code>
+			<Code value="SGD">
+				<Description xml:lang="en">Singapore dollar</Description>
+			</Code>
+			<Code value="SIT">
+				<Description xml:lang="en">Slovenian tolar</Description>
+			</Code>
+			<Code value="SKK">
+				<Description xml:lang="en">Slovak koruna</Description>
+			</Code>
+			<Code value="SQ_M">
+				<Description xml:lang="en">Square Metres</Description>
+			</Code>
+			<Code value="SYP">
+				<Description xml:lang="en">Syrian pound</Description>
+			</Code>
+			<Code value="THB">
+				<Description xml:lang="en">Thai bhat</Description>
+			</Code>
+			<Code value="TND">
+				<Description xml:lang="en">Tunisian dinar</Description>
+			</Code>
+			<Code value="TONNES">
+				<Description xml:lang="en">Tonnes</Description>
+			</Code>
+			<Code value="TRL">
+				<Description xml:lang="en">Turkish lira</Description>
+			</Code>
+			<Code value="TRY">
+				<Description xml:lang="en">Turkish lira (new)</Description>
+			</Code>
+			<Code value="TWD">
+				<Description xml:lang="en">New Taiwan dollar</Description>
+			</Code>
+			<Code value="UAH">
+				<Description xml:lang="en">Ukraine hryvnia</Description>
+			</Code>
+			<Code value="UNITS">
+				<Description xml:lang="en">Unit described in title</Description>
+			</Code>
+			<Code value="USD">
+				<Description xml:lang="en">US dollar</Description>
+			</Code>
+			<Code value="VEB">
+				<Description xml:lang="en">Venezuela bolivar</Description>
+			</Code>
+			<Code value="XAG">
+				<Description xml:lang="en">Silver</Description>
+			</Code>
+			<Code value="XDR">
+				<Description xml:lang="en">Special Drawing Rights (S.D.R.)</Description>
+			</Code>
+			<Code value="XEU">
+				<Description xml:lang="en">European Currency Unit (E.C.U.)</Description>
+			</Code>
+			<Code value="YEARS">
+				<Description xml:lang="en">Years</Description>
+			</Code>
+			<Code value="ZAR">
+				<Description xml:lang="en">South African rand</Description>
+			</Code>
+		</CodeList>
+		<CodeList agencyID="ECB" id="CL_UNIT_MULT">
+			<Name xml:lang="en">Unit multiplier code list</Name>
+			<Code value="0">
+				<Description xml:lang="en">Units</Description>
+			</Code>
+			<Code value="1">
+				<Description xml:lang="en">Tens</Description>
+			</Code>
+			<Code value="2">
+				<Description xml:lang="en">Hundreds</Description>
+			</Code>
+			<Code value="3">
+				<Description xml:lang="en">Thousands</Description>
+			</Code>
+			<Code value="4">
+				<Description xml:lang="en">Tens of thousands</Description>
+			</Code>
+			<Code value="6">
+				<Description xml:lang="en">Millions</Description>
+			</Code>
+			<Code value="9">
+				<Description xml:lang="en">Billions</Description>
+			</Code>
+		</CodeList>
+	</message:CodeLists>
+	<message:Concepts xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure">
+		<Concept agencyID="ECB" id="AMOUNT_CAT">
+			<Name>Amount category</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="BREAKS">
+			<Name>Breaks</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="BS_COUNT_SECTOR">
+			<Name>BS counterpart sector</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="BS_ITEM">
+			<Name>Balance sheet item</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="BS_REP_SECTOR">
+			<Name>BS reference sector breakdown</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="COLLECTION">
+			<Name xml:lang="en">Collection indicator</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="COMPILATION">
+			<Name>Compilation</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="COVERAGE">
+			<Name>Coverage</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="CURRENCY_TRANS">
+			<Name>Currency of transaction</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="DATA_TYPE_MIR">
+			<Name>MFI interest rate data type</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="DECIMALS">
+			<Name xml:lang="en">Decimals</Name>
+		</Concept>		
+		<Concept agencyID="ECB" id="DOM_SER_IDS">
+			<Name>Domestic series ids</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="FREQ">
+			<Name xml:lang="en">Frequency</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="IR_BUS_COV">
+			<Name>IR business coverage</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="MATURITY_ORIG">
+			<Name>Original maturity</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="NAT_TITLE">
+			<Name>National language title</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="OBS_COM">
+			<Name>Observation comment</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="OBS_CONF">
+			<Name xml:lang="en">Observation confidentiality</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="OBS_PRE_BREAK">
+			<Name>Pre-break observation value</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="OBS_STATUS">
+			<Name xml:lang="en">Observation status</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="OBS_VALUE">
+			<Name xml:lang="en">Observation value</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="PUBL_ECB">
+			<Name>Source publication (ECB only)</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="PUBL_MU">
+			<Name>Source publication (Euro area only)</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="PUBL_PUBLIC">
+			<Name>Source publication (public)</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="REF_AREA">
+			<Name>Reference area</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="SOURCE_AGENCY">
+			<Name>Source agency</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="TIME_FORMAT">
+			<Name xml:lang="en">Time format code</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="TIME_PERIOD">
+			<Name xml:lang="en">Time period or range</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="TITLE">
+			<Name>Title</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="TITLE_COMPL">
+			<Name xml:lang="en">Title complement</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="UNIT">
+			<Name xml:lang="en">Unit</Name>
+		</Concept>
+		<Concept agencyID="ECB" id="UNIT_MULT">
+			<Name xml:lang="en">Unit multiplier</Name>
+		</Concept>
+	</message:Concepts>
+	<message:KeyFamilies xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure">
+		<KeyFamily agencyID="ECB" id="ECB_MIR1" uri="http://stats.ecb.europa.eu/stats/dtf_test/ecb_mir1.xml">
+			<Name>MFI Interest Rate Statistics</Name>
+			<Components>
+				<Dimension conceptRef="FREQ" codelist="CL_FREQ" isFrequencyDimension="true"/>
+				<Dimension conceptRef="REF_AREA" codelist="CL_AREA_EE" isFrequencyDimension="false"/>
+				<Dimension conceptRef="BS_REP_SECTOR" codelist="CL_BS_REP_SECTOR" isFrequencyDimension="false"/>
+				<Dimension conceptRef="BS_ITEM" codelist="CL_BS_ITEM" isFrequencyDimension="false"/>
+				<Dimension conceptRef="MATURITY_ORIG" codelist="CL_MATURITY_ORIG" isFrequencyDimension="false"/>
+				<Dimension conceptRef="DATA_TYPE_MIR" codelist="CL_DATA_TYPE_MIR" isFrequencyDimension="false"/>
+				<Dimension conceptRef="AMOUNT_CAT" codelist="CL_AMOUNT_CAT" isFrequencyDimension="false"/>
+				<Dimension conceptRef="BS_COUNT_SECTOR" codelist="CL_BS_COUNT_SECTOR" isFrequencyDimension="false"/>
+				<Dimension conceptRef="CURRENCY_TRANS" codelist="CL_CURRENCY" isFrequencyDimension="false"/>
+				<Dimension conceptRef="IR_BUS_COV" codelist="CL_IR_BUS_COV" isFrequencyDimension="false"/>
+				<TimeDimension conceptRef="TIME_PERIOD"/>
+				<Group id="Group">
+					<DimensionRef>REF_AREA</DimensionRef>
+					<DimensionRef>BS_REP_SECTOR</DimensionRef>
+					<DimensionRef>BS_ITEM</DimensionRef>
+					<DimensionRef>MATURITY_ORIG</DimensionRef>
+					<DimensionRef>DATA_TYPE_MIR</DimensionRef>
+					<DimensionRef>AMOUNT_CAT</DimensionRef>
+					<DimensionRef>BS_COUNT_SECTOR</DimensionRef>
+					<DimensionRef>CURRENCY_TRANS</DimensionRef>
+					<DimensionRef>IR_BUS_COV</DimensionRef>
+				</Group>
+				<PrimaryMeasure conceptRef="OBS_VALUE"/>
+				<Attribute conceptRef="TIME_FORMAT" attachmentLevel="Series" assignmentStatus="Mandatory" isTimeFormat="true">
+					<TextFormat textType="String" maxLength="3"/>
+				</Attribute>
+				<Attribute conceptRef="OBS_STATUS" attachmentLevel="Observation" codelist="CL_OBS_STATUS" assignmentStatus="Mandatory" isTimeFormat="false">
+					<TextFormat textType="String" maxLength="1"/>
+				</Attribute>
+				<Attribute conceptRef="OBS_CONF" attachmentLevel="Observation" codelist="CL_OBS_CONF" assignmentStatus="Conditional" isTimeFormat="false">
+					<TextFormat textType="String" maxLength="1"/>
+				</Attribute>
+				<Attribute conceptRef="OBS_PRE_BREAK" attachmentLevel="Observation" assignmentStatus="Conditional" isTimeFormat="false">
+					<TextFormat textType="String" maxLength="15"/>
+				</Attribute>
+				<Attribute conceptRef="OBS_COM" attachmentLevel="Observation" assignmentStatus="Conditional" isTimeFormat="false">
+					<TextFormat textType="String" maxLength="1050"/>
+				</Attribute>
+				<Attribute conceptRef="BREAKS" attachmentLevel="Series" assignmentStatus="Conditional" isTimeFormat="false">
+					<TextFormat textType="String" maxLength="350"/>
+				</Attribute>
+				<Attribute conceptRef="COLLECTION" attachmentLevel="Series" codelist="CL_COLLECTION" assignmentStatus="Mandatory" isTimeFormat="false">
+					<TextFormat textType="String" maxLength="1"/>
+				</Attribute>
+				<Attribute conceptRef="DOM_SER_IDS" attachmentLevel="Series" assignmentStatus="Conditional" isTimeFormat="false">
+					<TextFormat textType="String" maxLength="70"/>
+				</Attribute>
+				<Attribute conceptRef="PUBL_ECB" attachmentLevel="Series" assignmentStatus="Conditional" isTimeFormat="false">
+					<TextFormat textType="String" maxLength="1050"/>
+				</Attribute>
+				<Attribute conceptRef="PUBL_MU" attachmentLevel="Series" assignmentStatus="Conditional" isTimeFormat="false">
+					<TextFormat textType="String" maxLength="1050"/>
+				</Attribute>
+				<Attribute conceptRef="PUBL_PUBLIC" attachmentLevel="Series" assignmentStatus="Conditional" isTimeFormat="false">
+					<TextFormat textType="String" maxLength="1050"/>
+				</Attribute>
+				<Attribute conceptRef="COMPILATION" attachmentLevel="Group" assignmentStatus="Conditional" isTimeFormat="false">
+					<TextFormat textType="String" maxLength="1050"/>
+					<AttachmentGroup>Group</AttachmentGroup>
+				</Attribute>
+				<Attribute conceptRef="COVERAGE" attachmentLevel="Group" assignmentStatus="Conditional" isTimeFormat="false">
+					<TextFormat textType="String" maxLength="350"/>
+					<AttachmentGroup>Group</AttachmentGroup>
+				</Attribute>
+				<Attribute conceptRef="DECIMALS" attachmentLevel="Group" codelist="CL_DECIMALS" assignmentStatus="Mandatory" isTimeFormat="false">
+					<TextFormat textType="Integer" maxLength="1"/>
+					<AttachmentGroup>Group</AttachmentGroup>
+				</Attribute>
+				<Attribute conceptRef="NAT_TITLE" attachmentLevel="Group" assignmentStatus="Conditional" isTimeFormat="false">
+					<TextFormat textType="String" maxLength="350"/>
+					<AttachmentGroup>Group</AttachmentGroup>
+				</Attribute>
+				<Attribute conceptRef="SOURCE_AGENCY" attachmentLevel="Group" codelist="CL_ORGANISATION" assignmentStatus="Conditional" isTimeFormat="false">
+					<TextFormat textType="String" maxLength="3"/>
+					<AttachmentGroup>Group</AttachmentGroup>
+				</Attribute>
+				<Attribute conceptRef="TITLE_COMPL" attachmentLevel="Group" assignmentStatus="Mandatory" isTimeFormat="false">
+					<TextFormat textType="String" maxLength="1050"/>
+					<AttachmentGroup>Group</AttachmentGroup>
+				</Attribute>
+				<Attribute conceptRef="UNIT" attachmentLevel="Group" codelist="CL_UNIT" assignmentStatus="Mandatory" isTimeFormat="false">
+					<TextFormat textType="String" maxLength="12"/>
+					<AttachmentGroup>Group</AttachmentGroup>
+				</Attribute>
+				<Attribute conceptRef="UNIT_MULT" attachmentLevel="Group" codelist="CL_UNIT_MULT" assignmentStatus="Mandatory" isTimeFormat="false">
+					<TextFormat textType="String" maxLength="2"/>
+					<AttachmentGroup>Group</AttachmentGroup>
+				</Attribute>
+			</Components>
+		</KeyFamily>
+	</message:KeyFamilies>
+</Structure>
+
