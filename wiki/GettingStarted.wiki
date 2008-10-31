@@ -1,0 +1,39 @@
+#summary This page described how to get started with the FlexCB project and how to set up your development environment.
+
+= Introduction =
+
+This page described how to get started with the FlexCB project and how to set up your development environment. To follow this tutorial, you will need:
+  * A working installation of Adobe Flex Builder 3 Professional Edition
+  * A working installation of a Subversion plugin for Adobe Flex Builder 3
+
+The source code for the FlexCB project is organized into various logical components. We recommend you setup independent projects for each of these components, mainly to save compilation time when making changes.
+
+= SDMX and the dynamic visualization of statistical data =
+
+The FlexCB visualization framework is based on the SDMX standard for various reasons:
+  * It is an ISO technical specification (ISO/TS 17369), sponsored by 7 international institutions.
+  * The SDMX information model describes all the components needed to represent the statistical data and metadata being displayed.
+  * The SDMX information model can be represented in various XML formats (SDMX-ML), and XML is ideal for feeding data to the visualization tools.
+
+For additional information regarding SDMX, please see http://www.sdmx.org. A description of the SDMX information model used in the FlexCB visualization framework is available in the Section 02 of the SDMX Documentation package (http://www.sdmx.org/index.php?page_id=16#package). 
+
+= The FlexCB source code in a nutshell =
+
+The code is organized into the following components:
+
+== 1. SDMX-ML Readers Package ==
+The SDMX-ML Readers package reads the data structure definitions and the data files, in the SDMX-ML Structure and Compact formats respectively. The readers will parse SDMX-ML data structure definitions and extracts code lists, concept schemes, organization schemes, data flows and key families. They will also parse SDMX-ML data files and extracts data sets, groups, series and observations. They will use the information available in the data structure definition (the dimensions, the attributes, the measures, etc) to interpret the statistical data. The readers will then translate the extracted data into objects of the SDMX information model (see next section).
+== 2. SDMX Information Model Package ==
+The SDMX Information Model Package represents the classes defined in the SDMX information model (code lists, concepts, dimensions, data sets, series, observations, etc) as objects that can be stored in memory. These are the objects that can then be visualized, using the views defined in the third package (see below).
+== 3. FlexCB MVC Package ==
+The FlexCB MVC Package provides views displaying the objects of the SDMX information model in various ways (charts, tables, metadata panels, etc). It also supports the possibility to combine various views on a screen.
+It follows the Model-View-Controller pattern and implements a few other design patterns (Command, Abstract Factory, Singleton, Observer, etc.).
+
+= Download of the source code =
+As mentioned in the introduction, we will organize the source code into various libraries and projects.
+
+== 1. The SDMX library==
+
+== 2. The FlexCB MVC library==
+
+== 3. The sample applications ==
