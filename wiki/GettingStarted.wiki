@@ -67,7 +67,7 @@ Three sample applications are provided with the FlexCB project (below trunk > sr
   # Create a new Flex project (File > New > Flex Project). We named it FlexCB_SampleApp2. If so you wish, you can delete the sample mxml application automatically created by Flex Builder. Add the FlexCB MVC library to the library path.
   # Create the following hierarchy eu > ecb > apps (File > New > Folder) below the src folder.
   # Import the application from Google code (File > Import > SVN > Project from SVN). Browse the repository and select trunk > src > main > eu > ecb > apps > sample2 and press Finish.
-  # Select "Check out as folder into an existing project" and select the src > main > eu > ecb > apps folder of the library we just created.
+  # Select "Check out as folder into an existing project" and select the eu > ecb > apps folder of the library we just created.
   # Set src > eu > ecb > apps > sample2 as the Main source folder.
-  # Run the applicatiom from Flex Builder (Project > Properties > Flex Library Build Path > Source Path).
+  # Run the application from Flex Builder (Project > Properties > Flex Library Build Path > Source Path).
   
