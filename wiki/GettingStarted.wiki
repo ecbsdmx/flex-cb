@@ -39,6 +39,12 @@ This library will contain the SDMX-ML reader package as well as the SDMX informa
   # On the next screen, add the FlexUnit swc file to the Library path.
   # Create a folder called src in the library, and, below that folder 2 other folders, main and test (File > New > Folder).
   # Import files from Google code (File > Import > SVN > Project from SVN). Browse the repository and select trunk > src > main > org and press Finish.
+  # Select "Check out as folder into an existing project" and select the src > main folder of the library we just created.
+  # We now need to repeat steps 4 and 5, but for the test folder (select trunk > src > test and check it out into the src > test folder of the library)
+  # Add src/main and src/test to the Source path of the library project (Project > Properties > Flex Library Build Path > Source path > Add folder). 
+  # Add all the classes to the library project classes (Project > Properties > Flex Library Build Path > Classes)
+
+We should now have a working copy of the 1st library.
 
 
 == 2. The FlexCB MVC library==
