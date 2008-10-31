@@ -5,6 +5,7 @@
 This page described how to get started with the FlexCB project and how to set up your development environment. To follow this tutorial, you will need:
   * A working installation of Adobe Flex Builder 3 Professional Edition
   * A working installation of a Subversion plugin for Adobe Flex Builder 3
+  * A working copy of FlexUnit
 
 The source code for the FlexCB project is organized into various logical components. We recommend you setup independent projects for each of these components, mainly to save compilation time when making changes.
 
@@ -33,6 +34,12 @@ It follows the Model-View-Controller pattern and implements a few other design p
 As mentioned in the introduction, we will organize the source code into various libraries and projects.
 
 == 1. The SDMX library==
+This library will contain the SDMX-ML reader package as well as the SDMX information model package.
+# Open Flex Builder and create a new library (File > New > Flex Library Project). We named it FlexCB_SDMXFramework.
+# On the next screen, add the FlexUnit swc file to the Library path.
+# Create a folder called src in the library, and, below that folder 2 other folders, main and test (File > New > Folder).
+# Import files from Google code (File > Import > SVN > Project from SVN). Browse the repository and select trunk > src > main > org and press Finish.
+
 
 == 2. The FlexCB MVC library==
 
