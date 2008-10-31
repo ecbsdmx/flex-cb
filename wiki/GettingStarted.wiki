@@ -40,13 +40,25 @@ This library will contain the SDMX-ML reader package as well as the SDMX informa
   # Create a folder called src in the library, and, below that folder 2 other folders, main and test (File > New > Folder).
   # Import files from Google code (File > Import > SVN > Project from SVN). Browse the repository and select trunk > src > main > org and press Finish.
   # Select "Check out as folder into an existing project" and select the src > main folder of the library we just created.
-  # We now need to repeat steps 4 and 5, but for the test folder (select trunk > src > test and check it out into the src > test folder of the library)
+  # We now need to repeat steps 4 and 5, but for the test folder (select trunk > src > test and check it out into the src > test folder of the library).
   # Add src/main and src/test to the Source path of the library project (Project > Properties > Flex Library Build Path > Source path > Add folder). 
-  # Add all the classes to the library project classes (Project > Properties > Flex Library Build Path > Classes)
+  # Add all the classes to the library project classes (Project > Properties > Flex Library Build Path > Classes).
 
-We should now have a working copy of the 1st library.
-
+We should now have a working copy of the SDMX library.
 
 == 2. The FlexCB MVC library==
+This library will contain the FlexCB MVC package.
+  # Open Flex Builder and create a new library (File > New > Flex Library Project). We named it FlexCB_MVCFramework.
+  # On the next screen, add the FlexUnit swc file to the Library path and add the SDMX library created in step 1.
+  # Create a folder called src in the library, and, below that folder the following hierarchies: main > eu > ecb and test > eu > ecb (File > New > Folder).
+  # Import files from Google code (File > Import > SVN > Project from SVN). Browse the repository and select trunk > src > main > eu > ecb > core and press Finish.
+  # Select "Check out as folder into an existing project" and select the src > main > eu > ecb folder of the library we just created.
+  # We now need to repeat steps 4 and 5, but for the test folder (select trunk > src > test > eu > ecb > core and check it out into the src > test > eu > ecb folder of the library).
+  # Import the library assets (select trunk > src > main > eu > ecb > assets) into the src > main > eu > ecb folder.
+  # Add src/main and src/test to the Source path of the library project (Project > Properties > Flex Library Build Path > Source path > Add folder). 
+  # Add all the classes, except the asset directory, to the library project classes (Project > Properties > Flex Library Build Path > Classes).
+  # Add the asset directory to the library assets (Project > Properties > Flex Library Build Path > Assets).
+
+We should now have a working copy of the FlexCB MVC library.
 
 == 3. The sample applications ==
