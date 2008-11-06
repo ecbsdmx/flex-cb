@@ -6,18 +6,18 @@
 Since it is sometime difficult to figure out how to checkout code and commit changes back to a Google Project, here is a little recipe on how to get connected!
 
 
-= Common task =
+= Configuration =
 
 1) Create a Google account if you don't already have one by clicking here: https://www.google.com/accounts/NewAccount
 
 2) Ask an administrator (Xavier!) to add you to the project.
 
 
-= Subclipse =
+== Option 1: Subclipse ==
 
 3) Install Subclipse (http://subclipse.tigris.org/), the Subversion plugin for Eclipse (www.eclipse.org).
 
-4) In Eclipse, select *Windows* | *Preferences*. 
+4) In Eclipse, select *Windows* | *Preferences*. Then, on the left, go to _General_ | _Network Connections_. Enter your proxy configuration than click _OK_.
 
 
 
