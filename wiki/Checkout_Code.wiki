@@ -1,0 +1,4 @@
+#labels Subversion,TortoiseSVN,Subclipse
+Checking out code with TurtoiseSVN or Subclipse through a proxy using Google account.
+
+Content is coming soon!
