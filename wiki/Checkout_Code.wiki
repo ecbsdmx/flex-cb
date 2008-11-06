@@ -6,7 +6,7 @@
 Since it is sometime difficult to figure out how to checkout code and commit changes back to a Google Project, here is a little recipe on how to get connected!
 
 
-= Common configuration =
+== Common configuration ==
 
 1) Create a Google account if you don't already have one by clicking here: https://www.google.com/accounts/NewAccount
 
@@ -45,13 +45,16 @@ Since it is sometime difficult to figure out how to checkout code and commit cha
 
 == Back to Common Configuration ==
 
-9) When you are prompt to enter your credentials, enter your Google account username. But you cannot use your regular Google password! Instead, go to 
+9) When you are prompt to enter your credentials, enter your Google account username. But you cannot use your regular Google password! Instead, sign in with your regular password at https://www.google.com/accounts/Login. 
+
+10) Once signed in, go to the project's home page: http://code.google.com/p/flex-cb/
+
+11) On the upper right, click on _Settings_.
+
+12) Copy your _Your googlecode.com password_ and paste it in the credential pop-up window.
+
+13) Enjoy the code!
 
 
 
-
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+Send me an email at dcaissy@bankofcanada.ca if you still experience some problems!
