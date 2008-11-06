@@ -1,5 +1,13 @@
+#summary Checking out code with TurtoiseSVN or Subclipse through a proxy using a Google account.
 #labels Subversion,TortoiseSVN,Subclipse
-Checking out code with TurtoiseSVN or Subclipse through a proxy using Google account.
+
+= Introduction =
+
+Since it is sometime difficult to figure out how to checkout code and commit changes back to a Google Project, here is a little recipe on how to get connected!
+
+
+
+= Details =
 
 1) Create a Google account if you don't already have one by clicking here: https://www.google.com/accounts/NewAccount
 
@@ -7,3 +15,12 @@ Checking out code with TurtoiseSVN or Subclipse through a proxy using Google acc
 
 
 https://flex-cb.googlecode.com/svn/trunk/
+
+
+
+
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
