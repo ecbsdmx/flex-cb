@@ -6,12 +6,19 @@
 Since it is sometime difficult to figure out how to checkout code and commit changes back to a Google Project, here is a little recipe on how to get connected!
 
 
-
-= Details =
+= Common task =
 
 1) Create a Google account if you don't already have one by clicking here: https://www.google.com/accounts/NewAccount
 
-2) Ask an administrator (Xavier!) to add you to the project committer 
+2) Ask an administrator (Xavier!) to add you to the project.
+
+
+= Subclipse =
+
+3) Install Subclipse (http://subclipse.tigris.org/), the Subversion plugin for Eclipse (www.eclipse.org).
+
+4) In Eclipse, select *Windows* | *Preferences*. 
+
 
 
 https://flex-cb.googlecode.com/svn/trunk/
