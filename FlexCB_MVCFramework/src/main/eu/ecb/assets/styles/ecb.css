@@ -1,0 +1,307 @@
+/* CSS file */
+Application {
+    paddingLeft:   10;
+    paddingTop:    10;
+    paddingRight:  10;
+    paddingBottom: 10;
+    backgroundGradientColors: #FFFFFF, #FFFFFF; 
+    fontSize: 10;
+    fontFamily: Verdana, "Trebuchet MS", Arial, Helvetica, sans-serif;
+}
+
+.informationBox {
+	verticalGap: 0;
+	horizontalGap: 0;
+	paddingBottom: 5; 
+	paddingLeft: 5; 
+	paddingRight: 5; 
+	paddingTop: 5; 
+	verticalAlign: middle;
+	borderAlpha: 1; 
+	borderColor: #EDEFF1; 
+	borderStyle: solid; 
+	borderThickness: 2; 
+	headerHeight: 0; 
+	cornerRadius: 5;
+	backgroundColor: #FFFFFF;
+}
+
+.errorBox {
+	verticalGap: 0;
+	horizontalGap: 0;
+	paddingBottom: 0; 
+	paddingLeft: 5; 
+	paddingRight: 5; 
+	paddingTop: 7; 
+	verticalAlign: middle;
+	borderAlpha: 1; 
+	borderColor: #FF0000; 
+	borderStyle: solid; 
+	borderThickness: 1; 
+	headerHeight: 0; 
+	cornerRadius: 0;
+	backgroundColor: #FFFFFF;
+	color: #FF0000;
+}
+
+.textBox {
+	verticalGap: 0;
+	horizontalGap: 0;
+	verticalAlign: middle;
+	color: #707070;
+}
+
+.textBoxRight {
+	verticalGap: 0;
+	horizontalGap: 0;
+	verticalAlign: bottom;
+	horizontalAlign: right;
+}
+
+.chartBox {
+	verticalGap: 0;
+	horizontalGap: 0;
+	paddingBottom: 0; 
+	paddingLeft: 0; 
+	paddingRight: 0; 
+}
+
+.filterBox {
+	borderColor: #EDEFF1; 
+	borderStyle: solid;
+	borderThickness: 2; 
+	cornerRadius: 5;
+}
+
+.ecbPeriodChartBox {
+	verticalGap: 0;
+	horizontalGap: 0;
+	paddingBottom: 0; 
+	paddingLeft: 0; 
+	paddingRight: 0; 
+	paddingTop: 0;
+}
+
+.dataPanel {
+	paddingBottom: 0; 
+	paddingLeft: 0; 
+	paddingRight: 0; 
+	paddingTop: 5; 
+	borderAlpha: 1; 
+	borderColor: #000000; 
+	borderStyle: none;
+    backgroundColor: #FFFFFF;
+    color: #000000;
+    headerHeight: 0; 
+    horizontalGap: 0;
+    verticalGap: 5;
+}
+
+.titleText {
+    fontSize: 14;
+}
+
+.greenColor {
+	color: #009933;
+}
+
+.redColor {
+	color: #CC0000;
+}
+
+.blackColor {
+	color: #000000;
+}
+
+.changeWithPreviousBox {
+	horizontalGap: 0;
+	verticalAlign: "bottom";
+	verticalGap: 0;
+	color: #707070;
+}
+
+LinkBar, LinkButton {
+    fontSize: 10;
+    color: #0031AD;
+    rollOverColor: #ffffff;
+    selectionColor: #ffffff;
+    textRollOverColor: #0031AD;
+    textSelectedColor: #707070;
+}
+
+.ecbLineChart {
+	color: #707070;
+	fontFamily: Verdana, "Trebuchet MS", Arial, Helvetica, sans-serif;
+	paddingRight: 0;
+	paddingLeft: 0;
+	gutterRight: 0;
+	paddingBottom: 0;
+}
+
+.ecbBarChart {
+	color: #707070;
+	fontFamily: Verdana, "Trebuchet MS", Arial, Helvetica, sans-serif;
+	paddingRight: 0;
+	paddingLeft: 0;
+	gutterRight: 0;
+	paddingBottom: 0;
+	columnWidthRatio: .5;
+}
+
+.ecbLineChartHorizontalAxis {
+	minorTickPlacement: outside;
+	minorTickLength: 3;
+	tickLength: 7;
+}
+
+.ecbLineChartGridLines {
+	direction: "both";
+    horizontalShowOrigin: true;
+    horizontalTickAligned: true;
+    horizontalChangeCount: 1; 
+    verticalShowOrigin: true;
+    verticalTickAligned: true; 
+    verticalChangeCount: 1; 
+}
+
+.ecbPeriodChart {
+	color: #707070;
+	fontFamily: Verdana, "Trebuchet MS", Arial, Helvetica, sans-serif;
+	gutterBottom: 0;
+	paddingBottom: 0;
+	paddingTop: 0;
+	paddingRight: 0;
+	gutterRight: 0;
+	gutterLeft: 0;
+	paddingLeft: 20;
+	gutterTop: 0;
+}
+
+.ecbPeriodCanvas {
+	paddingRight: 0;
+	paddingLeft: 0;
+	borderThickness: 0.5;
+	borderColor: #CCCCCC; 
+	borderStyle: solid;
+}
+
+.ecbPeriodCanvasLeftBox {
+/*	borderThickness: 0.5;
+	borderColor: #CCCCCC; 
+	borderStyle: solid;
+	borderSides: "right";*/
+}
+
+.ecbPeriodCanvasRightBox {
+	/*borderThickness: 0.5;
+	borderColor: #CCCCCC; 
+	borderStyle: solid;
+	borderSides: "left";*/
+}
+
+.ecbHorizontalAxisRenderer {
+	tickPlacement: "inside";
+	labelGap: -15;
+	showLine: false;
+	canStagger: false;
+	tickLength: 59;
+}	        
+
+.dataPod {
+	paddingBottom: 0; 
+	paddingLeft: 0; 
+	paddingRight: 0; 
+	paddingTop: 0; 
+    backgroundColor: #FFFFFF;
+    horizontalGap: 0;
+    verticalGap: 0;
+    borderStyle: none;
+	borderThicknessLeft: 0;
+	borderThicknessTop: 0;
+	borderThicknessBottom: 0;
+	borderThicknessRight: 0;
+	headerHeight: 0;
+	dropShadowEnabled: false;
+	color: #707070;
+}
+
+.movieButton {
+	paddingLeft: 10;
+	fillColors: #EBEEEF, #EBEEEF, #EBEEEF, #EBEEEF;
+	borderColor: #CBD1D5;
+	horizontalGap: 0;
+	themeColor: #2C70AA;
+}
+
+ToolTip {
+	fontFamily: Verdana, "Trebuchet MS", Arial, Helvetica, sans-serif;
+	backgroundColor: #FFFFFF;
+	backgroundAlpha: .8;
+	cornerRadius: 0;
+	borderSkin: ClassReference("eu.ecb.core.view.util.ECBToolTipBorder");
+	borderColor: #2C70AA;
+	paddingTop: 5;
+}
+
+.dataTip 
+{
+	shadowColor: #FFFFFF;
+	backgroundColor: #FFFFFF;
+	fontFamily: Verdana, "Trebuchet MS", Arial, Helvetica, sans-serif;
+	fontSize: 10;
+	color: #707070;
+}
+
+DataTip {
+	paddingBottom: -2;
+	backgroundColor: #FFFFFF;
+	paddingRight: 0;
+	paddingTop: 5;
+	paddingLeft: 5;
+	fontFamily: Verdana, "Trebuchet MS", Arial, Helvetica, sans-serif;
+}
+
+.progressBox {
+	horizontalAlign: center;
+	verticalAlign: middle;
+	backgroundAlpha: 0.8;
+	cornerRadius: 4;
+	backgroundColor: #F4F4F4;
+	dropShadowEnabled: true;
+	dropShadowColor: #333333;
+	borderStyle: solid;
+	borderThickness: 2;
+	borderColor: #EDEFF1;
+}
+
+.filters {
+    header-colors:           #EBEEEF, #EBEEEF;
+    padding-top:             5;
+    padding-right:           0;
+    padding-bottom:          0;
+    padding-left:            0;
+    border-style:            "solid";
+    border-thickness:        1;
+    background-color:        #FFFFFF;
+    border-color:            #EBEEEF;
+    color: 		             #000000;
+    drop-shadow-enabled:     false;
+    rounded-corners:  		 false;
+    header-height:			 12;	
+}
+
+Form {
+	backgroundColor: #FFFFFF;
+	paddingTop:	0;
+    paddingRight:  0;
+    paddingBottom: 0;
+    paddingLeft:   0;
+}
+
+FormItem {
+	backgroundColor: #FFFFFF;
+	paddingTop:	0;
+    paddingRight:  0;
+    paddingBottom: 0;
+    paddingLeft:   0;
+}

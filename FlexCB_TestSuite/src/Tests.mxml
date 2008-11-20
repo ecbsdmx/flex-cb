@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:flexunit="flexunit.flexui.*"
+	creationComplete="onCreationComplete()">
+	<mx:Script>
+		<![CDATA[
+			import flexunit.framework.TestSuite;
+			import org.sdmx.util.UtilPackageTests;
+			import org.sdmx.stores.StoresPackageTests;
+			import org.sdmx.model.ModelPackageTests;
+			import org.sdmx.event.EventPackageTests;
+			
+			private function onCreationComplete():void {
+ 				testRunner.test = createSuite();
+ 				testRunner.startTest();
+ 			}
+			
+			private function createSuite():TestSuite {
+ 				var suite:* = new TestSuite();
+ 				suite.addTest(EventPackageTests.suite());
+ 				suite.addTest(ModelPackageTests.suite());
+ 				suite.addTest(StoresPackageTests.suite());
+ 				suite.addTest(UtilPackageTests.suite());
+ 				//suite.addTest(ECBFrameworkTests.suite()); 				
+ 				return suite;
+ 			}
+		]]>
+	</mx:Script>
+	<flexunit:TestRunnerBase id="testRunner" width="100%" height="100%"/>
+</mx:Application>
