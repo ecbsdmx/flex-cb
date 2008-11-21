@@ -55,7 +55,7 @@ This library will contain the FlexCB MVC package.
   # On the next screen, select Flex Builder > Flex Library Project. We named it "FlexCB_MVCFramework".
   # On the next screen, add the FlexUnit swc file and the FlexCB_SDMXFramework library to the Library path.
   # Add src/main and src/test to the Source path of the library project (Project > Properties > Flex Library Build Path > Source path > Add folder). 
-  # Add all the classes, except the asset directory, to the library project classes (Project > Properties > Flex Library Build Path > Classes).
+  # Add all the classes, except the asset directory (below src/main/eu/ecb/assets), to the library project classes (Project > Properties > Flex Library Build Path > Classes).
   # Add the asset directory to the library assets (Project > Properties > Flex Library Build Path > Assets).
   
 We should now have a working copy of the FlexCB MVC library.
