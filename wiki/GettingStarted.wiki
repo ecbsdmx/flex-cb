@@ -63,7 +63,7 @@ We should now have a working copy of the FlexCB MVC library.
 == 3. The sample applications ==
 
 Three sample applications are provided with the FlexCB project. We will now setup one of them.
- # Open Flex Builder and create a new project (File > New > Other > SVN > New project from SVN).
+  # Open Flex Builder and create a new project (File > New > Other > SVN > New project from SVN).
   # On the next screen, select the flex-cb repository on Google code.
   # On the next screen, browse the repository, select the trunk/FlexCB_SampleApp2 folder and click on Finish.
   # On the next screen, select "Check out as a project configured using the New Project Wizard".
