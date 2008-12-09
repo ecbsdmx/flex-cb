@@ -30,7 +30,6 @@ In practice, the group of PMC members equates to the group of committers, plus i
 
 The responsibilities of the PMC include:
 
-    * Be familiar with these project guidelines, and the ASF Bylaws, and with the ASF documentation and procedures in general.
     * Keep oversight of the commits to ensure that the codebase and project are heading in the desired direction.
     * Keep oversight of the community to ensure that the open development ideals are upheld.
     * Guide the direction of the project.
