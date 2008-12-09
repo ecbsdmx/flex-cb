@@ -1,4 +1,5 @@
 #summary Defining the guidelines for the Flex-CB project.
+#labels Featured
 
 <wiki:toc max_depth="3" />
 
