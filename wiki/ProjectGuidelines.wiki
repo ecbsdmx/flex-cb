@@ -4,7 +4,9 @@
 
 = Introduction =
 
-This document defines the proposed guidelines for the Flex-CB project. It includes definitions of how conflict is resolved by voting, who is able to vote, and the procedures to follow for proposing and making changes to the project. This document is based on the best practices of similar open-source projects, such as the Apache HTTP and Apache Forrest projects. Normally these guidelines are not needed - the project just gets on with its day-to-day operation - but they enable all people to understand how the project operates. This document does not deal with the goals of the project itself, please consult the [[ProjectOverview]] for more information.
+This document defines the proposed guidelines for the Flex-CB project. It includes definitions of how conflict is resolved by voting, who is able to vote, and the procedures to follow for proposing and making changes to the project. This document is based on the best practices of similar open-source projects, such as the Apache HTTP and Apache Forrest projects. Normally these guidelines are not needed - the project just gets on with its day-to-day operation - but they enable all people to understand how the project operates. 
+
+This document does not deal with the goals of the project itself, please consult the [ProjectOverview] for more information.
 
 
 = Roles and Responsibilities=
