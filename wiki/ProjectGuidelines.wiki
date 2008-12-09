@@ -18,22 +18,22 @@ It is important to remember that there is no concept of individual leadership, t
 A contributor is a user who contributes to the project in the form of code or documentation. They take extra steps to participate in a project, are active on the forums, participate in discussions, provide patches, documentation, suggestions, and criticism. Contributors are also known as developers.
 
 Active contributors (?):
- * Allen Harvey (FRBNY)
- * Damien Charles (BoE)
- * Paul Asman (FRBNY)
- * Xavier Sosnovsky (ECB)
- * Jairus Pryor (BoC)
- * Kenneth Schwartz (FRBNY)
- * Aaron Berg (BoC)
+ * *Allen Harvey* _(FRBNY)_
+ * *Damien Charles* _(BoE)_
+ * *Paul Asman* _(FRBNY)_
+ * *Xavier Sosnovsky* _(ECB)_
+ * *Jairus Pryor* _(BoC)_
+ * *Kenneth Schwartz* _(FRBNY)_
+ * *Aaron Berg* _(BoC)_
 
 ==Committer==
 
 A committer is a contributor that was given write access to the code repository. Not needing to depend on other people for the patches, they are actually making short-term decisions for the project. The PMC can (even tacitly) agree and approve it into permanency, or they can reject it. Remember that the PMC makes the decisions, not the individual people.
 
 Active committers (?):
- * Xavier Sosnovsky (ECB)
- * Jairus Pryor (BoC)
- * Kenneth Schwartz (FRBNY)
+ * *Xavier Sosnovsky* _(ECB)_
+ * *Jairus Pryor* _(BoC)_
+ * *Kenneth Schwartz* _(FRBNY)_
 
 
 ==PMC Member==
@@ -43,11 +43,11 @@ A PMC member is a developer or a committer that was elected due to merit for the
 Members may have individual roles/hats defined as part of their PMC membership. These roles are non-binding, representing an area that the member in question has been trusted to take stewardship of. Members are not entitled to special authority nor are their votes weighted as a result of what hat they're wearing, all PMC members hold equal status.
 
 Active PMC members (?):
- * Christine Sommo - _Project Management_ (FRBNY)
- * Andrew Geraghty - _Project Direction_ (BoC)
- * Xavier Sosnovsky - _Lead Strategy_ (ECB)
- * Jairus Pryor - (BoC)
- * Kenneth Schwartz (FRBNY)
+ * *Christine Sommo* - Project Management _(FRBNY)_
+ * *Andrew Geraghty* - Project Direction _(BoC)_
+ * *Xavier Sosnovsky* - Lead Strategy _(ECB)_
+ * *Jairus Pryor* - _(BoC)_
+ * *Kenneth Schwartz* _(FRBNY)_
 
 ==Project Management Committee (PMC)==
 
