@@ -6,7 +6,7 @@ This is an open source project. It uses the terms of open source projects, and h
 
 In October 2008 the ECB established the FLEX/SDMX project with individuals from the Bank of Canada and the Federal Reserve Bank of New York as strategic members; providing the source code under the BSD to start the project and address common problems raised by all three institutions. One of the goals of the project is to develop and open source community to extend and support the SDMX/FLEX framework
 
-This wiki entry is intended to help you learn what the framework is for, why it is important, how you can get started, and where to learn more about it. Those terms and benefits are not defined here. This entry discusses what is particular to this project. 
+This wiki entry is intended to help you learn what the framework is for, why it is important, how you can get started, and where to learn more about it. Those terms and benefits are not defined here. This entry discusses what is particular to this project,lease consult the [ProjectGuidelines] for more information.
 
 
 = Purpose and Benefits=
