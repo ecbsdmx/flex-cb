@@ -49,11 +49,9 @@ Membership of the PMC is by invitation only and must receive consensus approval 
 
 Different types of decisions require different forms of approval. For example, the previous section describes a decision which requires "consensus approval". This section defines how voting is performed, the types of approval, and which types of decision require which type of approval.
 
-Most day-to-day operations do not require explicit voting - just get on and do the work. See the "Lazy approval" type described below. 
+Most day-to-day operations do not require explicit voting - just get on and do the work. See the "Lazy approval" type described below. In other words, the project is a minimum-threshold meritocracy.
 
-All contributors are encouraged to participate in decisions, but the decision itself is made by those who have been long-time committers to the project. In other words, the Apache Project is a minimum-threshold meritocracy.
 
-The act of voting carries certain obligations -- voting members are not only stating their opinion, they are agreeing to help do the work of the Apache Project. Since we are all volunteers, members often become inactive for periods of time in order to take care of their "real jobs" or devote more time to other projects. It is therefore unlikely that the entire group membership will vote on every issue. To account for this, all voting decisions are based on a minimum quorum.
 
 
 ==Voting==
