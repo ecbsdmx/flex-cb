@@ -1,0 +1,91 @@
+#summary Defining the guidelines for the Flex-CB project. It includes definitions of how conflict is resolved by voting, who is able to vote, and the procedures to follow for proposing and making changes to the project.
+
+<wiki:toc max_depth="3" />
+
+= Introduction =
+
+This document defines the proposed guidelines for the Flex-CB project. It includes definitions of how conflict is resolved by voting, who is able to vote, and the procedures to follow for proposing and making changes to the project. This document is based on the best practices of similar open-source projects, such as the Apache HTTP and Apache Forrest projects. Normally these guidelines are not needed - the project just gets on with its day-to-day operation - but they enable all people to understand how the project operates.
+
+
+= Roles and Responsibilities=
+
+It is important to remember that there is no concept of individual leadership, that this project is a meritocracy. This meritocracy enables various roles:
+
+==Contributor==
+
+A contributor is a user who contributes to the project in the form of code or documentation. They take extra steps to participate in a project, are active on the developer mailing list, participate in discussions, provide patches, documentation, suggestions, and criticism. Contributors are also known as developers.
+
+==Committer==
+
+A committer is a contributor that was given write access to the code repository. Not needing to depend on other people for the patches, they are actually making short-term decisions for the project. The PMC can (even tacitly) agree and approve it into permanency, or they can reject it. Remember that the PMC makes the decisions, not the individual people.
+
+==PMC Member==
+
+A PMC member is a developer or a committer that was elected due to merit for the evolution of the project and demonstration of commitment. They vote on community-related decisions and the right to propose an active user for committership. The PMC as a whole is the entity that controls the project, nobody else.
+
+
+==Project Management Committee (PMC)==
+
+In practice, the group of PMC members equates to the group of committers, plus involved managers from participating institutions.
+
+The responsibilities of the PMC include:
+
+    * Be familiar with these project guidelines, and the ASF Bylaws, and with the ASF documentation and procedures in general.
+    * Keep oversight of the commits to ensure that the codebase and project are heading in the desired direction.
+    * Keep oversight of the community to ensure that the open development ideals are upheld.
+    * Guide the direction of the project.
+    * Strive for and help to facilitate a harmonious productive community.
+    * Nominate new PMC members and committers.
+    * Maintain the project's shared resources, including the codebase repository, mailing lists, websites.
+    * Speak on behalf of the project.
+    * Maintain these and other guidelines of the project.
+
+Membership of the PMC is by invitation only and must receive consensus approval of the PMC members. In most cases we will be inviting people to go straight from contributor to PMC member, i.e. they simultaneously become committer and PMC member. 	 
+
+
+
+=  Decision Making  =
+
+
+Different types of decisions require different forms of approval. For example, the previous section describes a decision which requires "consensus approval". This section defines how voting is performed, the types of approval, and which types of decision require which type of approval.
+
+Most day-to-day operations do not require explicit voting - just get on and do the work. See the "Lazy approval" type described below. 
+
+All contributors are encouraged to participate in decisions, but the decision itself is made by those who have been long-time committers to the project. In other words, the Apache Project is a minimum-threshold meritocracy.
+
+The act of voting carries certain obligations -- voting members are not only stating their opinion, they are agreeing to help do the work of the Apache Project. Since we are all volunteers, members often become inactive for periods of time in order to take care of their "real jobs" or devote more time to other projects. It is therefore unlikely that the entire group membership will vote on every issue. To account for this, all voting decisions are based on a minimum quorum.
+
+
+==Voting==
+
+||*+1*||"Yes," "Agree," or "the action should be performed." In general, this vote also indicates a willingness on the behalf of the voter to assist with "making it happen". ||
+||*+0*||This vote indicates a willingness for the action under consideration to go ahead. The voter, however will not be able to help. ||
+||*-0*||This vote indicates that the voter does not, in general, agree with the proposed action but is not concerned enough to prevent the action going ahead.||
+||*-1*||No. On issues where consensus is required, this vote counts as a veto. All vetos must include an explanation of why the veto is appropriate, and (where possible) an alternative course of action. A veto with no explanation is void. No veto can be overruled. If you disagree with the veto, you should lobby the person who cast the veto. Voters intending to veto an action item should make their opinions known to the group immediately, so that the problem can be remedied as early as possible.||
+
+==Types of Approval==
+
+||*Consensus approval*||Consensus approval requires 3 binding +1 votes and no binding vetoes.||
+||*Lazy majority*||A lazy majority vote requires 3 binding +1 votes and more binding +1 votes than -1 votes.||
+||*Lazy approval*||An action with lazy approval is implicitly allowed unless a -1 vote is received, at which time, depending on the type of action, either lazy majority or consensus approval must be obtained.||
+||*2/3 majority*||Some actions should require a 2/3 majority of PMC members. Such actions typically affect the foundation of the project. The higher threshold is designed to ensure such changes are strongly supported. To pass this vote requires at least 2/3 of the votes that are cast to be +1.||
+||*Unanimous consensus*||All of the votes that are cast are to be +1 and there can be no vetoes (-1). ||
+
+==Actions==
+This section describes the various actions which are undertaken within the project, and the corresponding approval required for that action.
+
+||*Action*||*Description*||*Approval*||
+||Code change||A change made to a codebase of the project by a committer. This includes source code, documentation, website content, etc.||Lazy approval||
+||New committer||When a new committer is proposed for the project.||Consensus approval||
+||New PMC member||When a new member is proposed for the PMC.||Consensus approval||
+||Committer/PMC removal||When removal of commit privileges or PMC membership is sought.||Unanimous consensus (excluding member in question)||
+
+
+==Voting Timeframes==
+
+Votes are normally open for a period of one week to allow all active voters time to consider the vote. If the vote has not achieved a quorum, then it can be extended for another week. If still no quorum, then the vote fails, and would need to be raised again later. (Votes relating to code changes are not subject to a strict timetable, but should be made as timely as possible.)
+
+=Addendum=
+
+Outstanding issues with this document:
+ * ?
