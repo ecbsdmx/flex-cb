@@ -40,11 +40,13 @@ Active committers (?):
 
 A PMC member is a developer or a committer that was elected due to merit for the evolution of the project and demonstration of commitment. They vote on community-related decisions and the right to propose an active user for committership. The PMC as a whole is the entity that controls the project, nobody else.
 
+Members may have individual roles/hats defined as part of their PMC membership. These roles are non-binding, representing an area that the member in question has been trusted to take stewardship of. Members are not entitled to special authority nor are their votes weighted as a result of what hat they're wearing, all PMC members hold equal status.
+
 Active PMC members (?):
- * Christine Sommo (FRBNY)
- * Andrew Geraghty (BoC)
- * Xavier Sosnovsky (ECB)
- * Jairus Pryor (BoC)
+ * Christine Sommo - _Project Management_ (FRBNY)
+ * Andrew Geraghty - _Project Direction_ (BoC)
+ * Xavier Sosnovsky - _Lead Strategy_ (ECB)
+ * Jairus Pryor - (BoC)
  * Kenneth Schwartz (FRBNY)
 
 ==Project Management Committee (PMC)==
