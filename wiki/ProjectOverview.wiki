@@ -1,0 +1,45 @@
+#summary SDMX/Flex Project: Flex Visualization for SDMX Data
+
+= SDMX/Flex Project: Flex Visualization for SDMX Data =
+
+This is an open source project. It uses the terms of open source projects, and has the benefits of open source projects. The European Central Bank is the progenitor of the original SDMX/FLEX framework. The objectives of the initial framework (around 185 classes and 22,000 lines of code excluding unit tests) was to develop libraries that can be used to build visualisation tools for statistical data and metadata.
+
+In October 2008 the ECB established the FLEX/SDMX project with individuals from the Bank of Canada and the Federal Reserve Bank of New York as strategic members; providing the source code under the BSD to start the project and address common problems raised by all three institutions. One of the goals of the project is to develop and open source community to extend and support the SDMX/FLEX framework
+
+This wiki entry is intended to help you learn what the framework is for, why it is important, how you can get started, and where to learn more about it. Those terms and benefits are not defined here. This entry discusses what is particular to this project. 
+
+
+= Purpose and Benefits=
+
+This project is intended to develop libraries that can be used to build Flex graphical visualizations of statistical data and metadata represented with SDMX. Some perceived benefits are outlined below
+
+==Augment Benefits==
+
+   * leverage intellectual assets that have already been paid for
+   * knowledge sharing & innovation through agile collaboration
+   * opportunities for participation for all institutions that use the SDMX information model
+   * creation of new communities (design community, Quality Assurance Community, Implementation Community)
+   * diversify and decentralize - customization for niche requirements  
+
+==Reduced Costs==
+
+   * configuration flexibility
+   * migration flexibility (no forced obsolescence)
+   * reuse components
+   * simplification of license management
+   * reduced startup and delivery times
+   * engage international standards by default
+   * more agile systems development
+
+==Managed Risks==
+
+   * distribution of risk among multiple investors
+   * Protect the "knowledge commons"
+   * Sustainability (outlast team/organization)
+   * learning from peer review feedback (praise and/or criticism) (confirmation/rejection of assumptions
+   * employee retention and succession management
+
+=Objectives=
+
+    * Improved interoperability with different data sets.
+    * Improved information support for an expanded user base. 
