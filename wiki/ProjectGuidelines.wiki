@@ -1,4 +1,4 @@
-#summary Defining the guidelines for the Flex-CB project. It includes definitions of how conflict is resolved by voting, who is able to vote, and the procedures to follow for proposing and making changes to the project.
+#summary Defining the guidelines for the Flex-CB project.
 
 <wiki:toc max_depth="3" />
 
