@@ -28,13 +28,15 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.stores.xml.v2.structure.collection
 {
+	import org.sdmx.model.v2.base.InternationalString;
 	import org.sdmx.model.v2.base.SDMXArtefact;
 	import org.sdmx.model.v2.base.VersionableArtefact;
 	import org.sdmx.model.v2.structure.category.Category;
 	import org.sdmx.model.v2.structure.keyfamily.DataflowDefinition;
 	import org.sdmx.model.v2.structure.keyfamily.DataflowsCollection;
-	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
+	import org.sdmx.model.v2.structure.organisation.MaintenanceAgency;
 	import org.sdmx.stores.xml.v2.structure.ExtractorPool;
+	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
 	import org.sdmx.stores.xml.v2.structure.base.VersionableArtefactExtractor;
 
 	/**
@@ -60,7 +62,8 @@ package org.sdmx.stores.xml.v2.structure.collection
 			
 		/*===========================Constructor==============================*/
 		
-		public function CategoryExtractor(dataflows:DataflowsCollection) {
+		public function CategoryExtractor(dataflows:DataflowsCollection = null) 
+		{
 			super();
 			_dataflows = dataflows;
 		}
@@ -70,7 +73,8 @@ package org.sdmx.stores.xml.v2.structure.collection
 		/**
 		 * @inheritDoc
 		 */
-		public function extract(items:XML):SDMXArtefact {
+		public function extract(items:XML):SDMXArtefact 
+		{
 			var vaExtractor:VersionableArtefactExtractor = 
 				ExtractorPool.getInstance().versionableArtefactExtractor;	
 			var item:VersionableArtefact 
@@ -82,19 +86,33 @@ package org.sdmx.stores.xml.v2.structure.collection
 			category.uri = item.uri;
 			category.urn = item.urn;
 			category.version = item.version;
-			if (null != _dataflows) {
-				if (items.DataflowRef.length() > 0 
-					&& items.DataflowRef.AgencyID.length() > 0 
-					&& items.DataflowRef.DataflowID.length() > 0) {
-					for each (var dataflowRef:XML in items.DataflowRef) {
-						var dataflow:DataflowDefinition = 
-							_dataflows.getDataflowById(dataflowRef.DataflowID, 
-							dataflowRef.AgencyID, dataflowRef.Version);
-						if (null != dataflow) {	
-							category.dataflows.addItem(dataflow);	
-						}	
+			if (items.DataflowRef.length() > 0 
+				&& items.DataflowRef.AgencyID.length() > 0 
+				&& items.DataflowRef.DataflowID.length() > 0) {
+				for each (var dataflowRef:XML in items.DataflowRef) {
+					var dataflow:DataflowDefinition;
+					if (null != _dataflows) {
+						dataflow = _dataflows.getDataflowById(
+							dataflowRef.DataflowID,	dataflowRef.AgencyID, 
+							dataflowRef.Version);
+					} else {
+						dataflow = new DataflowDefinition(
+							dataflowRef.DataflowID, new InternationalString(),
+							new MaintenanceAgency(dataflowRef.AgencyID), null);
+						dataflow.version = dataflowRef.Version;	
 					}
+					
+					if (null != dataflow) {	
+						category.dataflows.addItem(dataflow);	
+					}	
 				}
+			}
+			
+			var categoryExtractor:CategoryExtractor = 
+				new CategoryExtractor(_dataflows);
+			for each (var subcategory:XML in items.Category) {
+				category.categories.addItem(
+					categoryExtractor.extract(subcategory));
 			}
 			return category;
 		}
