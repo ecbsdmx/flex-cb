@@ -48,12 +48,15 @@ package org.sdmx.model.v2.structure.category
 		/*==============================Fields================================*/
 		
 		private var _dataflows:DataflowsCollection;
+			
+		private var _categories:CategoriesCollection;
 		
 		/*===========================Constructor==============================*/
 		
 		public function Category(id:String) {
 			super(id);
 			_dataflows = new DataflowsCollection();
+			_categories = new CategoriesCollection();
 		}
 		
 		/*============================Accessors===============================*/
@@ -70,6 +73,20 @@ package org.sdmx.model.v2.structure.category
 		 */
 		public function get dataflows():DataflowsCollection {
 			return _dataflows;
+		}
+		
+		/**
+		 * @private
+		 */
+		public function set categories(categories:CategoriesCollection):void {
+			_categories = categories;
+		}
+		
+		/**
+		 * The list of subcategories belonging to the category 
+		 */
+		public function get categories():CategoriesCollection {
+			return _categories;
 		}
 	}
 }
