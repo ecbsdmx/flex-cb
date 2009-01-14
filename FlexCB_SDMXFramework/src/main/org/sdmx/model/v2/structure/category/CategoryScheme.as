@@ -68,7 +68,7 @@ package org.sdmx.model.v2.structure.category
 		}
 		
 		/**
-		 * The list of categores belonging to the category scheme 
+		 * The list of categories belonging to the category scheme 
 		 */
 		public function get categories():CategoriesCollection {
 			return _categories;
