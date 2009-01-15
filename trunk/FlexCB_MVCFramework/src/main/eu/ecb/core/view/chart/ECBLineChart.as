@@ -182,6 +182,15 @@ package eu.ecb.core.view.chart
 			_baseAtZero = true;
 		}
 		
+		/*========================Protected methods===========================*/
+		
+		override protected function resourcesChanged():void {
+			if (!initialized) return;
+			super.resourcesChanged();
+			_filteredDataSetChanged = true;//force update
+			this.commitProperties();
+		}		
+		
 		/*============================Accessors===============================*/
 		
 		/**
