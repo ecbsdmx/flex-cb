@@ -39,6 +39,7 @@ package eu.ecb.exr.view
 	import mx.controls.Alert;
 	import eu.ecb.core.view.SDMXViewAdapter;
 	
+	[ResourceBundle("flex_cb_sample_app_2_lang")]
 	public class EXRBaseCurrencySwitcher extends SDMXViewAdapter 
 		implements IHistoryManagerClient
 	{
@@ -74,6 +75,17 @@ package eu.ecb.exr.view
 		
 		/*=========================Protected methods==========================*/
 		
+		override protected function resourcesChanged():void {
+			if (!initialized) return;
+			super.resourcesChanged();
+			_currencySwitcher.label = 
+				resourceManager.getString("flex_cb_sample_app_2_lang", "base_currency_switcher_see")+ " "
+				+ (_filteredReferenceSeries.keyValues.getItemAt(2) as KeyValue).value.id 
+				+ " "+ resourceManager.getString("flex_cb_sample_app_2_lang", "base_currency_switcher_as") +" " + 
+				(_filteredReferenceSeries.keyValues.getItemAt(1) as 
+				KeyValue).value.id;		
+		}
+		
 		override protected function createChildren():void 
 		{
 			super.createChildren();
@@ -96,8 +108,10 @@ package eu.ecb.exr.view
 			
 			if (_filteredReferenceSeriesChanged) {				
 				_filteredReferenceSeriesChanged = false;
-				_currencySwitcher.label = "See " + (_filteredReferenceSeries.
-					keyValues.getItemAt(2) as KeyValue).value.id + " vs. " + 
+				_currencySwitcher.label = 
+					resourceManager.getString("flex_cb_sample_app_2_lang", "base_currency_switcher_see")+ " "
+					+ (_filteredReferenceSeries.keyValues.getItemAt(2) as KeyValue).value.id 
+					+ " "+ resourceManager.getString("flex_cb_sample_app_2_lang", "base_currency_switcher_as") +" " + 
 					(_filteredReferenceSeries.keyValues.getItemAt(1) as 
 					KeyValue).value.id;
 			}
