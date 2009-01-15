@@ -102,6 +102,15 @@ package eu.ecb.core.view.panel
 			percentWidth = 100;
 			percentHeight = 100;
 		}
+		
+		/*========================Protected methods===========================*/
+				
+		override protected function resourcesChanged():void {
+			if (!initialized) return;
+			super.resourcesChanged();
+			_model.updateLanguage();	
+		}
+		
 		/*============================Accessors===============================*/
 		
 		/**
