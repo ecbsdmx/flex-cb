@@ -34,6 +34,8 @@ package eu.ecb.core.view
 	import org.sdmx.model.v2.reporting.dataset.DataSet;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
 	
+	import mx.formatters.DateBase; 
+	
 	/**
 	 * Basic implementation of the ISDMXView interface.
 	 * 
@@ -131,6 +133,18 @@ package eu.ecb.core.view
 			super();
 			this.direction = direction;
 		}
+		
+		/*========================Protected methods===========================*/
+		
+		override protected function resourcesChanged():void {
+			if (!initialized) return;
+			super.resourcesChanged();
+			
+			DateBase.dayNamesLong=resourceManager.getStringArray("flex_cb_mvc_lang", "dayNamesLong");
+			DateBase.monthNamesLong=resourceManager.getStringArray("flex_cb_mvc_lang", "monthNamesLong");
+			DateBase.monthNamesShort=resourceManager.getStringArray("flex_cb_mvc_lang", "monthNamesShort");
+		
+		}		
 		
 		/*============================Accessors===============================*/
 		
