@@ -28,6 +28,8 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.exr.view
 {
+	import ca.boc.exr.buttons.LocaleSwitchButton;
+	
 	import eu.ecb.core.controller.SDMXDataController;
 	import eu.ecb.core.model.SDMXDataModel;
 	import eu.ecb.core.util.formatter.observation.EXRObservationFormatter;
@@ -47,6 +49,8 @@ package eu.ecb.exr.view
 		
 		private var _filtersPanel:FiltersPanel;
 		
+		private var _localeButton:LocaleSwitchButton;
+		
 		/*===========================Constructor==============================*/
 		
 		public function EXRDataPanel(model:SDMXDataModel, 
@@ -59,6 +63,12 @@ package eu.ecb.exr.view
 				
 		override protected function createChildren():void 
 		{
+			if (null == _localeButton) {
+				_localeButton = new LocaleSwitchButton();
+				_localeButton.percentWidth = 100;
+				addChild(_localeButton);
+			}
+			
 			if (null == _filtersPanel) {
 				_filtersPanel = new FiltersPanel();
 				_filtersPanel.addEventListener(FiltersPanel.SERIES_KEY_CHANGED, 
