@@ -70,6 +70,8 @@ package eu.ecb.core.view.filter
 	 * 
 	 * @author Xavier Sosnovsky
 	 */ 
+	
+	[ResourceBundle("flex_cb_mvc_lang")]
 	public class FiltersPanel extends SDMXViewAdapter 
 	{
 		
@@ -94,6 +96,10 @@ package eu.ecb.core.view.filter
 		
 		private var _isInitialization:Boolean;
 		
+		private var _panel:Panel;
+		
+		private var _submitButton:Button;
+		
 		/*===========================Constructor==============================*/
 
 		public function FiltersPanel(direction:String = "horizontal") {
@@ -101,6 +107,13 @@ package eu.ecb.core.view.filter
 		}
 		
 		/*========================Protected methods===========================*/
+		
+		override protected function resourcesChanged():void {
+			if (!initialized) return;
+			super.resourcesChanged();
+			_panel.title = resourceManager.getString("flex_cb_mvc_lang", "FiltersPanel_filter_options");
+			_submitButton.label = resourceManager.getString("flex_cb_mvc_lang", "FiltersPanel_submit");	
+		}
 		
 		/**
 		 * inheritDoc
@@ -240,20 +253,22 @@ package eu.ecb.core.view.filter
 		
 		private function createSubmitButton():Button {
 			var submitButton:Button = new Button();
-			submitButton.width = 80;
-			submitButton.label = "Submit"
+			//submitButton.width = 100;
+			submitButton.label = resourceManager.getString("flex_cb_mvc_lang", "FiltersPanel_submit");
 			submitButton.addEventListener(MouseEvent.CLICK, submitChanges);
-			return submitButton;
+			_submitButton = submitButton;
+			return _submitButton;
 		}
 		
 		private function createPanel(form:Form):Panel {
 			var panel:Panel = new Panel();
-			panel.title = "Filter options";
+			panel.title = resourceManager.getString("flex_cb_mvc_lang", "FiltersPanel_filter_options");
 			panel.layout = "vertical";
 			panel.styleName = "filters";
 			panel.width = width;
 			panel.addChild(form);
-			return panel;
+			_panel = panel
+			return _panel;
 		}
 		
 		//Event methods
