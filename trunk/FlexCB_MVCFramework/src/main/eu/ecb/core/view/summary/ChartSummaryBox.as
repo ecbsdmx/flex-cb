@@ -48,6 +48,7 @@ package eu.ecb.core.view.summary
 	 * 
 	 * @author Xavier Sosnovsky
 	 */
+	[ResourceBundle("flex_cb_mvc_lang")]
 	public class ChartSummaryBox extends SDMXViewAdapter
 	{
 		/*==============================Fields================================*/
@@ -93,6 +94,15 @@ package eu.ecb.core.view.summary
 			_showChange = true;
 			_showAverage = true;
 			percentWidth = 100;
+		}
+		
+		/*========================Protected methods===========================*/
+		
+		override protected function resourcesChanged():void {
+			if (!initialized) return;
+			_filteredReferenceSeriesChanged = true; //force an update
+			super.resourcesChanged();
+			this.commitProperties();
 		}
 		
 		/*============================Accessors===============================*/
@@ -185,9 +195,10 @@ package eu.ecb.core.view.summary
 		    				obs2.observationValue.indexOf(".") + 1, 
 		    				obs2.observationValue.length).length : 0;				
 				if (_showChange) {	
-					_changeText.text = "Change from " + 
-						_dateFormatter.format(obs1.timeValue) + " to " + 
-						_dateFormatter.format(obs2.timeValue) + ": ";
+					_changeText.text = resourceManager.getString("flex_cb_mvc_lang", "ChartSummaryBox_change_from") + " " + 
+						_dateFormatter.format(obs1.timeValue) 
+						+ " " +resourceManager.getString("flex_cb_mvc_lang", "ChartSummaryBox_to") + " " 
+						+ _dateFormatter.format(obs2.timeValue) + " ";
 			    	if (Number(obs2.observationValue) > 
 	             		Number(obs1.observationValue)) {
 	            		_changeValue.styleName = "greenColor";
@@ -233,7 +244,7 @@ package eu.ecb.core.view.summary
 		    		total = total + Number(currentObs.observationValue);
 		    	}
 		    	_numberFormatter.forceSigned = false;
-		    	_minMaxText.htmlText = "Minimum (" + 
+		    	_minMaxText.htmlText = resourceManager.getString("flex_cb_mvc_lang", "ChartSummaryBox_minimum") + " (" + 
 		    		_dateFormatter.format(minObs.timeValue) + "): " + 
 		    		"<font color='#000000'>" + 
 		    		minObs.observationValue;
@@ -241,7 +252,7 @@ package eu.ecb.core.view.summary
 		    		_minMaxText.htmlText = _minMaxText.htmlText + "%"; 
 		    	}	
 		    	_minMaxText.htmlText = _minMaxText.htmlText +
-		    		"</font> - Maximum (" +
+		    		"</font> - "+resourceManager.getString("flex_cb_mvc_lang", "ChartSummaryBox_maximum") +" (" +
 		    		_dateFormatter.format(maxObs.timeValue) + "): " + 
 		    		"<font color='#000000'>" + 
 		    		maxObs.observationValue;
@@ -262,7 +273,7 @@ package eu.ecb.core.view.summary
 		protected function calculateAverage(total:Number):void
 		{
 			_minMaxText.htmlText = _minMaxText.htmlText + "</font> - " + 
-	    		"Average: " + "<font color='#000000'>" + 
+	    		resourceManager.getString("flex_cb_mvc_lang", "ChartSummaryBox_average") + ": " + "<font color='#000000'>" + 
 	    		_numberFormatter.format(
 	    			total / _filteredReferenceSeries.timePeriods.length);
 	    	if (_isPercentage) {

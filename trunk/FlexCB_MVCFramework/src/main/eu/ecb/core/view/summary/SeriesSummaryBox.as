@@ -97,6 +97,16 @@ package eu.ecb.core.view.summary
 		
 		/*========================Protected methods===========================*/
 		
+		override protected function resourcesChanged():void {
+			if (!initialized) return;
+			super.resourcesChanged();
+			
+			_referenceSeriesChanged = true;//force update
+			this.commitProperties();
+			
+		
+		}		
+		
 		/**
 		 * @inheritDoc
 		 */ 
@@ -194,7 +204,7 @@ package eu.ecb.core.view.summary
 		 */
 		protected function formatLatestFieldTitle(period:Date):String 
 		{
-			return "Latest (" + _dateFormatter.format(period) + "): ";	
+			return resourceManager.getString("flex_cb_mvc_lang", "SeriesSummaryBox_latest") + " (" + _dateFormatter.format(period) + "): ";	
 		}
 		
 		/**
