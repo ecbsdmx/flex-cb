@@ -61,6 +61,7 @@ package eu.ecb.core.view.filter
 	 * 
 	 * @author Xavier Sosnovsky
 	 */
+	[ResourceBundle("flex_cb_mvc_lang")]
 	public class PeriodZoomBox extends SDMXViewAdapter implements 
 		IHistoryManagerClient {
 			
@@ -166,6 +167,11 @@ package eu.ecb.core.view.filter
 			}
 		}
 		
+		override protected function resourcesChanged():void {
+			if (!initialized) return;
+			_zoomLabelField.text = resourceManager.getString("flex_cb_mvc_lang", "select_date_range");
+		}
+		
 		/**
 		 * inheritDoc
 		 */
@@ -187,7 +193,7 @@ package eu.ecb.core.view.filter
 					}
 				}
 				if (_periods.length >= 2) {
-					_zoomLabelField.text = "Select date range: ";
+					_zoomLabelField.text = resourceManager.getString("flex_cb_mvc_lang", "select_date_range");
 					_periodsZoomField.dataProvider = _periods;
 				}	
 			}
