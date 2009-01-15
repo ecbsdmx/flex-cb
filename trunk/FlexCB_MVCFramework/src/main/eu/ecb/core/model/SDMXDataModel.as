@@ -37,6 +37,9 @@ package eu.ecb.core.model
 	import mx.collections.Sort;
 	import mx.collections.SortField;
 	import mx.formatters.DateFormatter;
+	import mx.resources.ResourceManager;
+	import mx.resources.IResourceManager
+
 	
 	import org.sdmx.model.v2.base.type.ConceptRole;
 	import org.sdmx.model.v2.reporting.dataset.AttributeValue;
@@ -114,8 +117,10 @@ package eu.ecb.core.model
 	 * @author Xavier Sosnovsky
 	 * @author Karine Feraboli
 	 */
+	[ResourceBundle("flex_cb_mvc_lang")]
 	public class SDMXDataModel extends EventDispatcher implements ISDMXDataModel
 	{
+				
 		/*=============================Constants==============================*/
 		/**
 		 * The SDMXDataModel.FULL_DATASET_UPDATED constant defines the value of 
@@ -195,6 +200,11 @@ package eu.ecb.core.model
 			"isPercentageUpdated";
 		
 		/*==============================Fields================================*/
+		
+		/**
+		 * @private
+		 */
+		private var _resourceManager:IResourceManager;
 		
 		protected var _fullDataSet:DataSet;
 		
@@ -290,6 +300,15 @@ package eu.ecb.core.model
 			super();
 			_dateFormatter = new DateFormatter();
 			_hasDefaultPeriod = true;
+			_resourceManager = ResourceManager.getInstance();
+		}
+		
+		/*=========================Public methods==========================*/		
+	
+		public function updateLanguage():void {
+			_allPeriods = null;
+			createSelectedPeriods();
+			dispatchEvent(new Event(PERIODS_UPDATED));
 		}
 		
 		/*============================Accessors===============================*/
@@ -666,22 +685,30 @@ package eu.ecb.core.model
 			var selectedPeriods:Array = new Array();
 			if (null == _allPeriods) {
 				_allPeriods = new Array();
-				_allPeriods.push({label: "1m", 
-					tooltip: "Display data for the last month"});						
-				_allPeriods.push({label: "3m", 
-					tooltip: "Display data for the last 3 months"});						
-				_allPeriods.push({label: "6m", 
-					tooltip: "Display data for the last 6 months"});						
-				_allPeriods.push({label: "1y", 
-					tooltip: "Display data for the last year"});						
-				_allPeriods.push({label: "2y", 
-					tooltip: "Display data for the last 2 years"});						
-				_allPeriods.push({label: "5y", 
-					tooltip: "Display data for the last 5 years"});						
-				_allPeriods.push({label: "10y", 
-					tooltip: "Display data for the last 10 years"});						
-				_allPeriods.push({label: "All", 
-					tooltip: "Display all available data"});	
+				_allPeriods.push({label: _resourceManager.getString("flex_cb_mvc_lang", "data_range_1m")
+								, tooltip: "Display data for the last month"
+								, identifier: "1m"});						
+				_allPeriods.push({label: _resourceManager.getString("flex_cb_mvc_lang", "data_range_3m")
+								, tooltip: "Display data for the last 3 months"
+								, identifier: "3m"});						
+				_allPeriods.push({label: _resourceManager.getString("flex_cb_mvc_lang", "data_range_6m")
+								, tooltip: "Display data for the last 6 months"
+								, identifier: "6m"});						
+				_allPeriods.push({label: _resourceManager.getString("flex_cb_mvc_lang", "data_range_1y")
+								, tooltip: "Display data for the last year"
+								, identifier: "1y"});						
+				_allPeriods.push({label: _resourceManager.getString("flex_cb_mvc_lang", "data_range_2y")
+								, tooltip: "Display data for the last 2 years"
+								, identifier: "2y"});						
+				_allPeriods.push({label: _resourceManager.getString("flex_cb_mvc_lang", "data_range_5y")
+								, tooltip: "Display data for the last 5 years"
+								, identifier: "5y"});						
+				_allPeriods.push({label: _resourceManager.getString("flex_cb_mvc_lang", "data_range_10y")
+								, tooltip: "Display data for the last 10 years"
+								, identifier: "10y"});						
+				_allPeriods.push({label: _resourceManager.getString("flex_cb_mvc_lang", "data_range_all")
+								, tooltip: "Display all available data"
+								, identifier: "All"});	
 			}
 
 			if (referenceSeries.timePeriods.length >0) {
@@ -779,7 +806,7 @@ package eu.ecb.core.model
 						"period");
 				}
 			}	
-	    	switch(_selectedPeriod.label) {
+	    	switch(_selectedPeriod.identifier) {
 	    		case "All":
 	    			tmpDate = 
 	    				(series.timePeriods.getItemAt(0) 
