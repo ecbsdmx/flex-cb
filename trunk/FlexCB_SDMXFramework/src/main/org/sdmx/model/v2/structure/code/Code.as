@@ -35,7 +35,7 @@ package org.sdmx.model.v2.structure.code
 	 * a concept whose meaning is described in a natural language. For instance,
 	 * a code list CL_FREQ could include the code "M" for "Monthly frequency".
 	 * 
-	 * @author Xavier Sosnowska
+	 * @author Xavier Sosnovsky
 	 * 
 	 * @todo
 	 * 		- Implement possibility to have child items.
