@@ -35,7 +35,7 @@ package org.sdmx.model.v2.base
 	 * Multiple language versions of a specific description are grouped together 
 	 * in an InternationalString.
 	 * 
-	 * @author Xavier Sosnowska
+	 * @author Xavier Sosnovsky
 	 * 
 	 * @see LocalisedStringsCollection
 	 */
