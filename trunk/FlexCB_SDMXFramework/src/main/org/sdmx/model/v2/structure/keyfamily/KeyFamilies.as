@@ -108,6 +108,26 @@ package org.sdmx.model.v2.structure.keyfamily
 		}
 		
 		/**
+		 * Returns the key family identified by the supplied URN 
+		 * 
+		 * @param keyFamilyURN The URN identifiying the key family
+		 * @return The key family identified by the supplied URN
+		 */
+		public function getKeyFamilyByURN(keyFamilyURN:String):KeyFamily {
+			var sortByURN:Sort = new Sort();
+            sortByURN.fields = [new SortField("urn", true)];
+            sort = sortByURN;
+			refresh();
+            var cursor:IViewCursor = createCursor();
+			var found:Boolean = cursor.findAny({urn:keyFamilyURN});
+			if (found && (cursor.current as KeyFamily).urn == keyFamilyURN) {
+				return cursor.current as KeyFamily;
+			} else {
+				return null;
+			}
+		}
+		
+		/**
 		 * Returns the key family identified by the supplied URI 
 		 * 
 		 * @param keyFamilyURI The URI identifiying the key family
