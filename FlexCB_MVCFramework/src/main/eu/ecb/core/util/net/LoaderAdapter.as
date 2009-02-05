@@ -39,6 +39,7 @@ package eu.ecb.core.util.net
 	import flash.net.URLLoader;
 	import flash.net.URLLoaderDataFormat;
 	import flash.net.URLRequest;
+	import flash.net.URLVariables;
 	import flash.utils.ByteArray;
 	import flash.utils.getTimer;
 
@@ -116,7 +117,7 @@ package eu.ecb.core.util.net
 		/**
 		 * @private
 		 */	
-		protected var _filename:String;
+		protected var _filename:URLRequest;
 		
 		/**
 		 * @private
@@ -141,14 +142,21 @@ package eu.ecb.core.util.net
 		/**
 		 * @inheritDoc
 		 */
-		public function load(filename:String, compressed:Boolean=true):void
+		public function load(filename:URLRequest, compressed:Boolean=true):void
 		{
 			_filename = filename;
 			_compressed = compressed;
 			_urlLoader.dataFormat = (compressed) ? URLLoaderDataFormat.BINARY: 
 				URLLoaderDataFormat.TEXT;
-			_urlLoader.load(new URLRequest(filename + "?fid=" + 
-				Math.random() * 1000));
+			
+			
+			if (filename.data is URLRequest) {
+				var fileVariables:URLVariables = filename.data as URLVariables;
+				fileVariables.fid = Math.random() * 1000;
+			}
+			
+			_urlLoader.load(filename);
+			
 		}
 		
 		/**

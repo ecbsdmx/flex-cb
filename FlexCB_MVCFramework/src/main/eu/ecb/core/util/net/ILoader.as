@@ -30,6 +30,7 @@ package eu.ecb.core.util.net
 {
 	import flash.events.IEventDispatcher;
 	import flash.events.Event;
+	import flash.net.URLRequest;
 	import eu.ecb.core.command.IReceiver;
 
 	/**
@@ -48,7 +49,7 @@ package eu.ecb.core.util.net
 		 * @param filename The file to be loaded
 		 * @param compressed Whether or not the file is compressed (zlib)
 		 */
-		function load(filename:String, compressed:Boolean = true):void;
+		function load(filename:URLRequest, compressed:Boolean = true):void;
 		
 		/**
 		 * Handle the loaded data
