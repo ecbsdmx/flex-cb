@@ -40,6 +40,7 @@ package eu.ecb.core.controller
 	import flash.events.DataEvent;
 	import flash.events.ErrorEvent;
 	import flash.events.Event;
+	import flash.net.URLRequest;
 	
 	import mx.collections.ArrayCollection;
 	
@@ -67,19 +68,19 @@ package eu.ecb.core.controller
 	 * 		   loader, based on the format of the SDMX-ML data file (e.g.: 
 	 * 		   Compact, Generic, etc).
 	 */
-	public class SDMXDataController extends ControllerAdapter
+	public class SDMXDataController extends PassiveSDMXDataController
 	{	
 		/*==============================Fields================================*/
 		
 		/**
 		 * @private 
 		 */
-		protected var _dataFile:String;
+		protected var _dataFile:URLRequest;
 		
 		/**
 		 * @private 
 		 */
-		protected var _structureFile:String;
+		protected var _structureFile:URLRequest;
 		
 		/**
 		 * @private 
@@ -132,22 +133,23 @@ package eu.ecb.core.controller
 		 * 		number of observations available in the data file.
 		 */
 		public function SDMXDataController(model:ISDMXDataModel, 
-			dataFile:String, structureFile:String, 
+			dataFile:URLRequest, structureFile:URLRequest, 
 			disableObservationAttribute:Boolean = true)
 		{
+			
 			super(model);
-			_dataFile = dataFile;
+			_dataFile = dataFile;	
 			_structureFile = structureFile;
+			
 			_nrOfFilesToFetch = 0;
 			
 			_command = 
-				new LoadSDMXData(dataFile, structureFile, new XMLLoader());
+				new LoadSDMXData(_dataFile, _structureFile, new XMLLoader());
 			_command.addEventListener(CommandAdapter.COMMAND_COMPLETED, 
 				handleData);
 			_command.addEventListener(CommandAdapter.COMMAND_ERROR, 
 				handleError);
 			_command.disableObservationAttribute = disableObservationAttribute;	
-			
 			_invoker = new InvokerAdapter();
 			_invoker.addCommand(_command);
 		}
@@ -186,75 +188,6 @@ package eu.ecb.core.controller
 			_invoker.invokeCommands();
 		}
 		
-		
-		/**
-		 * Call this function when a view updates the currently selected period.
-		 * The new period is passed to the model, which will update the list
-		 * of periods and the filtered dataset.
-		 * 
-		 * @param event A DataEvent containing the new period (e.g.: "1y")
-		 * 
-		 * @see eu.ecb.core.model.SDMXDataModel#periods
-		 * @see eu.ecb.core.model.SDMXDataModel#filteredDataSet
-		 * @see eu.ecb.core.view.filter.PeriodZoomBox
-		 */
-		public function handlePeriodChange(event:DataEvent):void 
-		{
-			event.stopImmediatePropagation();
-			(model as ISDMXDataModel).handlePeriodChange(event);
-		}
-		
-		/**
-		 * Call this function when a chart is being dragged.
-		 * 
-		 * @param event A DataEvent containing an integer indicating by how many
-		 * observations the filtered dataset should be moved to the left 
-		 * (negative) or to the right (positive).
-		 * 
-		 * @see eu.ecb.core.model.SDMXDataModel#periods
-		 * @see eu.ecb.core.model.SDMXDataModel#filteredDataSet
-		 * @see eu.ecb.core.view.chart.ECBLineChart
-		 */
-		public function handleChartDragged(event:DataEvent):void 
-		{
-			event.stopImmediatePropagation();
-			(model as ISDMXDataModel).handleChartDragged(event);
-		}
-		
-		/**
-		 * Call this function when the left thumb of a period slider is moved.
-		 * 
-		 * @param event A DataEvent containing an integer indicating by how many
-		 * observations the filtered dataset should be moved to the left 
-		 * (negative) or to the right (positive).
-		 * 
-		 * @see eu.ecb.core.model.SDMXDataModel#periods
-		 * @see eu.ecb.core.model.SDMXDataModel#filteredDataSet
-		 * @see eu.ecb.core.view.chart.PeriodSlider
-		 */
-		public function handleLeftDividerDragged(event:DataEvent):void 
-		{
-			event.stopImmediatePropagation();
-			(model as ISDMXDataModel).handleDividerDragged(event, "left");
-		}
-		
-		/**
-		 * Call this function when the right thumb of a period slider is moved.
-		 * 
-		 * @param event A DataEvent containing an integer indicating by how many
-		 * observations the filtered dataset should be moved to the left 
-		 * (negative) or to the right (positive).
-		 * 
-		 * @see eu.ecb.core.model.SDMXDataModel#periods
-		 * @see eu.ecb.core.model.SDMXDataModel#filteredDataSet
-		 * @see eu.ecb.core.view.chart.PeriodSlider
-		 */
-		public function handleRightDividerDragged(event:DataEvent):void 
-		{
-			(model as ISDMXDataModel).handleDividerDragged(event, "right");
-			event.stopImmediatePropagation();
-		}
-		
 		/**
 		 * Fetches and process the data of all the SDMX data files supplied in
 		 * the collection. 
@@ -283,7 +216,7 @@ package eu.ecb.core.controller
 			}
 			
 			if (!isFetching) {
-				_command.dataFile = _filesToFetch.removeItemAt(0) as String;
+				_command.dataFile = _filesToFetch.removeItemAt(0) as URLRequest;
 				dispatchEvent(new ProgressEventMessage(TASK_PROGRESS, false, 
 					false, 0, 0, "Please wait: Loading data (" + 
 					Math.round( (1 /_totalNrOfFiles) * 100) + "%)"));
@@ -333,37 +266,16 @@ package eu.ecb.core.controller
 			}
 			if (0 == _nrOfFilesToFetch) {
 				dispatchEvent(new Event(TASK_COMPLETED));
-				(model as SDMXDataModel).fullDataSet = _tmpDataSet;
+				this.dataSet = _tmpDataSet;
 			} else {
 				dispatchEvent(new ProgressEventMessage(TASK_PROGRESS, false, 
 					false, _totalNrOfFiles - _filesToFetch.length + 1, 
 					_totalNrOfFiles, "Please wait: Loading data (" + 
 					Math.round(((_totalNrOfFiles -	_filesToFetch.length + 1) /
 						_totalNrOfFiles) * 100) + "%)"));
-				_command.dataFile = _filesToFetch.removeItemAt(0) as String;
+				_command.dataFile = _filesToFetch.removeItemAt(0) as URLRequest;
 				_invoker.invokeCommands();	
 			}
-		}
-		
-		/**
-		 * Handle errors related to loading the SDMX-ML data files. 
-		 * 
-		 * <p>By default, the method will call the default Flex error box.</p>
-		 * 
-		 * @param event The event containing the error message.
-		 */
-		protected function handleError(event:ErrorEvent):void {
-			dispatchEvent(new ErrorEvent(TASK_ERROR, false, false, event.text));
-		}
-		
-		/**
-		 * Handle the progress activity of the loading task. 
-		 * 
-		 * <p>By default, this method silently suppresses the event.</p>
-		 * 
-		 * @param event The event containing the progress information
-		 */
-		protected function handleProgress(event:ProgressEventMessage):void {
-		}
+		}		
 	}
 }
