@@ -34,11 +34,13 @@ package eu.ecb.exr.controller
 	
 	import flash.events.DataEvent;
 	import flash.events.Event;
+	import flash.net.URLRequest;
 
 	public class EXRController extends SDMXDataController
 	{
-		public function EXRController(model:ISDMXDataModel, dataFile:String, 
-			structureFile:String, disableObservationAttribute:Boolean = true)
+		public function EXRController(model:ISDMXDataModel, dataFile:URLRequest, 
+			structureFile:URLRequest, 
+			disableObservationAttribute:Boolean = true)
 		{
 			super(model, dataFile, structureFile, disableObservationAttribute);
 		}
