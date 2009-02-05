@@ -44,8 +44,8 @@
 				var model:SDMXDataModel = new SDMXDataModel();
 				var controller:SDMXDataController =
 					new SDMXDataController(model, 
-						"data/inflation.xml.zlib", 
-						"data/ecb_icp1.xml");
+						new URLRequest("data/inflation.xml.zlib"), 
+						new URLRequest("data/ecb_icp1.xml"));
 				var view:SDMXDataPanelAdapter = new BasicDataPanel(model, 
 					controller, true);
 				view.width = 700;
