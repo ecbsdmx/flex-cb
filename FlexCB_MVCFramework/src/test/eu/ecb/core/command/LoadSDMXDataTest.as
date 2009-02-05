@@ -34,6 +34,8 @@ package eu.ecb.core.command
 	import eu.ecb.core.controller.ControllerAdapter;
 	import org.sdmx.event.SDMXDataEvent;
 	import flash.events.ErrorEvent;
+	import flash.net.URLRequest;
+	
 	import eu.ecb.core.util.net.XMLLoader;
 
 	/**
@@ -51,8 +53,10 @@ package eu.ecb.core.command
 		}
 		
 		public function testGetData():void {
-			var command:ICommand = new LoadSDMXData("testData/usd.xml", 
-				"testData/ecb_exr1.xml", new XMLLoader());
+			var command:ICommand = new LoadSDMXData(new URLRequest("testData/usd.xml")
+				, new URLRequest("testData/ecb_exr1.xml")
+				, new XMLLoader()
+				);
 			command.addEventListener(CommandAdapter.COMMAND_COMPLETED, 
 				addAsync(handleData, 3000));	
 			command.execute();	
@@ -60,16 +64,18 @@ package eu.ecb.core.command
 		
 		public function testNonExistingData():void {
 			var command:ICommand = 
-				new LoadSDMXData("testData/nonExistingFile.xml", 
-					"testData/ecb_exr1.xml", new XMLLoader());
+				new LoadSDMXData(
+				new URLRequest("testData/nonExistingFile.xml")
+								,new URLRequest("testData/ecb_exr1.xml")
+								, new XMLLoader());
 			command.addEventListener(CommandAdapter.COMMAND_ERROR, 
 				addAsync(handleError, 3000));	
 			command.execute();
 		}
 		
 		public function testWrongStructureFile():void {
-			var command:ICommand = new LoadSDMXData("testData/rub.xml.zlib", 
-				"testData/usd.xml", new XMLLoader());
+			var command:ICommand = new LoadSDMXData(new URLRequest("testData/rub.xml.zlib"), 
+				new URLRequest("testData/usd.xml"), new XMLLoader());
 			command.addEventListener(CommandAdapter.COMMAND_ERROR, 
 				addAsync(handleError, 3000));	
 			command.execute();
@@ -84,8 +90,9 @@ package eu.ecb.core.command
 		}*/
 		
 		public function testGetIdenticalFiles():void {
-			var command:ICommand = new LoadSDMXData("testData/ecb_exr1.xml", 
-				"testData/ecb_exr1.xml", new XMLLoader());
+			var command:ICommand = new LoadSDMXData(new URLRequest("testData/ecb_exr1.xml")
+					, new URLRequest("testData/ecb_exr1.xml")
+					, new XMLLoader());
 			command.addEventListener(CommandAdapter.COMMAND_ERROR, 
 				addAsync(handleError, 3000));	
 			command.execute();
