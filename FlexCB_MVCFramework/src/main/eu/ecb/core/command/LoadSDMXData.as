@@ -36,6 +36,7 @@ package eu.ecb.core.command
 	import flash.events.ErrorEvent;
 	import flash.events.Event;
 	import flash.events.ProgressEvent;
+	import flash.net.URLRequest;
 	
 	import mx.collections.ArrayCollection;
 	
@@ -63,13 +64,13 @@ package eu.ecb.core.command
 		/*==============================Fields================================*/
 		
 		/** The SDMX-ML v2.0 Compact format data file to be loaded */
-		protected var _dataFile:String;
+		protected var _dataFile:URLRequest;
 		
 		/** The SDMX-ML v2.0 Structure file to be loaded */
-		protected var _structureFile:String;
+		protected var _structureFile:URLRequest;
 		
 		/** The SDMX-ML data file being loaded */
-		private var _loadedFile:String;
+		private var _loadedFile:URLRequest;
 		
 		/** The Reader for the SDMX-ML compact format */
 		private var _compactReader:CompactReader;
@@ -97,8 +98,8 @@ package eu.ecb.core.command
 		 * @param structureFile The SDMX-ML structure file to be loaded
 		 * @param loader The SDMX loader responsible for loading the data file 
 		 */
-		public function LoadSDMXData(dataFile:String,
-			structureFile:String, loader:ILoader) {
+		public function LoadSDMXData(dataFile:URLRequest,
+			structureFile:URLRequest, loader:ILoader) {
 			super(loader);
 			_dataFile = dataFile;
 			_structureFile = structureFile;
@@ -121,7 +122,7 @@ package eu.ecb.core.command
 		 *  
 		 * @param dataFile
 		 */
-		public function set dataFile(dataFile:String):void
+		public function set dataFile(dataFile:URLRequest):void
 		{
 			_dataFile = dataFile;
 		}
@@ -177,13 +178,13 @@ package eu.ecb.core.command
 					}					
 				} else {
 					_loadedFile = _dataFile;
-					(_receiver as ILoader).load(_dataFile, _loadedFile.
-						indexOf(".zlib") > -1);
+					(_receiver as ILoader).load(_dataFile
+							, _loadedFile.url.indexOf(".zlib") > -1);
 				}
 			} else {
 				_loadedFile = _structureFile;
 				(_receiver as ILoader).load(_loadedFile, 
-					_loadedFile.indexOf(".zlib") > -1);
+					_loadedFile.url.indexOf(".zlib") > -1);
 			}
 		}
 		
@@ -255,7 +256,7 @@ package eu.ecb.core.command
 				_compactReader.addEventListener(DataReaderAdapter.INIT_READY, 
 					handleDataInitReady);
 				_compactReader.disableObservationAttribute = 
-					_disableObservationAttribute;
+					_disableObservationAttribute;	
 				_compactReader.dataFile = event.data;	
 			}
 			event = null;
@@ -266,7 +267,7 @@ package eu.ecb.core.command
 			_keyFamilies = event.data as KeyFamilies;
 			_loadedStructureFiles.addItem(_structureFile);
 			_loadedFile = _dataFile;
-			var compressed:Boolean = _loadedFile.indexOf(".zlib") > -1;
+			var compressed:Boolean = _loadedFile.url.indexOf(".zlib") > -1;
 			(_receiver as ILoader).load(_dataFile, compressed);
 			event = null;		
 		}
