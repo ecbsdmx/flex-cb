@@ -28,6 +28,8 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.util.net
 {
+	import flash.net.URLRequest;
+
 	import flexunit.framework.TestCase;
 	import flash.events.ErrorEvent;
 	import flash.events.DataEvent;
@@ -70,18 +72,18 @@ package eu.ecb.core.util.net
 		
 		public function testLoadPlainXMLData():void {
 			_loader.addEventListener(LoaderAdapter.DATA_LOADED, addAsync(getData, 3000));
-			_loader.load("testData/usd.xml", false);			
+			_loader.load(new URLRequest("testData/usd.xml"), false);			
 		}
 		
 		public function testLoadCompressedXMLData():void {
 			_loader.addEventListener(LoaderAdapter.DATA_LOADED, addAsync(getData, 3000));
-			_loader.load("testData/usd.xml.zlib", true);
+			_loader.load(new URLRequest("testData/usd.xml.zlib"), true);
 		}
 		
 		public function testErrorHandling():void {
 			_loader.addEventListener(LoaderAdapter.DATA_LOADING_ERROR, 
 				addAsync(handleError, 3000));
-			_loader.load("notExistingDataFile");
+			_loader.load(new URLRequest("notExistingDataFile"));
 		}
 		
 		private function getData(event:DataEvent):void {
