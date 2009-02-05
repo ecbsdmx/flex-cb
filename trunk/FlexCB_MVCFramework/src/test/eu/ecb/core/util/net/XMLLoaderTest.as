@@ -32,6 +32,7 @@ package eu.ecb.core.util.net
 	import flexunit.framework.TestSuite;
 	import eu.ecb.core.event.XMLDataEvent;
 	import flash.events.ErrorEvent;
+	import flash.net.URLRequest;
 
 	/**
 	 *	@private 
@@ -70,7 +71,7 @@ package eu.ecb.core.util.net
 		
 		public function testLoadPlainXMLDataShouldWorkWhenCompressionTurnedOn():void {
 			_loader.addEventListener(LoaderAdapter.DATA_LOADED, addAsync(getData, 3000));
-			_loader.load("testData/usd.xml", true);			
+			_loader.load(new URLRequest("testData/usd.xml"), true);			
 		}
 		
 		private function getData(event:XMLDataEvent):void {
