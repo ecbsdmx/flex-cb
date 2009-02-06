@@ -31,6 +31,7 @@ package org.sdmx.model.v2.base.structure
 	import mx.collections.ArrayCollection;
 	
 	import org.sdmx.model.v2.base.AnnotationsCollection;
+	import org.sdmx.model.v2.base.IdentifiableArtefact;
 	import org.sdmx.model.v2.base.InternationalString;
 	import org.sdmx.model.v2.base.VersionableArtefact;
 	import org.sdmx.model.v2.base.VersionableArtefactAdapter;
@@ -43,7 +44,7 @@ package org.sdmx.model.v2.base.structure
 	 * @author Xavier Sosnovsky
 	 */ 
 	public class ComponentList extends ArrayCollection 
-		implements VersionableArtefact {
+		implements IdentifiableArtefact {
 			
 		/*==============================Fields================================*/
 		
@@ -57,49 +58,7 @@ package org.sdmx.model.v2.base.structure
 		}
 		
 		/*============================Accessors===============================*/
-		
-		/**
-		 * @inheritDoc 
-		 */
-		public function get version():String {
-			return _versionableArtefact.version;
-		}
-		
-		/**
-		 * @inheritDoc 
-		 */
-		public function set version(version:String):void {
-			_versionableArtefact.version = version;
-		}
-		
-		/**
-		 * @inheritDoc 
-		 */
-		public function get validTo():Date {
-			return _versionableArtefact.validTo;
-		}
-		
-		/**
-		 * @inheritDoc 
-		 */
-		public function set validTo(date:Date):void {
-			_versionableArtefact.validTo = date;
-		}
-		
-		/**
-		 * @inheritDoc 
-		 */
-		public function get validFrom():Date {
-			return _versionableArtefact.validFrom;
-		}
-		
-		/**
-		 * @inheritDoc 
-		 */
-		public function set validFrom(date:Date):void {
-			_versionableArtefact.validFrom = date;
-		}
-		
+			
 		/**
 		 * @inheritDoc 
 		 */
