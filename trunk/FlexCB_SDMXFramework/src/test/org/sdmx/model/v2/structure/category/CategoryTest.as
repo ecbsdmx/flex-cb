@@ -28,10 +28,13 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.model.v2.structure.category
 {
-	import org.sdmx.model.v2.base.item.ItemTest;
-	import org.sdmx.model.v2.base.item.Item;
 	import flexunit.framework.TestSuite;
+	
+	import org.sdmx.model.v2.base.InternationalString;
+	import org.sdmx.model.v2.base.item.Item;
+	import org.sdmx.model.v2.base.item.ItemTest;
 	import org.sdmx.model.v2.structure.keyfamily.DataflowsCollection;
+	import org.sdmx.model.v2.structure.organisation.MaintenanceAgency;
 
 	/**
 	 * @private 
@@ -59,6 +62,20 @@ package org.sdmx.model.v2.structure.category
 			var category:Category = createCategory();
 			category.dataflows = dataflows;
 			assertEquals("The dataflows should be equal", dataflows, category.dataflows);
+		}
+		
+		public function testSetAndGetSubCategories():void {
+			var categoryScheme:CategoryScheme = 
+				new CategoryScheme("id", new InternationalString(), 
+				new MaintenanceAgency("ECB"));
+			var categories:CategoriesCollection = new CategoriesCollection();
+			var category1:Category = new Category("A");
+			var category2:Category = new Category("B");			
+			categories.addItem(category1);
+			categories.addItem(category2);
+			categoryScheme.categories = categories;
+			assertEquals("The lists of subcategories should be equal", 
+				categories, categoryScheme.categories);
 		}
 	}
 }
