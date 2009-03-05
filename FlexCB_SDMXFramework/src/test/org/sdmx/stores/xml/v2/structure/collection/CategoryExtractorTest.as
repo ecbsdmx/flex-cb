@@ -30,17 +30,18 @@ package org.sdmx.stores.xml.v2.structure.collection
 {
 	import flexunit.framework.TestCase;
 	import flexunit.framework.TestSuite;
-	import org.sdmx.model.v2.structure.category.Category;
-	import org.sdmx.model.v2.structure.keyfamily.DataflowsCollection;
-	import org.sdmx.model.v2.structure.keyfamily.DataflowDefinition;
+	
 	import org.sdmx.model.v2.base.InternationalString;
-	import org.sdmx.model.v2.structure.organisation.MaintenanceAgency;
+	import org.sdmx.model.v2.structure.category.Category;
 	import org.sdmx.model.v2.structure.concept.Concept;
+	import org.sdmx.model.v2.structure.keyfamily.DataflowDefinition;
+	import org.sdmx.model.v2.structure.keyfamily.DataflowsCollection;
 	import org.sdmx.model.v2.structure.keyfamily.Dimension;
 	import org.sdmx.model.v2.structure.keyfamily.KeyDescriptor;
+	import org.sdmx.model.v2.structure.keyfamily.KeyFamily;
 	import org.sdmx.model.v2.structure.keyfamily.MeasureDescriptor;
 	import org.sdmx.model.v2.structure.keyfamily.UncodedMeasure;
-	import org.sdmx.model.v2.structure.keyfamily.KeyFamily;
+	import org.sdmx.model.v2.structure.organisation.MaintenanceAgency;
 
 	/**
 	 * @private
@@ -64,6 +65,9 @@ package org.sdmx.stores.xml.v2.structure.collection
 						<AgencyID>ECB</AgencyID>
 						<DataflowID>ECB_EXR1_WEB</DataflowID>
 					</DataflowRef>
+					<Category version="1.0" id="2120778">
+						<Name xml:lang="en">Consumer price indices</Name>
+					</Category>
 				</Category>
 			var key:KeyDescriptor = new KeyDescriptor("key");
 			var dimension1:Dimension = new Dimension("dim1", new Concept("FREQ"));
@@ -95,6 +99,12 @@ package org.sdmx.stores.xml.v2.structure.collection
 			var dataflow:DataflowDefinition = category.dataflows.getItemAt(0) as DataflowDefinition;
 			assertEquals("The dataflow id should be equal", "ECB_EXR1_WEB", dataflow.id);
 			assertEquals("The dataflow agency id should be equal", "ECB", dataflow.maintainer.id);
+			assertTrue("There should be one subcategory", category.categories.length == 1);
+			var subcategory:Category = 
+				category.categories.getItemAt(0) as Category;
+			assertEquals("The id should be equal", "2120778", subcategory.id);
+			assertEquals("The EN names should be equal", "Consumer price indices", 
+				subcategory.name.localisedStrings.getDescriptionByLocale("en"));
 		}
 	}
 }
