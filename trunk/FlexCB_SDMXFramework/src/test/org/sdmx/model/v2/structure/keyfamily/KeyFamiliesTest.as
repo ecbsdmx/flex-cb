@@ -88,11 +88,11 @@ package org.sdmx.model.v2.structure.keyfamily
 			measure.addItem(new UncodedMeasure("measure", new Concept("OBS_VALUE")));
 			var keyFamily1:KeyFamily = new KeyFamily("test", new InternationalString(), new MaintenanceAgency("ECB"), key, measure);
 			var keyFamily2:KeyFamily = new KeyFamily("ECB_SEC1", new InternationalString(), new MaintenanceAgency("ECB"), key, measure);			
-			keyFamily1.uri = "http://www.ecb.int/vocabulary/stats/exr/1";
+			keyFamily1.urn = "http://www.ecb.int/vocabulary/stats/exr/1";
 			collection.addItem(keyFamily1);
 			collection.addItem(keyFamily2);			
-			assertEquals("The key families should be equal", keyFamily1, collection.getKeyFamilyByURI(keyFamily1.uri));
-			assertNull("There should be no such key family in the collection", collection.getKeyFamilyByURI("http://www.ecb.int/vocabulary/stats/sec/1"));
+			assertEquals("The key families should be equal", keyFamily1, collection.getKeyFamilyByURN(keyFamily1.urn));
+			assertNull("There should be no such key family in the collection", collection.getKeyFamilyByURN("http://www.ecb.int/vocabulary/stats/sec/1"));
 		}
 		
 		public function testGetKeyFamilyByID():void {
