@@ -28,7 +28,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view.panel
 {
-	import eu.ecb.core.controller.SDMXDataController;
+	import eu.ecb.core.controller.PassiveSDMXDataController;
 	import eu.ecb.core.model.SDMXDataModel;
 	import eu.ecb.core.view.chart.ECBChartEvents;
 	import eu.ecb.core.view.chart.ECBLegend;
@@ -39,7 +39,6 @@ package eu.ecb.core.view.panel
 	import eu.ecb.core.view.summary.SeriesSummaryBox;
 	
 	import flash.events.DataEvent;
-	import flash.utils.getTimer;
 	
 	import mx.binding.utils.BindingUtils;
 
@@ -106,7 +105,7 @@ package eu.ecb.core.view.panel
 		/*===========================Constructor==============================*/
 		
 		public function BasicDataPanel(model:SDMXDataModel, 
-			controller:SDMXDataController, showChange:Boolean = false)
+			controller:PassiveSDMXDataController, showChange:Boolean = false)
 		{
 			super(model, controller);
 			styleName = "dataPanel";
