@@ -28,8 +28,6 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.model.v2.reporting.dataset
 {
-	import mx.formatters.DateFormatter;
-	
 	import org.sdmx.util.date.SDMXDate;
 		
 	/**
@@ -62,7 +60,28 @@ package org.sdmx.model.v2.reporting.dataset
 			} else {
 				_sdmxDate = new SDMXDate();
 			}
-			_periodComparator = period;
+			if (period.indexOf("H") > -1 || period.indexOf("W") > -1) {
+				throw new Error("Not implemented!");
+			} else if (period.indexOf("Q") > -1 ) {
+				switch (period.charAt(6)) {
+					case "1":
+						_periodComparator = period.substr(0, 4) + "-01";
+						break;
+					case "2":
+						_periodComparator = period.substr(0, 4) + "-04";
+						break;
+					case "3":
+						_periodComparator = period.substr(0, 4) + "-07";
+						break;
+					case "4":
+						_periodComparator = period.substr(0, 4) + "-10";
+						break;
+					default:
+						throw new Error("Not yet implemented");				
+				}
+			} else {
+				_periodComparator = period;
+			}
 			_timeValue = _sdmxDate.getDate(_periodComparator);
 			setObservationValue(obs);
 		}
