@@ -28,8 +28,8 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.model.v2.structure.keyfamily
 {
-	import org.sdmx.model.v2.base.structure.Structure;
 	import org.sdmx.model.v2.base.InternationalString;
+	import org.sdmx.model.v2.base.structure.Structure;
 	import org.sdmx.model.v2.structure.organisation.MaintenanceAgency;
 
 	/**
@@ -50,12 +50,15 @@ package org.sdmx.model.v2.structure.keyfamily
 		
 		private var _groupDescriptors:GroupKeyDescriptorsCollection;
 		
+		private var _isKeyFamilyReference:Boolean;
+		
 		/*===========================Constructor==============================*/
 		
 		public function KeyFamily(id:String, name:InternationalString, 
 			maintenanceAgency:MaintenanceAgency, keyDescriptor:KeyDescriptor,
-			measureDescriptor:MeasureDescriptor) {
+			measureDescriptor:MeasureDescriptor, reference:Boolean = false) {
 			super(id, name, maintenanceAgency);
+			_isKeyFamilyReference = reference;
 			this.keyDescriptor = keyDescriptor;
 			this.measureDescriptor = measureDescriptor;
 			_groupDescriptors = new GroupKeyDescriptorsCollection();
@@ -67,13 +70,16 @@ package org.sdmx.model.v2.structure.keyfamily
 		 * @private
 		 */ 
 		public function set keyDescriptor(keyDescriptor:KeyDescriptor):void {
-			if (null == keyDescriptor){
-				throw new ArgumentError("The key descriptor cannot be null");
-			} else if (0 == keyDescriptor.length) {
-				throw new ArgumentError("The key descriptor cannot be empty");
-			} else {
-				_keyDescriptor = keyDescriptor;
+			if (!_isKeyFamilyReference) {
+				if (null == keyDescriptor){
+					throw new ArgumentError("The key descriptor cannot be " + 
+							"null");
+				} else if (0 == keyDescriptor.length) {
+					throw new ArgumentError("The key descriptor cannot be " + 
+							"empty");
+				}
 			}
+			_keyDescriptor = keyDescriptor;
 		}
 		
 		/**
@@ -88,15 +94,16 @@ package org.sdmx.model.v2.structure.keyfamily
 		 */
 		public function set measureDescriptor(
 			measureDescriptor:MeasureDescriptor):void {
-			if (null == measureDescriptor){
-				throw new ArgumentError("The measure descriptor " + 
-						"cannot be null");
-			} else if (0 == measureDescriptor.length) {
-				throw new ArgumentError("The measure descriptor " + 
-						"cannot be empty");
-			} else {
-				_measureDescriptor = measureDescriptor;
+			if (!_isKeyFamilyReference) {	
+				if (null == measureDescriptor){
+					throw new ArgumentError("The measure descriptor " + 
+							"cannot be null");
+				} else if (0 == measureDescriptor.length) {
+					throw new ArgumentError("The measure descriptor " + 
+							"cannot be empty");
+				}
 			}
+			_measureDescriptor = measureDescriptor;
 		}
 		
 		/**

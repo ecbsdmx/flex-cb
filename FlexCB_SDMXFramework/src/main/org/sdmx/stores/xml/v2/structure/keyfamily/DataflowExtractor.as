@@ -28,13 +28,24 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.stores.xml.v2.structure.keyfamily
 {
+	import mx.collections.ArrayCollection;
+	
+	import org.sdmx.model.v2.base.InternationalString;
 	import org.sdmx.model.v2.base.MaintainableArtefact;
 	import org.sdmx.model.v2.base.SDMXArtefact;
+	import org.sdmx.model.v2.base.structure.Component;
+	import org.sdmx.model.v2.reporting.provisioning.ContentConstraint;
+	import org.sdmx.model.v2.reporting.provisioning.CubeRegion;
+	import org.sdmx.model.v2.reporting.provisioning.CubeRegionsCollection;
+	import org.sdmx.model.v2.reporting.provisioning.MemberSelection;
+	import org.sdmx.model.v2.reporting.provisioning.MemberSelectionsCollection;
+	import org.sdmx.model.v2.structure.concept.Concept;
 	import org.sdmx.model.v2.structure.keyfamily.DataflowDefinition;
 	import org.sdmx.model.v2.structure.keyfamily.KeyFamilies;
 	import org.sdmx.model.v2.structure.keyfamily.KeyFamily;
-	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
+	import org.sdmx.model.v2.structure.organisation.MaintenanceAgency;
 	import org.sdmx.stores.xml.v2.structure.ExtractorPool;
+	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
 	import org.sdmx.stores.xml.v2.structure.base.MaintainableArtefactExtractor;
 
 	/**
@@ -56,14 +67,14 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure";		
 		use namespace structure;
 		
+		private namespace common = 
+			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/common";		
+		use namespace common;
+		
 		/*===========================Constructor==============================*/
 		
 		public function DataflowExtractor(keyFamilies:KeyFamilies) {
 			super();
-			if (null == keyFamilies) {
-				throw new ArgumentError("The key families collection cannot" + 
-						" be null");
-			}
 			_keyFamilies = keyFamilies;
 		}
 		
@@ -89,8 +100,15 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 				"KeyFamilyID");
 			if (items.KeyFamilyRef.child(agencyIdEl).length() > 0 && 
 				items.KeyFamilyRef.child(kfIdEl).length() > 0) {
-				keyFamily = _keyFamilies.getKeyFamilyByID(items.KeyFamilyRef.
-					KeyFamilyID, items.KeyFamilyRef.KeyFamilyAgencyID);
+				if (null != _keyFamilies) {
+					keyFamily = _keyFamilies.getKeyFamilyByID(items.KeyFamilyRef
+						.KeyFamilyID, items.KeyFamilyRef.KeyFamilyAgencyID);
+				} else {
+					keyFamily = new KeyFamily(items.KeyFamilyRef.KeyFamilyID,
+						new InternationalString(), new MaintenanceAgency(items.
+						KeyFamilyRef.KeyFamilyAgencyID), null, null, true);
+					keyFamily.version = items.KeyFamilyRef.Version; 	
+				}
 			}
 			if (null == keyFamily) {
 				throw new SyntaxError("Could not find key family");
@@ -108,6 +126,40 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 			dataflow.validTo = maintenableArtefact.validTo;
 			dataflow.version = maintenableArtefact.version;
 			dataflow.isFinal = maintenableArtefact.isFinal;
+			
+			//Fetching constraints (works only with cube regions for now)
+			if (items.Constraint.length() > 0 && items.Constraint.CubeRegion) {
+				var constraint:ContentConstraint = 
+					new ContentConstraint(items.Constraint.ConstraintID);
+				var cubeCollection:CubeRegionsCollection = 
+					new CubeRegionsCollection();
+				for each (var cube:XML in items.Constraint.CubeRegion) {
+					var region:CubeRegion = new CubeRegion();
+					region.isIncluded = cube.@isIncluded;
+					cubeCollection.addItem(region);
+					if (cube.Member.length() > 0) {
+						var members:MemberSelectionsCollection = 
+							new MemberSelectionsCollection();
+						for each (var mem:XML in 
+							items.Constraint.CubeRegion.Member) {
+							var member:MemberSelection = new MemberSelection();
+							member.isIncluded = mem.@isIncluded;
+							var component:Component = new Component(mem.
+								ComponentRef, new Concept(mem.ComponentRef));
+							member.structureComponent = component;
+							var values:ArrayCollection = new ArrayCollection();
+							for each (var val:XML in mem.MemberValue) {
+								values.addItem(val.Value); 
+							}		
+							member.values = values;
+							members.addItem(member);			
+						}
+						region.members = members;	
+					}
+				}		
+				constraint.permittedContentRegion = cubeCollection;
+				dataflow.contentConstraint = constraint;
+			}
 			return dataflow;	
 		}
 	}
