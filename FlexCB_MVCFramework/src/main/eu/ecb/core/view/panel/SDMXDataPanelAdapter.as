@@ -28,18 +28,13 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view.panel
 {
-	import org.sdmx.model.v2.reporting.dataset.DataSet;
-	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
-	import mx.collections.ArrayCollection;
-	import mx.containers.Panel;
-	import eu.ecb.core.model.IModel;
-	import eu.ecb.core.model.SDMXDataModel;
+	import eu.ecb.core.controller.PassiveSDMXDataController;
 	import eu.ecb.core.controller.SDMXDataController;
-	import flash.events.Event;
-	import flash.events.DataEvent;
-	import flash.display.DisplayObject;
-	import eu.ecb.core.view.SDMXViewAdapter;
+	import eu.ecb.core.model.SDMXDataModel;
 	import eu.ecb.core.view.ISDMXView;
+	import eu.ecb.core.view.SDMXViewAdapter;
+	
+	import flash.display.DisplayObject;
 
 	/**
 	 * Basic implementation of the ISDMXDataPanel interface.
@@ -89,12 +84,12 @@ package eu.ecb.core.view.panel
 		/**
 		 * @private
 		 */
-		protected var _controller:SDMXDataController;
+		protected var _controller:PassiveSDMXDataController;
 		
 		/*===========================Constructor==============================*/
 		
 		public function SDMXDataPanelAdapter(model:SDMXDataModel, 
-			controller:SDMXDataController, direction:String = "vertical")
+			controller:PassiveSDMXDataController, direction:String = "vertical")
 		{
 			super(direction);
 			_model = model;
