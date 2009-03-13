@@ -28,12 +28,12 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.model.v2.reporting.dataset
 {
-	import org.sdmx.model.v2.structure.keyfamily.KeyDescriptor;
 	import mx.collections.IViewCursor;
 	
+	import org.sdmx.model.v2.structure.keyfamily.KeyDescriptor;
+	
 	/**
-	 * Comprises the cross product of values of all the dimensions that
-	 * identify uniquely a time series.
+	 * Sets of observations made over time.
 	 * 
 	 * @author Xavier Sosnovsky
 	 */ 
@@ -45,9 +45,14 @@ package org.sdmx.model.v2.reporting.dataset
 		
 		private var _valueFor:KeyDescriptor;
 		
+		private var _cachedKey:String;
+		
+		private var _cachedGroupKey:String;
+		
 		/*===========================Constructor==============================*/
 		
-		public function TimeseriesKey(keyDescriptor:KeyDescriptor) {
+		public function TimeseriesKey(keyDescriptor:KeyDescriptor) 
+		{
 			super();
 			_timePeriods = new TimePeriodsCollection();
 			valueFor = keyDescriptor;
@@ -58,7 +63,8 @@ package org.sdmx.model.v2.reporting.dataset
 		/**
 	 	 * @private
 	 	 */
-		public function set valueFor(keyDescriptor:KeyDescriptor):void {
+		public function set valueFor(keyDescriptor:KeyDescriptor):void 
+		{
 			if (null == keyDescriptor) {
 				throw new ArgumentError("The key descriptor cannot be null");
 			} else {
@@ -69,29 +75,53 @@ package org.sdmx.model.v2.reporting.dataset
 		/**
 		 * Associates the key descriptor defined in the key family.
 		 */ 
-		public function get valueFor():KeyDescriptor {
+		public function get valueFor():KeyDescriptor 
+		{
 			return _valueFor;
 		}
 
 		/**
 	 	 * @private
 	 	 */
-		public function set timePeriods(timePeriods:TimePeriodsCollection):void{
+		public function set timePeriods(timePeriods:TimePeriodsCollection):void
+		{
 			_timePeriods = timePeriods;
 		}
 		
 		/**
 		 * The collection of periods belonging to a time series
 		 */ 
-		public function get timePeriods():TimePeriodsCollection {
+		public function get timePeriods():TimePeriodsCollection 
+		{
 			return _timePeriods;
 		}
 		
 		/**
 		 * The series key identifying the series 
 		 */
-		public function get seriesKey():String {
-			return (null == keyValues) ? null : keyValues.seriesKey;
+		public function get seriesKey():String 
+		{
+			if (null == keyValues) {
+				_cachedKey = null;
+			} else if (_cachedKey == null) {
+				_cachedKey = keyValues.seriesKey;
+			}
+			return _cachedKey;
+		}
+		
+		/**
+		 * The key of the sibling group to which this series belongs. This 
+		 * method makes the assumption that the frequency dimension is in first
+		 * position in the series key. 
+		 */
+		public function get siblingGroupKey():String
+		{
+			if (null == keyValues) {
+				_cachedGroupKey = null;
+			} else if (_cachedGroupKey == null) {
+				_cachedGroupKey = keyValues.seriesKey.substr(2);
+			}
+			return _cachedGroupKey;
 		}
 		
 		/*==========================Public methods============================*/
@@ -105,7 +135,8 @@ package org.sdmx.model.v2.reporting.dataset
 		 * the supplied collection of key values, false otherwise.
 		 */
 		public function belongsToGroup(
-			keyValuesCollection:KeyValuesCollection):Boolean {
+			keyValuesCollection:KeyValuesCollection):Boolean 
+		{
 			var groupCursor:IViewCursor = keyValuesCollection.createCursor();
 			var seriesCursor:IViewCursor = keyValues.createCursor();
 			var result:Boolean = false;
@@ -127,6 +158,26 @@ package org.sdmx.model.v2.reporting.dataset
 				}
 			}
 			return result;
+		}
+		
+		/**
+		 * Whether or not the series belong to the group identified by the 
+		 * supplied group key. The method was introduced in addition to the 
+		 * method belongsToGroup for performance purposes and makes two 
+		 * assumptions: 
+		 * 1. The key supplied identifies a sibling group (so a group where
+		 * the frequency dimension is wildcarded). 
+		 * 2. The frequency dimension is in the first position in the series
+		 * key.
+		 * 
+		 * @param groupKey The key identifying the sibling group
+		 * 
+		 * @return Whether or not the series belong to the group identified by 
+		 * the supplied group key
+		 */
+		public function belongsToSiblingGroup(groupKey:String):Boolean
+		{
+			return seriesKey.substr(2) == groupKey;
 		}
 	}
 }
