@@ -64,6 +64,7 @@ package org.sdmx.model.v2.structure.code
 			var sortById:Sort = new Sort();
             sortById.fields = [new SortField("id", true)];
             sort = sortById;
+            refresh();
 		}
 		
 		/*============================Accessors===============================*/
@@ -148,7 +149,6 @@ package org.sdmx.model.v2.structure.code
 		/*=========================Private methods============================*/
 		
 		private function findById(id:String):Code {
-			refresh();
 			return (_cursor.findAny({id:id})) ? _cursor.current as Code : null;
 		}
 	}
