@@ -89,7 +89,7 @@ package org.sdmx.model.v2.structure.keyfamily
 			groupKeyDescriptor.addItem(dim3);
 			groupKeyDescriptor.addItem(dim4);									
 			collection.addItem(groupKeyDescriptor);
-			assertEquals("The groups should be equal", groupKeyDescriptor, collection.getGroup("CURRENCY.CURRENCY_DENOM.EXR_TYPE.EXR_SUFFIX"));
+			assertEquals("The groups should be equal", groupKeyDescriptor, collection.getGroup("siblingGroup"));
 			assertNull("This should not be in the collection", collection.getGroup("TEST.BLAH"));
 		}
 	}
