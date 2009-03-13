@@ -50,7 +50,13 @@ package org.sdmx.model.v2.reporting.dataset
 		private static const ERROR_MSG:String = "Only timeseries keys are " + 
 				"allowed in a timeseries collection. Got: ";
 				
-		private var _cursor:IViewCursor;		
+		private var _cursor:IViewCursor;	
+		
+		private var _groupCursor:IViewCursor;	
+		
+		private var _seriesSort:Sort;
+		
+		private var _groupSort:Sort;
 				
 		/*===========================Constructor==============================*/		
 		
@@ -89,18 +95,48 @@ package org.sdmx.model.v2.reporting.dataset
 		 * Returns the time series identified by the supplied series key
 		 * @param seriesKey The series key identifiying the time series
 		 * @return The time series identified by the supplied series key
-		 * 
 		 */
 		public function getTimeseriesKey(seriesKey:String):TimeseriesKey {
 			if (null == _cursor) {
-				var sortByKey:Sort = new Sort();
-            	sortByKey.fields = [new SortField("seriesKey", true)];
-            	sort = sortByKey;
-				refresh();
+				_seriesSort = new Sort();
+            	_seriesSort.fields = [new SortField("seriesKey", true)];
 				_cursor = createCursor();
 			}
+			if (sort != _seriesSort) {
+				sort = _seriesSort;
+				refresh();
+			}	
 			var found:Boolean = _cursor.findAny({seriesKey:seriesKey});
 			return (found) ? _cursor.current as TimeseriesKey : null;
+		}
+		
+		/**
+		 * Returns the time series belonging to the group identified by the 
+		 * supplied group key.
+		 * This method will work ONLY if the 3 following conditions are met:
+		 * 1. The supplied key identifies a sibling group  
+		 * 2. The frequency dimension is in the first position in the series key
+		 * 3. There is only one series that belongs to the group
+		 * If any of these 3 conditions is not met, results are unpredictable. 
+		 * 
+		 * @param groupKey The key identifiying the sibling group
+		 * @return The time series belonging to the group identified by the 
+		 * supplied group key
+		 */
+		public function getTimeseriesKeyBySiblingGroup(
+			groupKey:String):TimeseriesKey {
+			if (null == _groupCursor) {
+				_groupSort = new Sort();
+            	_groupSort.fields = [new SortField("siblingGroupKey", true)];
+				_groupCursor = createCursor();
+			}
+			if (sort != _groupSort) {
+				sort = _groupSort;
+				refresh();
+			}
+			var found:Boolean = 
+				_groupCursor.findAny({siblingGroupKey:groupKey});
+			return (found) ? _groupCursor.current as TimeseriesKey : null;
 		}
 	}
 }
