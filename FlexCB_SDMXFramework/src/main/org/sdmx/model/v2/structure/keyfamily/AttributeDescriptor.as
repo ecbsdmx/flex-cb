@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -48,11 +46,13 @@ package org.sdmx.model.v2.structure.keyfamily
 		
 		private static const ERROR_MSG:String = "Only data attributes are " + 
 				"allowed in an AttributeDescriptor. Got: ";	
+		private var _attributes:Object;		
 		
 		/*===========================Constructor==============================*/
 		
 		public function AttributeDescriptor(id:String = "Attributes") {
 			super(id);
+			_attributes = new Object();
 		}
 		
 		/*==========================Public methods============================*/
@@ -65,6 +65,7 @@ package org.sdmx.model.v2.structure.keyfamily
 				throw new ArgumentError(ERROR_MSG + 
 						getQualifiedClassName(item) + ".");
 			} else {
+				_attributes[(item as DataAttribute).conceptIdentity.id] = item;
 				super.addItemAt(item, index);
 			}
 		}
@@ -77,6 +78,7 @@ package org.sdmx.model.v2.structure.keyfamily
 				throw new ArgumentError(ERROR_MSG + 
 						getQualifiedClassName(item) + ".");
 			} else {
+				_attributes[(item as DataAttribute).conceptIdentity.id] = item;
 				return super.setItemAt(item, index);
 			}
 		}
@@ -89,15 +91,7 @@ package org.sdmx.model.v2.structure.keyfamily
 		 * @return The data attribute identified by the supplied id
 		 */
 		public function getAttribute(id:String):DataAttribute {
-			var attribute:DataAttribute = null;
-			for (var i:uint = 0; i < length; i++) {
-				var curAttribute:DataAttribute = getItemAt(i) as DataAttribute;
-					if (id == curAttribute.conceptIdentity.id) {
-						attribute = curAttribute;
-						break;
-					}
-	      		}
-      		return attribute;
+      		return (_attributes.hasOwnProperty(id)) ? _attributes[id] : null;
 		}
 	}
 }
