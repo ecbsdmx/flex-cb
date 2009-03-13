@@ -28,16 +28,16 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.stores.xml.v2
 {
-	import org.sdmx.model.v2.structure.keyfamily.KeyFamilies;
+	import flash.events.IEventDispatcher;
+	
+	import org.sdmx.model.v2.structure.keyfamily.KeyFamily;
 	
 	/**
 	 * Contract to be implemented by readers of SDMX-ML data files.
 	 * 
 	 * @author Xavier Sosnovsky
-	 * 
-	 * @see Annotation
 	 */
-	public interface IDataReader
+	public interface IDataReader extends IEventDispatcher
 	{
 		/**
 		 * @private
@@ -73,13 +73,17 @@ package org.sdmx.stores.xml.v2
 		/**
 		 * @private
 		 */
-		function set keyFamilies(keyFamilies:KeyFamilies):void;
+		function set keyFamily(kf:KeyFamily):void;
 		
 		/**
-		 * The key families needed to interpret the data in the key family
-		 * dependent formats (such as for example the Compact format) 
+		 * The key family needed to interpret the data in the data file. 
 		 */ 
-		function get keyFamilies():KeyFamilies;
+		function get keyFamily():KeyFamily;
+		
+		/**
+		 * The desired optimisation algorithm.
+		 */
+		function set optimisationLevel(level:uint):void;
 		
 		/**
 		 * Triggers a query against the supplied data file. 
