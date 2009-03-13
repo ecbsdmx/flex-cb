@@ -60,6 +60,9 @@ package org.sdmx.model.v2.reporting.dataset
 			} else {
 				_sdmxDate = new SDMXDate();
 			}
+			if (null == period || period.length == 0) {
+				throw new ArgumentError("The period cannot be null or empty");
+			}
 			if (period.indexOf("H") > -1 || period.indexOf("W") > -1) {
 				throw new Error("Not implemented!");
 			} else if (period.indexOf("Q") > -1 ) {
