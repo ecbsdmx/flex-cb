@@ -28,12 +28,12 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.model.v2.structure.keyfamily
 {
-	import mx.collections.ArrayCollection;
 	import flash.utils.getQualifiedClassName;
-	import org.sdmx.model.v2.reporting.dataset.GroupKey;
+	
+	import mx.collections.ArrayCollection;
+	import mx.collections.IViewCursor;
 	import mx.collections.Sort;
 	import mx.collections.SortField;
-	import mx.collections.IViewCursor;
 
 	/**
 	 * A collection of group key descriptors. It extends the AS3 ArrayCollection
@@ -108,22 +108,22 @@ package org.sdmx.model.v2.structure.keyfamily
 		
 		/**
 		 * Returns the group key descriptor identified by the supplied group
-		 * key
+		 * name.
 		 *  
-		 * @param groupKey The key identifiying the group key descriptor
+		 * @param groupName The name identifiying the group key descriptor
 		 * @return The group key descriptor identified by the supplied group
 		 * key, if any 
 		 */
-		public function getGroup(groupKey:String):GroupKeyDescriptor {
+		public function getGroup(groupName:String):GroupKeyDescriptor {
 			if (null == _cursor) {
 				_cursor = createCursor();
 				var sortByGroupKey:Sort = new Sort();
-            	sortByGroupKey.fields = [new SortField("groupKey", true)];
+            	sortByGroupKey.fields = [new SortField("id", true)];
             	sort = sortByGroupKey;
             	refresh();
 			}
-			var found:Boolean = _cursor.findAny({groupKey:groupKey});
-			return (found) ? _cursor.current as GroupKeyDescriptor : null;
+			return (_cursor.findAny({id:groupName})) ? 
+				_cursor.current as GroupKeyDescriptor : null;
 		}
 	}
 }
