@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -45,12 +43,15 @@ package org.sdmx.model.v2.structure.keyfamily
 		/*==============================Fields================================*/
 		
 		private static const ERROR_MSG:String = "Only dimensions are " + 
-				"allowed in a KeyDescriptor. Got: ";	
+				"allowed in a KeyDescriptor. Got: ";
+				
+		private var _dimensions:Object;			
 		
 		/*===========================Constructor==============================*/
 			
 		public function KeyDescriptor(id:String = "Dimensions") {
 			super(id);
+			_dimensions = new Object();
 		}
 		
 		/*==========================Public methods============================*/
@@ -60,6 +61,7 @@ package org.sdmx.model.v2.structure.keyfamily
 				throw new ArgumentError(ERROR_MSG + 
 						getQualifiedClassName(item) + ".");
 			} else {
+				_dimensions[(item as Dimension).conceptIdentity.id] = item;
 				super.addItemAt(item, index);
 			}
 		}
@@ -69,21 +71,14 @@ package org.sdmx.model.v2.structure.keyfamily
 				throw new ArgumentError(ERROR_MSG + 
 						getQualifiedClassName(item) + ".");
 			} else {
+				_dimensions[(item as Dimension).conceptIdentity.id] = item;
 				return super.setItemAt(item, index);
 			}
 		}
 		
 		public function getDimension(conceptId:String):Dimension {
-			var dimension:Dimension = null;
-			for (var i:uint = 0; i < length; i++) {
-				var currentDimension:Dimension = 
-					getItemAt(i) as Dimension;
-				if (conceptId == currentDimension.conceptIdentity.id) {
-					dimension = currentDimension
-					break;
-				}
-   			}
-      		return dimension;
+      		return (_dimensions.hasOwnProperty(conceptId)) ? 
+      			_dimensions[conceptId] : null;
 		}
 	}
 }
