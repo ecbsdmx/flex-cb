@@ -39,6 +39,7 @@ package org.sdmx.stores.xml.v2.compact
 	import org.sdmx.model.v2.reporting.dataset.TimePeriod;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
 	import org.sdmx.model.v2.structure.keyfamily.KeyFamilies;
+	import org.sdmx.model.v2.structure.keyfamily.KeyFamily;
 	import org.sdmx.stores.xml.v2.DataReaderAdapter;
 	import org.sdmx.stores.xml.v2.structure.StructureReader;
 
@@ -70,9 +71,8 @@ package org.sdmx.stores.xml.v2.compact
 		
 		public function testSetEmptyKeyFamily():void
 		{
-			var keyFamilies:KeyFamilies = new KeyFamilies();
 			try {
-				new CompactReader(keyFamilies);
+				new CompactReader(null);
 				fail("It should not be possible to set empty key families");
 			} catch (error:ArgumentError) {}
 
@@ -89,7 +89,8 @@ package org.sdmx.stores.xml.v2.compact
 		
 		private function handleKeyFamilies(event:SDMXDataEvent):void 
 		{
-			_compactReader = new CompactReader(event.data as KeyFamilies);
+			_compactReader = new CompactReader((event.data as KeyFamilies).
+				getItemAt(0) as KeyFamily);
 			_compactReader.addEventListener(DataReaderAdapter.INIT_READY, 
 				handleInitReady);
 			_compactReader.dataFile = _compactXML;	
