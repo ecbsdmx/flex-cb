@@ -30,6 +30,8 @@ package org.sdmx.stores.xml.v2
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
 	
+	import mx.utils.StringUtil;
+	
 	import org.sdmx.event.SDMXDataEvent;
 	import org.sdmx.model.v2.base.type.ConceptRole;
 	import org.sdmx.model.v2.reporting.dataset.AttachableArtefact;
@@ -550,27 +552,31 @@ package org.sdmx.stores.xml.v2
 		{
 			var observation:Observation;
 			var result:Object = findObservation(xml);
-			if (_primaryMeasure is UncodedMeasure) {
-				observation = new UncodedObservation(result["value"], 
-					_primaryMeasure as UncodedMeasure);
-			} else {
-				var codeList:CodeList = 
-					_primaryMeasure.localRepresentation as CodeList;
-				var code:Code = codeList.codes.getCode(result["value"]);
-				if (null == code) {
-					throw new Error("Could not find code with value '" 
-						+ result["value"] + "' in codelist '" 
-						+ codeList.id + "'");
+			if (result["value"] != null && 
+				StringUtil.trim(result["value"]).length > 0 && 
+				result["value"] != "NaN") {
+				if (_primaryMeasure is UncodedMeasure) {
+					observation = new UncodedObservation(result["value"], 
+						_primaryMeasure as UncodedMeasure);
+				} else {
+					var codeList:CodeList = 
+						_primaryMeasure.localRepresentation as CodeList;
+					var code:Code = codeList.codes.getCode(result["value"]);
+					if (null == code) {
+						throw new Error("Could not find code with value '" 
+							+ result["value"] + "' in codelist '" 
+							+ codeList.id + "'");
+					}
+					observation = new CodedObservation(code, 
+						_primaryMeasure as CodedMeasure);
 				}
-				observation = 
-					new CodedObservation(code, _primaryMeasure as CodedMeasure);
+				if (!_disableObservationAttribute) {
+					observation.attributeValues = 
+						handleAttributes(xml, observation);
+				}
+				return new TimePeriod(result["period"], observation, _sdmxDate);
 			}
-			if (!_disableObservationAttribute) {
-				observation.attributeValues = 
-					handleAttributes(xml, observation);
-			}
-			return (result["value"] != "NaN") ? new TimePeriod(result["period"], 
-				observation, _sdmxDate) : null;
+			return null;
 		}
 		
 		/**
