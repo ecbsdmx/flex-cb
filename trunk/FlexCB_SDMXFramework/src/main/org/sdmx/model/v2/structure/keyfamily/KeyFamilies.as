@@ -158,14 +158,15 @@ package org.sdmx.model.v2.structure.keyfamily
 		 * by the supplied maintenance agency
 		 */
 		public function getKeyFamilyByID(keyFamilyID:String, 
-			keyFamilyAgency:String):KeyFamily {
+			keyFamilyAgency:String = null):KeyFamily {
 			refresh();	
 			var cursor:IViewCursor = createCursor();
 			var keyFamily:KeyFamily = null;
 			while(!cursor.afterLast) {
 				if ((cursor.current as KeyFamily).id == keyFamilyID && 
-					(cursor.current as KeyFamily).maintainer.id == 
-					keyFamilyAgency) {
+					((cursor.current as KeyFamily).maintainer.id == 
+					keyFamilyAgency || keyFamilyAgency == null || 
+					keyFamilyAgency == "")) {
 					keyFamily = cursor.current as KeyFamily;
 					break;	
 				}
