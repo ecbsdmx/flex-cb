@@ -28,10 +28,13 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.command
 {
-	import eu.ecb.core.controller.IController;
+	import eu.ecb.core.event.ProgressEventMessage;
+	
 	import flash.errors.IllegalOperationError;
-	import flash.events.EventDispatcher;
+	import flash.events.ErrorEvent;
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
+	import flash.events.ProgressEvent;
 	
 	/**
 	 * Event triggered after a command has been successfully executed.
@@ -69,10 +72,6 @@ package eu.ecb.core.command
 	 */ 
 	public class CommandAdapter extends EventDispatcher implements ICommand
 	{
-		/*==============================Fields================================*/
-		
-		protected var _receiver:IReceiver;
-		
 		/*=============================Constants==============================*/
 		
 		/**
@@ -102,6 +101,14 @@ package eu.ecb.core.command
 		 */ 
 		public static const COMMAND_PROGRESS:String = "commandProgress";
 		
+		/*==============================Fields================================*/
+		
+		/**
+		 * Commands may also contain commands to be executed. If so, these
+		 * sub-commands can be stored here.  
+		 */
+		protected var _commands:Object;
+		
 		/*===========================Constructor==============================*/
 		
 		/**
@@ -110,10 +117,10 @@ package eu.ecb.core.command
 		 * @param receiver The class who knows how to perform the work needed
 		 * to carry out the request.
 		 */
-		public function CommandAdapter(receiver:IReceiver) 
+		public function CommandAdapter() 
 		{
 			super();
-			_receiver = receiver;
+			_commands = new Object();
 		}
 
 		/*==========================Public methods============================*/
@@ -126,5 +133,69 @@ package eu.ecb.core.command
 			throw new IllegalOperationError("The execute method must be " + 
 					"implemented in the subclass");
 		}
+		
+		/*=========================Protected methods==========================*/
+		
+		/**
+		 * Handles the reception of "completed" events thrown by receivers and
+		 * dispatches the CommandAdapter.COMMAND_COMPLETED event.
+		 * 
+		 * @param event "completed" event thrown by receivers
+		 */
+		protected function handleCompleted(event:Event):void 
+		{
+			event.stopImmediatePropagation();
+			dispatchEvent(new Event(CommandAdapter.COMMAND_COMPLETED));
+			event = null;		
+		}
+		
+		/**
+		 * Handles the reception of "error" events thrown by receivers and
+		 * dispatches the CommandAdapter.COMMAND_ERROR event.
+		 * 
+		 * @param event "error" event thrown by receivers
+		 */
+		protected function handleError(event:ErrorEvent):void 
+		{
+			event.stopImmediatePropagation();
+			dispatchEvent(new ErrorEvent(CommandAdapter.COMMAND_ERROR, 
+					false, false, event.text));
+			event = null;		
+		}
+		
+		/**
+		 * Handles the reception of "progress" events thrown by receivers and
+		 * dispatches the CommandAdapter.COMMAND_PROGRESS event.
+		 * 
+		 * @param event "progress" event thrown by receivers
+		 */
+		protected function handleProgress(event:ProgressEvent):void 
+		{
+			event.stopImmediatePropagation();
+			dispatchEvent(new ProgressEventMessage(
+				CommandAdapter.COMMAND_PROGRESS, false, false, 
+				event.bytesLoaded, event.bytesTotal, ""));
+			event = null;	
+		}
+		
+		/**
+		 * Add a command to the list of subcommands to be executed by the class.
+		 *  
+		 * @param commandID The id of the command
+		 * @param command The command to be executed
+		 * @param event The event that will be dispatched when the command has
+		 * been successfully executed
+		 * @param eventHandler The function that will handle the reception of 
+		 * the event when the command has been successfully executed.
+		 * 
+		 */
+		protected function addCommand(commandID:String, command:ICommand, 
+			event:String, eventHandler:Function):void
+		{
+			_commands[commandID] = command;
+			command.addEventListener(event, eventHandler); 
+			command.addEventListener(CommandAdapter.COMMAND_ERROR, 
+				handleError);
+		}	
 	}
 }
