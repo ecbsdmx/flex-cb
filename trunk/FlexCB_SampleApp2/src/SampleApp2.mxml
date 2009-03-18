@@ -43,7 +43,7 @@
 				var model:EXRModel    = new EXRModel();
 				var controller:EXRController = new EXRController(model, 
 					new URLRequest("data/all.xml"), 
-					new URLRequest("data/ecb_exr1.xml"));
+					new URLRequest("data/ecb_exr1.xml"), true);
 				var view:EXRDataPanel = new EXRDataPanel(model, controller, 
 					true);
 				view.width = 700;
