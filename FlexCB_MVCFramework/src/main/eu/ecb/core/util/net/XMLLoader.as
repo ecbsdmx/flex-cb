@@ -92,7 +92,8 @@ package eu.ecb.core.util.net
 					LoaderAdapter.DATA_LOADED));
 			} catch (error:Error) {
 				_secondAttempt = true;
-				load(_filename, false);
+				compressed = false;
+				execute();
 			}			
         }
 		

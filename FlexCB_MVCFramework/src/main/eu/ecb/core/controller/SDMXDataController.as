@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -29,16 +27,10 @@
 package eu.ecb.core.controller
 {
 	import eu.ecb.core.command.CommandAdapter;
-	import eu.ecb.core.command.IInvoker;
-	import eu.ecb.core.command.InvokerAdapter;
-	import eu.ecb.core.command.LoadSDMXData;
+	import eu.ecb.core.command.sdmx.LoadSDMXData;
 	import eu.ecb.core.event.ProgressEventMessage;
 	import eu.ecb.core.model.ISDMXDataModel;
-	import eu.ecb.core.model.SDMXDataModel;
-	import eu.ecb.core.util.net.XMLLoader;
 	
-	import flash.events.DataEvent;
-	import flash.events.ErrorEvent;
 	import flash.events.Event;
 	import flash.net.URLRequest;
 	
@@ -60,13 +52,6 @@ package eu.ecb.core.controller
 	 * 
 	 * @author Xavier Sosnovsky
 	 * @author Karine Feraboli
-	 * 
-	 * @todo
-	 * 		1. Add the possibility to have multiple commands, tackling
-	 * 		   different data files.
-	 * 		2. Implement the Strategy pattern to enable changing the SDMX-ML
-	 * 		   loader, based on the format of the SDMX-ML data file (e.g.: 
-	 * 		   Compact, Generic, etc).
 	 */
 	public class SDMXDataController extends PassiveSDMXDataController
 	{	
@@ -85,17 +70,7 @@ package eu.ecb.core.controller
 		/**
 		 * @private 
 		 */
-		protected var _seriesKeys:ArrayCollection;
-		
-		/**
-		 * @private 
-		 */
 		protected var _command:LoadSDMXData;
-		
-		/**
-		 * @private 
-		 */
-		protected var _invoker:IInvoker;
 		
 		/**
 		 * @private 
@@ -127,51 +102,34 @@ package eu.ecb.core.controller
 		 * @param dataFile The SDMX-ML data file to be loaded
 		 * @param structureFile The SDMX-ML structure file, containing the data
 		 * 		structure definintion for the data to be fetched
+		 * @param dataReader The type of the reader that will read the SDMX-ML 
+		 * 		data files
 		 * @param disableObservationAttribute Whether the loader should extract
 		 * 		observation level attributes. By default, it is disabled, as 
 		 * 		this task can negatively affect performance, depending on the 
 		 * 		number of observations available in the data file.
+		 * @param optimisationLevel The optimisation settings that will be 
+		 * 		applied when reading data.
 		 */
 		public function SDMXDataController(model:ISDMXDataModel, 
 			dataFile:URLRequest, structureFile:URLRequest, 
-			disableObservationAttribute:Boolean = true)
+			disableObservationAttribute:Boolean = true, 
+			optimisationLevel:uint = 0)
 		{
-			
 			super(model);
 			_dataFile = dataFile;	
 			_structureFile = structureFile;
-			
 			_nrOfFilesToFetch = 0;
 			
-			_command = 
-				new LoadSDMXData(_dataFile, _structureFile, new XMLLoader());
-			_command.addEventListener(CommandAdapter.COMMAND_COMPLETED, 
+			_command = new LoadSDMXData();
+			_command.dataFile = _dataFile;
+			_command.structureFile = _structureFile;
+			_command.disableObservationAttribute = disableObservationAttribute;	
+			_command.optimisationLevel = optimisationLevel;
+			_command.addEventListener(LoadSDMXData.DATA_LOADED, 
 				handleData);
 			_command.addEventListener(CommandAdapter.COMMAND_ERROR, 
 				handleError);
-			_command.disableObservationAttribute = disableObservationAttribute;	
-			_invoker = new InvokerAdapter();
-			_invoker.addCommand(_command);
-		}
-		
-		/*============================Accessors===============================*/
-		
-		/**
-		 * The keys of the series to be extracted from the data file. By 
-		 * default, all series are extracted out of the SDMX-ML data file. In
-		 * case of large data files, it may be more efficient to just extract 
-		 * the series needed for the initial state of the application.
-		 */
-		public function get seriesKeys():ArrayCollection {
-			return _seriesKeys;
-		}
-		
-		/**
-		 * @private
-		 */
-		public function set seriesKeys(seriesKeys:ArrayCollection):void {
-			_seriesKeys = seriesKeys;
-			_command.seriesKeys = seriesKeys;
 		}
 		
 		/*==========================Public methods============================*/
@@ -185,7 +143,7 @@ package eu.ecb.core.controller
 		 */
 		public function loadData():void 
 		{
-			_invoker.invokeCommands();
+			_command.execute();
 		}
 		
 		/**
@@ -199,7 +157,7 @@ package eu.ecb.core.controller
 			var isFetching:Boolean = false;
 			if (null != _filesToFetch && _filesToFetch.length > 0) {
 				isFetching = true;
-				for each (var file:String in files) {
+				for each (var file:URLRequest in files) {
 					_filesToFetch.addItem(file);
 				}
 				_nrOfFilesToFetch = _filesToFetch.length + 1;
@@ -216,11 +174,12 @@ package eu.ecb.core.controller
 			}
 			
 			if (!isFetching) {
-				_command.dataFile = _filesToFetch.removeItemAt(0) as URLRequest;
+				_command.dataFile = 
+					_filesToFetch.removeItemAt(0) as URLRequest;
 				dispatchEvent(new ProgressEventMessage(TASK_PROGRESS, false, 
 					false, 0, 0, "Please wait: Loading data (" + 
 					Math.round( (1 /_totalNrOfFiles) * 100) + "%)"));
-				_invoker.invokeCommands();
+				_command.execute();
 			}	
 		}
 		
@@ -274,7 +233,7 @@ package eu.ecb.core.controller
 					Math.round(((_totalNrOfFiles -	_filesToFetch.length + 1) /
 						_totalNrOfFiles) * 100) + "%)"));
 				_command.dataFile = _filesToFetch.removeItemAt(0) as URLRequest;
-				_invoker.invokeCommands();	
+				_command.execute();
 			}
 		}		
 	}

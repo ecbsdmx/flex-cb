@@ -28,10 +28,11 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.util.net
 {
-	import flash.events.IEventDispatcher;
+	import eu.ecb.core.command.ICommand;
+	
 	import flash.events.Event;
+	import flash.events.IEventDispatcher;
 	import flash.net.URLRequest;
-	import eu.ecb.core.command.IReceiver;
 
 	/**
 	 * Interface for classes that load data from remote resources. 
@@ -41,16 +42,8 @@ package eu.ecb.core.util.net
 	 * 
 	 * @author Xavier Sosnovsky
 	 */ 
-	public interface ILoader extends IEventDispatcher, IReceiver
+	public interface ILoader extends IEventDispatcher, ICommand
 	{
-		/**
-		 * Loads the supplied file
-		 *  
-		 * @param filename The file to be loaded
-		 * @param compressed Whether or not the file is compressed (zlib)
-		 */
-		function load(filename:URLRequest, compressed:Boolean = true):void;
-		
 		/**
 		 * Handle the loaded data
 		 * 
