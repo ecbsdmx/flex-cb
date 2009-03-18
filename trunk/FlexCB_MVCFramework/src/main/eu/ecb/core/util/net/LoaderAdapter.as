@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -28,10 +26,11 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.util.net
 {
+	import eu.ecb.core.command.CommandAdapter;
+	
 	import flash.events.DataEvent;
 	import flash.events.ErrorEvent;
 	import flash.events.Event;
-	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
@@ -41,7 +40,6 @@ package eu.ecb.core.util.net
 	import flash.net.URLRequest;
 	import flash.net.URLVariables;
 	import flash.utils.ByteArray;
-	import flash.utils.getTimer;
 
 	/**
 	 * Event dispatched when the data has been successfully loaded.
@@ -49,22 +47,7 @@ package eu.ecb.core.util.net
 	 * @eventType eu.ecb.core.util.net.LoaderAdapter.DATA_LOADED
 	 */
 	[Event(name="dataLoaded", type="flash.events.DataEvent")]
-	
-	/**
-	 * Event dispatched when an error has been encountered when downloading 
-	 * data.
-	 * 
-	 * @eventType eu.ecb.core.util.net.LoaderAdapter.DATA_LOADING_ERROR
-	 */
-	[Event(name="dataDownloadError", type="flash.events.ErrorEvent")]
-	
-	/**
-	 * Event dispatched when the data is being downloaded.
-	 * 
-	 * @eventType eu.ecb.core.util.net.LoaderAdapter.DATA_LOADING_PROGRESS
-	 */
-	[Event(name="dataDownloadProgress", type="flash.events.ProgressEvent")]
-	
+		
 	/**
 	 * Default implementation of the ILoader interface.
 	 * 
@@ -75,7 +58,7 @@ package eu.ecb.core.util.net
 	 * 
 	 * @author Xavier Sosnovsky
 	 */
-	public class LoaderAdapter extends EventDispatcher implements ILoader
+	public class LoaderAdapter extends CommandAdapter implements ILoader
 	{
 		/*=============================Constants==============================*/
 		
@@ -87,26 +70,7 @@ package eu.ecb.core.util.net
 		 * @eventType dataLoaded
 		 */  
 		public static const DATA_LOADED:String = "dataLoaded";
-		
-		/**
-		 * The LoaderAdapter.DATA_LOADING_ERROR constant defines the value of 
-		 * the <code>type</code> property of the event object for a 
-		 * <code>dataLoadingError</code> event.
-		 * 
-		 * @eventType dataLoadingError
-		 */   
-		public static const DATA_LOADING_ERROR:String = "dataLoadingError";
-		
-		/**
-		 * The LoaderAdapter.DATA_LOADING_PROGRESS constant defines the value of 
-		 * the <code>type</code> property of the event object for a 
-		 * <code>dataLoadingProgress</code> event.
-		 * 
-		 * @eventType dataLoadingProgress
-		 */   
-		public static const DATA_LOADING_PROGRESS:String = 
-			"dataLoadingProgress";
-			
+					
 		/*==============================Fields================================*/
 		
 		/**
@@ -117,7 +81,7 @@ package eu.ecb.core.util.net
 		/**
 		 * @private
 		 */	
-		protected var _filename:URLRequest;
+		protected var _file:URLRequest;
 		
 		/**
 		 * @private
@@ -128,7 +92,7 @@ package eu.ecb.core.util.net
 			
 		public function LoaderAdapter(target:IEventDispatcher = null)
 		{
-			super(target);
+			super();
 			_urlLoader = new URLLoader();
 			_urlLoader.addEventListener(Event.COMPLETE, handleData);
 			_urlLoader.addEventListener(ProgressEvent.PROGRESS, handleProgress);
@@ -137,26 +101,43 @@ package eu.ecb.core.util.net
 				handleError);
 		}
 		
+		/*============================Accessors===============================*/
+		
+		/**
+		 * The data file to be loaded. 
+		 *  
+		 * @param dataFile
+		 */
+		public function set file(file:URLRequest):void
+		{
+			_file = file;
+			compressed = _file.url.indexOf(".zlib") > -1;
+		}
+		
+		/**
+		 *	Whether or not the file is compressed 
+		 */
+		public function set compressed(flag:Boolean):void
+		{
+			_compressed = flag;
+		}
+		
 		/*==========================Public methods============================*/
 		
 		/**
 		 * @inheritDoc
 		 */
-		public function load(filename:URLRequest, compressed:Boolean=true):void
+		override public function execute():void
 		{
-			_filename = filename;
-			_compressed = compressed;
-			_urlLoader.dataFormat = (compressed) ? URLLoaderDataFormat.BINARY: 
+			_urlLoader.dataFormat = (_compressed) ? URLLoaderDataFormat.BINARY: 
 				URLLoaderDataFormat.TEXT;
 			
-			
-			if (filename.data is URLRequest) {
-				var fileVariables:URLVariables = filename.data as URLVariables;
+			if (_file.data is URLRequest) {
+				var fileVariables:URLVariables = _file.data as URLVariables;
 				fileVariables.fid = Math.random() * 1000;
 			}
 			
-			_urlLoader.load(filename);
-			
+			_urlLoader.load(_file);
 		}
 		
 		/**
@@ -177,6 +158,7 @@ package eu.ecb.core.util.net
 			}
 			dispatchEvent(new DataEvent(LoaderAdapter.DATA_LOADED, false, false, 
 				out));
+			dispatchEvent(new Event(COMMAND_COMPLETED));	
 		}
 		
 		/*=========================Protected methods==========================*/
@@ -184,22 +166,11 @@ package eu.ecb.core.util.net
 		/**
          * @private
          */
-		protected function handleError(event:ErrorEvent):void {
+		override protected function handleError(event:ErrorEvent):void {
 			event.stopImmediatePropagation();
-        	dispatchEvent(new ErrorEvent(LoaderAdapter.DATA_LOADING_ERROR, 
-        		false, false, "Problem fetching data file " + _filename + ": "
-        		+ event.text));
+        	dispatchEvent(new ErrorEvent(COMMAND_ERROR, false, 
+        		"Problem fetching data file " + _file + ": " + event.text));
         	event = null;	
-        }
-        
-        /**
-         * @private
-         */ 
-        protected function handleProgress(event:ProgressEvent):void {
-        	event.stopImmediatePropagation();
-        	dispatchEvent(new ProgressEvent(LoaderAdapter.DATA_LOADING_PROGRESS, 
-        		false, false, event.bytesLoaded, event.bytesTotal));
-        	event = null;	
-        }
+        }        
 	}
 }
