@@ -71,7 +71,9 @@ package eu.ecb.core.util.net
 		
 		public function testLoadPlainXMLDataShouldWorkWhenCompressionTurnedOn():void {
 			_loader.addEventListener(LoaderAdapter.DATA_LOADED, addAsync(getData, 3000));
-			_loader.load(new URLRequest("testData/usd.xml"), true);			
+			_loader.file = new URLRequest("testData/usd.xml");
+			_loader.compressed = true;
+			_loader.execute();			
 		}
 		
 		private function getData(event:XMLDataEvent):void {

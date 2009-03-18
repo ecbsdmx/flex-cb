@@ -28,11 +28,13 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.util.net
 {
-	import flash.net.URLRequest;
-
-	import flexunit.framework.TestCase;
-	import flash.events.ErrorEvent;
+	import eu.ecb.core.command.CommandAdapter;
+	
 	import flash.events.DataEvent;
+	import flash.events.ErrorEvent;
+	import flash.net.URLRequest;
+	
+	import flexunit.framework.TestCase;
 	import flexunit.framework.TestSuite;
 
 	/**
@@ -72,18 +74,26 @@ package eu.ecb.core.util.net
 		
 		public function testLoadPlainXMLData():void {
 			_loader.addEventListener(LoaderAdapter.DATA_LOADED, addAsync(getData, 3000));
-			_loader.load(new URLRequest("testData/usd.xml"), false);			
+			_loader.file = new URLRequest("testData/usd.xml");
+			_loader.compressed = false;
+			_loader.execute(); 
 		}
 		
-		public function testLoadCompressedXMLData():void {
+		/*public function testLoadCompressedXMLData():void {
+			//Missing test data
 			_loader.addEventListener(LoaderAdapter.DATA_LOADED, addAsync(getData, 3000));
-			_loader.load(new URLRequest("testData/usd.xml.zlib"), true);
-		}
+			_loader.addEventListener(CommandAdapter.COMMAND_ERROR, 
+				addAsync(handleError, 3000));
+			_loader.file = new URLRequest("testData/usd.xml.zlib");
+			_loader.compressed = true;
+			_loader.execute(); 
+		}*/
 		
 		public function testErrorHandling():void {
-			_loader.addEventListener(LoaderAdapter.DATA_LOADING_ERROR, 
+			_loader.addEventListener(CommandAdapter.COMMAND_ERROR, 
 				addAsync(handleError, 3000));
-			_loader.load(new URLRequest("notExistingDataFile"));
+			_loader.file = new URLRequest("notExistingDataFile");
+			_loader.execute(); 	
 		}
 		
 		private function getData(event:DataEvent):void {
