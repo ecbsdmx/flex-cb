@@ -28,15 +28,15 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.command
 {
-	import flexunit.framework.TestCase;
-	import flexunit.framework.TestSuite;
-	import mx.containers.HBox;
-	import eu.ecb.core.controller.ControllerAdapter;
-	import org.sdmx.event.SDMXDataEvent;
+	import eu.ecb.core.command.sdmx.LoadSDMXData;
+	
 	import flash.events.ErrorEvent;
 	import flash.net.URLRequest;
 	
-	import eu.ecb.core.util.net.XMLLoader;
+	import flexunit.framework.TestCase;
+	import flexunit.framework.TestSuite;
+	
+	import org.sdmx.event.SDMXDataEvent;
 
 	/**
 	 *	@private 
@@ -53,46 +53,45 @@ package eu.ecb.core.command
 		}
 		
 		public function testGetData():void {
-			var command:ICommand = new LoadSDMXData(new URLRequest("testData/usd.xml")
-				, new URLRequest("testData/ecb_exr1.xml")
-				, new XMLLoader()
-				);
-			command.addEventListener(CommandAdapter.COMMAND_COMPLETED, 
+			var command:LoadSDMXData = new LoadSDMXData();
+			command.dataFile = new URLRequest("testData/usd.xml");
+			command.structureFile = new URLRequest("testData/ecb_exr1.xml");	
+			command.addEventListener(LoadSDMXData.DATA_LOADED, 
 				addAsync(handleData, 3000));	
 			command.execute();	
 		}
 		
 		public function testNonExistingData():void {
-			var command:ICommand = 
-				new LoadSDMXData(
-				new URLRequest("testData/nonExistingFile.xml")
-								,new URLRequest("testData/ecb_exr1.xml")
-								, new XMLLoader());
+			var command:LoadSDMXData = new LoadSDMXData();
+			command.dataFile = new URLRequest("testData/nonExistingFile.xml");
+			command.structureFile = new URLRequest("testData/ecb_exr1.xml");
 			command.addEventListener(CommandAdapter.COMMAND_ERROR, 
 				addAsync(handleError, 3000));	
 			command.execute();
 		}
 		
 		public function testWrongStructureFile():void {
-			var command:ICommand = new LoadSDMXData(new URLRequest("testData/rub.xml.zlib"), 
-				new URLRequest("testData/usd.xml"), new XMLLoader());
+			var command:LoadSDMXData = new LoadSDMXData();
+			command.dataFile = new URLRequest("testData/rub.xml.zlib");
+			command.structureFile = new URLRequest("testData/usd.xml");
 			command.addEventListener(CommandAdapter.COMMAND_ERROR, 
 				addAsync(handleError, 3000));	
 			command.execute();
 		}
 		
-		/*public function testGetWrongDataFile():void {
-			var command:ICommand = new LoadSDMXData("testData/ecb_mir1.xml", 
-				"testData/ecb_exr1.xml", new XMLLoader());
+		public function testGetWrongDataFile():void {
+			var command:LoadSDMXData = new LoadSDMXData();
+			command.dataFile = new URLRequest("testData/ecb_mir1.xml");
+			command.structureFile = new URLRequest("testData/ecb_exr1.xml");
 			command.addEventListener(CommandAdapter.COMMAND_ERROR, 
 				addAsync(handleError, 3000));	
 			command.execute();
-		}*/
+		}
 		
 		public function testGetIdenticalFiles():void {
-			var command:ICommand = new LoadSDMXData(new URLRequest("testData/ecb_exr1.xml")
-					, new URLRequest("testData/ecb_exr1.xml")
-					, new XMLLoader());
+			var command:LoadSDMXData = new LoadSDMXData();
+			command.dataFile = new URLRequest("testData/ecb_exr1.xml");
+			command.structureFile = new URLRequest("testData/ecb_exr1.xml");
 			command.addEventListener(CommandAdapter.COMMAND_ERROR, 
 				addAsync(handleError, 3000));	
 			command.execute();

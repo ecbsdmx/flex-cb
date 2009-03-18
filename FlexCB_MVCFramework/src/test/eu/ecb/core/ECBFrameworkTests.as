@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -26,33 +24,28 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-package eu.ecb.core.command
+package eu.ecb.core
 {
-	import flexunit.framework.TestCase;
-	import flash.errors.IllegalOperationError;
+	import eu.ecb.core.command.CommandTests;
+	import eu.ecb.core.controller.ControllerTests;
+	import eu.ecb.core.event.EventTests;
+	import eu.ecb.core.model.ModelTests;
+	import eu.ecb.core.util.UtilTests;
+	import eu.ecb.core.view.ViewTests;
+	
 	import flexunit.framework.TestSuite;
 	
-	/**
-	 *	@private 
-	 */
-	public class CommandAdapterTest extends TestCase
+	public class ECBFrameworkTests
 	{
-		public function CommandAdapterTest(methodName:String = null)
-		{
-			super(methodName);
-		}
-		
-		public static function suite():TestSuite
-		{
-			return new TestSuite(CommandAdapterTest);
-		}
-		
-		public function testExecute():void {
-			var command:ICommand = new CommandAdapter();
-			try {
-				command.execute();
-				fail("An IllegalOperationError should have been caught");
-			} catch (error:IllegalOperationError) {}
+		public static function suite():TestSuite {
+			var suite:TestSuite = new TestSuite();
+ 			suite.addTest(CommandTests.suite());
+ 			suite.addTest(ControllerTests.suite());
+ 			suite.addTest(EventTests.suite());
+ 			suite.addTest(ModelTests.suite());
+ 			suite.addTest(UtilTests.suite());
+ 			suite.addTest(ViewTests.suite());
+ 			return suite;
 		}
 	}
 }

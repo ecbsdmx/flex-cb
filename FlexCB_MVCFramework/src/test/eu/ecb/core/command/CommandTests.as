@@ -28,6 +28,9 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.command
 {
+	import eu.ecb.core.command.sdmx.FindKeyFamilyTest;
+	import eu.ecb.core.command.sdmx.GuessDataTypeTest;
+	
 	import flexunit.framework.TestSuite;
 	
 	/**
@@ -40,6 +43,8 @@ package eu.ecb.core.command
  			suite.addTest(CommandAdapterTest.suite());
  			suite.addTest(InvokerAdapterTest.suite());
  			suite.addTest(LoadSDMXDataTest.suite());
+ 			suite.addTest(GuessDataTypeTest.suite());
+ 			suite.addTest(FindKeyFamilyTest.suite());
  			return suite;
 		}
 	}
