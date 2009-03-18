@@ -5,6 +5,7 @@
 	creationComplete="onCreationComplete()">
 	<mx:Script>
 		<![CDATA[
+			import eu.ecb.core.ECBFrameworkTests;
 			import flexunit.framework.TestSuite;
 			import org.sdmx.util.UtilPackageTests;
 			import org.sdmx.stores.StoresPackageTests;
@@ -22,7 +23,7 @@
  				suite.addTest(ModelPackageTests.suite());
  				suite.addTest(StoresPackageTests.suite());
  				suite.addTest(UtilPackageTests.suite());
- 				//suite.addTest(ECBFrameworkTests.suite()); 				
+ 				suite.addTest(ECBFrameworkTests.suite()); 				
  				return suite;
  			}
 		]]>
