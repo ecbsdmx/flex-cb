@@ -29,8 +29,11 @@
 package org.sdmx.stores.xml.v2
 {
 	import flexunit.framework.TestSuite;
-	import org.sdmx.stores.xml.v2.structure.StructurePackageTests;
+	
 	import org.sdmx.stores.xml.v2.compact.CompactReaderTest;
+	import org.sdmx.stores.xml.v2.generic.GenericReaderTest;
+	import org.sdmx.stores.xml.v2.structure.StructurePackageTests;
+	import org.sdmx.stores.xml.v2.utility.UtilityReaderTest;
 	
 	/**
 	 *	@private 
@@ -40,6 +43,8 @@ package org.sdmx.stores.xml.v2
 		public static function suite():TestSuite {
 			var suite:TestSuite = new TestSuite();
 			suite.addTest(CompactReaderTest.suite());
+			suite.addTest(GenericReaderTest.suite());
+			suite.addTest(UtilityReaderTest.suite());
  			suite.addTest(StructurePackageTests.suite());
  			return suite;
 		}
