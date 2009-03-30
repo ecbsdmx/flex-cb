@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -28,8 +26,10 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.util.formatter
 {
+	import mx.formatters.DateBase;
 	import mx.formatters.DateFormatter;
 
+	[ResourceBundle("flex_cb_mvc_lang")]
 	/**
      * Utility class that extends the standard Flex date formatter, to 
      * accomodate default ECB formatting and frequencies.
@@ -54,6 +54,8 @@ package eu.ecb.core.util.formatter
 		public function SDMXDateFormatter() 
 		{
 			super();
+			DateBase.monthNamesLong = resourceManager.getString(
+				"flex_cb_mvc_lang", "monthNamesLong").split(",");
 		}
 		
 		/*============================Accessors===============================*/
