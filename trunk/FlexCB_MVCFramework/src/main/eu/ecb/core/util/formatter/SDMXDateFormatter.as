@@ -54,8 +54,8 @@ package eu.ecb.core.util.formatter
 		public function SDMXDateFormatter() 
 		{
 			super();
-			DateBase.monthNamesLong = resourceManager.getString(
-				"flex_cb_mvc_lang", "monthNamesLong").split(",");
+			DateBase.monthNamesLong = resourceManager.getStringArray(
+				"flex_cb_mvc_lang", "monthNamesLong");
 		}
 		
 		/*============================Accessors===============================*/
