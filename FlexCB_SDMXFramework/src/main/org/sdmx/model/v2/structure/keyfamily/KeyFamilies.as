@@ -28,11 +28,13 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.model.v2.structure.keyfamily
 {
+	import flash.utils.getQualifiedClassName;
+	
+	import mx.collections.ArrayCollection;
 	import mx.collections.IViewCursor;
 	import mx.collections.Sort;
 	import mx.collections.SortField;
-	import flash.utils.getQualifiedClassName;
-	import mx.collections.ArrayCollection;
+	
 	import org.sdmx.model.v2.base.SDMXArtefact;
 
 	/**
@@ -158,7 +160,8 @@ package org.sdmx.model.v2.structure.keyfamily
 		 * by the supplied maintenance agency
 		 */
 		public function getKeyFamilyByID(keyFamilyID:String, 
-			keyFamilyAgency:String = null):KeyFamily {
+			keyFamilyAgency:String = null, 
+			versionNumber:String = null):KeyFamily {
 			refresh();	
 			var cursor:IViewCursor = createCursor();
 			var keyFamily:KeyFamily = null;
@@ -166,7 +169,9 @@ package org.sdmx.model.v2.structure.keyfamily
 				if ((cursor.current as KeyFamily).id == keyFamilyID && 
 					((cursor.current as KeyFamily).maintainer.id == 
 					keyFamilyAgency || keyFamilyAgency == null || 
-					keyFamilyAgency == "")) {
+					keyFamilyAgency == "") && ((cursor.current as KeyFamily).
+					version == versionNumber || versionNumber == null || 
+					versionNumber == "")) {
 					keyFamily = cursor.current as KeyFamily;
 					break;	
 				}
