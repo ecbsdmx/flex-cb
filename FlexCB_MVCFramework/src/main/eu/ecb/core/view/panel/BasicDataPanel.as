@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -121,7 +119,7 @@ package eu.ecb.core.view.panel
 			BindingUtils.bindProperty(this, "dataSet", _model, 
 				"dataSet");
 			BindingUtils.bindProperty(this, "fullDataSet", _model, 
-				"fullDataSet");			
+				"allDataSets");			
 			BindingUtils.bindProperty(this, "filteredReferenceSeries", _model, 
 				"filteredReferenceSeries");
 			BindingUtils.bindProperty(this, "periods", _model, "periods");

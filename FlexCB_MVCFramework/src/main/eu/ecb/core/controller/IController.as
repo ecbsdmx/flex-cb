@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -30,6 +28,8 @@ package eu.ecb.core.controller
 {
 	import eu.ecb.core.model.IModel;
 	
+	import flash.events.IEventDispatcher;
+	
 	/**
 	 * Minimum contract to be implemented by controllers.
 	 * 
@@ -41,7 +41,7 @@ package eu.ecb.core.controller
 	 * 
 	 * @author Xavier Sosnovsky
 	 */ 
-	public interface IController
+	public interface IController extends IEventDispatcher
 	{			
 		/**
 		 * The model used by this controller. 
