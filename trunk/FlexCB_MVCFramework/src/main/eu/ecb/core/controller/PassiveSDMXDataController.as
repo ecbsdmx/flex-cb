@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -29,7 +27,6 @@
 package eu.ecb.core.controller
 {
 	import eu.ecb.core.event.ProgressEventMessage;
-	import eu.ecb.core.model.IModel;
 	import eu.ecb.core.model.ISDMXDataModel;
 	import eu.ecb.core.model.SDMXDataModel;
 	
@@ -44,20 +41,26 @@ package eu.ecb.core.controller
 	 * 
 	 * @author Xavier Sosnovsky
 	 */
-	public class PassiveSDMXDataController extends ControllerAdapter
+	public class PassiveSDMXDataController extends BaseSDMXServiceController
 	{
 		/*===========================Constructor==============================*/
 		
-		public function PassiveSDMXDataController(model:IModel)
+		public function PassiveSDMXDataController(model:ISDMXDataModel)
 		{
 			super(model);
 		}
 		
 		/*============================Accessors===============================*/
 		
+		/**
+		 * When a data set is already available and there is no need to ask
+		 * the controller to fetch it, it can be assigned using this method.
+		 * 
+		 * @param ds The data set assigned to this controller 
+		 */
 		public function set dataSet(ds:DataSet):void
 		{
-			(model as SDMXDataModel).fullDataSet = ds;		
+			(model as SDMXDataModel).allDataSets = ds;		
 		}
 				
 		/*==========================Public methods============================*/
@@ -128,29 +131,6 @@ package eu.ecb.core.controller
 		{
 			(model as ISDMXDataModel).handleDividerDragged(event, "right");
 			event.stopImmediatePropagation();
-		}
-		
-		/*=========================Protected methods==========================*/
-		
-		/**
-		 * Handle errors related to loading the SDMX-ML data files. 
-		 * 
-		 * <p>By default, the method will call the default Flex error box.</p>
-		 * 
-		 * @param event The event containing the error message.
-		 */
-		protected function handleError(event:ErrorEvent):void {
-			dispatchEvent(new ErrorEvent(TASK_ERROR, false, false, event.text));
-		}
-		
-		/**
-		 * Handle the progress activity of the loading task. 
-		 * 
-		 * <p>By default, this method silently suppresses the event.</p>
-		 * 
-		 * @param event The event containing the progress information
-		 */
-		protected function handleProgress(event:ProgressEventMessage):void {
 		}
 	}
 }

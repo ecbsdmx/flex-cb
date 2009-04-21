@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -28,9 +26,11 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.controller
 {
-	import flash.events.EventDispatcher;
-	import flash.events.Event;
 	import eu.ecb.core.model.IModel;
+	
+	import flash.events.ErrorEvent;
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	
 	/**
 	 * Event triggered after the controller has finished all pending tasks
@@ -142,6 +142,17 @@ package eu.ecb.core.controller
 		 */
 		public function set model(model:IModel):void {
 			_model = model;
+		}
+		
+		/*=========================Protected methods==========================*/
+		
+		/**
+		 * Handle errors.
+		 * 
+		 * @param event The event containing the error message.
+		 */
+		protected function handleError(event:ErrorEvent):void {
+			dispatchEvent(new ErrorEvent(TASK_ERROR, false, false, event.text));
 		}
 	}
 }

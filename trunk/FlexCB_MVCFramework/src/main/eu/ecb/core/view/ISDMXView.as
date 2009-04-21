@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -28,9 +26,10 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view
 {
+	import mx.collections.ArrayCollection;
+	
 	import org.sdmx.model.v2.reporting.dataset.DataSet;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
-	import mx.collections.ArrayCollection;
 	
 	/**
 	 * Contract to be implemented by classes supporting visual representations
@@ -38,18 +37,12 @@ package eu.ecb.core.view
 	 *  
 	 * @author Xavier Sosnovsky
 	 */
-	public interface ISDMXView
+	public interface ISDMXView extends ISDMXServiceView
 	{
 		/**
 		 * The SDMX data set containing all the data available in the model. 
 		 */ 
 		function set fullDataSet(dataSet:DataSet):void;
-		
-		/**
-		 * The SDMX data set containing the desired subset of data to be 
-		 * displayed by the view. 
-		 */ 
-		function set dataSet(dataSet:DataSet):void;
 		
 		/**
 		 * The SDMX data set, after all its series have been filtered

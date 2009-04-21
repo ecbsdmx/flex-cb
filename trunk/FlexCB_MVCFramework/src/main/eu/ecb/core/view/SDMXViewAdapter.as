@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -29,19 +27,18 @@
 package eu.ecb.core.view
 {
 	import mx.collections.ArrayCollection;
-	import mx.containers.Box;
+	import mx.formatters.DateBase;
 	
 	import org.sdmx.model.v2.reporting.dataset.DataSet;
-	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
-	
-	import mx.formatters.DateBase; 
+	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey; 
 	
 	/**
 	 * Basic implementation of the ISDMXView interface.
 	 * 
 	 * @author Xavier Sosnovsky
 	 */
-	public class SDMXViewAdapter extends Box implements ISDMXView
+	public class SDMXViewAdapter extends SDMXServiceViewAdapter 
+		implements ISDMXView
 	{
 		
 		/*==============================Fields================================*/
@@ -55,16 +52,6 @@ package eu.ecb.core.view
 		 * @private
 		 */
 		protected var _fullDataSetChanged:Boolean;
-		
-		/**
-		 * @private
-		 */ 	
-		protected var _dataSet:DataSet;
-		
-		/**
-		 * @private
-		 */
-		protected var _dataSetChanged:Boolean;
 		
 		/**
 		 * @private
@@ -130,8 +117,7 @@ package eu.ecb.core.view
 				
 		public function SDMXViewAdapter(direction:String = "vertical") 
 		{
-			super();
-			this.direction = direction;
+			super(direction);
 		}
 		
 		/*========================Protected methods===========================*/
@@ -157,19 +143,6 @@ package eu.ecb.core.view
 				dataSet.timeseriesKeys.length > 0) {
 				_fullDataSet = dataSet;
 				_fullDataSetChanged = true;		
-				invalidateProperties();
-			}
-		}
-		
-		/**
-		 * @inheritDoc
-		 */ 
-		public function set dataSet(dataSet:DataSet):void
-		{
-			if (null != dataSet &&  null != dataSet.timeseriesKeys && 
-				dataSet.timeseriesKeys.length > 0) {
-				_dataSet = dataSet;
-				_dataSetChanged = true;		
 				invalidateProperties();
 			}
 		}

@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -29,8 +27,8 @@
 package eu.ecb.core.view.panel
 {
 	import eu.ecb.core.controller.PassiveSDMXDataController;
-	import eu.ecb.core.controller.SDMXDataController;
 	import eu.ecb.core.model.SDMXDataModel;
+	import eu.ecb.core.view.ISDMXServiceView;
 	import eu.ecb.core.view.ISDMXView;
 	import eu.ecb.core.view.SDMXViewAdapter;
 	
@@ -147,7 +145,7 @@ package eu.ecb.core.view.panel
 		/**
 		 * @inheritDoc
 		 */ 
-		public function addView(view:ISDMXView):void
+		public function addView(view:ISDMXServiceView):void
 		{
 			if (null != view) {
 				addChild(view as DisplayObject);
@@ -157,7 +155,7 @@ package eu.ecb.core.view.panel
 		/**
 		 * @inheritDoc
 		 */ 
-		public function removeView(view:ISDMXView):void
+		public function removeView(view:ISDMXServiceView):void
 		{
 			if (null != view) {
 				removeChild(view as DisplayObject);
@@ -167,7 +165,7 @@ package eu.ecb.core.view.panel
 		/**
 		 * @inheritDoc
 		 */ 
-		public function getView(index:uint):ISDMXView
+		public function getView(index:uint):ISDMXServiceView
 		{
 			if (index < getChildren().length) {
 				return getChildAt(index) as ISDMXView;

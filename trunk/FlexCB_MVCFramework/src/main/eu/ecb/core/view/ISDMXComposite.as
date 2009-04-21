@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -42,7 +40,7 @@ package eu.ecb.core.view
 		 *  
 		 * @param view The view to be added
 		 */
-		function addView(view:ISDMXView):void;
+		function addView(view:ISDMXServiceView):void;
 		
 		/**
 		 * Gets the view identified by the supplied index in the collection.
@@ -51,7 +49,7 @@ package eu.ecb.core.view
 		 * 
 		 * @return The view identified by the supplied index in the collection.
 		 */
-		function getView(index:uint):ISDMXView;
+		function getView(index:uint):ISDMXServiceView;
 		
 		/**
 		 * Removes the supplied view from the collection of views held by the
@@ -59,6 +57,6 @@ package eu.ecb.core.view
 		 *  
 		 * @param view The view to be removed
 		 */
-		function removeView(view:ISDMXView):void;
+		function removeView(view:ISDMXServiceView):void;
 	}
 }

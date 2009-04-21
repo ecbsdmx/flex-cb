@@ -26,8 +26,6 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.controller
 {
-	import eu.ecb.core.command.CommandAdapter;
-	import eu.ecb.core.command.sdmx.LoadSDMXData;
 	import eu.ecb.core.event.ProgressEventMessage;
 	import eu.ecb.core.model.ISDMXDataModel;
 	
@@ -66,11 +64,6 @@ package eu.ecb.core.controller
 		 * @private 
 		 */
 		protected var _structureFile:URLRequest;
-		
-		/**
-		 * @private 
-		 */
-		protected var _command:LoadSDMXData;
 		
 		/**
 		 * @private 
@@ -116,20 +109,12 @@ package eu.ecb.core.controller
 			disableObservationAttribute:Boolean = true, 
 			optimisationLevel:uint = 0)
 		{
-			super(model);
-			_dataFile = dataFile;	
-			_structureFile = structureFile;
+			super(model);	
 			_nrOfFilesToFetch = 0;
-			
-			_command = new LoadSDMXData();
-			_command.dataFile = _dataFile;
-			_command.structureFile = _structureFile;
-			_command.disableObservationAttribute = disableObservationAttribute;	
-			_command.optimisationLevel = optimisationLevel;
-			_command.addEventListener(LoadSDMXData.DATA_LOADED, 
-				handleData);
-			_command.addEventListener(CommandAdapter.COMMAND_ERROR, 
-				handleError);
+			this.structureFile = structureFile;
+			this.dataFile = dataFile;
+			this.disableObservationAttribute = disableObservationAttribute;
+			this.optimisationLevel = optimisationLevel;
 		}
 		
 		/*==========================Public methods============================*/
@@ -143,7 +128,7 @@ package eu.ecb.core.controller
 		 */
 		public function loadData():void 
 		{
-			_command.execute();
+			fetchData();
 		}
 		
 		/**
@@ -174,12 +159,11 @@ package eu.ecb.core.controller
 			}
 			
 			if (!isFetching) {
-				_command.dataFile = 
-					_filesToFetch.removeItemAt(0) as URLRequest;
+				this.dataFile = _filesToFetch.removeItemAt(0) as URLRequest;
 				dispatchEvent(new ProgressEventMessage(TASK_PROGRESS, false, 
 					false, 0, 0, "Please wait: Loading data (" + 
 					Math.round( (1 /_totalNrOfFiles) * 100) + "%)"));
-				_command.execute();
+				fetchData();
 			}	
 		}
 		
@@ -199,7 +183,7 @@ package eu.ecb.core.controller
 		 * @see org.sdmx.model.v2.reporting.dataset.DataSet
 		 * @see eu.ecb.core.command.LoadSDMXData
 		 */
-		protected function handleData(event:SDMXDataEvent):void 
+		override protected function handleData(event:SDMXDataEvent):void 
 		{
 			if (_nrOfFilesToFetch > 0) {
 				_nrOfFilesToFetch--;
@@ -232,8 +216,8 @@ package eu.ecb.core.controller
 					_totalNrOfFiles, "Please wait: Loading data (" + 
 					Math.round(((_totalNrOfFiles -	_filesToFetch.length + 1) /
 						_totalNrOfFiles) * 100) + "%)"));
-				_command.dataFile = _filesToFetch.removeItemAt(0) as URLRequest;
-				_command.execute();
+				this.dataFile = _filesToFetch.removeItemAt(0) as URLRequest;
+				fetchData();
 			}
 		}		
 	}

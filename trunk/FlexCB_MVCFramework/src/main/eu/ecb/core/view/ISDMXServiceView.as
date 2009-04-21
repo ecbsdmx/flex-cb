@@ -1,6 +1,4 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
-// Copyright (C) 2008 European Central Bank. All rights reserved.
+// Copyright (C) 2009 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
 // with or without modification, are permitted
@@ -26,49 +24,40 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-package eu.ecb.core.event
+package eu.ecb.core.view
 {
-    import flash.events.Event;
-
+	import org.sdmx.model.v2.reporting.dataset.DataSet;
+	import org.sdmx.model.v2.structure.category.CategorieSchemesCollection;
+	import org.sdmx.model.v2.structure.keyfamily.DataflowsCollection;
+	import org.sdmx.model.v2.structure.keyfamily.KeyFamilies;
+	
 	/**
-	 * Event dispatched when an XML data file has been successfully loaded.
-	 * 
-	 * This class is normally used by the ecb.eu.util.net.XMLLoader class.
-	 * 
+	 * Contract to be implemented by classes supporting visual representations
+	 * of objects returned by SDMX services.
+	 *  
 	 * @author Xavier Sosnovsky
-	 * 
-	 * @see ecb.eu.util.net.XMLLoader
-	 */ 
-    public class XMLDataEvent extends Event {
-    	
-    	/*==============================Fields================================*/
-        
-        /** The XML data that has been loaded */ 
-        private var _data:XML;    
-        
-        /*=============================Constants==============================*/
-        
-        public function XMLDataEvent(data:XML, type:String) {
-            super(type);
-            _data = data;
-        }
-        
-        /*==========================Public methods============================*/
-        
-        /**
-        * @inheritDoc
-        */ 
-        override public function clone():Event {
-            return new XMLDataEvent(_data, type);
-        }
-        
-        /**
-         * Returns the XML data extracted by a loader class
-         * 
-         * @return The XML data extracted by a loader class
-         */
-        public function get data():XML {
-            return _data;
-        }
-    }
+	 */
+	public interface ISDMXServiceView
+	{
+		/**
+		 * The category schemes to be displayed by the view 
+		 */
+		function set categorySchemes(cs:CategorieSchemesCollection):void;
+		
+		/**
+		 * The dataflow definition to be displayed by the view 
+		 */
+		function set dataflowDefinitions(dd:DataflowsCollection):void;
+		
+		/**
+		 * The key families to be displayed by the view. 
+		 */
+		function set keyFamilies(kf:KeyFamilies):void;
+		
+		/**
+		 * The SDMX data set containing the desired subset of data to be 
+		 * displayed by the view. 
+		 */ 
+		function set dataSet(ds:DataSet):void;
+	}
 }

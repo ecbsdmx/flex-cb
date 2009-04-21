@@ -216,6 +216,7 @@ package eu.ecb.core.view.filter
 
 			//We add the form to the panel and we store it in memory
 			_form = form;
+			removeAllChildren();
 			addChild(createPanel(_form));
 		}
 		
