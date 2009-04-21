@@ -39,6 +39,7 @@ package org.sdmx.event
 			var suite:TestSuite = new TestSuite();
 			suite.addTest(SDMXDataEventTest.suite());
  			suite.addTest(SDMXMLDataEventTest.suite());
+ 			suite.addTest(XMLDataEventTest.suite());
  			return suite;
 		}
 	}

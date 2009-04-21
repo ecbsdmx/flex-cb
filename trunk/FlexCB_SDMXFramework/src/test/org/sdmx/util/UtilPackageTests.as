@@ -28,9 +28,11 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.util
 {
-	import org.sdmx.util.validator.ValidatorPackageTests;
 	import flexunit.framework.TestSuite;
+	
 	import org.sdmx.util.date.SDMXDateTest;
+	import org.sdmx.util.validator.ValidatorPackageTests;
+	import org.sdmx.util.net.NetTests;
 	
 	/**
 	 *	@private 
@@ -40,6 +42,7 @@ package org.sdmx.util
 			var suite:TestSuite = new TestSuite();
 			suite.addTest(SDMXDateTest.suite());
  			suite.addTest(ValidatorPackageTests.suite());
+ 			suite.addTest(NetTests.suite());
  			return suite;
 		}
 	}

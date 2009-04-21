@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -26,28 +24,19 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-package org.sdmx.stores.xml.v2
+package org.sdmx.util.net
 {
 	import flexunit.framework.TestSuite;
-	
-	import org.sdmx.stores.xml.v2.compact.CompactReaderTest;
-	import org.sdmx.stores.xml.v2.generic.GenericReaderTest;
-	import org.sdmx.stores.xml.v2.structure.StructurePackageTests;
-	import org.sdmx.stores.xml.v2.utility.UtilityReaderTest;
 	
 	/**
 	 *	@private 
 	 */
-	public class V2PackageTests
+	public class NetTests
 	{
 		public static function suite():TestSuite {
 			var suite:TestSuite = new TestSuite();
-			suite.addTest(CompactReaderTest.suite());
-			suite.addTest(GenericReaderTest.suite());
-			suite.addTest(UtilityReaderTest.suite());
- 			suite.addTest(StructurePackageTests.suite());
- 			suite.addTest(FindKeyFamilyTest.suite());
- 			suite.addTest(GuessDataTypeTest.suite());
+			suite.addTest(LoaderAdapterTest.suite());
+ 			suite.addTest(XMLLoaderTest.suite());
  			return suite;
 		}
 	}
