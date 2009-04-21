@@ -26,7 +26,6 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core
 {
-	import eu.ecb.core.command.CommandTests;
 	import eu.ecb.core.controller.ControllerTests;
 	import eu.ecb.core.event.EventTests;
 	import eu.ecb.core.model.ModelTests;
@@ -39,7 +38,6 @@ package eu.ecb.core
 	{
 		public static function suite():TestSuite {
 			var suite:TestSuite = new TestSuite();
- 			suite.addTest(CommandTests.suite());
  			suite.addTest(ControllerTests.suite());
  			suite.addTest(EventTests.suite());
  			suite.addTest(ModelTests.suite());
