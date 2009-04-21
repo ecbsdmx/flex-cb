@@ -64,7 +64,7 @@ package eu.ecb.exr.model
 			super();
 		}
 		
-		override public function set fullDataSet(ds:DataSet):void 
+		override public function set allDataSets(ds:DataSet):void 
 		{
 			if (null == ds) {
 				throw new ArgumentError("The data set cannot be null");
@@ -73,31 +73,31 @@ package eu.ecb.exr.model
 				throw new ArgumentError("There should be some time series in " + 
 						"the data set");
 			} else {
-				_fullDataSet = ds;	
+				_allDataSets = ds;	
 				
 				if (null == _sort) {
 					_sort = new Sort();
 		            _sort.fields = [new SortField("periodComparator")];
 		  		}
 				for each (var series:TimeseriesKey in 
-					_fullDataSet.timeseriesKeys) {
+					_allDataSets.timeseriesKeys) {
 					series.timePeriods.sort = _sort;
 					series.timePeriods.refresh();
 				}
 				
-				dispatchEvent(new Event(FULL_DATASET_UPDATED));
+				dispatchEvent(new Event(ALL_DATA_SETS_UPDATED));
 				
 				var tmpDs:DataSet = new DataSet();
-				tmpDs.attributeValues = _fullDataSet.attributeValues;
-				tmpDs.groupKeys = _fullDataSet.groupKeys;
-				tmpDs.dataExtractionDate = _fullDataSet.dataExtractionDate;
-				tmpDs.describedBy = _fullDataSet.describedBy;
-				tmpDs.reportingBeginDate = _fullDataSet.reportingBeginDate;
-				tmpDs.reportingEndDate = _fullDataSet.reportingEndDate;
+				tmpDs.attributeValues = _allDataSets.attributeValues;
+				tmpDs.groupKeys = _allDataSets.groupKeys;
+				tmpDs.dataExtractionDate = _allDataSets.dataExtractionDate;
+				tmpDs.describedBy = _allDataSets.describedBy;
+				tmpDs.reportingBeginDate = _allDataSets.reportingBeginDate;
+				tmpDs.reportingEndDate = _allDataSets.reportingEndDate;
 				var selectedSeries:TimeseriesKeysCollection = 
 					new TimeseriesKeysCollection();
 				selectedSeries.addItem(
-					_fullDataSet.timeseriesKeys.getItemAt(0));
+					_allDataSets.timeseriesKeys.getItemAt(0));
 				tmpDs.timeseriesKeys = selectedSeries;
 				_dataSet = tmpDs;
 				
@@ -108,7 +108,7 @@ package eu.ecb.exr.model
 				createSelectedPeriods();
 				createFilteredDataSet();
 				
-				dispatchEvent(new Event(DATASET_UPDATED));
+				dispatchEvent(new Event(DATA_SET_UPDATED));
 			}
 		}
 		
@@ -136,19 +136,19 @@ package eu.ecb.exr.model
 		{
 			var selectedSeries:TimeseriesKeysCollection = 
 				new TimeseriesKeysCollection();
-			var series:TimeseriesKey = _fullDataSet.timeseriesKeys.
+			var series:TimeseriesKey = _allDataSets.timeseriesKeys.
 				getTimeseriesKey(seriesKey);
 			selectedSeries.addItem(series);
 			_dataSet.timeseriesKeys = selectedSeries;
 			_dataSet.groupKeys = 
-				_fullDataSet.groupKeys.getGroupsForTimeseries(series);
+				_allDataSets.groupKeys.getGroupsForTimeseries(series);
 			_initialBaseDataSet = null;
 			_reverseBaseDataSet = null;
 			createReferenceSeries();
 			createReferenceSeriesFrequency();
 			createSelectedPeriods();
 			createFilteredDataSet();
-			dispatchEvent(new Event(DATASET_UPDATED));
+			dispatchEvent(new Event(DATA_SET_UPDATED));
 		}
 		
 		private function createReverseBaseDataSet():void
