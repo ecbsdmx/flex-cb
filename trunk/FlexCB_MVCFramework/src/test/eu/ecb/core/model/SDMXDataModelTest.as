@@ -65,7 +65,7 @@ package eu.ecb.core.model
 			var model:SDMXDataModel = new SDMXDataModel();
 			var dataSet:DataSet;
 			try {
-				model.fullDataSet = dataSet;
+				model.allDataSets = dataSet;
 				fail("It should not be possible to set a null dataSet");
 			} catch (error:ArgumentError) {}
 		}
@@ -74,7 +74,7 @@ package eu.ecb.core.model
 			var model:SDMXDataModel =  new SDMXDataModel();
 			var dataSet:DataSet = new DataSet();
 			try {
-				model.fullDataSet = dataSet;
+				model.allDataSets = dataSet;
 				fail("It should not be possible to set an empty dataSet");
 			}  catch (error:ArgumentError) {}
 		}

@@ -37,7 +37,6 @@ package eu.ecb.core.event
 	{
 		public static function suite():TestSuite {
 			var suite:TestSuite = new TestSuite();
- 			suite.addTest(XMLDataEventTest.suite());
  			suite.addTest(ProgressEventMessageTest.suite());
  			return suite;
 		}
