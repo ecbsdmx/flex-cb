@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -30,16 +28,14 @@ package eu.ecb.core.model
 {
 	import flash.events.DataEvent;
 	import flash.events.Event;
-	import flash.events.EventDispatcher;
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.IViewCursor;
 	import mx.collections.Sort;
 	import mx.collections.SortField;
 	import mx.formatters.DateFormatter;
+	import mx.resources.IResourceManager;
 	import mx.resources.ResourceManager;
-	import mx.resources.IResourceManager
-
 	
 	import org.sdmx.model.v2.base.type.ConceptRole;
 	import org.sdmx.model.v2.reporting.dataset.AttributeValue;
@@ -52,21 +48,6 @@ package eu.ecb.core.model
 	import org.sdmx.model.v2.reporting.dataset.TimePeriodsCollection;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKeysCollection;
-	
-	/**
-	 * Event dispatched when the data set containing all series has been 
-	 * processed
-	 * 
-	 * @eventType eu.ecb.core.model.SDMXDataModel.FULL_DATASET_UPDATED
-	 */
-	[Event(name="fullDataSetUpdated", type="flash.events.Event")]
-	
-	/**
-	 * Event dispatched when the data set with the selected set of series
-	 * 
-	 * @eventType eu.ecb.core.model.SDMXDataModel.DATASET_UPDATED
-	 */
-	[Event(name="dataSetUpdated", type="flash.events.Event")]
 	
 	/**
 	 * Event dispatched when the filtered data set has been processed
@@ -118,27 +99,11 @@ package eu.ecb.core.model
 	 * @author Karine Feraboli
 	 */
 	[ResourceBundle("flex_cb_mvc_lang")]
-	public class SDMXDataModel extends EventDispatcher implements ISDMXDataModel
+	public class SDMXDataModel extends BaseSDMXServiceModel 
+		implements ISDMXDataModel
 	{
 				
 		/*=============================Constants==============================*/
-		/**
-		 * The SDMXDataModel.FULL_DATASET_UPDATED constant defines the value of 
-		 * the <code>type</code> property of the event object for a 
-		 * <code>fullDataSetUpdated</code> event.
-		 * 
-		 * @eventType fullDataSetUpdated
-		 */
-		public static const FULL_DATASET_UPDATED:String = "fullDataSetUpdated";
-		
-		/**
-		 * The SDMXDataModel.DATASET_UPDATED constant defines the value of 
-		 * the <code>type</code> property of the event object for a 
-		 * <code>dataSetUpdated</code> event.
-		 * 
-		 * @eventType dataSetUpdated
-		 */
-		public static const DATASET_UPDATED:String = "dataSetUpdated";
 		
 		/**
 		 * The SDMXDataModel.FILTERED_DATASET_UPDATED constant defines the value 
@@ -206,13 +171,6 @@ package eu.ecb.core.model
 		 */
 		private var _resourceManager:IResourceManager;
 		
-		protected var _fullDataSet:DataSet;
-		
-		/**
-		 * @private
-		 */ 
-		protected var _dataSet:DataSet;
-		
 		/**
 		 * @private
 		 */ 
@@ -276,11 +234,6 @@ package eu.ecb.core.model
 		/**
 		 * @private
 		 */
-		protected var _sort:Sort;
-		
-		/**
-		 * @private
-		 */
 		private var _dateFormatter:DateFormatter;
 		
 		/**
@@ -312,62 +265,18 @@ package eu.ecb.core.model
 		}
 		
 		/*============================Accessors===============================*/
-		
-		/**
-		 * @inheritDoc
-		 */
-		[Bindable("fullDataSetUpdated")]
-		public function get fullDataSet():DataSet 
-		{
-			return _fullDataSet;
-		}
-		
+				
 		/**
 		 * @private
 		 */ 
-		public function set fullDataSet(ds:DataSet):void 
-		{
-			if (null == ds) {
-				throw new ArgumentError("The data set cannot be null");
-			} else if (null == ds.timeseriesKeys || 
-				0 == ds.timeseriesKeys.length) {
-				throw new ArgumentError("There should be some time series in " + 
-						"the data set");
-			} else {
-				_fullDataSet = ds;	
-				if (null == _sort) {
-					_sort = new Sort();
-		            _sort.fields = [new SortField("periodComparator")];
-		  		}
-				for each (var series:TimeseriesKey in 
-					_fullDataSet.timeseriesKeys) {
-					series.timePeriods.sort = _sort;
-					series.timePeriods.refresh();
-				}
-				dataSet = _fullDataSet;
-			}
-		}
-		
-		/**
-		 * @inheritDoc
-		 */
-		[Bindable("dataSetUpdated")]
-		public function get dataSet():DataSet 
-		{
-			return _dataSet;
-		}
-		
-		/**
-		 * @private
-		 */ 
-		public function set dataSet(ds:DataSet):void 
+		override public function set dataSet(ds:DataSet):void 
 		{
 			_dataSet = ds;
 			createReferenceSeries();
 			createReferenceSeriesFrequency();
 			createSelectedPeriods();
 			createFilteredDataSet();
-			dispatchEvent(new Event(DATASET_UPDATED));
+			super.dataSet = ds;
 		}
 		
 		/**
@@ -711,6 +620,7 @@ package eu.ecb.core.model
 								, identifier: "All"});	
 			}
 
+			sortSeries(referenceSeries);
 			if (referenceSeries.timePeriods.length >0) {
 				var firstObsDate:Date = 
 					(referenceSeries.timePeriods.getItemAt(0) as 
