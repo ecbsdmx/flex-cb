@@ -1,6 +1,4 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
-// Copyright (C) 2008 European Central Bank. All rights reserved.
+// Copyright (C) 2009 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
 // with or without modification, are permitted
@@ -28,52 +26,20 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.model
 {
+	import flash.events.DataEvent;
+	
+	import mx.collections.ArrayCollection;
+	
 	import org.sdmx.model.v2.reporting.dataset.DataSet;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
-	import mx.collections.ArrayCollection;
-	import flash.events.DataEvent;
 	
 	/**
 	 * Interface for SDMX Data model classes.
 	 * 
 	 * @author Xavier Sosnovsky
 	 */ 
-	public interface ISDMXDataModel extends IModel
+	public interface ISDMXDataModel extends ISDMXServiceModel
 	{
-		/**
-		 * The SDMX data set containing all the data for this data model. 
-		 * The data set cannot be null and it must contain at least one series,
-		 * else an ArgumentError will be thrown. The observations for each of 
-		 * the series in the data set will be sorted in ascending order. 
-		 * 
-		 * @throws An ArgumentError, if the data set is null or contains no 
-		 * 		series.
-		 */ 
-		function get fullDataSet():DataSet;
-		
-		/**
-		 * @private
-		 */ 
-		function set fullDataSet(dataSet:DataSet):void;
-		
-		/**
-		 * The SDMX data set containing a subset of the data for this data 
-		 * model. This is useful in case ony a subset of the data available in 
-		 * the data set needs to be displayed by the views. By default, the
-		 * dataset contains the same information as the full dataset. If a 
-		 * different behaviour is needed, it should be implemented in the 
-		 * subclasses. The data set cannot be null and it must contain at least 
-		 * one series, else an ArgumentError will be thrown. The observations 
-		 * for each of the series in the data set will be sorted in ascending 
-		 * order. 
-		 */ 
-		function get dataSet():DataSet;
-		
-		/**
-		 * @private
-		 */ 
-		function set dataSet(dataSet:DataSet):void;
-		
 		/**
 		 * The SDMX data set, after all its series have been filtered
 		 * in order to display only observations falling within the defined
