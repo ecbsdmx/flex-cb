@@ -40,6 +40,8 @@ package eu.ecb.exr.view
 	
 	import flash.events.DataEvent;
 	import flash.events.Event;
+	
+	import mx.binding.utils.BindingUtils;
 
 	public class EXRDataPanel extends BasicDataPanel
 	{
@@ -50,6 +52,8 @@ package eu.ecb.exr.view
 		private var _filtersPanel:FiltersPanel;
 		
 		private var _localeButton:LocaleSwitchButton;
+		
+		private var _initial:Boolean = true;
 		
 		/*===========================Constructor==============================*/
 		
@@ -75,6 +79,7 @@ package eu.ecb.exr.view
 					handleSeriesChanged);
 				_filtersPanel.percentWidth = 100;
 				addChild(_filtersPanel);
+				_initial = true;
 			}
 			
 			if (null == _seriesSummaryBox) {
@@ -101,6 +106,14 @@ package eu.ecb.exr.view
 			if (null != _chart) {
 				_chart.observationValueFormatter = 
 					new EXRObservationFormatter();
+			}
+		}
+		
+		override protected function commitFullDataSet():void
+		{
+			if (_initial) {
+				_filtersPanel.fullDataSet = _fullDataSet;
+				_initial = false;
 			}
 		}
 		
