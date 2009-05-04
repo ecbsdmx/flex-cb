@@ -149,7 +149,7 @@ package org.sdmx.util.validator
 				if (success) {
 					return _results;
 				} else {
-					if (!success && (7 <= check.length && 13 >= check.length)) {
+					if (7 <= check.length && 13 >= check.length) {
 						_results = new Array();
 						success = isGYearMonth(check);
 					} 
@@ -161,7 +161,7 @@ package org.sdmx.util.validator
 					}
 					
 					var pattern:RegExp = /^\d{4}-[T|B|Q|W]\d{1,2}$/;
-					if (!success && (4 <= check.length && 10 >= check.length) &&
+					if (!success && 10 >= check.length &&
 						!pattern.test(check)) {
 						_results = new Array();
 						success = isGYear(check);
