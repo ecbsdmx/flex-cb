@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -30,9 +28,9 @@ package org.sdmx.util
 {
 	import flexunit.framework.TestSuite;
 	
-	import org.sdmx.util.date.SDMXDateTest;
-	import org.sdmx.util.validator.ValidatorPackageTests;
+	import org.sdmx.util.date.DatePackageTests;
 	import org.sdmx.util.net.NetTests;
+	import org.sdmx.util.validator.ValidatorPackageTests;
 	
 	/**
 	 *	@private 
@@ -40,9 +38,9 @@ package org.sdmx.util
 	public class UtilPackageTests {
 		public static function suite():TestSuite {
 			var suite:TestSuite = new TestSuite();
-			suite.addTest(SDMXDateTest.suite());
+			suite.addTest(DatePackageTests.suite());
+			suite.addTest(NetTests.suite());
  			suite.addTest(ValidatorPackageTests.suite());
- 			suite.addTest(NetTests.suite());
  			return suite;
 		}
 	}
