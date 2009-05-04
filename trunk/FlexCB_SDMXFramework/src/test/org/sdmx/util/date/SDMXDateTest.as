@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -82,9 +80,55 @@ package org.sdmx.util.date
 			assertEquals("Years should be equal", 1999, date.fullYear);
 			assertEquals("Months should be equal", 3, date.month);
 			assertEquals("Dates should be equal", 16, date.date);
-			/*assertEquals("Hours should be equal", 11, date.hoursUTC);
-			assertEquals("Minutes should be equal", 10, date.minutesUTC);
-			assertEquals("Seconds should be equal", 40, date.secondsUTC);*/						
+		}
+		
+		public function testConvertSDMXDate():void {
+			var sdmxDate:SDMXDate = new SDMXDate();
+			var date:Date = sdmxDate.getDate("2009-Q1");
+			assertEquals("Years should be equal", 2009, date.fullYear);
+			assertEquals("Months should be equal", 0, date.month);
+			assertEquals("Dates should be equal", 1, date.date);
+			date = sdmxDate.getDate("2009-Q2");
+			assertEquals("Years should be equal", 2009, date.fullYear);
+			assertEquals("Months should be equal", 3, date.month);
+			assertEquals("Dates should be equal", 1, date.date);
+			date = sdmxDate.getDate("2009-Q3");
+			assertEquals("Years should be equal", 2009, date.fullYear);
+			assertEquals("Months should be equal", 6, date.month);
+			assertEquals("Dates should be equal", 1, date.date);
+			date = sdmxDate.getDate("2009-Q4");
+			assertEquals("Years should be equal", 2009, date.fullYear);
+			assertEquals("Months should be equal", 9, date.month);
+			assertEquals("Dates should be equal", 1, date.date);
+		}
+		
+		public function testErrors():void
+		{
+			var sdmxDate:SDMXDate = new SDMXDate();
+			try {
+				sdmxDate.getDate("");
+				fail("Empty dates should fail");
+			} catch (error:ArgumentError) {}
+			
+			try {
+				sdmxDate.getDate(null);
+				fail("Null dates should fail");
+			} catch (error:ArgumentError) {}
+			
+			try {
+				sdmxDate.getDate("ABCD");
+				fail("Not a date");
+			} catch (error:ArgumentError) {}
+			
+			try {
+				sdmxDate.getDate("2009-H1");
+				fail("Not yet supported");
+			} catch (error:Error) {}
+			
+			try {
+				sdmxDate.getDate("2009-Q5");
+				fail("Only four quarters");
+			} catch (error:Error) {}
 		}
 	}
 }
