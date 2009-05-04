@@ -92,10 +92,7 @@ package org.sdmx.util.date
 							break;
 						case "4":
 							return new Date(Number(date.substr(0, 4)), 9, 1);
-							break;
-						default:
-							throw new ArgumentError("Q" + date.charAt(6) + "" + 
-								" is not supported");				
+							break;			
 					}
 				}
 				throw new Error("Not yet implemented");
