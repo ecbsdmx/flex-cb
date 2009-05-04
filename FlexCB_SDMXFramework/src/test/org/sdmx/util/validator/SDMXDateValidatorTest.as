@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -59,21 +57,6 @@ package org.sdmx.util.validator
 			_results = _validator.validate("2007-13:59");
 			assertEquals("2007-13:59 should be a valid date", ValidationResultEvent.VALID, _results.type);
 			_results = _validator.validate("2007+13:00");
-			/*assertEquals("2007+13:00 should not be a valid date", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2007+12:61");
-			assertEquals("2007+12:61 should not be a valid date", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2007-14:00");
-			assertEquals("2007-14:00 should not be a valid date", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2007-13:61");
-			assertEquals("2007-13:61 should not be a valid date", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2007Z");
-			assertEquals("2007Z", ValidationResultEvent.VALID, _results.type);
-			_results = _validator.validate("2007X");
-			assertEquals("2007X", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("-2001");
-			assertEquals("-2001", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("01");
-			assertEquals("01", ValidationResultEvent.INVALID, _results.type);*/
 		}
 		
 		public function testGYearMonth():void {
@@ -85,22 +68,6 @@ package org.sdmx.util.validator
 			assertEquals("2007-10-00:00 should be a valid date", ValidationResultEvent.VALID, _results.type);
 			_results = _validator.validate("2007-10-13:59");
 			assertEquals("2007-10-13:59 should be a valid date", ValidationResultEvent.VALID, _results.type);
-			/*_results = _validator.validate("2007-10+13:00");
-			assertEquals("2007-10+13:00 should not be a valid date", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2007-10+12:61");
-			assertEquals("2007-10+12:61 should not be a valid date", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2007-10-14:00");
-			assertEquals("2007-10-14:00 should not be a valid date", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2007-10-13:61");
-			assertEquals("2007-10-13:61 should not be a valid date", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2001-13");
-			assertEquals("2001-13", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2001-00");
-			assertEquals("2001-00", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("01-10");
-			assertEquals("01-10", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2001-10Z");
-			assertEquals("2001-10Z", ValidationResultEvent.VALID, _results.type);*/
 		}
 		
 		public function testGYearMonthDay():void {
@@ -113,31 +80,6 @@ package org.sdmx.util.validator
 			_results = _validator.validate("2007-10-30-13:59");
 			assertEquals("2007-10-30-13:59 should be a valid date", ValidationResultEvent.VALID, _results.type);
 			_results = _validator.validate("2007-10-30+13:00");
-			/*assertEquals("2007-10-30+13:00 should not be a valid date", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2007-10-30+12:61");
-			assertEquals("2007-10-30+12:61 should not be a valid date", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2007-10-30-14:00");
-			assertEquals("2007-10-30-14:00 should not be a valid date", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2007-10-30-13:61");
-			assertEquals("2007-10-30-13:61 should not be a valid date", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2001-13-30");
-			assertEquals("2001-13-30", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2001-00-12");
-			assertEquals("2001-00-12", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2001-13-12");
-			assertEquals("2001-13-12", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2001-12-00");
-			assertEquals("2001-12-00", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2001-12-32");
-			assertEquals("2001-12-32", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2001-12-31Z");
-			assertEquals("2001-12-31Z", ValidationResultEvent.VALID, _results.type);
-			_results = _validator.validate("01-12-31");
-			assertEquals("01-12-31", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2001-11-31");
-			assertEquals("2001-11-31", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2001-02-30");
-			assertEquals("2001-02-30", ValidationResultEvent.INVALID, _results.type);*/
 		}
 		
 		public function testGYearMonthDayTime():void {
@@ -148,35 +90,10 @@ package org.sdmx.util.validator
 			_results = _validator.validate("2007-10-30T13:55:00-00:00");
 			assertEquals("2007-10-30T13:55:00-00:00 should be a valid date", ValidationResultEvent.VALID, _results.type);
 			_results = _validator.validate("2007-10-30T13:55:00-13:59");
-			assertEquals("2007-10-30T13:55:00-13:59 should be a valid date", ValidationResultEvent.VALID, _results.type);
-			_results = _validator.validate("2007-10-30T13:55:00+13:00");
-			/*assertEquals("2007-10-30T13:55:00+13:00 should not be a valid date", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2007-10-30T13:55:00+12:61");
-			assertEquals("2007-10-30T13:55:00+12:61 should not be a valid date", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2007-10-30T13:55:00-14:00");
-			assertEquals("2007-10-30T13:55:00-14:00 should not be a valid date", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2007-10-30T13:55:00-13:61");
-			assertEquals("2007-10-30T13:55:00-13:61 should not be a valid date", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2001-13-30T13:55:00");
-			assertEquals("2001-13-30T13:55:00", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2001-00-12T13");
-			assertEquals("2001-00-12T13", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2001-13-12T13:55");
-			assertEquals("2001-13-12T13:55", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2001-12-00T24:55:00");
-			assertEquals("2001-12-00T24:55:00", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2001-12-32T23:60:00");
-			assertEquals("2001-12-32T23:60:00", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2001-12-31T23:55:59");
-			assertEquals("2001-12-31T23:55:59Z", ValidationResultEvent.VALID, _results.type);
-			_results = _validator.validate("2001-11-31T23:55:59Z");
-			assertEquals("2001-11-31T23:55:59Z", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2001-02-30T23:55:59Z");
-			assertEquals("2001-02-30T23:55:59Z", ValidationResultEvent.INVALID, _results.type);*/
 		}
 		
 		public function testSDMXPeriodType():void {
-			/*_results = _validator.validate("2007-Q1");
+			_results = _validator.validate("2007-Q1");
 			assertEquals("2007-Q1 should be a valid date", ValidationResultEvent.VALID, _results.type);
 			_results = _validator.validate("2007-Q4");
 			assertEquals("2007-Q4 should be a valid date", ValidationResultEvent.VALID, _results.type);
@@ -208,8 +125,14 @@ package org.sdmx.util.validator
 			assertEquals("2007-W0 should not be a valid date", ValidationResultEvent.INVALID, _results.type);
 			_results = _validator.validate("2007-W53");
 			assertEquals("2007-W53 should not be a valid date", ValidationResultEvent.INVALID, _results.type);
-			_results = _validator.validate("2007-A1");
-			assertEquals("2007-A1 should not be a valid date", ValidationResultEvent.INVALID, _results.type);*/
+		}
+		
+		public function testLength():void
+		{
+			_results = _validator.validate("207");
+			assertEquals("207", ValidationResultEvent.INVALID, _results.type);
+			_results = _validator.validate("0123456789012345678012345");
+			assertEquals("207", ValidationResultEvent.INVALID, _results.type);
 		}
 	}
 }
