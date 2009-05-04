@@ -76,15 +76,12 @@ package org.sdmx.util.net
 			_loader.execute(); 
 		}
 		
-		/*public function testLoadCompressedXMLData():void {
-			//Missing test data
+		public function testLoadCompressedXMLData():void {
 			_loader.addEventListener(LoaderAdapter.DATA_LOADED, addAsync(getData, 3000));
-			_loader.addEventListener(CommandAdapter.COMMAND_ERROR, 
-				addAsync(handleError, 3000));
 			_loader.file = new URLRequest("testData/usd.xml.zlib");
 			_loader.compressed = true;
 			_loader.execute(); 
-		}*/
+		}
 		
 		public function testErrorHandling():void {
 			_loader.addEventListener(IOErrorEvent.IO_ERROR, 
