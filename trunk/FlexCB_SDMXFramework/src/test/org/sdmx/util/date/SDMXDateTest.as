@@ -121,7 +121,7 @@ package org.sdmx.util.date
 			} catch (error:ArgumentError) {}
 			
 			try {
-				sdmxDate.getDate("2009-H1");
+				sdmxDate.getDate("2009-B1");
 				fail("Not yet supported");
 			} catch (error:Error) {}
 			
