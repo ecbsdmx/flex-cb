@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -96,7 +94,8 @@ package org.sdmx.util.date
 							return new Date(Number(date.substr(0, 4)), 9, 1);
 							break;
 						default:
-							throw new Error("Not yet implemented");				
+							throw new ArgumentError("Q" + date.charAt(6) + "" + 
+								" is not supported");				
 					}
 				}
 				throw new Error("Not yet implemented");
