@@ -35,6 +35,12 @@ package org.sdmx.model.v2.base.type
 	 */
 	public final class UsageStatus {
 		
+		/*==============================Fields================================*/
+		
+		private static var _instance:UsageStatus;
+		
+		private static var _usageStatus:ArrayCollection;
+		
 		/*============================Constants===============================*/
 		
 		/**
@@ -46,6 +52,12 @@ package org.sdmx.model.v2.base.type
 	     * The usage is mandatory when certain conditions are satisfied.
 	     */
 	    public static const CONDITIONAL:String = "Conditional";
+	    
+	    /*===========================Constructor==============================*/
+		
+		public function UsageStatus(enforcer:SingletonEnforcer) {
+			super();
+		}
 	    
 	    /*==========================Public methods============================*/
 	    
@@ -63,10 +75,16 @@ package org.sdmx.model.v2.base.type
 	    /*=========================Private methods============================*/
 	    
 	    private static function createUsageStatusList():ArrayCollection {
-	    	var usageStatus:ArrayCollection = new ArrayCollection();
-	    	usageStatus.addItem(MANDATORY);
-		    usageStatus.addItem(CONDITIONAL);
-		    return usageStatus;
+	    	if (null == _instance) {
+	    		_instance = new UsageStatus(new SingletonEnforcer());
+	    		_usageStatus = new ArrayCollection();
+	    		_usageStatus.addItem(MANDATORY);
+		    	_usageStatus.addItem(CONDITIONAL);
+		    }
+		    return _usageStatus;
 	    }
 	}
+}
+
+class SingletonEnforcer {
 }

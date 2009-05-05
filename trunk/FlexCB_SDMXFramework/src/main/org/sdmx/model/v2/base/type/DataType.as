@@ -37,6 +37,12 @@ package org.sdmx.model.v2.base.type
 	 */
 	public final class DataType {
 		
+		/*==============================Fields================================*/
+		
+		private static var _instance:DataType;
+		
+		private static var _dataTypes:ArrayCollection;
+		
 		/*============================Constants===============================*/
 		
 		/**
@@ -190,6 +196,12 @@ package org.sdmx.model.v2.base.type
 	     */
 	    public static const BASE64_BINARY:String = "base64Binary";
 	    
+	    /*===========================Constructor==============================*/
+		
+		public function DataType(enforcer:SingletonEnforcer) {
+			super();
+		}
+	    
 	    /*==========================Public methods============================*/
 	    
 	    /**
@@ -206,34 +218,40 @@ package org.sdmx.model.v2.base.type
 	    /*=========================Private methods============================*/
 	    
 	    private static function createDataTypesList():ArrayCollection {
-	    	var dataTypes:ArrayCollection = new ArrayCollection();
-	    	dataTypes.addItem(STRING);
-		    dataTypes.addItem(BIG_INTEGER);
-		    dataTypes.addItem(INTEGER);
-		    dataTypes.addItem(LONG);
-		    dataTypes.addItem(SHORT);
-		    dataTypes.addItem(DECIMAL);
-		    dataTypes.addItem(FLOAT);
-		    dataTypes.addItem(DOUBLE);
-		    dataTypes.addItem(BOOLEAN);
-		    dataTypes.addItem(DATE_TIME);
-		    dataTypes.addItem(TIME);
-		    dataTypes.addItem(DATE);
-		    dataTypes.addItem(YEAR);
-		    dataTypes.addItem(MONTH);
-		    dataTypes.addItem(DAY);
-		    dataTypes.addItem(MONTH_DAY);
-		    dataTypes.addItem(YEAR_MONTH);
-		    dataTypes.addItem(DURATION);
-		    dataTypes.addItem(TIME_SPAN);
-		    dataTypes.addItem(URI);
-		    dataTypes.addItem(COUNT);
-		    dataTypes.addItem(INCLUSIVE_VALUE_RANGE);
-		    dataTypes.addItem(EXCLUSIVE_VALUE_RANGE);
-		    dataTypes.addItem(INCREMENT);
-		    dataTypes.addItem(OBSERVATIONAL_TIME_PERIOD);
-		    dataTypes.addItem(BASE64_BINARY);
-		    return dataTypes;
+	    	if (null == _instance) {
+	    		_instance = new DataType(new SingletonEnforcer());
+		    	_dataTypes = new ArrayCollection();
+		    	_dataTypes.addItem(STRING);
+			    _dataTypes.addItem(BIG_INTEGER);
+			    _dataTypes.addItem(INTEGER);
+			    _dataTypes.addItem(LONG);
+			    _dataTypes.addItem(SHORT);
+			    _dataTypes.addItem(DECIMAL);
+			    _dataTypes.addItem(FLOAT);
+			    _dataTypes.addItem(DOUBLE);
+			    _dataTypes.addItem(BOOLEAN);
+			    _dataTypes.addItem(DATE_TIME);
+			    _dataTypes.addItem(TIME);
+			    _dataTypes.addItem(DATE);
+			    _dataTypes.addItem(YEAR);
+			    _dataTypes.addItem(MONTH);
+			    _dataTypes.addItem(DAY);
+			    _dataTypes.addItem(MONTH_DAY);
+			    _dataTypes.addItem(YEAR_MONTH);
+			    _dataTypes.addItem(DURATION);
+			    _dataTypes.addItem(TIME_SPAN);
+			    _dataTypes.addItem(URI);
+			    _dataTypes.addItem(COUNT);
+			    _dataTypes.addItem(INCLUSIVE_VALUE_RANGE);
+			    _dataTypes.addItem(EXCLUSIVE_VALUE_RANGE);
+			    _dataTypes.addItem(INCREMENT);
+			    _dataTypes.addItem(OBSERVATIONAL_TIME_PERIOD);
+		   		_dataTypes.addItem(BASE64_BINARY);
+		    }
+		    return _dataTypes;
 	    }
 	}
+}
+
+class SingletonEnforcer {
 }

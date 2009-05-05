@@ -35,6 +35,12 @@ package org.sdmx.model.v2.base.type
 	 */
 	public class AttachmentLevel {
 		
+		/*==============================Fields================================*/
+		
+		private static var _instance:AttachmentLevel;
+		
+		private static var _attachmentLevels:ArrayCollection;
+		
 		/*============================Constants===============================*/
 		
 		/**
@@ -57,6 +63,12 @@ package org.sdmx.model.v2.base.type
 	     */
 	    public static const OBSERVATION:String = "Observation";
 	    
+	    /*===========================Constructor==============================*/
+		
+		public function AttachmentLevel(enforcer:SingletonEnforcer) {
+			super();
+		}
+	    
 	    /*==========================Public methods============================*/
 	    
 	    /**
@@ -73,12 +85,18 @@ package org.sdmx.model.v2.base.type
 	    /*=========================Private methods============================*/
 	    
 	    private static function createAttachmentLevelList():ArrayCollection {
-	    	var attachmentLevel:ArrayCollection = new ArrayCollection();
-	    	attachmentLevel.addItem(DATASET);
-	    	attachmentLevel.addItem(GROUP);
-		    attachmentLevel.addItem(SERIES);
-	    	attachmentLevel.addItem(OBSERVATION);		    
-		    return attachmentLevel;
+	    	if (null == _instance) {
+	    		_instance = new AttachmentLevel(new SingletonEnforcer());
+	    		_attachmentLevels = new ArrayCollection();
+		    	_attachmentLevels.addItem(DATASET);
+		    	_attachmentLevels.addItem(GROUP);
+			    _attachmentLevels.addItem(SERIES);
+		    	_attachmentLevels.addItem(OBSERVATION);
+	    	}
+		    return _attachmentLevels;
 	    }
 	}
+}
+
+class SingletonEnforcer {
 }

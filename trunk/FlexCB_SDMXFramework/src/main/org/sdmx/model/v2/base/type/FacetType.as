@@ -38,6 +38,12 @@ package org.sdmx.model.v2.base.type
 	 */
 	public class FacetType {
 		
+		/*==============================Fields================================*/
+		
+		private static var _instance:FacetType;
+		
+		private static var _facetTypes:ArrayCollection;
+		
 		/*============================Constants===============================*/
 		
 	    /**
@@ -117,6 +123,12 @@ package org.sdmx.model.v2.base.type
 	     */
 		public static const ENUMERATION:String = "enumeration";
 		
+		/*===========================Constructor==============================*/
+		
+		public function FacetType(enforcer:SingletonEnforcer) {
+			super();
+		}
+		
 		/*==========================Public methods============================*/
 		
 		/**
@@ -134,21 +146,27 @@ package org.sdmx.model.v2.base.type
 	    /*=========================Private methods============================*/
 	    
 	    private static function createFacetTypesList():ArrayCollection {
-	    	var facetTypes:ArrayCollection = new ArrayCollection();
-	    	facetTypes.addItem(IS_SEQUENCE);	    	
-	    	facetTypes.addItem(IS_INCLUSIVE);
-	    	facetTypes.addItem(MIN_LENGTH);
-	    	facetTypes.addItem(MAX_LENGTH);
-	    	facetTypes.addItem(MAX_VALUE);
-	    	facetTypes.addItem(MAX_VALUE);
-	    	facetTypes.addItem(START_VALUE);
-	    	facetTypes.addItem(END_VALUE);
-	    	facetTypes.addItem(INCREMENT);
-	    	facetTypes.addItem(TIME_INTERVAL);
-	    	facetTypes.addItem(DECIMALS);
-	    	facetTypes.addItem(PATTERN);
-	    	facetTypes.addItem(ENUMERATION);
-		    return facetTypes;
+	    	if (null == _instance) {
+	    		_instance = new FacetType(new SingletonEnforcer());
+		    	_facetTypes = new ArrayCollection();
+		    	_facetTypes.addItem(IS_SEQUENCE);	    	
+		    	_facetTypes.addItem(IS_INCLUSIVE);
+		    	_facetTypes.addItem(MIN_LENGTH);
+		    	_facetTypes.addItem(MAX_LENGTH);
+		    	_facetTypes.addItem(MAX_VALUE);
+		    	_facetTypes.addItem(MAX_VALUE);
+		    	_facetTypes.addItem(START_VALUE);
+		    	_facetTypes.addItem(END_VALUE);
+		    	_facetTypes.addItem(INCREMENT);
+		    	_facetTypes.addItem(TIME_INTERVAL);
+		    	_facetTypes.addItem(DECIMALS);
+		    	_facetTypes.addItem(PATTERN);
+		    	_facetTypes.addItem(ENUMERATION);
+		    }
+		    return _facetTypes;
 	    }
 	}
+}
+
+class SingletonEnforcer {
 }
