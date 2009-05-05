@@ -35,6 +35,12 @@ package org.sdmx.model.v2.base.type
 	 */
 	public final class ConceptRole {
 		
+		/*==============================Fields================================*/
+		
+		private static var _instance:ConceptRole;
+		
+		private static var _roles:ArrayCollection;
+		
 		/*============================Constants===============================*/
 		
 		/**
@@ -92,6 +98,12 @@ package org.sdmx.model.v2.base.type
 	     */
 	    public static const TIME_FORMAT:String = "timeFormat";
 	    
+	    /*===========================Constructor==============================*/
+		
+		public function ConceptRole(enforcer:SingletonEnforcer) {
+			super();
+		}
+	    
 	    /*==========================Public methods============================*/
 	    
 	    /**
@@ -108,17 +120,23 @@ package org.sdmx.model.v2.base.type
 	    /*=========================Private methods============================*/
 	    
 	    private static function createConceptRoleList():ArrayCollection {
-	    	var conceptRole:ArrayCollection = new ArrayCollection();
-	    	conceptRole.addItem(FREQUENCY);
-		    conceptRole.addItem(COUNT);
-		    conceptRole.addItem(MEASURE_TYPE);
-		    conceptRole.addItem(NON_OBS_TIME);
-		    conceptRole.addItem(IDENTITY);
-		    conceptRole.addItem(TIME);
-		    conceptRole.addItem(PRIMARY_MEASURE);		    		    		    		    
-		    conceptRole.addItem(ENTITY);
-		    conceptRole.addItem(TIME_FORMAT);
-		    return conceptRole;
+	    	if (null == _instance) {
+	    		_instance = new ConceptRole(new SingletonEnforcer());
+		    	_roles = new ArrayCollection();
+		    	_roles.addItem(FREQUENCY);
+			    _roles.addItem(COUNT);
+			    _roles.addItem(MEASURE_TYPE);
+			    _roles.addItem(NON_OBS_TIME);
+			    _roles.addItem(IDENTITY);
+			    _roles.addItem(TIME);
+			    _roles.addItem(PRIMARY_MEASURE);		    		    		    		    
+			    _roles.addItem(ENTITY);
+			    _roles.addItem(TIME_FORMAT);
+		    }
+		    return _roles;
 	    }
 	}
+}
+
+class SingletonEnforcer {
 }
