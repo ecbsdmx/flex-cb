@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -39,6 +37,7 @@ package org.sdmx.event
 			var suite:TestSuite = new TestSuite();
 			suite.addTest(SDMXDataEventTest.suite());
  			suite.addTest(SDMXMLDataEventTest.suite());
+ 			suite.addTest(SDMXQueryEventTest.suite());
  			suite.addTest(XMLDataEventTest.suite());
  			return suite;
 		}
