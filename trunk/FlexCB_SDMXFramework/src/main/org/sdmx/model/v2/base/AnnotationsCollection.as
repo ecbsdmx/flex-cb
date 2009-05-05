@@ -75,9 +75,8 @@ package org.sdmx.model.v2.base
 			if (!(item is Annotation)) {
 				throw new ArgumentError(ERROR_MSG + 
 						getQualifiedClassName(item) + ".");
-			} else {
-				return super.setItemAt(item, index);
 			}
+			return super.setItemAt(item, index);
 		}
 	}
 }
