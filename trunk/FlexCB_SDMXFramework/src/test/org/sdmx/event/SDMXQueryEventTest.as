@@ -1,7 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
-// Copyright (C) 2008 European Central Bank. All rights reserved.
-//
 // Redistribution and use in source and binary forms,
 // with or without modification, are permitted
 // provided that the following conditions are met:
@@ -31,41 +27,37 @@ package org.sdmx.event
 	import flexunit.framework.TestCase;
 	import flexunit.framework.TestSuite;
 	
-	import org.sdmx.model.v2.base.SDMXArtefact;
-	import org.sdmx.model.v2.reporting.dataset.DataSet;
+	import org.sdmx.stores.api.SDMXQueryParameters;
 
-	/**
-	 *	@private 
-	 */
-	public class SDMXDataEventTest extends TestCase
+	public class SDMXQueryEventTest extends TestCase
 	{
-		public function SDMXDataEventTest(methodName:String=null)
+		public function SDMXQueryEventTest(methodName:String=null)
 		{
 			super(methodName);
 		}
 		
 		public static function suite():TestSuite 
 		{
-			return new TestSuite(SDMXDataEventTest);
+			return new TestSuite(SDMXQueryEventTest);
 		}
-		
-		public function testCreateSDMXDataEvent():void {
-			var artefact:SDMXArtefact = new DataSet();
-			var event:SDMXDataEvent = new SDMXDataEvent(artefact, 
-				"testCreateSDMXDataEvent");
-			assertEquals("The SDMX artefact should be equal", artefact, 
-				event.data);
+				
+		public function testCreateSDMXQueryEvent():void {
+			var params:SDMXQueryParameters = new SDMXQueryParameters();
+			var event:SDMXQueryEvent = 
+				new SDMXQueryEvent(params, "testCreateSDMXDataEvent");
+			assertEquals("The XML data should be equal", params, event.params);
 		}
 		
 		public function testCloneEvent():void {
-			var artefact:SDMXArtefact = new DataSet();
-			var event:SDMXDataEvent = new SDMXDataEvent(artefact, 
-				"testCreateSDMXDataEvent");
-			var clonedEvent:SDMXDataEvent = event.clone() as SDMXDataEvent;
+			var params:SDMXQueryParameters = new SDMXQueryParameters();
+			var event:SDMXQueryEvent = 
+				new SDMXQueryEvent(params, "testCreateSDMXDataEvent");
+			var clonedEvent:SDMXQueryEvent = event.clone() as SDMXQueryEvent;
 			assertTrue("Events should not be the same object", 
 				event != clonedEvent);
-			assertEquals("Events should have the same object", event.data, 
-				clonedEvent.data);		
+			assertEquals("Events should have the same object", event.params, 
+				clonedEvent.params);		
 		}
+		
 	}
 }

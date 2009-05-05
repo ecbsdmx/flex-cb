@@ -1,5 +1,3 @@
-// Copyright (C) 2008 European Central Bank. All rights reserved.
-//
 // Redistribution and use in source and binary forms,
 // with or without modification, are permitted
 // provided that the following conditions are met:
@@ -60,6 +58,16 @@ package org.sdmx.event
 		public function testCreateXMLDataEvent():void {
 			var event:XMLDataEvent = new XMLDataEvent(_testData, "testCreateSDMXDataEvent");
 			assertEquals("The XML data should be equal", _testData, event.data);
+		}
+		
+		public function testCloneEvent():void {
+			var event:XMLDataEvent = 
+				new XMLDataEvent(_testData, "testCreateSDMXDataEvent");
+			var clonedEvent:XMLDataEvent = event.clone() as XMLDataEvent;
+			assertTrue("Events should not be the same object", 
+				event != clonedEvent);
+			assertEquals("Events should have the same object", event.data, 
+				clonedEvent.data);		
 		}
 	}
 }
