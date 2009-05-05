@@ -44,7 +44,7 @@ package org.sdmx.model.v2.structure.keyfamily
 			super(methodName);
 		}
 				
-		public override function createStructureUsage():StructureUsage {
+		protected override function createStructureUsage():StructureUsage {
 			var key:KeyDescriptor = new KeyDescriptor("key");
 			var dimension1:Dimension = new Dimension("dim1", new Concept("FREQ"));
 			var dimension2:Dimension = new Dimension("dim2", new Concept("CURRENCY"));
