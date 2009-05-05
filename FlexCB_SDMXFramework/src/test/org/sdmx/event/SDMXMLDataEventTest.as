@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -62,6 +60,16 @@ package org.sdmx.event
 		public function testCreateSDMXMLDataEvent():void {
 			var event:SDMXMLDataEvent = new SDMXMLDataEvent(_testData, "testCreateSDMXDataEvent");
 			assertEquals("The XML data should be equal", _testData, event.data);
+		}
+		
+		public function testCloneEvent():void {
+			var event:SDMXMLDataEvent = new SDMXMLDataEvent(_testData, 
+				"testCreateSDMXDataEvent");
+			var clonedEvent:SDMXMLDataEvent = event.clone() as SDMXMLDataEvent;
+			assertTrue("Events should not be the same object", 
+				event != clonedEvent);
+			assertEquals("Events should have the same object", event.data, 
+				clonedEvent.data);		
 		}
 	}
 }
