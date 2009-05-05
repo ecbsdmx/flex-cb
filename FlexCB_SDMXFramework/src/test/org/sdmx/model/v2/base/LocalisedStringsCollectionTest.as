@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -30,6 +28,7 @@ package org.sdmx.model.v2.base
 {
 	import flexunit.framework.TestCase;
 	import flexunit.framework.TestSuite;
+	
 	import mx.resources.Locale;
 
 	/**
@@ -63,6 +62,16 @@ package org.sdmx.model.v2.base
 		
 		public function testSetItemAt():void {
 			var collection:LocalisedStringsCollection = new LocalisedStringsCollection();
+			var string1:LocalisedString = 
+				new LocalisedString(new Locale("en"), "Statistic");
+			collection.addItem(string1);	
+			var string2:LocalisedString = 
+				new LocalisedString(new Locale("en"), "Statistics");
+			collection.setItemAt(string2, 0);
+			assertEquals("There should be one item in the collection", 1,
+				collection.length);
+			assertEquals("The 2nd string should be in the collection", string2, 
+				collection.getItemAt(0));			
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("Localised strings collections can only contain localised strings");

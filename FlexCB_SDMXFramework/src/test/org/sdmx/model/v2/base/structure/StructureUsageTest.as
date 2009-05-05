@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -45,13 +43,13 @@ package org.sdmx.model.v2.base.structure
 			return createStructureUsage();
 		}
 		
-		public function createStructureUsage():StructureUsage {
+		public static function suite():TestSuite {
+			return new TestSuite(StructureUsageTest);
+		}
+		
+		protected function createStructureUsage():StructureUsage {
 			return new StructureUsage(_id, _name, _maintainer, 
 				new Structure("structure", _name, _maintainer));
-		}
-				
-		public static function suite():TestSuite {
-			return new TestSuite(StructureTest);
 		}
 	}
 }
