@@ -78,9 +78,8 @@ package org.sdmx.model.v2.base
 			if (!(item is LocalisedString)) {
 				throw new ArgumentError(ERROR_MSG + 
 						getQualifiedClassName(item) + ".");
-			} else {
-				return super.setItemAt(item, index);
 			}
+			return super.setItemAt(item, index);
 		}
 		
 		/**
