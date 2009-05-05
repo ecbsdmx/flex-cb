@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -28,8 +26,8 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.model.v2.base
 {
-	import flexunit.framework.TestSuite;
 	import flexunit.framework.TestCase;
+	import flexunit.framework.TestSuite;
 
 	/**
 	 *	@private 
@@ -46,6 +44,12 @@ package org.sdmx.model.v2.base
 		
 		public function testAddItem():void {
 			var collection:AnnotationsCollection = new AnnotationsCollection();
+			var annotation:Annotation = new Annotation();
+			collection.addItem(annotation);
+			assertEquals("Collection should contain one annotation", 1, 
+				collection.length);
+			assertEquals("The 1st annotation should be in the collection", 
+				annotation, collection.getItemAt(0));	
 			try {
 				collection.addItem("Wrong object");
 				fail("Annotations collections can only contain annotations");
@@ -54,6 +58,16 @@ package org.sdmx.model.v2.base
 		
 		public function testAddItemAt():void {
 			var collection:AnnotationsCollection = new AnnotationsCollection();
+			var annotation1:Annotation = new Annotation();
+			collection.addItem(annotation1);
+			var annotation2:Annotation = new Annotation();
+			collection.addItemAt(annotation2, 0);
+			assertEquals("Collection should contain two annotations", 2, 
+				collection.length);
+			assertEquals("The 1st annotation should be in position 2", 
+				annotation1, collection.getItemAt(1));	
+			assertEquals("The 2nd annotation should be in position 1", 
+				annotation2, collection.getItemAt(0));
 			try {
 				collection.addItemAt("Wrong object", 0);
 				fail("Annotations collections can only contain annotations");
@@ -62,6 +76,14 @@ package org.sdmx.model.v2.base
 		
 		public function testSetItemAt():void {
 			var collection:AnnotationsCollection = new AnnotationsCollection();
+			var annotation1:Annotation = new Annotation();
+			collection.addItem(annotation1);
+			var annotation2:Annotation = new Annotation();
+			collection.setItemAt(annotation2, 0);
+			assertEquals("Collection should contain one annotation", 1, 
+				collection.length);
+			assertEquals("The 2nd annotation should be in the collection", 
+				annotation2, collection.getItemAt(0));	
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("Annotations collections can only contain annotations");

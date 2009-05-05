@@ -84,12 +84,12 @@ package org.sdmx.model.v2.base
 		 * @inheritDoc 
 		 */
 		public function set validTo(date:Date):void {
-			if (null == _validFrom || validateValidityPeriod(_validFrom, date)){
-				_validTo = date;
-			} else if (null != date) {
+			if (null != date && 
+				!validateValidityPeriod(_validFrom, date)) {
 				throw new ArgumentError("The validTo date should be after " + 
 						"validFrom");
 			}
+			_validTo = date;
 		}
 		
 		/**
@@ -103,17 +103,18 @@ package org.sdmx.model.v2.base
 		 * @inheritDoc 
 		 */
 		public function set validFrom(date:Date):void {
-			if (null == _validTo || validateValidityPeriod(date, _validTo)) {
-				_validFrom = date;
-			} else if (null != date) {
+			if (null != date && null != _validTo && 
+				!validateValidityPeriod(date, _validTo)) {
 				throw new ArgumentError("The validTo date should be after " + 
-						"validFrom");
+					"validFrom");
 			}
+			_validFrom = date;
 		}
 		
 		/*=========================Private methods============================*/
 		
-		private function validateValidityPeriod(validFrom:Date, validTo:Date):Boolean {
+		private function validateValidityPeriod(validFrom:Date, 
+			validTo:Date):Boolean {
 			return validFrom < validTo;
 		}
 	}
