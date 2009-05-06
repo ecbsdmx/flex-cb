@@ -28,11 +28,12 @@ package org.sdmx.model.v2.reporting.dataset
 {
 	import flexunit.framework.TestCase;
 	import flexunit.framework.TestSuite;
+	
+	import org.sdmx.model.v2.structure.code.Code;
+	import org.sdmx.model.v2.structure.concept.Concept;
+	import org.sdmx.model.v2.structure.keyfamily.Dimension;
 	import org.sdmx.model.v2.structure.keyfamily.GroupKeyDescriptor;
 	import org.sdmx.model.v2.structure.keyfamily.KeyDescriptor;
-	import org.sdmx.model.v2.structure.keyfamily.Dimension;
-	import org.sdmx.model.v2.structure.concept.Concept;
-	import org.sdmx.model.v2.structure.code.Code;
 
 	/**
 	 * @private
@@ -65,6 +66,12 @@ package org.sdmx.model.v2.reporting.dataset
 		
 		public function testSetItemAt():void {
 			var collection:GroupKeysCollection = new GroupKeysCollection();
+			var groupKey1:GroupKey = new GroupKey(new GroupKeyDescriptor("1"));
+			var groupKey2:GroupKey = new GroupKey(new GroupKeyDescriptor("1"));
+			collection.addItem(groupKey1);
+			collection.setItemAt(groupKey2, 0);
+			assertEquals("One group", 1, collection.length);
+			assertEquals("GroupKey2", groupKey2, collection.getItemAt(0));
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("Group keys collections can only contain group keys");

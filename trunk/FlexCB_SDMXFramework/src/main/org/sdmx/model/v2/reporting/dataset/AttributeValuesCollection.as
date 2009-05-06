@@ -26,10 +26,10 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.model.v2.reporting.dataset
 {
-	import flash.utils.getQualifiedClassName;
-	
 	import mx.collections.ArrayCollection;
+	import mx.collections.CursorBookmark;
 	import mx.collections.IViewCursor;
+	import flash.utils.getQualifiedClassName;
 
 	/**
 	 * A collection of attribute values. It extends the AS3 ArrayCollection
@@ -52,6 +52,7 @@ package org.sdmx.model.v2.reporting.dataset
 				
 		public function AttributeValuesCollection(source:Array=null) {
 			super(source);
+			_cursor = createCursor();
 		}
 		
 		/*==========================Public methods============================*/
@@ -63,9 +64,8 @@ package org.sdmx.model.v2.reporting.dataset
 			if (!(item is AttributeValue)) {
 				throw new ArgumentError(ERROR_MSG + 
 						getQualifiedClassName(item) + ".");
-			} else {
-				super.addItemAt(item, index);
 			}
+			super.addItemAt(item, index);
 		}
 		
 		/**
@@ -75,9 +75,8 @@ package org.sdmx.model.v2.reporting.dataset
 			if (!(item is AttributeValue)) {
 				throw new ArgumentError(ERROR_MSG + 
 						getQualifiedClassName(item) + ".");
-			} else {
-				return super.setItemAt(item, index);
 			}
+			return super.setItemAt(item, index);
 		}
 		
 		/**
@@ -89,9 +88,7 @@ package org.sdmx.model.v2.reporting.dataset
 			item:AttachableArtefact):AttributeValuesCollection {
 			var collection:AttributeValuesCollection 
 				= new AttributeValuesCollection();
-			if (null == _cursor) { 	
-				_cursor = createCursor();
-			}
+			_cursor.seek(CursorBookmark.FIRST);	
 			while (!_cursor.afterLast) {
 				var attributeValue:AttributeValue 
 					= _cursor.current as AttributeValue;

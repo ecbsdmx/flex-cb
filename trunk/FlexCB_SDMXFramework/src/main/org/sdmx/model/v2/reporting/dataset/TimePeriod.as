@@ -62,7 +62,7 @@ package org.sdmx.model.v2.reporting.dataset
 				throw new ArgumentError("The period cannot be null or empty");
 			}
 			if (period.indexOf("H") > -1 || period.indexOf("W") > -1) {
-				throw new Error("Not implemented!");
+				throw new ArgumentError("Not implemented!");
 			} else if (period.indexOf("Q") > -1 ) {
 				switch (period.charAt(6)) {
 					case "1":
@@ -78,7 +78,7 @@ package org.sdmx.model.v2.reporting.dataset
 						_periodComparator = period.substr(0, 4) + "-10";
 						break;
 					default:
-						throw new Error("Not yet implemented");				
+						throw new ArgumentError("Not yet implemented");				
 				}
 			} else {
 				_periodComparator = period;

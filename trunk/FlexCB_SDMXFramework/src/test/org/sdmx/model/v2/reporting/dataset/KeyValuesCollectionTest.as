@@ -28,9 +28,10 @@ package org.sdmx.model.v2.reporting.dataset
 {
 	import flexunit.framework.TestCase;
 	import flexunit.framework.TestSuite;
+	
 	import org.sdmx.model.v2.structure.code.Code;
-	import org.sdmx.model.v2.structure.keyfamily.Dimension;
 	import org.sdmx.model.v2.structure.concept.Concept;
+	import org.sdmx.model.v2.structure.keyfamily.Dimension;
 
 	/**
 	 * @private
@@ -63,6 +64,14 @@ package org.sdmx.model.v2.reporting.dataset
 		
 		public function testSetItemAt():void {
 			var collection:KeyValuesCollection = new KeyValuesCollection();
+			var value1:KeyValue = new KeyValue(new Code("A"), 
+				new Dimension("dim", new Concept("c1")));
+			var value2:KeyValue = new KeyValue(new Code("B"), 
+				new Dimension("dim", new Concept("c2")));	
+			collection.addItem(value1);
+			collection.setItemAt(value2, 0);
+			assertEquals("1", 1, collection.length);
+			assertEquals("value2", value2, collection.getItemAt(0));	
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("Key values collections can only contain key values");
@@ -81,7 +90,11 @@ package org.sdmx.model.v2.reporting.dataset
 			collection.addItem(keyValue3);
 			collection.addItem(keyValue4);
 			collection.addItem(keyValue5);
-			assertEquals("The series key should be equal", "M.Z51.EUR.ERC0.A", collection.seriesKey);												
+			assertEquals("The series key should be equal", "M.Z51.EUR.ERC0.A", collection.seriesKey);
+			collection.removeItemAt(4);
+			assertEquals("The series key should be equal - 2", "M.Z51.EUR.ERC0", collection.seriesKey);
+			collection.removeAll();
+			assertEquals("The series key should be equal - 3", "", collection.seriesKey);
 		}
 	}
 }

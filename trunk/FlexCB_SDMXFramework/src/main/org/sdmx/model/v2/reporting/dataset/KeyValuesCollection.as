@@ -91,11 +91,10 @@ package org.sdmx.model.v2.reporting.dataset
 			if (!(item is KeyValue)) {
 				throw new ArgumentError(ERROR_MSG + 
 						getQualifiedClassName(item) + ".");
-			} else {
-				var returnedObject:Object = super.setItemAt(item, index);
-				return returnedObject;
-				_seriesKey = "";
 			}
+			_seriesKey = "";
+			return super.setItemAt(item, index);
+				
 		}
 		
 		/**

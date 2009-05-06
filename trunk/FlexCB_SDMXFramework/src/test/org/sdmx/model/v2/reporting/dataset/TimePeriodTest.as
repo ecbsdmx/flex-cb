@@ -29,8 +29,13 @@ package org.sdmx.model.v2.reporting.dataset
 	import flexunit.framework.TestCase;
 	import flexunit.framework.TestSuite;
 	
+	import org.sdmx.model.v2.base.InternationalString;
+	import org.sdmx.model.v2.structure.code.Code;
+	import org.sdmx.model.v2.structure.code.CodeList;
 	import org.sdmx.model.v2.structure.concept.Concept;
+	import org.sdmx.model.v2.structure.keyfamily.CodedMeasure;
 	import org.sdmx.model.v2.structure.keyfamily.UncodedMeasure;
+	import org.sdmx.model.v2.structure.organisation.MaintenanceAgency;
 
 	/**
 	 * @private
@@ -66,13 +71,8 @@ package org.sdmx.model.v2.reporting.dataset
 			var value:Observation = new UncodedObservation("1.258", new UncodedMeasure("measure", new Concept("OBS_VALUE")));
 			var period:TimePeriod = new TimePeriod(date, value);
 			assertEquals("The dates should be equal", date, period.periodComparator);
-			/*var date2:String = "2007-08-29";
-			period.timeValue = new Date(2007, 7, 29);
-			assertEquals("The new dates should be equal", date2, period.periodComparator);
-			try {
-				period.timeValue = null;
-				fail("It should not be possible to set a null date");
-			} catch (error:ArgumentError) {}*/
+			assertTrue("The time value should be equal", 
+				period.timeValue.fullYear == 2007 && period.timeValue.month == 4 && period.timeValue.date == 21 );
 		}
 		
 		public function testSetAndGetObservation():void {
@@ -80,13 +80,47 @@ package org.sdmx.model.v2.reporting.dataset
 			var value:Observation = new UncodedObservation("1.258", new UncodedMeasure("measure", new Concept("OBS_VALUE")));
 			var period:TimePeriod = new TimePeriod(date, value);
 			assertEquals("The observations should be equal", value, period.observation);
-			/*var value2:Observation = new UncodedObservation("1.3515", new UncodedMeasure("measure", new Concept("OBS_VALUE")));
-			period.observation = value2;
-			assertEquals("The new observations should be equal", value2, period.observation);
-			try {
-				period.observation = null;
-				fail("It should not be possible to set a null observation");
-			} catch (error:ArgumentError) {}*/
+		}
+		
+		public function testQuarterlyConversion():void
+		{
+			var value:Observation = new UncodedObservation("1.258", new UncodedMeasure("measure", new Concept("OBS_VALUE")));
+			var period1:TimePeriod = new TimePeriod("2007-Q1", value);
+			assertEquals("Q1 = 01", "2007-01", period1.periodComparator);
+			var period2:TimePeriod = new TimePeriod("2007-Q2", value);
+			assertEquals("Q2 = 04", "2007-04", period2.periodComparator);
+			var period3:TimePeriod = new TimePeriod("2007-Q3", value);
+			assertEquals("Q3 = 07", "2007-07", period3.periodComparator);
+			var period4:TimePeriod = new TimePeriod("2007-Q4", value);
+			assertEquals("Q4 = 10", "2007-10", period4.periodComparator);
+		}
+		
+		public function testNotImplementedFeature():void
+		{
+			var date:String = "2007-W1";
+			var value:Observation = new UncodedObservation("1.258", new UncodedMeasure("measure", new Concept("OBS_VALUE")));
+			try {  
+				var period:TimePeriod = new TimePeriod(date, value);
+				fail("Not supported");
+			} catch (error:ArgumentError) {}
+			
+			var date2:String = "2007-H2";
+			try {  
+				var period:TimePeriod = new TimePeriod(date, value);
+				fail("Not supported");
+			} catch (error:ArgumentError) {}
+		}
+		
+		public function testSetCodedValue():void
+		{
+			var date:String = "2007-Q1";
+			var value:Observation = new CodedObservation(new Code("A"), 
+				new CodedMeasure("measure", new Concept("OBS_VALUE"), 
+				new CodeList("testcl", new InternationalString(), 
+				new MaintenanceAgency("ecb"))));
+			var period:TimePeriod = new TimePeriod(date, value);	
+			assertEquals("The value should be equal", "A", 
+				period.observationValue);	
 		}
 	}
 }
