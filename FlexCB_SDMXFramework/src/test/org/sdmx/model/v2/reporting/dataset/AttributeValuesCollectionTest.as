@@ -28,8 +28,9 @@ package org.sdmx.model.v2.reporting.dataset
 {
 	import flexunit.framework.TestCase;
 	import flexunit.framework.TestSuite;
-	import org.sdmx.model.v2.structure.keyfamily.UncodedDataAttribute;
+	
 	import org.sdmx.model.v2.structure.concept.Concept;
+	import org.sdmx.model.v2.structure.keyfamily.UncodedDataAttribute;
 
 	/**
 	 * @private
@@ -62,6 +63,18 @@ package org.sdmx.model.v2.reporting.dataset
 		
 		public function testSetItemAt():void {
 			var collection:AttributeValuesCollection = new AttributeValuesCollection();
+			var attribute1:UncodedAttributeValue = new UncodedAttributeValue(
+				new DataSet(), "test", new UncodedDataAttribute("attr", 
+				new Concept("c")));
+			var attribute2:UncodedAttributeValue = new UncodedAttributeValue(
+				new DataSet(), "test2", new UncodedDataAttribute("attr2", 
+				new Concept("c2")));
+			collection.addItem(attribute1);
+			collection.setItemAt(attribute2, 0);
+			assertEquals("There should be one item in the collection", 1, 
+				collection.length);
+			assertEquals("The item should be attribute2", attribute2, 
+				collection.getItemAt(0));	
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("Attribute values collections can only contain attribute values");

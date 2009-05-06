@@ -28,6 +28,9 @@ package org.sdmx.model.v2.reporting.dataset
 {
 	import flexunit.framework.TestCase;
 	import flexunit.framework.TestSuite;
+	
+	import org.sdmx.model.v2.structure.concept.Concept;
+	import org.sdmx.model.v2.structure.keyfamily.UncodedMeasure;
 
 	/**
 	 * @private
@@ -60,7 +63,17 @@ package org.sdmx.model.v2.reporting.dataset
 		}
 		
 		public function testSetItemAt():void {
-			var collection:KeyValuesCollection = new KeyValuesCollection();
+			var collection:TimePeriodsCollection = new TimePeriodsCollection();
+			var obs1:TimePeriod = new TimePeriod("2009-01", 
+				new UncodedObservation("1.25", new UncodedMeasure("measure", 
+				new Concept("m"))));
+			var obs2:TimePeriod = new TimePeriod("2009-02", 
+				new UncodedObservation("1.35", new UncodedMeasure("measure", 
+				new Concept("m"))));	
+			collection.addItem(obs1);
+			collection.setItemAt(obs2, 0);	
+			assertEquals("1", 1, collection.length);
+			assertEquals("2nd", obs2, collection.getItemAt(0));
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("Time periods collections can only contain time periods");

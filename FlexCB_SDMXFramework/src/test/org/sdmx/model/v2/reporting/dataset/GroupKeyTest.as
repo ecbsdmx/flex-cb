@@ -27,6 +27,7 @@
 package org.sdmx.model.v2.reporting.dataset
 {
 	import flexunit.framework.TestSuite;
+	
 	import org.sdmx.model.v2.structure.keyfamily.GroupKeyDescriptor;
 	import org.sdmx.model.v2.structure.keyfamily.KeyDescriptor;
 	
@@ -72,9 +73,10 @@ package org.sdmx.model.v2.reporting.dataset
 			var keyDescriptor:KeyDescriptor = new KeyDescriptor("test");
 			keys.addItem(new TimeseriesKey(keyDescriptor));
 			keys.addItem(new TimeseriesKey(keyDescriptor));
-			var dataSet:DataSet = new DataSet();
-			dataSet.timeseriesKeys = keys;
-			assertEquals("Collections should be equal", keys, dataSet.timeseriesKeys);
+			var group:GroupKey = new GroupKey(new GroupKeyDescriptor("1"));
+			group.timeseriesKeys = keys;
+			assertEquals("Collections should be equal", keys, 
+				group.timeseriesKeys);
 		}
 	}
 }
