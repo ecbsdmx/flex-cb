@@ -106,5 +106,28 @@ package org.sdmx.model.v2.reporting.dataset
 			assertTrue("The series should belong to the 1st group", key.belongsToGroup(groupKeyValues1));
 			assertFalse("The series should not belong to the 2nd group", key.belongsToGroup(groupKeyValues2));
 		}
+		
+		public function testSiblingGroupKey():void
+		{
+			var dim0:Dimension = new Dimension("dim0", new Concept("FREQ"));
+			var dim1:Dimension = new Dimension("dim1", new Concept("CURRENCY"));
+			var dim2:Dimension = new Dimension("dim2", new Concept("CURRENCY_DENOM"));
+			var dim3:Dimension = new Dimension("dim3", new Concept("EXR_TYPE"));
+			var dim4:Dimension = new Dimension("dim4", new Concept("EXR_SUFFIX"));
+			var seriesKeyValues:KeyValuesCollection = new KeyValuesCollection();
+			seriesKeyValues.addItem(new KeyValue(new Code("D"), dim0));
+			seriesKeyValues.addItem(new KeyValue(new Code("RUB"), dim1));
+			seriesKeyValues.addItem(new KeyValue(new Code("EUR"), dim2));
+			seriesKeyValues.addItem(new KeyValue(new Code("S"), dim3));
+			seriesKeyValues.addItem(new KeyValue(new Code("A"), dim4));
+			var key:TimeseriesKey = new TimeseriesKey(new KeyDescriptor("id"));
+			key.keyValues = seriesKeyValues;
+			assertEquals("The group keys should be equal", "RUB.EUR.S.A", 
+				key.siblingGroupKey);
+			assertTrue("Should belong to RUB group", 
+				key.belongsToSiblingGroup("RUB.EUR.S.A"));
+			assertFalse("Should not belong to USD group", 
+				key.belongsToSiblingGroup("USD.EUR.S.A"));		
+		}
 	}
 }
