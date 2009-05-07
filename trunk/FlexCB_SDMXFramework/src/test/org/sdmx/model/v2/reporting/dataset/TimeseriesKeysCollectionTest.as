@@ -64,6 +64,12 @@ package org.sdmx.model.v2.reporting.dataset
 		
 		public function testSetItemAt():void {
 			var collection:TimeseriesKeysCollection = new TimeseriesKeysCollection();
+			var series1:TimeseriesKey = new TimeseriesKey(new KeyDescriptor("test1"));
+			var series2:TimeseriesKey = new TimeseriesKey(new KeyDescriptor("test2"));
+			collection.addItem(series1);
+			collection.setItemAt(series2, 0);
+			assertEquals("There should be one series", 1, collection.length);
+			assertEquals("series2", series2, collection.getItemAt(0));
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("Time series keys collections can only contain time series keys");
@@ -97,6 +103,37 @@ package org.sdmx.model.v2.reporting.dataset
 			collection.addItem(series2);
 			collection.addItem(series3);
 			assertEquals("The series should be equal", series2, collection.getTimeseriesKey("B.2.II"));
+			assertNull("no series", collection.getTimeseriesKey("B.2.IV"));
+		}
+		
+		public function testGetTimeseriesKeyBySiblingGroup():void {
+			var collection:TimeseriesKeysCollection = new TimeseriesKeysCollection();
+			var dimension1:Dimension = new Dimension("1", new Concept("Concept1"));
+			var dimension2:Dimension = new Dimension("2", new Concept("Concept2"));
+			var dimension3:Dimension = new Dimension("3", new Concept("Concept3"));						
+			var series1:TimeseriesKey = new TimeseriesKey(new KeyDescriptor("test1"));
+			var series2:TimeseriesKey = new TimeseriesKey(new KeyDescriptor("test2"));
+			var series3:TimeseriesKey = new TimeseriesKey(new KeyDescriptor("test3"));
+			var keyValues1:KeyValuesCollection = new KeyValuesCollection();
+			keyValues1.addItem(new KeyValue(new Code("A"), dimension1));
+			keyValues1.addItem(new KeyValue(new Code("1"), dimension2));
+			keyValues1.addItem(new KeyValue(new Code("I"), dimension3));
+			var keyValues2:KeyValuesCollection = new KeyValuesCollection();
+			keyValues2.addItem(new KeyValue(new Code("B"), dimension1));
+			keyValues2.addItem(new KeyValue(new Code("2"), dimension2));
+			keyValues2.addItem(new KeyValue(new Code("II"), dimension3));
+			var keyValues3:KeyValuesCollection = new KeyValuesCollection();
+			keyValues3.addItem(new KeyValue(new Code("C"), dimension1));
+			keyValues3.addItem(new KeyValue(new Code("3"), dimension2));
+			keyValues3.addItem(new KeyValue(new Code("III"), dimension3));
+			series1.keyValues = keyValues1;
+			series2.keyValues = keyValues2;
+			series3.keyValues = keyValues3;
+			collection.addItem(series1);
+			collection.addItem(series2);
+			collection.addItem(series3);
+			assertEquals("The series should be equal", series2, collection.getTimeseriesKeyBySiblingGroup("2.II"));
+			assertNull("no series", collection.getTimeseriesKeyBySiblingGroup("2.IV"));
 		}
 	}
 }

@@ -65,9 +65,10 @@ package org.sdmx.model.v2.reporting.dataset
 		{
 			if (null == keyDescriptor) {
 				throw new ArgumentError("The key descriptor cannot be null");
-			} else {
-				_valueFor = keyDescriptor;
 			}
+			_valueFor = keyDescriptor;
+			_cachedKey = null;
+			_cachedGroupKey = null;
 		}
 		
 		/**
@@ -99,9 +100,7 @@ package org.sdmx.model.v2.reporting.dataset
 		 */
 		public function get seriesKey():String 
 		{
-			if (null == keyValues) {
-				_cachedKey = null;
-			} else if (_cachedKey == null) {
+			if (_cachedKey == null && null != keyValues) {
 				_cachedKey = keyValues.seriesKey;
 			}
 			return _cachedKey;
@@ -114,10 +113,8 @@ package org.sdmx.model.v2.reporting.dataset
 		 */
 		public function get siblingGroupKey():String
 		{
-			if (null == keyValues) {
-				_cachedGroupKey = null;
-			} else if (_cachedGroupKey == null) {
-				_cachedGroupKey = keyValues.seriesKey.substr(2);
+			if (_cachedGroupKey == null && null != keyValues) {
+				_cachedGroupKey = seriesKey.substr(2);
 			}
 			return _cachedGroupKey;
 		}
@@ -175,7 +172,7 @@ package org.sdmx.model.v2.reporting.dataset
 		 */
 		public function belongsToSiblingGroup(groupKey:String):Boolean
 		{
-			return seriesKey.substr(2) == groupKey;
+			return _cachedGroupKey == groupKey;
 		}
 	}
 }

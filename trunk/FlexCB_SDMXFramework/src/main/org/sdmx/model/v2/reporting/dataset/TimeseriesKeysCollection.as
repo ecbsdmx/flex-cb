@@ -71,9 +71,8 @@ package org.sdmx.model.v2.reporting.dataset
 			if (!(item is TimeseriesKey)) {
 				throw new ArgumentError(ERROR_MSG + 
 						getQualifiedClassName(item) + ".");
-			} else {
-				super.addItemAt(item, index);
 			}
+			super.addItemAt(item, index);
 		}
 		
 		/**
@@ -83,9 +82,8 @@ package org.sdmx.model.v2.reporting.dataset
 			if (!(item is TimeseriesKey)) {
 				throw new ArgumentError(ERROR_MSG + 
 						getQualifiedClassName(item) + ".");
-			} else {
-				return super.setItemAt(item, index);
 			}
+			return super.setItemAt(item, index);
 		}
 		
 		
@@ -104,8 +102,8 @@ package org.sdmx.model.v2.reporting.dataset
 				sort = _seriesSort;
 				refresh();
 			}	
-			var found:Boolean = _cursor.findAny({seriesKey:seriesKey});
-			return (found) ? _cursor.current as TimeseriesKey : null;
+			return (_cursor.findAny({seriesKey:seriesKey})) ? 
+				_cursor.current as TimeseriesKey : null;
 		}
 		
 		/**
@@ -132,9 +130,8 @@ package org.sdmx.model.v2.reporting.dataset
 				sort = _groupSort;
 				refresh();
 			}
-			var found:Boolean = 
-				_groupCursor.findAny({siblingGroupKey:groupKey});
-			return (found) ? _groupCursor.current as TimeseriesKey : null;
+			return (_groupCursor.findAny({siblingGroupKey:groupKey})) ? 
+				_groupCursor.current as TimeseriesKey : null;
 		}
 	}
 }
