@@ -60,6 +60,12 @@ package org.sdmx.model.v2.reporting.provisioning
 		
 		public function testSetItemAt():void {
 			var collection:CubeRegionsCollection = new CubeRegionsCollection();
+			var cube1:CubeRegion = new CubeRegion();
+			var cube2:CubeRegion = new CubeRegion();
+			collection.addItem(cube1);
+			collection.setItemAt(cube2, 0);
+			assertEquals("1 cube", 1, collection.length);
+			assertEquals("cube2", cube2, collection.getItemAt(0));
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("Cube regions collections can only contain cube regions");

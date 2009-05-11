@@ -60,6 +60,12 @@ package org.sdmx.model.v2.reporting.provisioning
 		
 		public function testSetItemAt():void {
 			var collection:MemberSelectionsCollection = new MemberSelectionsCollection();
+			var ms1:MemberSelection = new MemberSelection();
+			var ms2:MemberSelection = new MemberSelection();
+			collection.addItem(ms1);
+			collection.setItemAt(ms2, 0);
+			assertEquals("1 ms", 1, collection.length);
+			assertEquals("ms2", ms2, collection.getItemAt(0));
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("Member selections collections can only contain member selections");
