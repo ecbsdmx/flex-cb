@@ -129,9 +129,8 @@ package org.sdmx.model.v2.structure.code
 				throw new ArgumentError("The code value cannot be longer" + 
 						" than the maximum code value length - " + 
 						_codeValueLength);
-			} else {
-				return super.setItemAt(item, index);
 			}
+			return super.setItemAt(item, index);
 		}
 		
 		/**

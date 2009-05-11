@@ -28,8 +28,6 @@ package org.sdmx.model.v2.structure.code
 {
 	import flexunit.framework.TestCase;
 	import flexunit.framework.TestSuite;
-	import org.sdmx.model.v2.base.InternationalString;
-	import org.sdmx.model.v2.structure.organisation.MaintenanceAgency;
 
 	/**
 	 * @private 
@@ -107,6 +105,10 @@ package org.sdmx.model.v2.structure.code
 			collection.addItem(new Code("A"));
 			collection.addItem(new Code("AB"));			
 			collection.addItem(new Code("ABC"));
+			var code:Code = new Code("CBA");
+			collection.setItemAt(code, 2);
+			assertEquals("3", 3, collection.length);
+			assertEquals("Should be code", code, collection.getItemAt(2));
 			try {
 				collection.addItemAt(new Code("ABCD"), 0);
 				fail("It should not be possible to add codes at a certain position with values longer than codeValueLength");
