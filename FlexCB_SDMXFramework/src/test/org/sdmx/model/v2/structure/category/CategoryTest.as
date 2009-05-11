@@ -75,5 +75,16 @@ package org.sdmx.model.v2.structure.category
 			assertEquals("The lists of subcategories should be equal", 
 				categories, categoryScheme.categories);
 		}
+		
+		public function testCategoryWithinCategory():void
+		{
+			var category1:Category = new Category("1");
+			var category2:Category = new Category("1.1");
+			var categories:CategoriesCollection = new CategoriesCollection();
+			categories.addItem(category2);
+			category1.categories = categories;
+			assertEquals("The lists of subcategories should be equal", 
+				categories, category1.categories);
+		}
 	}
 }

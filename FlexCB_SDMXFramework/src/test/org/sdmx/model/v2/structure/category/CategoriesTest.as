@@ -29,6 +29,9 @@ package org.sdmx.model.v2.structure.category
 	import flexunit.framework.TestCase;
 	import flexunit.framework.TestSuite;
 	
+	import org.sdmx.model.v2.base.InternationalString;
+	import org.sdmx.model.v2.structure.organisation.MaintenanceAgency;
+	
 	/**
 	 * @private 
 	 */
@@ -40,6 +43,15 @@ package org.sdmx.model.v2.structure.category
 		
 		public static function suite():TestSuite {
 			return new TestSuite(CategoriesTest);
+		}
+		
+		public function testSetAndGetID():void
+		{
+			var collection:CategorieSchemesCollection =
+				new CategorieSchemesCollection("id");
+			assertEquals("ID should be =", "id", collection.id);
+			collection.id = "id2";
+			assertEquals("ID should be = (2)", "id2", collection.id);	 
 		}
 		
 		public function testAddItem():void {
@@ -59,7 +71,16 @@ package org.sdmx.model.v2.structure.category
 		}
 		
 		public function testSetItemAt():void {
-			var collection:CategorieSchemesCollection = new CategorieSchemesCollection("Categories");
+			var collection:CategorieSchemesCollection = 
+				new CategorieSchemesCollection("Categories");
+			var cs1:CategoryScheme = new CategoryScheme("cs1", 
+				new InternationalString(), new MaintenanceAgency("ecb"));	
+			var cs2:CategoryScheme = new CategoryScheme("cs2", 
+				new InternationalString(), new MaintenanceAgency("ecb"));
+			collection.addItem(cs1);
+			collection.setItemAt(cs2, 0);
+			assertEquals("Should be 1", 1, collection.length);
+			assertEquals("Should be cs2", cs2, collection.getItemAt(0));		
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("Categories collections can only contain category schemes");
