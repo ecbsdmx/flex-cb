@@ -60,6 +60,12 @@ package org.sdmx.model.v2.structure.category
 		
 		public function testSetItemAt():void {
 			var collection:CategoriesCollection = new CategoriesCollection();
+			var category1:Category = new Category("A");
+			var category2:Category = new Category("B");	
+			collection.addItem(category1);
+			collection.setItemAt(category2, 0);
+			assertEquals("One item", 1, collection.length);
+			assertEquals("Should be cat2", category2, collection.getItemAt(0));
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("Categories collections can only contain categories");
