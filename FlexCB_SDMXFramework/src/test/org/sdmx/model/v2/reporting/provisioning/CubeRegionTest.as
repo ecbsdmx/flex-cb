@@ -54,7 +54,8 @@ package org.sdmx.model.v2.reporting.provisioning
 			assertEquals("By default, there should be no member selection", 0, cube.members.length);
 			var members:MemberSelectionsCollection = new MemberSelectionsCollection();	
 			var member:MemberSelection = new MemberSelection();
-			cube.members.addItem(member);
+			members.addItem(member);
+			cube.members = members;
 			assertEquals("There should be 1 member", 1, cube.members.length);
 			assertEquals("The members should be equal", member, cube.members.getItemAt(0));
 		}

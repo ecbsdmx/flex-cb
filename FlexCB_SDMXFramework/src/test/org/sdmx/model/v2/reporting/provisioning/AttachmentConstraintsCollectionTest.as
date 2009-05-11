@@ -60,6 +60,12 @@ package org.sdmx.model.v2.reporting.provisioning
 		
 		public function testSetItemAt():void {
 			var collection:AttachmentConstraintsCollection = new AttachmentConstraintsCollection();
+			var constraint1:AttachmentConstraint = new AttachmentConstraint("c1");
+			var constraint2:AttachmentConstraint = new AttachmentConstraint("c2");
+			collection.addItem(constraint1);
+			collection.setItemAt(constraint2, 0);
+			assertEquals("1 constraint", 1, collection.length);
+			assertEquals("cs2", constraint2, collection.getItemAt(0));
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("Attachment constraints collection can only contain Attachment constraints");

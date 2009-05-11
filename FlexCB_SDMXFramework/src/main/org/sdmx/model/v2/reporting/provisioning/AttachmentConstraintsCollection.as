@@ -58,9 +58,8 @@ package org.sdmx.model.v2.reporting.provisioning
 			if (!(item is AttachmentConstraint)) {
 				throw new ArgumentError(ERROR_MSG + 
 						getQualifiedClassName(item) + ".");
-			} else {
-				super.addItemAt(item, index);
 			}
+			super.addItemAt(item, index);
 		}
 		
 		/**
@@ -70,9 +69,8 @@ package org.sdmx.model.v2.reporting.provisioning
 			if (!(item is AttachmentConstraint)) {
 				throw new ArgumentError(ERROR_MSG + 
 						getQualifiedClassName(item) + ".");
-			} else {
-				return super.setItemAt(item, index);
 			}
+			return super.setItemAt(item, index);
 		}
 	}
 }

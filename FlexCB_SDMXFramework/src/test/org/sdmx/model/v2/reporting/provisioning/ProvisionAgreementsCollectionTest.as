@@ -28,6 +28,8 @@ package org.sdmx.model.v2.reporting.provisioning
 {
 	import flexunit.framework.TestCase;
 	import flexunit.framework.TestSuite;
+	
+	import org.sdmx.model.v2.structure.organisation.DataProvider;
 
 	/**
 	 * @private
@@ -60,6 +62,14 @@ package org.sdmx.model.v2.reporting.provisioning
 		
 		public function testSetItemAt():void {
 			var collection:ProvisionAgreementsCollection = new ProvisionAgreementsCollection();
+			var pa1:ProvisionAgreement = 
+				new ProvisionAgreement("pa1", new DataProvider("4F0"));
+			var pa2:ProvisionAgreement = 
+				new ProvisionAgreement("pa2", new DataProvider("4F0"));
+			collection.addItem(pa1);
+			collection.setItemAt(pa2, 0);
+			assertEquals("1 pa", 1, collection.length);
+			assertEquals("pa2", pa2, collection.getItemAt(0));
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("Provision agreements collections can only contain provision agreements");
