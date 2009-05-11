@@ -44,6 +44,14 @@ package org.sdmx.model.v2.structure.code
 			return new TestSuite(CodeListsTest);
 		}
 		
+		public function testGetAndSetIDs():void
+		{
+			var collection:CodeLists = new CodeLists("test");
+			assertEquals("ID =", "test", collection.id);
+			collection.id = "test2";
+			assertEquals("ID = (2)", "test2", collection.id);
+		}	
+		
 		public function testAddItem():void {
 			var collection:CodeLists = new CodeLists("test");
 			try {
@@ -62,6 +70,13 @@ package org.sdmx.model.v2.structure.code
 		
 		public function testSetItemAt():void {
 			var collection:CodeLists = new CodeLists("test");
+			var maintainer:MaintenanceAgency = new MaintenanceAgency("ECB");
+			var codeList1:CodeList = new CodeList("codeList1", new InternationalString(), maintainer);
+			var codeList2:CodeList = new CodeList("codeList2", new InternationalString(), maintainer);
+			collection.addItem(codeList1);
+			collection.setItemAt(codeList2, 0);
+			assertEquals("1", 1, collection.length);
+			assertEquals("cl2", codeList2, collection.getItemAt(0));
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("Codelists collections can only contain codelists");
