@@ -60,6 +60,12 @@ package org.sdmx.model.v2.structure.concept
 		
 		public function testSetItemAt():void {
 			var collection:ConceptsCollection = new ConceptsCollection();
+			var concept1:Concept = new Concept("A");
+			var concept2:Concept = new Concept("AB");
+			collection.addItem(concept1);
+			collection.setItemAt(concept2, 0);
+			assertEquals("There should be 1 concept in the code list", 1, collection.length);
+			assertTrue("Concept2", collection.contains(concept2));
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("Concepts collections can only contain concepts");

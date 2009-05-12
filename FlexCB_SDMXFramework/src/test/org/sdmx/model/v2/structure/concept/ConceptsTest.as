@@ -28,6 +28,7 @@ package org.sdmx.model.v2.structure.concept
 {
 	import flexunit.framework.TestCase;
 	import flexunit.framework.TestSuite;
+	
 	import org.sdmx.model.v2.base.InternationalString;
 	import org.sdmx.model.v2.structure.organisation.MaintenanceAgency;
 
@@ -44,8 +45,16 @@ package org.sdmx.model.v2.structure.concept
 			return new TestSuite(ConceptsTest);
 		}
 		
+		public function testGetAndSetID():void
+		{
+			var collection:Concepts = new Concepts("c");
+			assertEquals("id=c", "c", collection.id);
+			collection.id = "d";
+			assertEquals("id=d", "d", collection.id);
+		}
+		
 		public function testAddItem():void {
-			var collection:ConceptsCollection = new ConceptsCollection();
+			var collection:Concepts = new Concepts();
 			try {
 				collection.addItem("Wrong object");
 				fail("Concepts collections can only contain concepts");
@@ -53,7 +62,7 @@ package org.sdmx.model.v2.structure.concept
 		}
 		
 		public function testAddItemAt():void {
-			var collection:ConceptsCollection = new ConceptsCollection();
+			var collection:Concepts = new Concepts();
 			try {
 				collection.addItemAt("Wrong object", 0);
 				fail("Concepts collections can only contain concepts");
@@ -61,25 +70,18 @@ package org.sdmx.model.v2.structure.concept
 		}
 		
 		public function testSetItemAt():void {
-			var collection:ConceptsCollection = new ConceptsCollection();
+			var collection:Concepts = new Concepts();
+			var concept1:Concept = new Concept("A");
+			var concept2:ConceptScheme = new ConceptScheme("cs", 
+				new InternationalString(), new MaintenanceAgency("ECB"));
+			collection.addItem(concept1);
+			collection.setItemAt(concept2, 0);
+			assertEquals("length=1", 1, collection.length);
+			assertEquals("Concept2", concept2, collection.getItemAt(0));
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("Concepts collections can only contain concepts");
 			} catch (error:ArgumentError) {}
-		}
-		
-		public function testNoDuplicates():void {	
-			var collection:ConceptsCollection = new ConceptsCollection();
-			var concept1:Concept = new Concept("A");
-			var concept2:Concept = new Concept("AB");
-			var concept3:Concept = new Concept("A");						
-			collection.addItem(concept1);
-			collection.addItem(concept2);
-			collection.addItem(concept3);
-			assertEquals("There should be only 2 codes in the code list", 2, collection.length);
-			assertFalse("The first code A should not be in the list anymore", collection.contains(concept1));
-			assertTrue("The code AB should be in the list", collection.contains(concept2));
-			assertTrue("The second code A should be in the list", collection.contains(concept3));
 		}
 		
 		public function testGetConcept():void {
