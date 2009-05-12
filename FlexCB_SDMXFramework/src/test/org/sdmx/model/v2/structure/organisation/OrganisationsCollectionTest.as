@@ -60,6 +60,12 @@ package org.sdmx.model.v2.structure.organisation
 		
 		public function testSetItemAt():void {
 			var collection:OrganisationsCollection = new OrganisationsCollection();
+			var org1:Organisation = new Organisation("A");
+			var org2:Organisation = new Organisation("AB");
+			collection.addItem(org1);
+			collection.setItemAt(org2, 0);
+			assertEquals("There should be only 1 organisation in the list", 1, collection.length);
+			assertEquals("Should be org2", org2, collection.getItemAt(0));
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("Organisations collections can only contain organisations");

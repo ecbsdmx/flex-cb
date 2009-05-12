@@ -60,6 +60,12 @@ package org.sdmx.model.v2.structure.organisation
 		
 		public function testSetItemAt():void {
 			var collection:ContactsCollection = new ContactsCollection();
+			var c1:Contact = new Contact();
+			var c2:Contact = new Contact();
+			collection.addItem(c1);
+			collection.setItemAt(c2, 0);
+			assertEquals("length=1", 1, collection.length);
+			assertEquals("should be c2", c2, collection.getItemAt(0));
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("Contacts collections can only contain contacts");
