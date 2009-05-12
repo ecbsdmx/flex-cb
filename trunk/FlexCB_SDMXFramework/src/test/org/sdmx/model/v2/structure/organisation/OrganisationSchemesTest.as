@@ -28,6 +28,8 @@ package org.sdmx.model.v2.structure.organisation
 {
 	import flexunit.framework.TestCase;
 	import flexunit.framework.TestSuite;
+	
+	import org.sdmx.model.v2.base.InternationalString;
 
 	/**
 	 * @private 
@@ -40,6 +42,14 @@ package org.sdmx.model.v2.structure.organisation
 		
 		public static function suite():TestSuite {
 			return new TestSuite(OrganisationSchemesTest);
+		}
+		
+		public function testSetAndGetID():void
+		{
+			var schemes:OrganisationSchemes = new OrganisationSchemes("os");
+			assertEquals("id=", "os", schemes.id);
+			schemes.id = "os2";
+			assertEquals("id2=", "os2", schemes.id);
 		}
 		
 		public function testAddItem():void {
@@ -60,6 +70,14 @@ package org.sdmx.model.v2.structure.organisation
 		
 		public function testSetItemAt():void {
 			var collection:OrganisationSchemes = new OrganisationSchemes();
+			var os1:OrganisationScheme = new OrganisationScheme("os1", 
+				new InternationalString, new MaintenanceAgency("ecb"));
+			var os2:OrganisationScheme = new OrganisationScheme("os2", 
+				new InternationalString, new MaintenanceAgency("ecb"));	
+			collection.addItem(os1);
+			collection.setItemAt(os2, 0);
+			assertEquals("should be 1", 1, collection.length);
+			assertEquals("should be os2", os2, collection.getItemAt(0));	
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("Organisation schemes collections can only contain organisation schemes");
