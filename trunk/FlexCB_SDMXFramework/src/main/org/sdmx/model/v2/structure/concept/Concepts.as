@@ -104,9 +104,8 @@ package org.sdmx.model.v2.structure.concept
 			if (!(item is Concept) && !(item is ConceptScheme)) {
 				throw new ArgumentError(ERROR_MSG + 
 						getQualifiedClassName(item) + ".");
-			} else {
-				super.addItemAt(item, index);
 			}
+			super.addItemAt(item, index);
 		}
 		
 		/**
@@ -116,9 +115,8 @@ package org.sdmx.model.v2.structure.concept
 			if (!(item is Concept) && !(item is ConceptScheme)) {
 				throw new ArgumentError(ERROR_MSG + 
 						getQualifiedClassName(item) + ".");
-			} else {
-				return super.setItemAt(item, index);
 			}
+			return super.setItemAt(item, index);
 		}
 		
 		/**
