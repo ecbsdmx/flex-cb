@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -28,9 +26,10 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.model.v2.structure.keyfamily
 {
-	import org.sdmx.model.v2.base.structure.ComponentListTest;
 	import flexunit.framework.TestSuite;
+	
 	import org.sdmx.model.v2.base.structure.ComponentList;
+	import org.sdmx.model.v2.base.structure.ComponentListTest;
 	import org.sdmx.model.v2.structure.concept.Concept;
 
 	/**
@@ -69,6 +68,12 @@ package org.sdmx.model.v2.structure.keyfamily
 		
 		public function testSetItemAt():void {
 			var collection:MeasureDescriptor = new MeasureDescriptor("measure");
+			var measure1:UncodedMeasure = new UncodedMeasure("m1", new Concept("c1"));
+			var measure2:UncodedMeasure = new UncodedMeasure("m2", new Concept("c2"));
+			collection.addItem(measure1);
+			collection.setItemAt(measure2, 0);
+			assertEquals("=1", 1, collection.length);
+			assertTrue("Should be m2", collection.contains(measure2));
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("A MeasureDescriptor can only contain measures");

@@ -26,11 +26,13 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.model.v2.structure.keyfamily
 {
-	import org.sdmx.model.v2.base.structure.StructureUsageTest;
-	import org.sdmx.model.v2.reporting.dataset.DataSet;
-	import org.sdmx.model.v2.base.structure.Structure;
 	import flexunit.framework.TestSuite;
+	
 	import org.sdmx.model.v2.base.structure.StructureUsage;
+	import org.sdmx.model.v2.base.structure.StructureUsageTest;
+	import org.sdmx.model.v2.reporting.provisioning.AttachmentConstraintsCollection;
+	import org.sdmx.model.v2.reporting.provisioning.ContentConstraint;
+	import org.sdmx.model.v2.reporting.provisioning.ProvisionAgreementsCollection;
 	import org.sdmx.model.v2.structure.concept.Concept;
 
 	/**
@@ -62,6 +64,33 @@ package org.sdmx.model.v2.structure.keyfamily
 				
 		public static function suite():TestSuite {
 			return new TestSuite(DataflowDefinitionTest);
+		}
+		
+		public function testSetAndGetContentConstraint():void {
+			var content:ContentConstraint = new ContentConstraint("cs");
+			var df:DataflowDefinition = 
+				createStructureUsage() as DataflowDefinition;
+				
+			df.contentConstraint = content;
+			assertEquals("content=", content, df.contentConstraint);
+		}
+		
+		public function testSetAndGetAttachmentConstraint():void {
+			var cstr:AttachmentConstraintsCollection = 	
+				new AttachmentConstraintsCollection();
+			var df:DataflowDefinition = 
+				createStructureUsage() as DataflowDefinition;
+			df.attachmentConstraints = cstr;
+			assertEquals("attachment=", cstr, df.attachmentConstraints);
+		}
+		
+		public function testSetAndGetProvisionAgreements():void {
+			var pa:ProvisionAgreementsCollection = 
+				new ProvisionAgreementsCollection();
+			var df:DataflowDefinition = 
+				createStructureUsage() as DataflowDefinition;
+			df.provisionAgreements = pa;
+			assertEquals("agreements=", pa, df.provisionAgreements);							
 		}
 	}
 }
