@@ -45,6 +45,14 @@ package org.sdmx.model.v2.structure.keyfamily
 			return new TestSuite(KeyFamiliesTest);
 		}
 		
+		public function testSetAndGetId():void
+		{
+			var collection:KeyFamilies = new KeyFamilies("id1");
+			assertEquals("=id1", "id1", collection.id);
+			collection.id = "id2";
+			assertEquals("=id2", "id2", collection.id);
+		}
+		
 		public function testAddItem():void {
 			var collection:KeyFamilies = new KeyFamilies("ad");
 			try {
@@ -62,14 +70,33 @@ package org.sdmx.model.v2.structure.keyfamily
 		}
 		
 		public function testSetItemAt():void {
+			var key:KeyDescriptor = new KeyDescriptor("key");
+			var dimension1:Dimension = new Dimension("dim1", new Concept("FREQ"));
+			var dimension2:Dimension = new Dimension("dim2", new Concept("CURRENCY"));
+			var dimension3:Dimension = new Dimension("dim3", new Concept("CURRENCY_DENOM"));
+			var dimension4:Dimension = new Dimension("dim4", new Concept("EXR_TYPE"));
+			var dimension5:Dimension = new Dimension("dim5", new Concept("EXR_SUFFIX"));
+			key.addItem(dimension1);
+			key.addItem(dimension2);
+			key.addItem(dimension3);
+			key.addItem(dimension4);
+			key.addItem(dimension5);	
+			var measure:MeasureDescriptor = new MeasureDescriptor("measures");
+			measure.addItem(new UncodedMeasure("measure", new Concept("OBS_VALUE")));
+			var keyFamily1:KeyFamily = new KeyFamily("test", new InternationalString(), new MaintenanceAgency("ECB"), key, measure);
+			var keyFamily2:KeyFamily = new KeyFamily("ECB_SEC1", new InternationalString(), new MaintenanceAgency("ECB"), key, measure);
 			var collection:KeyFamilies = new KeyFamilies("ad");
+			collection.addItem(keyFamily1);
+			collection.setItemAt(keyFamily2, 0);
+			assertEquals("=1", 1, collection.length);
+			assertTrue("kf2", collection.contains(keyFamily2));
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("An collection of key families can only contain key families");
 			} catch (error:ArgumentError) {}
 		}
 		
-		public function testGetKeyFamilyByURI():void {
+		public function testGetKeyFamilyByURN():void {
 			var collection:KeyFamilies = new KeyFamilies("ad");
 			var key:KeyDescriptor = new KeyDescriptor("key");
 			var dimension1:Dimension = new Dimension("dim1", new Concept("FREQ"));
@@ -93,6 +120,30 @@ package org.sdmx.model.v2.structure.keyfamily
 			assertNull("There should be no such key family in the collection", collection.getKeyFamilyByURN("http://www.ecb.int/vocabulary/stats/sec/1"));
 		}
 		
+		public function testGetKeyFamilyByURI():void {
+			var collection:KeyFamilies = new KeyFamilies("ad");
+			var key:KeyDescriptor = new KeyDescriptor("key");
+			var dimension1:Dimension = new Dimension("dim1", new Concept("FREQ"));
+			var dimension2:Dimension = new Dimension("dim2", new Concept("CURRENCY"));
+			var dimension3:Dimension = new Dimension("dim3", new Concept("CURRENCY_DENOM"));
+			var dimension4:Dimension = new Dimension("dim4", new Concept("EXR_TYPE"));
+			var dimension5:Dimension = new Dimension("dim5", new Concept("EXR_SUFFIX"));
+			key.addItem(dimension1);
+			key.addItem(dimension2);
+			key.addItem(dimension3);
+			key.addItem(dimension4);
+			key.addItem(dimension5);	
+			var measure:MeasureDescriptor = new MeasureDescriptor("measures");
+			measure.addItem(new UncodedMeasure("measure", new Concept("OBS_VALUE")));
+			var keyFamily1:KeyFamily = new KeyFamily("test", new InternationalString(), new MaintenanceAgency("ECB"), key, measure);
+			var keyFamily2:KeyFamily = new KeyFamily("ECB_SEC1", new InternationalString(), new MaintenanceAgency("ECB"), key, measure);			
+			keyFamily1.uri = "http://www.ecb.int/vocabulary/stats/exr/1";
+			collection.addItem(keyFamily1);
+			collection.addItem(keyFamily2);			
+			assertEquals("The key families should be equal", keyFamily1, collection.getKeyFamilyByURI(keyFamily1.uri));
+			assertNull("There should be no such key family in the collection", collection.getKeyFamilyByURI("http://www.ecb.int/vocabulary/stats/sec/1"));
+		}
+		
 		public function testGetKeyFamilyByID():void {
 			var collection:KeyFamilies = new KeyFamilies("ad");
 			var key:KeyDescriptor = new KeyDescriptor("key");
@@ -111,8 +162,14 @@ package org.sdmx.model.v2.structure.keyfamily
 			var keyFamily1:KeyFamily = new KeyFamily("ECB_EXR1", new InternationalString(), new MaintenanceAgency("ECB"), key, measure);
 			var keyFamily2:KeyFamily = new KeyFamily("ECB_SEC1", new InternationalString(), new MaintenanceAgency("ECB"), key, measure);
 			collection.addItem(keyFamily1);
+			collection.addItem(keyFamily2);
 			assertEquals("The key families should be equal", keyFamily1, collection.getKeyFamilyByID("ECB_EXR1", "ECB"));
 			assertNull("There should be no such key family in the collection", collection.getKeyFamilyByID("ECB_OFI1", "ECB"));
+			keyFamily1.version = "1.0";
+			var keyFamily3:KeyFamily = new KeyFamily("ECB_EXR1", new InternationalString(), new MaintenanceAgency("ECB"), key, measure);
+			keyFamily3.version = "2.0";
+			collection.addItem(keyFamily3);
+			assertEquals("The key families should be equal - with version", keyFamily3, collection.getKeyFamilyByID("ECB_EXR1", "ECB", "2.0"));
 		}
 	}
 }

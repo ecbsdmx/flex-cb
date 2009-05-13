@@ -28,9 +28,10 @@ package org.sdmx.model.v2.structure.keyfamily
 {
 	import flexunit.framework.TestCase;
 	import flexunit.framework.TestSuite;
+	
+	import org.sdmx.model.v2.base.InternationalString;
 	import org.sdmx.model.v2.structure.concept.Concept;
 	import org.sdmx.model.v2.structure.organisation.MaintenanceAgency;
-	import org.sdmx.model.v2.base.InternationalString;
 
 	/**
 	 * @private
@@ -43,6 +44,14 @@ package org.sdmx.model.v2.structure.keyfamily
 		
 		public static function suite():TestSuite {
 			return new TestSuite(DataflowsCollectionTest);
+		}
+		
+		public function testSetAndGetID():void
+		{
+			var collection:DataflowsCollection = new DataflowsCollection("id1");
+			assertEquals("=id1", "id1", collection.id);
+			collection.id = "id2";
+			assertEquals("=id2", "id2", collection.id);
 		}
 		
 		public function testAddItem():void {
@@ -62,7 +71,27 @@ package org.sdmx.model.v2.structure.keyfamily
 		}
 		
 		public function testSetItemAt():void {
+			var key:KeyDescriptor = new KeyDescriptor("key");
+			var dimension1:Dimension = new Dimension("dim1", new Concept("FREQ"));
+			var dimension2:Dimension = new Dimension("dim2", new Concept("CURRENCY"));
+			var dimension3:Dimension = new Dimension("dim3", new Concept("CURRENCY_DENOM"));
+			var dimension4:Dimension = new Dimension("dim4", new Concept("EXR_TYPE"));
+			var dimension5:Dimension = new Dimension("dim5", new Concept("EXR_SUFFIX"));
+			key.addItem(dimension1);
+			key.addItem(dimension2);
+			key.addItem(dimension3);
+			key.addItem(dimension4);
+			key.addItem(dimension5);	
+			var measure:MeasureDescriptor = new MeasureDescriptor("measures");
+			measure.addItem(new UncodedMeasure("measure", new Concept("OBS_VALUE")));
+			var keyFamily:KeyFamily = new KeyFamily("ECB_EXR1", new InternationalString(), new MaintenanceAgency("ECB"), key, measure);
 			var collection:DataflowsCollection = new DataflowsCollection();
+			var df1:DataflowDefinition = new DataflowDefinition("ECB_EXR1_WEB", new InternationalString(), new MaintenanceAgency("ECB"), keyFamily);
+			var df2:DataflowDefinition = new DataflowDefinition("ECB_OFI1_WEB", new InternationalString(), new MaintenanceAgency("ECB"), keyFamily);
+			collection.addItem(df1);
+			collection.setItemAt(df2, 0);
+			assertEquals("=1", 1, collection.length);
+			assertTrue("Should be df2", collection.contains(df2));
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("An collection of dataflows can only contain dataflows");
@@ -97,6 +126,16 @@ package org.sdmx.model.v2.structure.keyfamily
 			assertEquals("dataflowDef1 should be there", dataflowDef1, dataflows.getDataflowById("ECB_OFI1_WEB", "ECB", null));
 			assertEquals("dataflowDef2 should be there", dataflowDef2, dataflows.getDataflowById("ECB_OFI1_WEB", "ECB", "2.0"));
 			assertNull("No such dataflow!", dataflows.getDataflowById("ECB_OFI1_WEB", "IMF", "2.0"));
+			
+			try {
+				dataflows.getDataflowById(null, "ECB", "1.0");
+				fail("Should not be possible to search for null id");
+			} catch (error:ArgumentError) {}
+			
+			try {
+				dataflows.getDataflowById("", "ECB", "2.0");
+				fail("Should not be possible to search for emoty id");
+			} catch (error:ArgumentError) {}
 		}
 	}
 }

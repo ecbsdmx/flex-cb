@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -70,6 +68,12 @@ package org.sdmx.model.v2.structure.keyfamily
 		
 		public function testSetItemAt():void {
 			var collection:AttributeDescriptor = new AttributeDescriptor("ad");
+			var attribute1:DataAttribute = new UncodedDataAttribute("attr1", new Concept("OBS_COM"));
+			var attribute2:DataAttribute = new UncodedDataAttribute("attr2", new Concept("OBS_CONF"));
+			collection.addItem(attribute1);
+			collection.setItemAt(attribute2, 0);
+			assertEquals("=1", 1, collection.length);
+			assertTrue("Should be attr2", collection.contains(attribute2));
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("An AttributeDescriptor can only contain data attributes");

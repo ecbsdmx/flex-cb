@@ -61,6 +61,12 @@ package org.sdmx.model.v2.structure.keyfamily
 		
 		public function testSetItemAt():void {
 			var collection:GroupKeyDescriptorsCollection = new GroupKeyDescriptorsCollection();
+			var grp1:GroupKeyDescriptor = new GroupKeyDescriptor("siblingGroup");
+			var grp2:GroupKeyDescriptor = new GroupKeyDescriptor("currencyGroup");
+			collection.addItem(grp1);
+			collection.setItemAt(grp2, 0);
+			assertEquals("=1", 1, collection.length);
+			assertTrue("Should be dim2", collection.contains(grp2));
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("A GroupKeyDescriptorsCollection can only contain GroupKeyDescriptor");
@@ -85,8 +91,13 @@ package org.sdmx.model.v2.structure.keyfamily
 			groupKeyDescriptor.addItem(dim1);
 			groupKeyDescriptor.addItem(dim2);
 			groupKeyDescriptor.addItem(dim3);
-			groupKeyDescriptor.addItem(dim4);									
+			groupKeyDescriptor.addItem(dim4);		
+			var groupKeyDescriptor2:GroupKeyDescriptor = new GroupKeyDescriptor("currencyGroup");
+			groupKeyDescriptor2.addItem(dim2);
+			groupKeyDescriptor2.addItem(dim3);
+			groupKeyDescriptor2.addItem(dim4);															
 			collection.addItem(groupKeyDescriptor);
+			collection.addItem(groupKeyDescriptor2);
 			assertEquals("The groups should be equal", groupKeyDescriptor, collection.getGroup("siblingGroup"));
 			assertNull("This should not be in the collection", collection.getGroup("TEST.BLAH"));
 		}

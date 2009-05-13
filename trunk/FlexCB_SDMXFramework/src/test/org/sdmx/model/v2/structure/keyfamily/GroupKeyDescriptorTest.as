@@ -66,6 +66,12 @@ package org.sdmx.model.v2.structure.keyfamily
 		
 		public function testSetItemAt():void {
 			var collection:GroupKeyDescriptor = new GroupKeyDescriptor("group");
+			var dim1:Dimension = new Dimension("dim1", new Concept("CURRENCY"));
+			var dim2:Dimension = new Dimension("dim2", new Concept("CURRENCY_DENOM"));
+			collection.addItem(dim1);
+			collection.setItemAt(dim2, 0);
+			assertEquals("=1", 1, collection.length);
+			assertTrue("Should be dim2", collection.contains(dim2));
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("A GroupKeyDescriptor can only contain dimensions");

@@ -70,6 +70,12 @@ package org.sdmx.model.v2.structure.keyfamily
 		
 		public function testSetItemAt():void {
 			var collection:KeyDescriptor = new KeyDescriptor("dimensions");
+			var dim1:Dimension = new Dimension("dim1", new Concept("FREQ"));
+			var dim2:Dimension = new Dimension("dim2", new Concept("REF_AREA"));
+			collection.addItem(dim1);
+			collection.setItemAt(dim2, 0);
+			assertEquals("=1", 1, collection.length);
+			assertTrue("Should be dim2", collection.contains(dim2));
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("A KeyDescriptor can only contain dimensions");
