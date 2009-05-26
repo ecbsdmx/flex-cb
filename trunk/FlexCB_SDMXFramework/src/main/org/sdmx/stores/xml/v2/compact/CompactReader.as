@@ -135,7 +135,7 @@ package org.sdmx.stores.xml.v2.compact
 		{
 			var groupKeyVal:String = "";
 			for each (var keyValue:KeyValue in group.keyValues) {
-				groupKeyVal = groupKeyVal + keyValue.value.id;
+				groupKeyVal = groupKeyVal + keyValue.value.id + ".";
 			}			
 			groupKeyVal = groupKeyVal.substr(0, groupKeyVal.length - 1);
 			
@@ -153,8 +153,10 @@ package org.sdmx.stores.xml.v2.compact
 					group.timeseriesKeys.addItem(s2);
 				}
 			} else if (_optimisationLevel == 3) {
-				group.timeseriesKeys.addItem(
-					_dataSet.timeseriesKeys.getItemAt(position));
+				if (position < _dataSet.timeseriesKeys.length) {
+					group.timeseriesKeys.addItem(
+						_dataSet.timeseriesKeys.getItemAt(position));
+				}
 			} else {
 				for each (var s3:TimeseriesKey in _dataSet.timeseriesKeys) {
                 	if (s3.belongsToGroup(group.keyValues)) {
