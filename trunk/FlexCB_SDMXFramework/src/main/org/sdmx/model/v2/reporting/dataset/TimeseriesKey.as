@@ -172,7 +172,7 @@ package org.sdmx.model.v2.reporting.dataset
 		 */
 		public function belongsToSiblingGroup(groupKey:String):Boolean
 		{
-			return _cachedGroupKey == groupKey;
+			return siblingGroupKey == groupKey;
 		}
 	}
 }
