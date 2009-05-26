@@ -28,7 +28,7 @@
 package org.sdmx.stores.xml.v2.utility
 {
 	import flash.events.Event;
-	
+		
 	import flexunit.framework.TestCase;
 	import flexunit.framework.TestSuite;
 	
@@ -209,8 +209,62 @@ package org.sdmx.stores.xml.v2.utility
 			structureReader.addEventListener(StructureReader.KEY_FAMILIES_EVENT,
 				addAsync(handleBISKeyFamilies, 3000));
 			structureReader.read(_bisStructureXml);
+		}
+		
+		public function testWrongData1():void
+		{
+			var structureReader:StructureReader = new StructureReader();
+			structureReader.dispatchKeyFamilies = true;
+			structureReader.addEventListener(StructureReader.KEY_FAMILIES_EVENT,
+				addAsync(handleKeyFamiliesWD1, 3000));
+			structureReader.read(_structureXML);
 		}		
 		
+		public function testWrongData2():void
+		{
+			var structureReader:StructureReader = new StructureReader();
+			structureReader.dispatchKeyFamilies = true;
+			structureReader.addEventListener(StructureReader.KEY_FAMILIES_EVENT,
+				addAsync(handleKeyFamiliesWD2, 3000));
+			structureReader.read(_structureXML);
+		}
+		
+		private function handleKeyFamiliesWD1(event:SDMXDataEvent):void 
+		{
+			_utilityReader = 
+				new UtilityReader((event.data as KeyFamilies).getItemAt(0) 
+					as KeyFamily);
+			_utilityReader.addEventListener(DataReaderAdapter.INIT_READY, 
+				handleInitReadyWD1);
+			_utilityReader.dataFile = _wrongData1;	
+		}
+		
+		private function handleKeyFamiliesWD2(event:SDMXDataEvent):void 
+		{
+			_utilityReader = 
+				new UtilityReader((event.data as KeyFamilies).getItemAt(0) 
+					as KeyFamily);
+			_utilityReader.addEventListener(DataReaderAdapter.INIT_READY, 
+				handleInitReadyWD2);
+			_utilityReader.dataFile = _wrongData2;	
+		}
+		
+		private function handleInitReadyWD1(event:Event):void
+		{
+			try {
+				_utilityReader.query();
+				fail("Should have caught an exception");
+			} catch (e:Error) {	}	
+		}
+		
+		private function handleInitReadyWD2(event:Event):void
+		{
+			try {
+				_utilityReader.query();
+				fail("Should have caught an exception");
+			} catch (e:Error) {	}	
+		}
+				
 		private function handleBISKeyFamilies(event:SDMXDataEvent):void 
 		{
 			_utilityReader = 
@@ -1124,5 +1178,53 @@ xsi:schemaLocation="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message SD
 		</bisjd:Group>
 	</bisjd:DataSet>
 </UtilityData>		
+
+private var _wrongData1:XML =
+<UtilityData xsi:schemaLocation="http://www.SDMX.org/resources/SDMXML/schemas/v1_0/message SDMXMessage.xsd  http://www.newyorkfed.org/xml/schemas/RateBase/utility RateBaseUtility.xsd http://www.newyorkfed.org/xml/schemas/FFBase/utility FFBaseUtility.xsd http://www.newyorkfed.org/xml/schemas/FFMethod/utility FFMethodUtility.xsd http://www.newyorkfed.org/xml/schemas/FF/utility FFUtility.xsd" xmlns:generic="http://www.SDMX.org/resources/SDMXML/schemas/v1_0/generic" xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v1_0/message" xmlns:ffbase="http://www.newyorkfed.org/xml/schemas/FFBase/utility" xmlns:utility="http://www.SDMX.org/resources/SDMXML/schemas/v1_0/utility" xmlns:query="http://www.SDMX.org/resources/SDMXML/schemas/v1_0/query" xmlns:structure="http://www.SDMX.org/resources/SDMXML/schemas/v1_0/structure" xmlns:common="http://www.SDMX.org/resources/SDMXML/schemas/v1_0/common" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:m="http://www.newyorkfed.org/xml/schemas/FFMethod/utility" xmlns:compact="http://www.SDMX.org/resources/SDMXML/schemas/v1_0/compact" xmlns:ff="http://www.newyorkfed.org/xml/structures/ffStructure.xml" xmlns:cross="http://www.SDMX.org/resources/SDMXML/schemas/v1_0/cross" xmlns:base="http://www.newyorkfed.org/xml/schemas/RateBase/utility">
+   <Header>
+      <ID>FFD</ID>
+      <Test>false</Test>
+      <Name xml:lang="en">Wrong data</Name>
+      <Prepared>2008-12-03</Prepared>
+      <Sender id="ECB"/>
+   </Header>
+   <ff:DataSet keyFamilyURI="http://www.newyorkfed.org/xml/structures/ffStructure.xml">
+      <ff:Series AVAILABILITY="A" DECIMALS="2" FF_METHOD="D" DISCLAIMER="G" TIME_FORMAT="P1D" >
+         <ffbase:Key>
+            <base:FREQ>D</base:FREQ>
+            <base:RATE>FF</base:RATE>
+            <base:MATURITY>O</base:MATURITY>
+            <ffbase:FF_SCOPE>D</ffbase:FF_SCOPE>
+         </ffbase:Key>
+         <ff:Obs OBS_CONF="F" OBS_STATUS="A">            
+            <base:OBS_VALUE>0.59</base:OBS_VALUE>
+         </ff:Obs>
+      </ff:Series>
+   </ff:DataSet>
+</UtilityData>;	
+private var _wrongData2:XML =
+<UtilityData xsi:schemaLocation="http://www.SDMX.org/resources/SDMXML/schemas/v1_0/message SDMXMessage.xsd  http://www.newyorkfed.org/xml/schemas/RateBase/utility RateBaseUtility.xsd http://www.newyorkfed.org/xml/schemas/FFBase/utility FFBaseUtility.xsd http://www.newyorkfed.org/xml/schemas/FFMethod/utility FFMethodUtility.xsd http://www.newyorkfed.org/xml/schemas/FF/utility FFUtility.xsd" xmlns:generic="http://www.SDMX.org/resources/SDMXML/schemas/v1_0/generic" xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v1_0/message" xmlns:ffbase="http://www.newyorkfed.org/xml/schemas/FFBase/utility" xmlns:utility="http://www.SDMX.org/resources/SDMXML/schemas/v1_0/utility" xmlns:query="http://www.SDMX.org/resources/SDMXML/schemas/v1_0/query" xmlns:structure="http://www.SDMX.org/resources/SDMXML/schemas/v1_0/structure" xmlns:common="http://www.SDMX.org/resources/SDMXML/schemas/v1_0/common" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:m="http://www.newyorkfed.org/xml/schemas/FFMethod/utility" xmlns:compact="http://www.SDMX.org/resources/SDMXML/schemas/v1_0/compact" xmlns:ff="http://www.newyorkfed.org/xml/structures/ffStructure.xml" xmlns:cross="http://www.SDMX.org/resources/SDMXML/schemas/v1_0/cross" xmlns:base="http://www.newyorkfed.org/xml/schemas/RateBase/utility">
+   <Header>
+      <ID>FFD</ID>
+      <Test>false</Test>
+      <Name xml:lang="en">Wrong data</Name>
+      <Prepared>2008-12-03</Prepared>
+      <Sender id="ECB"/>
+   </Header>
+   <ff:DataSet keyFamilyURI="http://www.newyorkfed.org/xml/structures/ffStructure.xml">
+      <ff:Series AVAILABILITY="A" DECIMALS="2" FF_METHOD="D" DISCLAIMER="G" TIME_FORMAT="P1D" >
+         <ffbase:Key>
+            <base:FREQ>D</base:FREQ>
+            <base:RATE>FF</base:RATE>
+            <base:MATURITY>O</base:MATURITY>
+            <ffbase:FF_SCOPE>D</ffbase:FF_SCOPE>
+         </ffbase:Key>
+         <ff:Obs OBS_CONF="F" OBS_STATUS="A">            
+            <base:TIME_PERIOD></base:TIME_PERIOD>
+            <base:OBS_VALUE>0.59</base:OBS_VALUE>
+         </ff:Obs>
+      </ff:Series>
+   </ff:DataSet>
+</UtilityData>;	 
 	}	
 }
