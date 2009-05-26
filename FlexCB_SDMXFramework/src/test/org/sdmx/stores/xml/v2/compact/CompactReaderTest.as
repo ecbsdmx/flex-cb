@@ -34,6 +34,7 @@ package org.sdmx.stores.xml.v2.compact
 	import org.sdmx.event.SDMXDataEvent;
 	import org.sdmx.model.v2.reporting.dataset.CodedAttributeValue;
 	import org.sdmx.model.v2.reporting.dataset.DataSet;
+	import org.sdmx.model.v2.reporting.dataset.GroupKey;
 	import org.sdmx.model.v2.reporting.dataset.TimePeriod;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
 	import org.sdmx.model.v2.structure.keyfamily.KeyFamilies;
@@ -85,19 +86,101 @@ package org.sdmx.stores.xml.v2.compact
 			structureReader.read(_structureXML);	
 		}
 		
+		public function testOptimisationLevel1():void
+		{
+			var structureReader:StructureReader = new StructureReader();
+			structureReader.dispatchKeyFamilies = true;
+			structureReader.addEventListener(StructureReader.KEY_FAMILIES_EVENT,
+				addAsync(handleKeyFamilies1, 3000));
+			structureReader.read(_structureXML);
+		}
+		
+		public function testOptimisationLevel2():void
+		{
+			var structureReader:StructureReader = new StructureReader();
+			structureReader.dispatchKeyFamilies = true;
+			structureReader.addEventListener(StructureReader.KEY_FAMILIES_EVENT,
+				addAsync(handleKeyFamilies2, 3000));
+			structureReader.read(_structureXML);
+		}
+		
+		public function testOptimisationLevel3():void
+		{
+			var structureReader:StructureReader = new StructureReader();
+			structureReader.dispatchKeyFamilies = true;
+			structureReader.addEventListener(StructureReader.KEY_FAMILIES_EVENT,
+				addAsync(handleKeyFamilies3, 3000));
+			structureReader.read(_structureXML);
+		}
+		
 		private function handleKeyFamilies(event:SDMXDataEvent):void 
 		{
 			_compactReader = new CompactReader((event.data as KeyFamilies).
 				getItemAt(0) as KeyFamily);
 			_compactReader.addEventListener(DataReaderAdapter.INIT_READY, 
 				handleInitReady);
+			_compactReader.optimisationLevel = CompactReader.NO_OPTIMISATION;	
 			_compactReader.dataFile = _compactXML;	
+		}
+		
+		private function handleKeyFamilies1(event:SDMXDataEvent):void 
+		{
+			_compactReader = new CompactReader((event.data as KeyFamilies).
+				getItemAt(0) as KeyFamily);
+			_compactReader.addEventListener(DataReaderAdapter.INIT_READY, 
+				handleInitReady1);
+			_compactReader.optimisationLevel = 
+				CompactReader.SIBLING_GROUP_OPTIMISATION;	
+			_compactReader.dataFile = _compactXML;	
+		}
+		
+		private function handleKeyFamilies2(event:SDMXDataEvent):void 
+		{
+			_compactReader = new CompactReader((event.data as KeyFamilies).
+				getItemAt(0) as KeyFamily);
+			_compactReader.addEventListener(DataReaderAdapter.INIT_READY, 
+				handleInitReady2);
+			_compactReader.optimisationLevel = 
+				CompactReader.SIBLING_GROUP_DEFINED_KEY_ORDER;
+			_compactReader.dataFile = _compactXML;	
+		}
+		
+		private function handleKeyFamilies3(event:SDMXDataEvent):void 
+		{
+			_compactReader = new CompactReader((event.data as KeyFamilies).
+				getItemAt(0) as KeyFamily);
+			_compactReader.addEventListener(DataReaderAdapter.INIT_READY, 
+				handleInitReady3);
+			_compactReader.optimisationLevel = 
+				CompactReader.SERIES_POSITION_OPTIMISATION;	
+			_compactReader.dataFile = _compactXML2;	
 		}
 		
 		private function handleInitReady(event:Event):void
 		{
 			_compactReader.addEventListener(DataReaderAdapter.DATASET_EVENT,
 				handleDataSet);
+			_compactReader.query();	
+		}
+		
+		private function handleInitReady1(event:Event):void
+		{
+			_compactReader.addEventListener(DataReaderAdapter.DATASET_EVENT,
+				handleDataSet);
+			_compactReader.query();	
+		}
+		
+		private function handleInitReady2(event:Event):void
+		{
+			_compactReader.addEventListener(DataReaderAdapter.DATASET_EVENT,
+				handleDataSet);
+			_compactReader.query();	
+		}
+		
+		private function handleInitReady3(event:Event):void
+		{
+			_compactReader.addEventListener(DataReaderAdapter.DATASET_EVENT,
+				handleDataSet2);
 			_compactReader.query();	
 		}
 		
@@ -117,10 +200,59 @@ package org.sdmx.stores.xml.v2.compact
 				dataSet.reportingBeginDate);	
 			assertNull("There is no reporting end date",
 				dataSet.reportingEndDate);
+			assertEquals("There should be two groups", 2, 
+				dataSet.groupKeys.length);
+			assertEquals("First group does not contain series", 0, 
+				(dataSet.groupKeys.getItemAt(0) as GroupKey).timeseriesKeys.length);	
+			assertEquals("Second group contains the series", 1, 
+				(dataSet.groupKeys.getItemAt(1) as GroupKey).timeseriesKeys.length);
+			assertEquals("There should be one series", 1, 
+				dataSet.timeseriesKeys.length);				
+			assertEquals("The series key should be =", "D.USD.EUR.SP00.A", 
+				(dataSet.timeseriesKeys.getItemAt(0) as TimeseriesKey).seriesKey);	
+			assertEquals("The series should have 6 observations", 6, 
+				(dataSet.timeseriesKeys.getItemAt(0) 
+					as TimeseriesKey).timePeriods.length);
+			var obs:TimePeriod = (dataSet.timeseriesKeys.getItemAt(0) 
+				as TimeseriesKey).timePeriods.getItemAt(3) as TimePeriod;
+			assertEquals("The values should be equal", 1.1632, 
+				obs.observationValue);
+			assertEquals("The periods should be equal", "1999-01-07", 
+				obs.periodComparator);	
+			assertEquals("There should be 2 attributes", 2, 
+				obs.observation.attributeValues.length);	
+			assertEquals("The last attribute should be the obs_conf", 
+				"OBS_CONF", (obs.observation.attributeValues.getItemAt(1) 
+				as CodedAttributeValue).valueFor.id);
+			assertEquals("The oservation should be free", 
+				"F", (obs.observation.attributeValues.getItemAt(1) 
+				as CodedAttributeValue).value.id);	
+		}
+		
+		private function handleDataSet2(event:SDMXDataEvent):void
+		{
+			var dataSet:DataSet = event.data as DataSet;
+			assertNotNull("The dataset should not be null", dataSet);
+			assertEquals("There should be no attributes on the dataset level",
+				0, dataSet.attributeValues.length);
+			assertTrue("The extraction date should be 2007-04-26", 
+				dataSet.dataExtractionDate.fullYearUTC == 2007 &&
+				dataSet.dataExtractionDate.monthUTC == 3 &&
+				dataSet.dataExtractionDate.date == 26);
+			assertNull("There is no dataflow associated to the dataset", 
+				dataSet.describedBy);
+			assertNull("There is no reporting begin date", 
+				dataSet.reportingBeginDate);	
+			assertNull("There is no reporting end date",
+				dataSet.reportingEndDate);
 			assertEquals("There should be one group", 1, 
 				dataSet.groupKeys.length);
+			assertEquals("The group group contains the series", 1, 
+				(dataSet.groupKeys.getItemAt(0) as GroupKey).timeseriesKeys.length);
 			assertEquals("There should be one series", 1, 
-				dataSet.timeseriesKeys.length);
+				dataSet.timeseriesKeys.length);				
+			assertEquals("The series key should be =", "D.USD.EUR.SP00.A", 
+				(dataSet.timeseriesKeys.getItemAt(0) as TimeseriesKey).seriesKey);	
 			assertEquals("The series should have 6 observations", 6, 
 				(dataSet.timeseriesKeys.getItemAt(0) 
 					as TimeseriesKey).timePeriods.length);
@@ -141,6 +273,34 @@ package org.sdmx.stores.xml.v2.compact
 		}
 		
 		private var _compactXML:XML =
+<CompactData xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message https://stats.ecb.int/stats/vocabulary/sdmx/2.0/SDMXMessage.xsd">
+	<Header>
+		<ID>EXR-HIST_2007-04-26</ID>
+		<Test>false</Test>
+		<Name xml:lang="en">Euro foreign exchange reference rates</Name>
+		  <Prepared>2007-04-26T14:25:11</Prepared>
+		<Sender id="4F0">
+			<Name xml:lang="en">European Central Bank</Name>
+		</Sender>
+		<DataSetAgency>ECB</DataSetAgency>
+		<DataSetID>ECB_EXR_WEB</DataSetID>
+		<Extracted>2007-04-26T14:25:11</Extracted>
+	</Header>
+	<DataSet xmlns="http://www.ecb.int/vocabulary/stats/exr/1" xsi:schemaLocation="http://www.ecb.int/vocabulary/stats/exr/1 https://stats.ecb.int/stats/vocabulary/exr/1/2006-09-04/sdmx-compact.xsd">
+		<Group CURRENCY="AUD" CURRENCY_DENOM="EUR" EXR_TYPE="SP00" EXR_SUFFIX="A" DECIMALS="4" UNIT="USD" UNIT_MULT="0" TITLE_COMPL="ECB reference exchange rate, Australian dollar/Euro, 2:15 pm (C.E.T.)" />
+		<Group CURRENCY="USD" CURRENCY_DENOM="EUR" EXR_TYPE="SP00" EXR_SUFFIX="A" DECIMALS="4" UNIT="USD" UNIT_MULT="0" TITLE_COMPL="ECB reference exchange rate, US dollar/Euro, 2:15 pm (C.E.T.)" />
+		<Series FREQ="D" CURRENCY="USD" CURRENCY_DENOM="EUR" EXR_TYPE="SP00" EXR_SUFFIX="A" TIME_FORMAT="P1D" COLLECTION="A">
+			<Obs TIME_PERIOD="1999-01-04" OBS_VALUE="1.1789" OBS_STATUS="A" OBS_CONF="F" />
+			<Obs TIME_PERIOD="1999-01-05" OBS_VALUE="1.1790" OBS_STATUS="A" OBS_CONF="F" />
+			<Obs TIME_PERIOD="1999-01-06" OBS_VALUE="1.1743" OBS_STATUS="A" OBS_CONF="F" />
+			<Obs TIME_PERIOD="1999-01-07" OBS_VALUE="1.1632" OBS_STATUS="A" OBS_CONF="F" />
+			<Obs TIME_PERIOD="1999-01-08" OBS_VALUE="1.1659" OBS_STATUS="A" OBS_CONF="F" />
+			<Obs TIME_PERIOD="1999-01-11" OBS_VALUE="1.1569" OBS_STATUS="A" OBS_CONF="F" />
+		</Series>
+	</DataSet>
+</CompactData>		
+
+	private var _compactXML2:XML =
 <CompactData xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message https://stats.ecb.int/stats/vocabulary/sdmx/2.0/SDMXMessage.xsd">
 	<Header>
 		<ID>EXR-HIST_2007-04-26</ID>
