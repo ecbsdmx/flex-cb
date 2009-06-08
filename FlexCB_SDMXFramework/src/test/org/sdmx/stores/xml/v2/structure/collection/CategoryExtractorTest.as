@@ -104,5 +104,53 @@ package org.sdmx.stores.xml.v2.structure.collection
 			assertEquals("The EN names should be equal", "Consumer price indices", 
 				subcategory.name.localisedStrings.getDescriptionByLocale("en"));
 		}
+		
+		public function testExtractCategoryNoDataflow():void {
+			var xml:XML = 
+				<Category id="exr1" version="1.0" uri="http://www.sdmx.org" urn="UID" xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure">
+					<Name xml:lang="en">Euro foreign exchange reference rates</Name>
+					<Description xml:lang="en">Euro foreign exchange reference rates section on the ECB website</Description>
+					<DataflowRef>
+						<AgencyID>ECB</AgencyID>
+						<DataflowID>ECB_EXR1_WEB</DataflowID>
+					</DataflowRef>
+					<Category version="1.0" id="2120778">
+						<Name xml:lang="en">Consumer price indices</Name>
+					</Category>
+				</Category>
+			var key:KeyDescriptor = new KeyDescriptor("key");
+			var dimension1:Dimension = new Dimension("dim1", new Concept("FREQ"));
+			var dimension2:Dimension = new Dimension("dim2", new Concept("CURRENCY"));
+			var dimension3:Dimension = new Dimension("dim3", new Concept("CURRENCY_DENOM"));
+			var dimension4:Dimension = new Dimension("dim4", new Concept("EXR_TYPE"));
+			var dimension5:Dimension = new Dimension("dim5", new Concept("EXR_SUFFIX"));
+			key.addItem(dimension1);
+			key.addItem(dimension2);
+			key.addItem(dimension3);
+			key.addItem(dimension4);
+			key.addItem(dimension5);	
+			var measure:MeasureDescriptor = new MeasureDescriptor("measures");
+			measure.addItem(new UncodedMeasure("measure", new Concept("OBS_VALUE")));
+			var keyFamily:KeyFamily = new KeyFamily("ECB_EXR1", new InternationalString(), new MaintenanceAgency("ECB"), key, measure);
+			var extractor:CategoryExtractor = new CategoryExtractor();
+			var category:Category = extractor.extract(xml) as Category;	
+			assertNotNull("The category cannot be null", category);
+			assertEquals("The id should be equal", "exr1", category.id);
+			assertEquals("The version should be equal", "1.0", category.version);
+			assertEquals("The URI should be equal", "http://www.sdmx.org", category.uri);
+			assertEquals("The URN should be equal", "UID", category.urn);
+			assertEquals("The EN names should be equal", "Euro foreign exchange reference rates", category.name.localisedStrings.getDescriptionByLocale("en"));
+			assertEquals("The EN descriptions should be equal", "Euro foreign exchange reference rates section on the ECB website", category.description.localisedStrings.getDescriptionByLocale("en"));			
+			assertEquals("There should be one dataflow attached to the category", 1, category.dataflows.length);
+			var dataflow:DataflowDefinition = category.dataflows.getItemAt(0) as DataflowDefinition;
+			assertEquals("The dataflow id should be equal", "ECB_EXR1_WEB", dataflow.id);
+			assertEquals("The dataflow agency id should be equal", "ECB", dataflow.maintainer.id);
+			assertTrue("There should be one subcategory", category.categories.length == 1);
+			var subcategory:Category = 
+				category.categories.getItemAt(0) as Category;
+			assertEquals("The id should be equal", "2120778", subcategory.id);
+			assertEquals("The EN names should be equal", "Consumer price indices", 
+				subcategory.name.localisedStrings.getDescriptionByLocale("en"));
+		}
 	}
 }
