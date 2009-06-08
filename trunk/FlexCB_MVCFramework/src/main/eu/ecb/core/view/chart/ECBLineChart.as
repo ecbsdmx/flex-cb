@@ -509,10 +509,14 @@ package eu.ecb.core.view.chart
 			if (null != observationValueFormatter) {
 				observationValueFormatter.series = 
 					(data.element as LineSeries).dataProvider as TimeseriesKey;
-				observationValueFormatter.group = 
-					(_filteredDataSet.groupKeys.getGroupsForTimeseries(
+				if ((_filteredDataSet.groupKeys.getGroupsForTimeseries(
 					(data.element as LineSeries).dataProvider as TimeseriesKey)
-					as GroupKeysCollection).getItemAt(0) as GroupKey;
+					as GroupKeysCollection).length > 0) {
+					observationValueFormatter.group = 
+						(_filteredDataSet.groupKeys.getGroupsForTimeseries(
+						(data.element as LineSeries).dataProvider as TimeseriesKey)
+						as GroupKeysCollection).getItemAt(0) as GroupKey;
+					}
 					dataTip = dataTip + observationValueFormatter.format(
 						obs.observationValue);		
 			} else {
@@ -651,10 +655,13 @@ package eu.ecb.core.view.chart
 					// Latest value
 					if (null != observationValueFormatter) {
 						observationValueFormatter.series = selectedSeries;
-						observationValueFormatter.group = 
-							(_filteredDataSet.groupKeys.getGroupsForTimeseries(
-								selectedSeries) as GroupKeysCollection).getItemAt(0) 
-									as GroupKey;
+						if ((_filteredDataSet.groupKeys.getGroupsForTimeseries(
+							selectedSeries) as GroupKeysCollection).length > 0 ) {
+								observationValueFormatter.group = 
+									(_filteredDataSet.groupKeys.getGroupsForTimeseries(
+										selectedSeries) as GroupKeysCollection).getItemAt(0) 
+											as GroupKey;
+							}
 						_boxText = _boxText + observationValueFormatter.format(
 							lastObs.observationValue);		
 					} else {
