@@ -38,7 +38,7 @@ package eu.ecb.core.util.formatter.observation
 	import org.sdmx.model.v2.reporting.dataset.UncodedAttributeValue;
 	import flash.errors.IllegalOperationError;
 
-	internal class ObservationAdapterFormatter implements IObservationFormatter
+	public class ObservationAdapterFormatter implements IObservationFormatter
 	{
 		/*==============================Fields================================*/
 		
