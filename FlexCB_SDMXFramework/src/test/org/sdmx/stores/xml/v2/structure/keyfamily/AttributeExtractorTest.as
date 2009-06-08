@@ -124,7 +124,7 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 			concepts.addItem(concept2);
 			concepts.addItem(concept3);
 			var xml:XML =
-				<Attribute conceptRef="OBS_STATUS" attachmentLevel="Observation" codelist="CL_OBS_STATUS" assignmentStatus="Mandatory"/>
+				<Attribute conceptRef="OBS_STATUS" attachmentLevel="Observation" codelist="CL_OBS_STATUS" assignmentStatus="Mandatory" isIdentityAttribute="true"/>
 			var extractor:AttributeExtractor = 
 				new AttributeExtractor(null, concepts, group);	
 			try {	
@@ -143,8 +143,8 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 			concepts.addItem(concept2);
 			concepts.addItem(concept3);
 			var xml:XML =
-				<Attribute conceptRef="TITLE_COMPL" attachmentLevel="Group" assignmentStatus="Mandatory" isEntityAttribute="true">
-					<TextFormat textType="String" maxLength="1050"/>
+				<Attribute conceptRef="TITLE_COMPL" attachmentLevel="Group" assignmentStatus="Mandatory" isFrequencyAttribute="true">
+					<TextFormat textType="Integer" maxLength="10"/>
 					<AttachmentGroup>Group</AttachmentGroup>
 				</Attribute>
 			var extractor:AttributeExtractor = 
