@@ -85,7 +85,7 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 			concepts.addItem(concept2);
 			concepts.addItem(concept3);
 			var xml:XML =
-				<Dimension conceptRef="FREQ" codelist="CL_FREQ" isFrequencyDimension="true"/>
+				<Dimension conceptRef="FREQ" codelist="CL_FREQ" isCountDimension="true"/>
 			var extractor:DimensionExtractor = new DimensionExtractor(null, concepts);
 			try {
 				extractor.extract(xml);
