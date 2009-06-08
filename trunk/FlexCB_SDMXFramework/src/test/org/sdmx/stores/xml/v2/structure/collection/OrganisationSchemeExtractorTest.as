@@ -30,6 +30,7 @@ package org.sdmx.stores.xml.v2.structure.collection
 	import flexunit.framework.TestSuite;
 	
 	import org.sdmx.model.v2.structure.organisation.DataProvider;
+	import org.sdmx.model.v2.structure.organisation.MaintenanceAgency;
 	import org.sdmx.model.v2.structure.organisation.Organisation;
 	import org.sdmx.model.v2.structure.organisation.OrganisationScheme;
 	import org.sdmx.util.date.SDMXDate;
@@ -52,8 +53,17 @@ package org.sdmx.stores.xml.v2.structure.collection
 				<OrganisationScheme id="ESCB" agencyID="ECB" isFinal="true" uri="http://www.ecb.int" urn="ECB:DESC" validFrom="2007-07-28" validTo="2007-07-29" version="1.0">
 					<Name xml:lang="en">The European System of Central Banks</Name>
 					<Description>The European System of Central Banks (Desc)</Description>
+					<Agencies>
+						<Agency id="ECB">
+							<Name xml:lang="en">European Central Bank</Name>
+							<DisseminatorContact>
+								<Department>Directorate General Statistics - Statistical Information Services</Department>
+								<Email>sis.external@ecb.int</Email>
+							</DisseminatorContact>
+						</Agency>
+					</Agencies>
 					<DataProviders>
-						<DataProvider id="ECB">
+						<DataProvider id="4F0">
 							<Name xml:lang="en">European Central Bank</Name>
 							<DisseminatorContact>
 								<Department>Directorate General Statistics - Statistical Information Services</Department>
@@ -81,13 +91,19 @@ package org.sdmx.stores.xml.v2.structure.collection
 			assertEquals("There should be 1 localised strings in the description collection", 1, item.description.localisedStrings.length);
 			assertEquals("The descriptions for EN should be equal", "The European System of Central Banks (Desc)", item.description.localisedStrings.getDescriptionByLocale("en"));
 			assertNotNull("The list of organisations cannot be null", item.organisations);
-			assertEquals("There should be 1 organisation in the list", 1, item.organisations.length);
-			var organisation:Organisation = item.organisations.getItemAt(0) as Organisation;
-			assertNotNull("The organisation cannot be null", organisation);
-			assertTrue("The organisation should be a data provider", organisation is DataProvider);
-			assertEquals("The IDs for organisation should be equal", "ECB", organisation.id);
-			assertNotNull("The name for organisation cannot be null", organisation.name);
-			assertEquals("The name for EN should be equal for organisation", "European Central Bank", organisation.name.localisedStrings.getDescriptionByLocale("en"));
+			assertEquals("There should be 2 organisation ins the list", 2, item.organisations.length);
+			var organisation1:Organisation = item.organisations.getItemAt(1) as Organisation;
+			var organisation2:Organisation = item.organisations.getItemAt(0) as Organisation;
+			assertNotNull("The organisation 1 cannot be null", organisation1);
+			assertTrue("The organisation 1 should be an agency", organisation1 is MaintenanceAgency);
+			assertEquals("The IDs for organisation 1 should be equal", "ECB", organisation1.id);
+			assertNotNull("The name for organisation 1 cannot be null", organisation1.name);
+			assertEquals("The name for EN should be equal for organisation 1", "European Central Bank", organisation1.name.localisedStrings.getDescriptionByLocale("en"));
+			assertNotNull("The organisation 2 cannot be null", organisation2);
+			assertTrue("The organisation 2 should be a data provider", organisation2 is DataProvider);
+			assertEquals("The IDs for organisation 2 should be equal", "4F0", organisation2.id);
+			assertNotNull("The name for organisation 2 cannot be null", organisation2.name);
+			assertEquals("The name for EN should be equal for organisation 2", "European Central Bank", organisation2.name.localisedStrings.getDescriptionByLocale("en"));
 		}
 	}
 }

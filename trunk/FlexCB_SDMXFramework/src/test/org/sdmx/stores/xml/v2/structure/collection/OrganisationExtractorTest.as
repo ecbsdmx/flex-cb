@@ -53,10 +53,26 @@ package org.sdmx.stores.xml.v2.structure.collection
 				<DataProvider id="ECB" uri="http://www.ecb.int/" urn="REGISTRY:ECB" validFrom="1998-06-01" version="2.0">
 					<Name xml:lang="en">European Central Bank</Name>
 					<Description xml:lang="en">European Central Bank Description</Description>
+					<MaintenanceContact>
+						<Department>Unit 1</Department>
+						<Email>unit1@ecb.int</Email>
+					</MaintenanceContact>
+					<CollectorContact>
+						<Department>Unit 2</Department>
+						<Telephone>+4969987654321</Telephone>
+					</CollectorContact>
 					<DisseminatorContact>
-						<Department>Directorate General Statistics - Statistical Information Services</Department>
-						<Email>sis.external@ecb.int</Email>
+						<Department>Unit 3</Department>
+						<Fax>+4969123456789</Fax>
 					</DisseminatorContact>
+					<ReporterContact>
+						<Department>Unit 4</Department>
+						<X400>test4</X400>
+					</ReporterContact>
+					<OtherContact>
+						<Department>Unit 5</Department>
+						<URI>test1</URI>
+					</OtherContact>
 				</DataProvider>
 			var extractor:OrganisationExtractor = new OrganisationExtractor();
 			var organisation:Organisation = extractor.extract(xml) as Organisation;
@@ -69,10 +85,26 @@ package org.sdmx.stores.xml.v2.structure.collection
 			assertEquals("The valid from dates should be equal", sdmxDate.getDate("1998-06-01").getTime(), organisation.validFrom);
 			assertEquals("The EN names should be equal", "European Central Bank", organisation.name.localisedStrings.getDescriptionByLocale("en"));
 			assertEquals("The EN descriptions should be equal", "European Central Bank Description", organisation.description.localisedStrings.getDescriptionByLocale("en"));			
-			assertEquals("There should be one contact details", 1, organisation.contacts.length);
-			var contact:Contact = organisation.contacts.getItemAt(0) as Contact;
-			assertEquals("The dpt should be equal", "Directorate General Statistics - Statistical Information Services", contact.department.localisedStrings.getDescriptionByLocale("en"));
-			assertEquals("The email address should be the same", "sis.external@ecb.int", (contact.contactDetails[Contact.EMAIL] as ArrayCollection).getItemAt(0));
+			assertEquals("There should be 5 contact details", 5, organisation.contacts.length);
+			var contact1:Contact = organisation.contacts.getItemAt(0) as Contact;
+			assertEquals("The dpt should be equal", "Unit 1", contact1.department.localisedStrings.getDescriptionByLocale("en"));
+			assertEquals("The email address should be the same", "unit1@ecb.int", (contact1.contactDetails[Contact.EMAIL] as ArrayCollection).getItemAt(0));
+			
+			var contact2:Contact = organisation.contacts.getItemAt(1) as Contact;
+			assertEquals("The dpt should be equal", "Unit 2", contact2.department.localisedStrings.getDescriptionByLocale("en"));
+			assertEquals("The phone should be the same", "+4969987654321", (contact2.contactDetails[Contact.TELEPHONE] as ArrayCollection).getItemAt(0));
+			
+			var contact3:Contact = organisation.contacts.getItemAt(2) as Contact;
+			assertEquals("The dpt should be equal", "Unit 3", contact3.department.localisedStrings.getDescriptionByLocale("en"));
+			assertEquals("The fax should be the same", "+4969123456789", (contact3.contactDetails[Contact.FAX] as ArrayCollection).getItemAt(0));
+			
+			var contact4:Contact = organisation.contacts.getItemAt(3) as Contact;
+			assertEquals("The dpt should be equal", "Unit 4", contact4.department.localisedStrings.getDescriptionByLocale("en"));
+			assertEquals("The x400 address should be the same", "test4", (contact4.contactDetails[Contact.X400] as ArrayCollection).getItemAt(0));
+			
+			var contact5:Contact = organisation.contacts.getItemAt(4) as Contact;
+			assertEquals("The dpt should be equal", "Unit 5", contact5.department.localisedStrings.getDescriptionByLocale("en"));
+			assertEquals("The URI should be the same", "test1", (contact5.contactDetails[Contact.URI] as ArrayCollection).getItemAt(0));
 		}		
 	}
 }

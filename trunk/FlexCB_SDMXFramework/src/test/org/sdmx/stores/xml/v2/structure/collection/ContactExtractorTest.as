@@ -48,6 +48,7 @@ package org.sdmx.stores.xml.v2.structure.collection
 			var xml:XML = 					
 				<DisseminatorContact>
 					<id>S-SIS</id>
+					<Name xml:lang="en">Test</Name>
 					<Department>Directorate General Statistics - Statistical Information Services</Department>
 					<Role>Secret Information Services</Role>
 					<Email>sis.external@ecb.int</Email>
@@ -59,6 +60,7 @@ package org.sdmx.stores.xml.v2.structure.collection
 			var contact:Contact = extractor.extract(xml) as Contact;
 			assertNotNull("Contact cannot be null", contact);
 			assertEquals("The ids should be equal", "S-SIS", contact.id);
+			assertEquals("The names should be equal", "Test", contact.name.localisedStrings.getDescriptionByLocale("en"));
 			assertEquals("The dpt should be equal", "Directorate General Statistics - Statistical Information Services", contact.department.localisedStrings.getDescriptionByLocale("en"));
 			assertEquals("The roles should be equal", "Secret Information Services", contact.role.localisedStrings.getDescriptionByLocale("en"));
 			assertEquals("There should be 2 emails listed", 2, (contact.contactDetails[Contact.EMAIL] as ArrayCollection).length);
