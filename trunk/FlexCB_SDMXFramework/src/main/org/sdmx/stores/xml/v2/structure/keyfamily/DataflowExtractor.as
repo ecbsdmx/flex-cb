@@ -135,7 +135,8 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 					new CubeRegionsCollection();
 				for each (var cube:XML in items.Constraint.CubeRegion) {
 					var region:CubeRegion = new CubeRegion();
-					region.isIncluded = cube.@isIncluded;
+					region.isIncluded = 
+						(cube.@isIncluded == true) ? true : false;
 					cubeCollection.addItem(region);
 					if (cube.Member.length() > 0) {
 						var members:MemberSelectionsCollection = 
@@ -143,7 +144,8 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 						for each (var mem:XML in 
 							items.Constraint.CubeRegion.Member) {
 							var member:MemberSelection = new MemberSelection();
-							member.isIncluded = mem.@isIncluded;
+							member.isIncluded = 
+								(mem.@isIncluded == "true") ? true : false;
 							var component:Component = new Component(mem.
 								ComponentRef, new Concept(mem.ComponentRef));
 							member.structureComponent = component;
