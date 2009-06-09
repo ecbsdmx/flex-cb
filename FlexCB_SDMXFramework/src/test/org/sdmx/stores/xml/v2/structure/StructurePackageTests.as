@@ -27,6 +27,7 @@
 package org.sdmx.stores.xml.v2.structure
 {
 	import flexunit.framework.TestSuite;
+	
 	import org.sdmx.stores.xml.v2.structure.base.BasePackageTests;
 	import org.sdmx.stores.xml.v2.structure.collection.CollectionPackageTests;
 	import org.sdmx.stores.xml.v2.structure.keyfamily.KeyFamilyPackageTests;
@@ -38,6 +39,7 @@ package org.sdmx.stores.xml.v2.structure
 	{
 		public static function suite():TestSuite {
 			var suite:TestSuite = new TestSuite();
+			suite.addTest(SDMXMLKeyFamilyDaoTest.suite());
 			suite.addTest(StructureReaderTest.suite());
 			suite.addTest(BasePackageTests.suite());
 			suite.addTest(CollectionPackageTests.suite());
