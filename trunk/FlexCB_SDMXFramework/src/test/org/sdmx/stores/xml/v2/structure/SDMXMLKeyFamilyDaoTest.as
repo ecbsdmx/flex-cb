@@ -1,52 +1,15 @@
-// Copyright (C) 2008 European Central Bank. All rights reserved.
-//
-// Redistribution and use in source and binary forms,
-// with or without modification, are permitted
-// provided that the following conditions are met:
-//
-// Redistributions of source code must retain the above copyright notice,
-// this list of conditions and the following disclaimer.
-// Redistributions in binary form must reproduce the above copyright notice,
-// this list of conditions and the following disclaimer in the documentation
-// and/or other materials provided with the distribution.
-// Neither the name of the European Central Bank
-// nor the names of its contributors may be used to endorse or promote products
-// derived from this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
-// TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-// PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-// HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-// THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.stores.xml.v2.structure
 {
 	import flexunit.framework.TestCase;
 	import flexunit.framework.TestSuite;
 	
 	import org.sdmx.event.SDMXDataEvent;
-	import org.sdmx.model.v2.structure.category.CategorieSchemesCollection;
-	import org.sdmx.model.v2.structure.category.CategoryScheme;
-	import org.sdmx.model.v2.structure.code.CodeList;
-	import org.sdmx.model.v2.structure.code.CodeLists;
-	import org.sdmx.model.v2.structure.concept.Concept;
-	import org.sdmx.model.v2.structure.concept.Concepts;
-	import org.sdmx.model.v2.structure.keyfamily.DataflowDefinition;
-	import org.sdmx.model.v2.structure.keyfamily.DataflowsCollection;
 	import org.sdmx.model.v2.structure.keyfamily.KeyFamilies;
 	import org.sdmx.model.v2.structure.keyfamily.KeyFamily;
-	import org.sdmx.model.v2.structure.organisation.OrganisationScheme;
-	import org.sdmx.model.v2.structure.organisation.OrganisationSchemes;
+	import org.sdmx.stores.api.BaseSDMXDaoFactory;
+	import org.sdmx.stores.api.IMaintainableArtefactProvider;
 
-	/**
-	 * @private
-	 */
-	public class StructureReaderTest extends TestCase
+	public class SDMXMLKeyFamilyDaoTest extends TestCase
 	{
 		private var _testXML:XML = 
 <Structure 
@@ -436,92 +399,7 @@ package org.sdmx.stores.xml.v2.structure
 	</message:KeyFamilies>
 </Structure>
 
-		private var _testCS:XML =
-<message:Structure xsi:schemaLocation="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message http://ollie:8080/scorpio-external/vocabulary/sdmx/2.0/SDMXMessage.xsd http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure http://ollie:8080/scorpio-external/vocabulary/sdmx/2.0/SDMXStructure.xsd" xmlns:generic="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/generic" xmlns:message="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message" xmlns:structure="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:compact="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/compact" xmlns:metadatareport="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/metadatareport" xmlns:utility="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/utility" xmlns:common="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/common" xmlns:query="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/query" xmlns:genericmetadata="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/genericmetadata" xmlns:registry="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cross="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/cross">
-    <message:Header>
-        <message:ID>d87f1147-9505-45dd-9d2f-21200d6c2fe6</message:ID>
-        <message:Test>false</message:Test>
-        <message:Prepared>2009-06-09T14:46:15+02:00</message:Prepared>
-        <message:Sender id="ECB">
-            <message:Name>European Central Bank</message:Name>
-
-            <message:Contact>
-                <message:Email>statistics@ecb.europa.eu</message:Email>
-            </message:Contact>
-        </message:Sender>
-    </message:Header>
-    <message:CategorySchemes>
-        <structure:CategoryScheme isFinal="true" version="1.0" agencyID="ECB" id="SDW_ECONOMIC_CONCEPTS">
-            <structure:Name>SDW economic concepts</structure:Name>
-            <structure:Category version="1.0" id="2018800">
-                <structure:Name>Monetary operations</structure:Name>
-                <structure:Category version="1.0" id="2018801">
-                    <structure:Name>Key interest rates</structure:Name>
-                    <structure:DataflowRef>
-                        <structure:AgencyID>ECB</structure:AgencyID>
-                        <structure:DataflowID>2136672</structure:DataflowID>
-                        <structure:Version>1.0</structure:Version>
-                    </structure:DataflowRef>
-                </structure:Category>
-                <structure:Category version="1.0" id="2018802">
-                    <structure:Name>Minimum reserves and liquidity</structure:Name>
-                    <structure:DataflowRef>
-                        <structure:AgencyID>ECB</structure:AgencyID>
-                        <structure:DataflowID>2136673</structure:DataflowID>
-                        <structure:Version>1.0</structure:Version>
-                    </structure:DataflowRef>
-                    <structure:DataflowRef>
-                        <structure:AgencyID>ECB</structure:AgencyID>
-                        <structure:DataflowID>2034468</structure:DataflowID>
-                        <structure:Version>1.0</structure:Version>
-                    </structure:DataflowRef>
-                </structure:Category>
-            </structure:Category>
-		</structure:CategoryScheme>
-    </message:CategorySchemes>
-</message:Structure>
-
-		private var _testOS:XML =
-<message:Structure xsi:schemaLocation="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message http://ollie:8080/scorpio-external/vocabulary/sdmx/2.0/SDMXMessage.xsd http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure http://ollie:8080/scorpio-external/vocabulary/sdmx/2.0/SDMXStructure.xsd" xmlns:generic="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/generic" xmlns:message="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message" xmlns:structure="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:compact="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/compact" xmlns:metadatareport="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/metadatareport" xmlns:utility="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/utility" xmlns:common="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/common" xmlns:query="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/query" xmlns:genericmetadata="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/genericmetadata" xmlns:registry="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cross="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/cross">
-    <message:Header>
-        <message:ID>d4bf2593-261d-4879-9910-4d29a9e25787</message:ID>
-        <message:Test>false</message:Test>
-        <message:Prepared>2009-06-09T14:47:16+02:00</message:Prepared>
-        <message:Sender id="ECB"/>
-    </message:Header>
-    <message:OrganisationSchemes>
-        <structure:OrganisationScheme isFinal="true" agencyID="ECB" version="1.0" id="ESCB">
-            <structure:Name>27 EU National Central Banks plus ECB</structure:Name>
-            <structure:Agencies>
-                <structure:Agency id="ECB">
-                    <structure:Name>European Central Bank</structure:Name>
-                    <structure:MaintenanceContact>
-                        <structure:Name>Statistics Hotline</structure:Name>
-                        <structure:Department>DG - Statistics</structure:Department>
-                        <structure:Telephone>+49 69 1344 6688</structure:Telephone>
-                        <structure:Email>statistics@ecb.europa.eu</structure:Email>
-                    </structure:MaintenanceContact>
-                </structure:Agency>
-            </structure:Agencies>
-            <structure:DataProviders>
-                <structure:DataProvider id="COCOA">
-                    <structure:Name>Cocoa Island</structure:Name>
-                </structure:DataProvider>
-                <structure:DataProvider id="ECB">
-                    <structure:Name>European Central Bank</structure:Name>
-                    <structure:MaintenanceContact>
-                        <structure:Name>Statistics Hotline</structure:Name>
-                        <structure:Department>DG - Statistics</structure:Department>
-                        <structure:Telephone>+49 69 1344 6688</structure:Telephone>
-                        <structure:Email>statistics@ecb.europa.eu</structure:Email>
-                    </structure:MaintenanceContact>
-                </structure:DataProvider>
-            </structure:DataProviders>
-        </structure:OrganisationScheme>
-    </message:OrganisationSchemes>
-</message:Structure>
-		
-		private var _testDF:XML =
+		private var _wrongData:XML =
 <message:Structure xsi:schemaLocation="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message http://ollie:8080/scorpio-external/vocabulary/sdmx/2.0/SDMXMessage.xsd http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure http://ollie:8080/scorpio-external/vocabulary/sdmx/2.0/SDMXStructure.xsd" xmlns:generic="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/generic" xmlns:message="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message" xmlns:structure="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:compact="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/compact" xmlns:metadatareport="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/metadatareport" xmlns:utility="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/utility" xmlns:common="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/common" xmlns:query="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/query" xmlns:genericmetadata="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/genericmetadata" xmlns:registry="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cross="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/cross">
     <message:Header>
         <message:ID>43c6984c-ca56-49d2-96ee-1ca226497526</message:ID>
@@ -544,101 +422,34 @@ package org.sdmx.stores.xml.v2.structure
             </structure:KeyFamilyRef>
         </structure:Dataflow>
     </message:Dataflows>
-</message:Structure>
+</message:Structure>		
 
-		
-		public function StructureReaderTest(methodName:String=null)
+		public function SDMXMLKeyFamilyDaoTest(methodName:String=null)
 		{
 			super(methodName);
 		}
 		
 		public static function suite():TestSuite
 		{
-			return new TestSuite(StructureReaderTest);
+			return new TestSuite(SDMXMLKeyFamilyDaoTest);
 		}
 		
-		public function testExtractCodeLists():void
+		public function testGetMaintainableArtefact():void
 		{
-			var reader:StructureReader = new StructureReader();
-			reader.dispatchCodeLists = true;
-			reader.addEventListener(StructureReader.CODE_LISTS_EVENT, 
-				addAsync(handleCodeLists, 3000));
-			reader.read(_testXML);
-		}
-		
-		public function testExtractConcepts():void
-		{
-			var reader:StructureReader = new StructureReader();
-			reader.dispatchConcepts = true;
-			reader.addEventListener(StructureReader.CONCEPTS_EVENT, 
-				addAsync(handleConcepts, 3000));
-			reader.read(_testXML);
-		}
-		
-		public function testExtractKeyFamily():void
-		{
-			var reader:StructureReader = new StructureReader();
-			reader.dispatchKeyFamilies = true;
-			reader.addEventListener(StructureReader.KEY_FAMILIES_EVENT,
+			var dao:IMaintainableArtefactProvider = new SDMXMLKeyFamilyDao();
+			(dao as SDMXMLKeyFamilyDao).structureFile = _testXML;
+			dao.addEventListener(BaseSDMXDaoFactory.KEY_FAMILIES_EVENT, 
 				addAsync(handleKeyFamilies, 3000));
-			reader.read(_testXML);
+			dao.getMaintainableArtefact("ECB_EXR1", "ECB");	
 		}
 		
-		public function testExtractDataflow():void
+		public function testSetWrongData():void
 		{
-			var reader:StructureReader = new StructureReader();
-			reader.dispatchDataflows = true;
-			reader.addEventListener(StructureReader.DATAFLOWS_EVENT,
-				addAsync(handleDF, 3000));
-			reader.read(_testDF);
-		}
-		
-		public function testExtractOrganisationScheme():void
-		{
-			var reader:StructureReader = new StructureReader();
-			reader.dispatchOrganisationSchemes = true;
-			reader.addEventListener(StructureReader.ORGANISATION_SCHEMES_EVENT,
-				addAsync(handleOS, 3000));
-			reader.read(_testOS);
-		}
-		
-		public function testCategoryScheme():void
-		{
-			var reader:StructureReader = new StructureReader();
-			reader.dispatchCategorySchemes = true;
-			reader.addEventListener(StructureReader.CATEGORY_SCHEMES_EVENT,
-				addAsync(handleCS, 3000));
-			reader.read(_testCS);
-		}
-		
-		private function handleCodeLists(event:SDMXDataEvent):void
-		{
-			assertTrue("There should be some code lists in the event", 
-				event.data is CodeLists);
-			var codeLists:CodeLists = event.data as CodeLists;
-			assertEquals("There must be 10 code lists", 10, codeLists.length);
-			var codeList1:CodeList = codeLists.getItemAt(0) as CodeList;
-			assertEquals("The 1st code list should be CL_COLLECTION", 
-				"CL_COLLECTION", codeList1.id);
-			assertEquals("There should be 10 codes in the code list", 10,
-				codeList1.codes.length);
-			var codeList2:CodeList = codeLists.getItemAt(9) as CodeList;	
-			assertEquals("The 1st code list should be CL_UNIT_MULT", 
-				"CL_UNIT_MULT", codeList2.id);
-			assertEquals("There should be 7 codes in the code list", 7,
-				codeList2.codes.length);
-		}
-		
-		private function handleConcepts(event:SDMXDataEvent):void
-		{
-			var concepts:Concepts = event.data as Concepts;
-			assertEquals("There must be 15 concepts", 15, concepts.length);
-			var concept1:Concept = concepts.getItemAt(0) as Concept;
-			assertEquals("The 1st concept should be 'COLLECTION'", 
-				"COLLECTION", concept1.id);
-			var concept2:Concept = concepts.getItemAt(14) as Concept;
-			assertEquals("The last concept should be 'UNIT_MULT'", 
-				"UNIT_MULT", concept2.id);			
+			var dao:IMaintainableArtefactProvider = new SDMXMLKeyFamilyDao();
+			try {
+				(dao as SDMXMLKeyFamilyDao).structureFile = _wrongData;
+				fail("Should not be possible to set a wrong file");
+			} catch (error:ArgumentError) {}
 		}
 		
 		private function handleKeyFamilies(event:SDMXDataEvent):void
@@ -656,40 +467,5 @@ package org.sdmx.stores.xml.v2.structure
 				keyFamily.attributeDescriptor.length);	
 		}
 		
-		private function handleOS(event:SDMXDataEvent):void
-		{        
-			assertTrue("There should be an organisation scheme in the event", 
-				event.data is OrganisationSchemes);
-			var org:OrganisationSchemes = event.data as OrganisationSchemes;	
-			assertEquals("There must be 1 os", 1, org.length);
-			var os1:OrganisationScheme = org.getItemAt(0) as OrganisationScheme;
-			assertEquals("Should be ESCB", "ESCB", os1.id);
-			assertEquals("There should be 2 organisations in the os", 2,
-				os1.organisations.length);
-		}
-		
-		private function handleCS(event:SDMXDataEvent):void
-		{
-			assertTrue("There should a list of category schemes in the event", 
-				event.data is CategorieSchemesCollection);
-			var schemes:CategorieSchemesCollection = 
-				event.data as CategorieSchemesCollection;
-			assertEquals("There must be 1 category scheme", 1, schemes.length);
-			var scheme:CategoryScheme = schemes.getItemAt(0) as CategoryScheme;
-			assertEquals("The scheme should be", "SDW_ECONOMIC_CONCEPTS", 
-				scheme.id);
-		}
-		
-		private function handleDF(event:SDMXDataEvent):void
-		{
-			assertTrue("There should be some dataflows in the event", 
-				event.data is DataflowsCollection);
-			var flows:DataflowsCollection = event.data as DataflowsCollection;
-			assertEquals("There must be 1 dataflow", 1, flows.length);
-			var df:DataflowDefinition = 
-				flows.getItemAt(0) as DataflowDefinition;
-			assertEquals("The 1st df should be 2034468", 
-				"2034468", df.id);
-		}
 	}
 }
