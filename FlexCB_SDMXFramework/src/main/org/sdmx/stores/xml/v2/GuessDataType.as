@@ -37,13 +37,6 @@ package org.sdmx.stores.xml.v2
 	 */  
 	public class GuessDataType
 	{		
-		/*===========================Constructor==============================*/
-		
-		public function GuessDataType()
-		{
-			super();
-		}
-		
 		/*==========================Public methods============================*/
 		
 		/**
