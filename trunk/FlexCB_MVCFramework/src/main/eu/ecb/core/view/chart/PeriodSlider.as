@@ -357,7 +357,7 @@ package eu.ecb.core.view.chart
 			event.stopImmediatePropagation();
 			event = null;
 			if (_isDragging) {
-				/*var physicalDelta:Number = this.mouseX - _mouseXRef;
+				var physicalDelta:Number = this.mouseX - _mouseXRef;
 				var physicalSpacing:Number = _overlayCanvas.width /
 						_referenceSeries.timePeriods.length;
 				var logicalDelta:Number = 
@@ -369,18 +369,7 @@ package eu.ecb.core.view.chart
 					dispatchEvent(new DataEvent(ECBChartEvents.CHART_DRAGGED, 
 						false, false, String(logicalDelta)));
 					_mouseXRef += logicalDelta * physicalSpacing;		
-				}*/
-				var remainder:Number = Math.round((this.mouseX - _mouseXRef) / 
-					(_overlayCanvas.width / 
-						_referenceSeries.timePeriods.length));
-				if (remainder != 0 && 
-					remainder + _leftIndex >= 0 &&
-					remainder + _rightIndex <= 
-						_referenceSeries.timePeriods.length - 1) {	
-					dispatchEvent(new DataEvent(ECBChartEvents.CHART_DRAGGED, 
-						false, false, String(remainder)));		
 				}		
-				_mouseXRef = this.mouseX;		
 			}
 		}        
 		
