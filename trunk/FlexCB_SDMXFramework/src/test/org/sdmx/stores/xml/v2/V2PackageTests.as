@@ -46,6 +46,7 @@ package org.sdmx.stores.xml.v2
  			suite.addTest(StructurePackageTests.suite());
  			suite.addTest(FindKeyFamilyTest.suite());
  			suite.addTest(GuessDataTypeTest.suite());
+ 			suite.addTest(SDMXMLDataDaoTest.suite());
  			return suite;
 		}
 	}

@@ -44,13 +44,6 @@ package org.sdmx.stores.xml.v2
 	 */
 	public class FindKeyFamily
 	{				
-		/*===========================Constructor==============================*/
-		
-		public function FindKeyFamily()
-		{
-			super();
-		}
-		
 		/*==========================Public methods============================*/
 		
 		/**
