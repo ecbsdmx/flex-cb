@@ -53,6 +53,8 @@ package eu.ecb.core.view.chart
 	import mx.charts.events.ChartItemEvent;
 	import mx.charts.series.LineSeries;
 	import mx.collections.IViewCursor;
+	import mx.effects.Effect;
+	import mx.effects.Fade;
 	import mx.effects.easing.Quadratic;
 	import mx.formatters.DateFormatter;
 	import mx.graphics.Stroke;
@@ -60,6 +62,7 @@ package eu.ecb.core.view.chart
 	
 	import org.sdmx.model.v2.reporting.dataset.AttributeValue;
 	import org.sdmx.model.v2.reporting.dataset.CodedAttributeValue;
+	import org.sdmx.model.v2.reporting.dataset.DataSet;
 	import org.sdmx.model.v2.reporting.dataset.GroupKey;
 	import org.sdmx.model.v2.reporting.dataset.GroupKeysCollection;
 	import org.sdmx.model.v2.reporting.dataset.TimePeriod;
@@ -154,6 +157,11 @@ package eu.ecb.core.view.chart
 		private var _baseAtZero:Boolean;
 		
 		private var _indexColor:Array;
+		
+		private var _effects:Object = new Object();
+		
+		private var _minimized:Object = new Object();
+		
 		/*===========================Constructor==============================*/
 
 		/**
@@ -419,7 +427,13 @@ package eu.ecb.core.view.chart
 								SeriesColors.getColors().getItemAt(i) as uint : 
 								Math.round( Math.random()*0xFFFFFF );
 						}
-						axisStroke.weight = 1;
+						if (null != _selectedDataSet && 
+							_selectedDataSet.timeseriesKeys.contains(
+							_filteredDataSet.timeseriesKeys.getItemAt(i))) {
+							axisStroke.weight = 2;	
+						} else { 
+							axisStroke.weight = 1;
+						}
 						(allLineSeries[i] as LineSeries).setStyle("lineStroke", 
 							axisStroke);
 					
@@ -462,6 +476,16 @@ package eu.ecb.core.view.chart
 					_chart.series = allLineSeries;
 				}
 				setAxisTicksAndLabels();
+			}
+
+			if (_selectedDataSetChanged) {
+				_selectedDataSetChanged = false;
+				drawLineSeries(_selectedDataSet);
+			}
+			
+			if (_highlightedDataSetChanged) {
+				_highlightedDataSetChanged = false;
+				drawLineSeries(_highlightedDataSet);
 			}
 			
 			if (_referenceSeriesFrequencyChanged) {
@@ -516,8 +540,8 @@ package eu.ecb.core.view.chart
 						(_filteredDataSet.groupKeys.getGroupsForTimeseries(
 						(data.element as LineSeries).dataProvider as TimeseriesKey)
 						as GroupKeysCollection).getItemAt(0) as GroupKey;
-					}
-					dataTip = dataTip + observationValueFormatter.format(
+				}
+				dataTip = dataTip + observationValueFormatter.format(
 						obs.observationValue);		
 			} else {
 				dataTip = dataTip + obs.observationValue;
@@ -661,7 +685,7 @@ package eu.ecb.core.view.chart
 									(_filteredDataSet.groupKeys.getGroupsForTimeseries(
 										selectedSeries) as GroupKeysCollection).getItemAt(0) 
 											as GroupKey;
-							}
+						}
 						_boxText = _boxText + observationValueFormatter.format(
 							lastObs.observationValue);		
 					} else {
@@ -836,15 +860,16 @@ package eu.ecb.core.view.chart
         private function moveOverChart(event:MouseEvent):void 
         {
 			if (_isDragging) {
-				var mouseDiv:Number = this.mouseX - _mouseXRef;
-				var remainder:Number = Math.round(mouseDiv / (_chart.width / 
+				var physicalDelta:Number = this.mouseX - _mouseXRef;
+				var physicalSpacing:Number = (_chart.width / 
 					(_filteredDataSet.timeseriesKeys.getItemAt(0) 
-						as TimeseriesKey).timePeriods.length));
-				if (remainder != 0) {		
+						as TimeseriesKey).timePeriods.length);
+				var logicalDelta:Number = Math.round(physicalDelta / physicalSpacing);
+				if (Math.abs(logicalDelta) >= 1) {	
 					dispatchEvent(new DataEvent(ECBChartEvents.CHART_DRAGGED, 
-						false, false, String(remainder)));		
-				}		
-				_mouseXRef = this.mouseX;
+						false, false, String(-logicalDelta)));
+					_mouseXRef += logicalDelta * physicalSpacing;		
+				}				
 			} else if (event.currentTarget == _chart && _showECBToolTip) {
 				displayObsData(event);
 			}
@@ -924,5 +949,54 @@ package eu.ecb.core.view.chart
 		{
 			dispatchEvent(event);
 		}
+		
+		private function drawLineSeries(ds:DataSet):void
+		{
+			var allLineSeries:Array = _chart.series;				
+			for (var i:uint = 0; i < _filteredDataSet.timeseriesKeys.length; 
+				i++) {
+				var series:TimeseriesKey = _filteredDataSet.timeseriesKeys.
+					getItemAt(i) as	TimeseriesKey; 
+				if ((null != _selectedDataSet && 
+					_selectedDataSet.timeseriesKeys.contains(series)) ||
+					(null != _highlightedDataSet && _highlightedDataSet.
+					timeseriesKeys.contains(series)) || 
+					((null == _selectedDataSet || (null != _selectedDataSet && 
+					0 == _selectedDataSet.timeseriesKeys.length)) && 
+					null != _highlightedDataSet && 
+					0 == _highlightedDataSet.timeseriesKeys.length)) {
+					if (_minimized.hasOwnProperty(series.seriesKey) && 
+						_minimized[series.seriesKey] == true) {	
+						playEffect(allLineSeries[i] as LineSeries, true);
+						_minimized[series.seriesKey] = false;
+					}
+				} else if (!(_minimized.hasOwnProperty(series.seriesKey)) || 
+					_minimized[series.seriesKey] == false) {
+						playEffect(allLineSeries[i] as LineSeries, false);
+						_minimized[series.seriesKey] = true;
+				}
+			}
+		}
+		
+		private function createEffect():Effect {
+	    	var z:Fade = new Fade();
+	    	z.alphaFrom = 1;
+	    	z.alphaTo   = 0.3; 
+	    	z.duration  = 600;
+	    	return z;
+	    } 
+    
+	    private function playEffect(target:LineSeries, reverse:Boolean):void {      
+	    	var effect:Effect = _effects[target];
+	    	if (effect == null) {
+	        	effect = createEffect();         
+	        	_effects[target] = effect;
+	      	}
+	      	if (effect.isPlaying) {
+		        effect.reverse();
+		    } else {
+	    	    effect.play([target], reverse);
+			}
+	    }
 	}
 }

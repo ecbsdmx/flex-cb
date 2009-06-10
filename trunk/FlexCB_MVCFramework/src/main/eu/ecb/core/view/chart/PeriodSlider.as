@@ -32,7 +32,6 @@ package eu.ecb.core.view.chart
 	
 	import flash.events.DataEvent;
 	import flash.events.MouseEvent;
-	import flash.utils.getTimer;
 	
 	import mx.charts.AreaChart;
 	import mx.charts.AxisRenderer;
@@ -207,11 +206,11 @@ package eu.ecb.core.view.chart
 				_middleCanvasBox.height = _periodChart.height - 2;
 				_middleCanvasBox.addEventListener(MouseEvent.MOUSE_DOWN, 
 					handleMouseDown, false, 0, true);
-				_middleCanvasBox.addEventListener(MouseEvent.MOUSE_UP,
+				_overlayCanvas.addEventListener(MouseEvent.MOUSE_UP,
 					handleMouseUp, false, 0, true);
-				_middleCanvasBox.addEventListener(MouseEvent.ROLL_OUT,
+				_overlayCanvas.addEventListener(MouseEvent.ROLL_OUT,
 					handleMouseUp, false, 0, true);
-				_middleCanvasBox.addEventListener(MouseEvent.MOUSE_MOVE, 
+				_overlayCanvas.addEventListener(MouseEvent.MOUSE_MOVE, 
 					handleMiddleCanvasMoved, false, 0, true);				
 				_overlayCanvas.addChild(_middleCanvasBox);
 				
@@ -358,6 +357,19 @@ package eu.ecb.core.view.chart
 			event.stopImmediatePropagation();
 			event = null;
 			if (_isDragging) {
+				/*var physicalDelta:Number = this.mouseX - _mouseXRef;
+				var physicalSpacing:Number = _overlayCanvas.width /
+						_referenceSeries.timePeriods.length;
+				var logicalDelta:Number = 
+					Math.round(physicalDelta / physicalSpacing);
+				if (Math.abs(logicalDelta) >= 1 && 
+					logicalDelta + _leftIndex >= 0 &&
+					logicalDelta + _rightIndex <= 
+						_referenceSeries.timePeriods.length - 1) {	
+					dispatchEvent(new DataEvent(ECBChartEvents.CHART_DRAGGED, 
+						false, false, String(logicalDelta)));
+					_mouseXRef += logicalDelta * physicalSpacing;		
+				}*/
 				var remainder:Number = Math.round((this.mouseX - _mouseXRef) / 
 					(_overlayCanvas.width / 
 						_referenceSeries.timePeriods.length));
@@ -368,7 +380,7 @@ package eu.ecb.core.view.chart
 					dispatchEvent(new DataEvent(ECBChartEvents.CHART_DRAGGED, 
 						false, false, String(remainder)));		
 				}		
-				_mouseXRef = this.mouseX;
+				_mouseXRef = this.mouseX;		
 			}
 		}        
 		
