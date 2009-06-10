@@ -31,8 +31,6 @@ package eu.ecb.core.model
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.IViewCursor;
-	import mx.collections.Sort;
-	import mx.collections.SortField;
 	import mx.formatters.DateFormatter;
 	import mx.resources.IResourceManager;
 	import mx.resources.ResourceManager;
@@ -55,6 +53,22 @@ package eu.ecb.core.model
 	 * @eventType eu.ecb.core.model.SDMXDataModel.FILTERED_DATASET_UPDATED
 	 */
 	[Event(name="filteredDataSetUpdated", type="flash.events.Event")]
+	
+	/**
+	 * Event dispatched when the data set containing the selected series
+	 * has been processed updated.
+	 * 
+	 * @eventType eu.ecb.core.model.SDMXDataModel.SELECTED_DATASET_UPDATED
+	 */
+	[Event(name="selectedDataSetUpdated", type="flash.events.Event")]
+	
+	/**
+	 * Event dispatched when the data set containing the highlighted series
+	 * has been processed updated.
+	 * 
+	 * @eventType eu.ecb.core.model.SDMXDataModel.HIGHLIGHTED_DATASET_UPDATED
+	 */
+	[Event(name="highlightedDataSetUpdated", type="flash.events.Event")]
 	
 	/**
 	 * Event dispatched when the reference series has been processed
@@ -116,6 +130,26 @@ package eu.ecb.core.model
 			"filteredDataSetUpdated";
 			
 		/**
+		 * The SDMXDataModel.SELECTED_DATASET_UPDATED constant defines the value 
+		 * of the <code>type</code> property of the event object for a 
+		 * <code>selectedDataSetUpdated</code> event.
+		 * 
+		 * @eventType selectedDataSetUpdated
+		 */
+		public static const SELECTED_DATASET_UPDATED:String = 
+			"selectedDataSetUpdated";	
+			
+		/**
+		 * The SDMXDataModel.HIGHLIGHTED_DATASET_UPDATED constant defines the 
+		 * value of the <code>type</code> property of the event object for a 
+		 * <code>highlightedDataSetUpdated</code> event.
+		 * 
+		 * @eventType highlightedDataSetUpdated
+		 */
+		public static const HIGHLIGHTED_DATASET_UPDATED:String = 
+			"highlightedDataSetUpdated";	
+			
+		/**
 		 * The SDMXDataModel.REFERENCE_SERIES_UPDATED constant defines the value  
 		 * of the <code>type</code> property of the event object for a 
 		 * <code>referenceSeriesUpdated</code> event.
@@ -175,6 +209,16 @@ package eu.ecb.core.model
 		 * @private
 		 */ 
 		protected var _filteredDataSet:DataSet;
+		
+		/**
+		 * @private
+		 */
+		protected var _selectedDataSet:DataSet;
+		
+		/**
+		 * @private
+		 */
+		protected var _highlightedDataSet:DataSet;
 		
 		/**
 		 * @private
@@ -295,6 +339,42 @@ package eu.ecb.core.model
 		{
 			_filteredDataSet = dataSet;
 			dispatchEvent(new Event(FILTERED_DATASET_UPDATED));
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		[Bindable("selectedDataSetUpdated")]
+		public function get selectedDataSet():DataSet
+		{
+			return _selectedDataSet; 
+		}
+		
+		/**
+		 * @private
+		 */
+		public function set selectedDataSet(dataSet:DataSet):void
+		{
+			_selectedDataSet = dataSet;
+			dispatchEvent(new Event(SELECTED_DATASET_UPDATED));
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		[Bindable("highlightedDataSetUpdated")]
+		public function get highlightedDataSet():DataSet
+		{
+			return _highlightedDataSet; 
+		}
+		
+		/**
+		 * @private
+		 */
+		public function set highlightedDataSet(dataSet:DataSet):void
+		{
+			_highlightedDataSet = dataSet;
+			dispatchEvent(new Event(HIGHLIGHTED_DATASET_UPDATED));
 		}
 		
 		/**

@@ -86,6 +86,26 @@ package eu.ecb.core.view
 		/**
 		 * @private
 		 */
+		protected var _selectedDataSet:DataSet;
+		
+		/**
+		 * @private
+		 */
+		protected var _selectedDataSetChanged:Boolean;
+		
+		/**
+		 * @private
+		 */
+		protected var _highlightedDataSet:DataSet;
+		
+		/**
+		 * @private
+		 */
+		protected var _highlightedDataSetChanged:Boolean;
+		
+		/**
+		 * @private
+		 */
 		protected var _referenceSeries:TimeseriesKey;
 		
 		/**
@@ -158,6 +178,30 @@ package eu.ecb.core.view
 				_filteredDataSetChanged = true;
 				invalidateProperties();
 			} 
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function set selectedDataSet(dataSet:DataSet):void
+		{
+			if (null != dataSet) {
+				_selectedDataSet = dataSet;
+				_selectedDataSetChanged = true;
+				invalidateProperties(); 
+			}
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function set highlightedDataSet(dataSet:DataSet):void
+		{
+			if (null != dataSet) {
+				_highlightedDataSet = dataSet;
+				_highlightedDataSetChanged = true;
+				invalidateProperties(); 
+			}
 		}
 		
 		/**

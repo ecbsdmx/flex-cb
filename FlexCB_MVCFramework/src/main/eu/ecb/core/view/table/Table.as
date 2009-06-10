@@ -36,12 +36,14 @@ package eu.ecb.core.view.table
 	import mx.controls.DataGrid;
 	import mx.controls.dataGridClasses.DataGridColumn;
 	import mx.events.DataGridEvent;
+	import mx.formatters.DateBase;
 	
 	import org.sdmx.model.v2.reporting.dataset.KeyValue;
 	import org.sdmx.model.v2.reporting.dataset.KeyValuesCollection;
 	import org.sdmx.model.v2.reporting.dataset.TimePeriod;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
 
+	[ResourceBundle("flex_cb_mvc_lang")]
 	/**
 	 * A table containing statistical data.
 	 *  
@@ -117,6 +119,10 @@ package eu.ecb.core.view.table
 			_percentFormatter = new ExtendedNumberFormatter();
 			_percentFormatter.precision = 1;
 			_percentFormatter.forceSigned = true;
+			DateBase.monthNamesLong = resourceManager.getStringArray(
+				"flex_cb_mvc_lang", "monthNamesLong");
+			DateBase.monthNamesShort = resourceManager.getStringArray(
+				"flex_cb_mvc_lang", "monthNamesShort");	
 		}
 		
 		/*============================Accessors===============================*/

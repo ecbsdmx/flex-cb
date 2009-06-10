@@ -28,21 +28,37 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view.chart
 {
-	import org.sdmx.model.v2.reporting.dataset.DataSet;
-	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
-	import org.sdmx.model.v2.structure.keyfamily.Dimension;
-	import org.sdmx.model.v2.reporting.dataset.AttributeValue;
-	import org.sdmx.model.v2.reporting.dataset.CodedAttributeValue;
-	import org.sdmx.model.v2.reporting.dataset.UncodedAttributeValue;
-	import mx.charts.LegendItem;
-	import org.sdmx.model.v2.reporting.dataset.KeyValue;
 	import eu.ecb.core.util.helper.SeriesColors;
-	import org.sdmx.model.v2.reporting.dataset.GroupKey;
-	import mx.containers.Box;
+	import eu.ecb.core.view.SDMXViewAdapter;
+	
+	import flash.events.DataEvent;
+	import flash.events.MouseEvent;
+	
+	import mx.collections.ArrayCollection;
 	import mx.controls.Label;
 	import mx.core.UIComponent;
-	import eu.ecb.core.view.SDMXViewAdapter;
+	
+	import org.sdmx.model.v2.reporting.dataset.AttributeValue;
+	import org.sdmx.model.v2.reporting.dataset.CodedAttributeValue;
+	import org.sdmx.model.v2.reporting.dataset.GroupKey;
+	import org.sdmx.model.v2.reporting.dataset.KeyValue;
+	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
+	import org.sdmx.model.v2.reporting.dataset.UncodedAttributeValue;
+	import org.sdmx.model.v2.structure.keyfamily.Dimension;
 
+	/**
+	 * Event triggered when one of the items in the legend has been selected or
+	 * deselected by clicking on it.
+	 */
+	[Event(name="legendSelected", type="flash.events.DataEvent")]
+	
+	/**
+	 * Event triggered when one of the items in the legend has been highlighted 
+	 * by hovering over it, or when focus has been removed from it by mousing 
+	 * out from the label.
+	 */
+	[Event(name="legendHighlighted", type="flash.events.DataEvent")]
+	
 	/**
 	 * The chart legend
 	 * 
@@ -56,6 +72,8 @@ package eu.ecb.core.view.chart
 		private var _attributeTitle:String;
 		
 		private var _alwaysDisplay:Boolean;
+		
+		private var _highlightedSeries:ArrayCollection;
 		
 		/*===========================Constructor==============================*/
 		
@@ -212,6 +230,13 @@ package eu.ecb.core.view.chart
 						uicomponent.graphics.drawCircle(5, 11, 5);
 						addChild(uicomponent);
 						var legendItem:Label = new Label();
+						legendItem.addEventListener(MouseEvent.CLICK, 
+							handleLegendClicked);
+						legendItem.addEventListener(MouseEvent.MOUSE_OVER,
+							handleMouseOver);	
+						legendItem.addEventListener(MouseEvent.MOUSE_OUT,
+							handleMouseOut);	
+						legendItem.id = series.seriesKey;						
 						legendItem.setStyle("paddingLeft", 12);
 						switch(titleType) {
 							case 0:
@@ -245,6 +270,46 @@ package eu.ecb.core.view.chart
 						addChild(legendItem);
 					}
 				}
+	 		}
+	 	}
+	 	
+	 	private function handleLegendClicked(event:MouseEvent):void
+	 	{
+	 		if (null == _highlightedSeries) {
+	 			_highlightedSeries = new ArrayCollection();
+	 		}
+	 		var key:String = event.currentTarget.id; 
+	 		if (_highlightedSeries.contains(key)) {
+	 			_highlightedSeries.removeItemAt(
+	 				_highlightedSeries.getItemIndex(key));
+	 			event.currentTarget.setStyle("color", "#707070");	
+	 		} else {
+	 			_highlightedSeries.addItem(key);
+	 			event.currentTarget.setStyle("color", "#000000");
+	 		}
+	 		dispatchEvent(new DataEvent("legendSelected", false, false, key)); 
+	 	}
+	 	
+	 	private function handleMouseOver(event:MouseEvent):void
+	 	{
+	 		var key:String = event.currentTarget.id; 
+	 		if (null == _highlightedSeries || (null != _highlightedSeries && 
+	 			!(_highlightedSeries.contains(key)))) {
+	 			event.currentTarget.setStyle("color", "#000000");
+	 			dispatchEvent(new DataEvent("legendHighlighted", false, false, 
+	 				key));
+	 		}
+	 		 
+	 	}
+	 	
+	 	private function handleMouseOut(event:MouseEvent):void
+	 	{
+	 		var key:String = event.currentTarget.id; 
+	 		if (null == _highlightedSeries || (null != _highlightedSeries &&
+	 			!(_highlightedSeries.contains(key)))) {
+	 			event.currentTarget.setStyle("color", "#707070");
+	 			dispatchEvent(new DataEvent("legendHighlighted", false, false, 
+	 				key));
 	 		}
 	 	}
 	}

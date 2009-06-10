@@ -52,6 +52,18 @@ package eu.ecb.core.view
 		function set filteredDataSet(dataSet:DataSet):void;
 		
 		/**
+		 * The SDMX data set containing the series which have been selected,
+		 * using, for example, the Legend control.
+		 */ 
+		function set selectedDataSet(dataSet:DataSet):void;
+		
+		/**
+		 * The SDMX data set containing the series which have been highlighted,
+		 * using, for example, the Legend control.
+		 */ 
+		function set highlightedDataSet(dataSet:DataSet):void;
+		
+		/**
 		 * The reference series. 
 		 * 
 		 * <p>This is typically used in case mulitple series are plotted on a 
