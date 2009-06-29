@@ -190,6 +190,12 @@ package eu.ecb.core.view.chart
 			_baseAtZero = true;
 		}
 		
+		/*=========================Public methods=============================*/
+		
+		public function get chart():LineChart {
+			return _chart;
+		}
+		
 		/*========================Protected methods===========================*/
 		
 		override protected function resourcesChanged():void {

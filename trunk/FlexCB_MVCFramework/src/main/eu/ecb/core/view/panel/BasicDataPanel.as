@@ -99,15 +99,29 @@ package eu.ecb.core.view.panel
 		 * @private
 		 */
 		protected var _periodSlider:PeriodSlider;
-		
+
+		/**
+		 * @private
+		 */
+		protected var _showSeriesSummaryBox:Boolean;
+
+		/**
+		 * @private
+		 */
+		protected var _showChartSummaryBox:Boolean;
+						
 		/*===========================Constructor==============================*/
 		
 		public function BasicDataPanel(model:SDMXDataModel, 
-			controller:PassiveSDMXDataController, showChange:Boolean = false)
+			controller:PassiveSDMXDataController, showChange:Boolean = false,
+			showSeriesSummaryBox:Boolean = true,
+			showChartSummaryBox:Boolean = true)
 		{
 			super(model, controller);
 			styleName = "dataPanel";
 			_showChange = showChange;
+			_showSeriesSummaryBox = showSeriesSummaryBox;
+			_showChartSummaryBox = showChartSummaryBox;
 			BindingUtils.bindProperty(this, "referenceSeriesFrequency", _model, 
 				"referenceSeriesFrequency");
 			BindingUtils.bindProperty(this, "referenceSeries", _model, 
@@ -124,7 +138,16 @@ package eu.ecb.core.view.panel
 				"filteredReferenceSeries");
 			BindingUtils.bindProperty(this, "periods", _model, "periods");
 		}
+
+		/*========================Public methods===========================*/
+		public function get legend():ECBLegend {
+			return _legend;
+		}
 		
+		public function get chart():ECBLineChart {
+			return _chart;
+		}		
+				
 		/*========================Protected methods===========================*/
 		
 		/**
@@ -134,7 +157,7 @@ package eu.ecb.core.view.panel
 		{
 			super.createChildren();
 						
-			if (null == _seriesSummaryBox) {
+			if (null == _seriesSummaryBox && _showSeriesSummaryBox) {
 				createSeriesSummaryBox();
 			}
 			
@@ -150,7 +173,7 @@ package eu.ecb.core.view.panel
 				createChartBox();
 			}
 			
-			if (null == _chartSummaryBox) {
+			if (null == _chartSummaryBox && _showChartSummaryBox) {
 				createChartSummaryBox();
 			}
 			
@@ -218,7 +241,8 @@ package eu.ecb.core.view.panel
 			_filterBox.visible = true;
 			_filterBox.width = _chart.getExplicitOrMeasuredWidth();
 			_periodSlider.size = _chart.getExplicitOrMeasuredWidth();
-			_chartSummaryBox.width = _chart.getExplicitOrMeasuredWidth();
+			if (_chartSummaryBox != null)
+				_chartSummaryBox.width = _chart.getExplicitOrMeasuredWidth();
 		}
 		
 		/**
@@ -227,9 +251,12 @@ package eu.ecb.core.view.panel
 		override protected function commitIsPercentage():void
 		{
 			super.commitIsPercentage();
-			_chartSummaryBox.height = _isPercentage ? 25 : 40;
-			_chartSummaryBox.showChange = !_isPercentage;
-			_seriesSummaryBox.showChange = !_isPercentage;
+			if (_chartSummaryBox != null) {
+				_chartSummaryBox.height = _isPercentage ? 25 : 40;
+				_chartSummaryBox.showChange = !_isPercentage;
+			}
+			if (_seriesSummaryBox != null)
+				_seriesSummaryBox.showChange = !_isPercentage;		
 			_chart.showChange = !_isPercentage;
 		}
 		
