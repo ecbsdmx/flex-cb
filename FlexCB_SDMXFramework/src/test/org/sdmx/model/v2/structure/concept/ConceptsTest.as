@@ -113,9 +113,9 @@ package org.sdmx.model.v2.structure.concept
 			collection.addItem(conceptScheme1);
 			collection.addItem(conceptScheme2);
 			assertEquals("The 1st concept should be returned", concept1, collection.getConcept("A"));
-			/*assertEquals("The 3rd concept should be returned", concept3, collection.getConcept("A", "2.0"));
+			//assertEquals("The 3rd concept should be returned", concept3, collection.getConcept("A", "2.0"));
 			assertEquals("The 8th concept should be returned", concept8, collection.getConcept("C2", null, "ECB", "test1"));
-			assertEquals("The 8th concept should be returned", concept8, collection.getConcept("C2", "8.0", "ECB", "test1"));			
+			/*assertEquals("The 8th concept should be returned", concept8, collection.getConcept("C2", "8.0", "ECB", "test1"));			
 			assertEquals("The 7th concept should be returned", concept7, collection.getConcept("C2", "8.0", "OECD", "test1"));*/			
 			try {
 				collection.getConcept(null);
