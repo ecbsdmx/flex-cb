@@ -420,7 +420,7 @@ package org.sdmx.stores.xml.v2
 		protected function extractGroup(xml:XML, position:uint):GroupKey 
 		{			
 			var targetGroup:GroupKeyDescriptor = 
-				_groups.getGroup(xml.localName());
+				_groups.getGroup(getGroupName(xml));
 			if (null == targetGroup) {
 				throw new Error("Could not find group with key: " + 
 					groupDimensions.seriesKey);
@@ -638,6 +638,18 @@ package org.sdmx.stores.xml.v2
 		protected function findObservation(xml:XML):Object
 		{
 			throw new Error("This method must be implemented by subclasses");
+		}
+		
+		/**
+		 * Returns the name of the group to be retrieved
+		 * 
+		 * @param xml The XML snippet with the Group element
+		 *  
+		 * @return The name of the group to be retrieved
+		 */
+		protected function getGroupName(xml:XML):String
+		{
+			return xml.localName();
 		}
 	}
 }
