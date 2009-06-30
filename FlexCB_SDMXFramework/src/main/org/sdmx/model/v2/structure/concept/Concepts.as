@@ -51,7 +51,7 @@ package org.sdmx.model.v2.structure.concept
 	 * @see ConceptScheme
 	 * 
 	 * @todo  
-	 * 	- Search to include agencyId, conceptSchemeRef and conceptSchemeAgency
+	 * 	- Search to include agencyId and conceptSchemeAgency
 	 * 	- Check that we don't allow the insertion of duplicates
 	 */ 
 	public class Concepts extends ArrayCollection implements SDMXArtefact {
@@ -131,18 +131,24 @@ package org.sdmx.model.v2.structure.concept
 		 */
 		public function getConcept(conceptRef:String, 
 			conceptVersion:String = null, conceptAgency:String = null, 
-			conceptScheme:String = null):Concept {
+			conceptSchemeName:String = null):Concept {
 				
 			if (null == conceptRef || 0 == conceptRef.length) {
 				throw new ArgumentError("The concept ref cannot be null or" + 
 						" empty");
 			}
             var targetConceptScheme:Boolean = 
-            	(conceptScheme != null && conceptScheme.length > 0) ? 
+            	(conceptSchemeName != null && conceptSchemeName.length > 0) ? 
             		true : false;
             var concept:Concept = null;				
             if (targetConceptScheme) {
-            
+            	if (_cursor.findAny({id:conceptSchemeName})) {
+            		var conceptScheme:ConceptScheme = 
+            			_cursor.current as ConceptScheme;
+            		concept = conceptScheme.concepts.getConcept(conceptRef);
+            	} else {
+            		concept = null;
+            	}
             } else {
             	if (_cursor.findAny({id:conceptRef})) {
 					concept = _cursor.current as Concept;     

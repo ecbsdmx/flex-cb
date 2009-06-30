@@ -49,11 +49,18 @@ package org.sdmx.model.v2.structure.concept
 		
 		private static const ERROR_MSG:String = "Only concepts are " + 
 				"allowed in a concepts collection. Got: ";		
+				
+		private var _cursor:IViewCursor;		
 		
 		/*===========================Constructor==============================*/
 
 		public function ConceptsCollection(source:Array=null) {
 			super(source);
+			var sortByID:Sort = new Sort();
+			sortByID.fields = [new SortField("id", true)];
+    		sort = sortByID;
+			refresh();
+			_cursor = createCursor();
 		}
 		
 		/*==========================Public methods============================*/
@@ -66,7 +73,7 @@ package org.sdmx.model.v2.structure.concept
 				throw new ArgumentError(ERROR_MSG + 
 						getQualifiedClassName(item) + ".");
 			} else {
-				var current:Concept = findById((item as Concept).id);
+				var current:Concept = getConcept((item as Concept).id);
 				if (null != current) {
 					removeItemAt(getItemIndex(current));
 					if (index != 0 && index > length) {
@@ -89,16 +96,14 @@ package org.sdmx.model.v2.structure.concept
 			}
 		}
 		
-		/*=========================Private methods============================*/
-		
-		private function findById(id:String):Concept {
-			var sortById:Sort = new Sort();
-            sortById.fields = [new SortField("id", true)];
-            sort = sortById;
-			refresh();
-			var cursor:IViewCursor = createCursor();
-			var found:Boolean = cursor.findAny({id:id});
-			return (found) ? cursor.current as Concept : null;
+		/**
+		 * Returns the concept matched by the supplied id, null otherwise. 
+		 * 
+		 * @param id The ID of the concept
+		 */		
+		public function getConcept(id:String):Concept {
+			var found:Boolean = _cursor.findAny({id:id});
+			return (found) ? _cursor.current as Concept : null;
 		}
 	}
 }
