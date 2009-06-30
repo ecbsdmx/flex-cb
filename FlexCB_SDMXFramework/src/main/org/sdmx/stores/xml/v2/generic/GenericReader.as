@@ -138,5 +138,13 @@ package org.sdmx.stores.xml.v2.generic
 			obs["period"]  = xml.genericNS::Time.text();
 			return obs;		
 		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override protected function getGroupName(xml:XML):String
+		{
+			return xml.attribute("type");
+		}
 	}
 }
