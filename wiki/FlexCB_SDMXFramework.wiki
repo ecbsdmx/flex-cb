@@ -1,0 +1,51 @@
+#summary A description of the FlexCB_SDMXFramework library
+
+= Introduction =
+
+As mentioned in the [GettingStarted] page, the code is organized in 3 layers:
+ * The SDMX-ML Readers layer, that reads the data structure definitions and the data files.
+ * The SDMX Information Model layer, that represents the classes defined in the SDMX information model as AS3 objects.
+ * The MVC layer, that provides views displaying the objects of the SDMX information model in various ways (charts, tables, etc).
+
+This library covers the first two layers, i.e. extracting statistical data and metadata out of SDMX-ML files, and storing in memory the extracted data as AS3 objects. 
+
+Before describing the various packages that make up this library, let's give a brief overview of SDMX, from a developer's perspective.
+
+= A brief overview of SDMX =
+
+The [http://www.sdmx.org Statistical Data and Metadata Exchange] initiative is sponsored by seven institutions (the BIS, the ECB, Eurostat, the IMF, the OECD, the UN and the World Bank) to foster standards for the exchange of statistical information. The first version of the standard is an ISO technical specification (ISO/Technical Specification 17369:2005). It offers an information model for the representation of statistical data and metadata, as well as several formats to represent this model (SDMX-EDI and several SDMX-ML formats). It also proposes a standard way of implementing web services, including the use of registries.
+
+== The SDMX information model in a nutshell ==
+
+The list below tells you what you need to know about the SDMX information model in order to start using this library. However, to get a better understanding of the standard, we advise you to read the documentation and the user guide published on the [http://www.sdmx.org SDMX web site].
+
+ # *Descriptor concepts*: In order to make sense of some statistical data, we need to know the concepts associated with them. For example, on its own the figure 1.2953 is pretty meaningless, but if we know that this is an exchange rate for the US dollar against the euro on 23 November 2006, it starts to make more sense.
+ # *Packaging structure*: Statistical data can be grouped together at the following levels: the _observation level_ (the measurement of some phenomenon); the _series level_ (the measurement of some phenomenon over time, usually at regular intervals); the _group level_ (a group of series – a well-known example being the sibling group, a set of series which are identical, except for the fact that they are measured with different frequencies); and the _dataset level_ (made up of several groups, to cover a specific statistical domain for instance). The descriptor concepts mentioned in point 1 can be attached at various levels in this hierarchy.
+ # *Dimensions and attributes*: There are two types of descriptor concept: _dimensions_, which both identify and describe the data, and _attributes_, which are purely descriptive.
+ # *Keys*: Dimensions are grouped into keys, which allow the identification of a particular set of data (a series, for example). The key values are attached at the series level and given in a fixed sequence. Conventionally, frequency is the first descriptor concept and the other concepts are assigned an order for that particular dataset. Partial keys can be attached to groups.
+ # *Code lists*: Every possible value for a dimension is defined in a code list. Each value on that list is given a language-independent abbreviation (code) and a language-specific description. Attributes are represented sometimes by codes, and sometimes by free-text values. Since the purpose of an attribute is solely to describe and not to identify the data, this is not a problem.
+ # *Data Structure Definitions*: A Data Structure Definition (also known as a key family) specifies a set of _concepts_, which _describe_ and _identify_ a set of data. It tells us which concepts are _dimensions_ (identification and description) and which are _attributes_ (just description), and it gives the _attachment level_ for each of these concepts on the basis of the packaging structure (dataset, group, series or observation), as well as their status (mandatory or conditional). It also specifies which _code lists_ provide possible values for the dimensions and gives possible values for the attributes, either as code lists or free text fields.
+
+== The various SDMX-ML formats ==
+
+SDMX-ML supports various use cases and, therefore, defines several XML formats. [2]. For the purpose of this tutorial, the following two formats will be used:
+
+ # The Structure Definition format : This format will be used to define the structure (concepts, code lists, dimensions, attributes, etc.) of the key families.
+ # The Compact format: This format will be used to define the data file. It is not a generic format (it is specific to a Data Structure Definition), but it is designed to support validation and is much more compact so as to support the exchange of large datasets.
+
+Now that we know the basics, let's briefly describe the packages that make up the library.
+
+= The packages =
+
+== The event package ==
+
+== The model package ==
+=== The base package ===
+=== The reporting package ===
+=== The structure package ===
+
+== The stores package ==
+=== The api package ===
+=== The xml package (the xml store) ===
+
+== The util package ==
