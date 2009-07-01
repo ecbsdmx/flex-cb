@@ -48,6 +48,9 @@ The event package contains the events that can be dispatched by the library clas
 The model package contains the AS3 representation, in AS3, of the SDMX information model. In order to better understand the classes defined in the package, it is advised to read the section 02 document (information model) of the [http://sdmx.org/docs/2_0/SDMX_2_0%20SECTION_02_InformationModel.pdf SDMX Standards package]. 
 
 === The base package ===
+
+The base package contains the building blocks upon which the other layers of the model package are built. This includes abstract classes that are inherited by concrete implementations (e.g.: IdentifiableArtefact, MaintainableArtefact), classes that are used by other classes (e.g.: InternationalString), as well as the patterns used in other layers (e.g.: item scheme pattern, which is used by all collections such as code lists and concept schemes, or the structure pattern which is used in the data structure definition).
+
 === The reporting package ===
 === The structure package ===
 
