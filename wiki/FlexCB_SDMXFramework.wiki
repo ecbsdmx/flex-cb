@@ -7,7 +7,7 @@ As mentioned in the [GettingStarted] page, the code is organized in 3 layers:
  * The SDMX Information Model layer, that represents the classes defined in the SDMX information model as AS3 objects.
  * The MVC layer, that provides views displaying the objects of the SDMX information model in various ways (charts, tables, etc).
 
-This library covers the first two layers, i.e. extracting statistical data and metadata out of SDMX-ML files, and storing in memory the extracted data as AS3 objects. 
+This library covers the first two layers, i.e. extracting statistical data and metadata out of SDMX-ML files, and storing in memory the extracted data as AS3 objects. It contains both the actual code as well as the unit tests covering it.
 
 Before describing the various packages that make up this library, let's give a brief overview of SDMX, from a developer's perspective.
 
@@ -37,9 +37,16 @@ Now that we know the basics, let's briefly describe the packages that make up th
 
 = The packages =
 
+The library contains 4 main packages. The most important ones are the *model* package (AS3 representation of the SDMX information model) and the *stores* packages (readers for the SDMX-ML files). The *event* package contains the events dispatched by library classes, while the *util* package contains a few utility classes (validators, etc).
+
 == The event package ==
 
+The event package contains the events that can be dispatched by the library classes.
+
 == The model package ==
+
+The model package contains the AS3 representation, in AS3, of the SDMX information model. In order to better understand the classes defined in the package, it is advised to read the section 02 document (information model) of the [http://sdmx.org/docs/2_0/SDMX_2_0%20SECTION_02_InformationModel.pdf SDMX Standards package]. 
+
 === The base package ===
 === The reporting package ===
 === The structure package ===
@@ -49,3 +56,5 @@ Now that we know the basics, let's briefly describe the packages that make up th
 === The xml package (the xml store) ===
 
 == The util package ==
+
+The util package contains various utility classes related to date handling, data downloads over HTTP and input validation.
