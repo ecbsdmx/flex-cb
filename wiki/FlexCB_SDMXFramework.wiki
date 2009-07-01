@@ -3,7 +3,7 @@
 = Introduction =
 
 As mentioned in the [GettingStarted] page, the code is organized in 3 layers:
- * The SDMX-ML Readers layer, that reads the data structure definitions and the data files.
+ * The SDMX-ML Readers layer, that reads the SDMX-ML data structure definitions and data files.
  * The SDMX Information Model layer, that represents the classes defined in the SDMX information model as AS3 objects.
  * The MVC layer, that provides views displaying the objects of the SDMX information model in various ways (charts, tables, etc).
 
@@ -28,10 +28,10 @@ The list below tells you what you need to know about the SDMX information model 
 
 == The various SDMX-ML formats ==
 
-SDMX-ML supports various use cases and, therefore, defines several XML formats. [2]. For the purpose of this tutorial, the following two formats will be used:
+SDMX-ML supports various use cases and, therefore, defines several XML formats. Currently, the library offers support for the following formats:
 
- # The Structure Definition format : This format will be used to define the structure (concepts, code lists, dimensions, attributes, etc.) of the key families.
- # The Compact format: This format will be used to define the data file. It is not a generic format (it is specific to a Data Structure Definition), but it is designed to support validation and is much more compact so as to support the exchange of large datasets.
+ # The Structure Definition format (SDMX-ML Structure format): This format is used to define the structure (concepts, code lists, dimensions, attributes, etc.) of the data structure definitions.
+ # The data formats (SDMX-ML Compact Data, SDMX-ML Generic Data and SDMX-ML Utility formats): These formats are used to define to the data files. Out of the 4 SDMX-ML Data formats, only the SDMX-ML Cross-sectional Data format is currently not supported.
 
 Now that we know the basics, let's briefly describe the packages that make up the library.
 
