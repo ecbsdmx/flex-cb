@@ -3,11 +3,11 @@
 = Introduction =
 
 As mentioned in the [GettingStarted] page, the code is organized into 3 layers:
- * The SDMX-ML Readers layer, that reads the SDMX-ML data structure definitions and data files.
- * The SDMX Information Model layer, that represents the classes defined in the SDMX information model as AS3 objects.
- * The MVC layer, that provides views displaying the objects of the SDMX information model in various ways (charts, tables, etc).
+ # The data access layer, that extracts statistical data and metadata out of an SDMX data source (currently SDMX-ML files).
+ # The information model layer, that converts the extract data to the various artefacts defined in the SDMX information model.
+ # The MVC layer, that provides views displaying the objects of the SDMX information model in various ways (charts, tables, etc).
 
-This library covers the first two layers, i.e. extracting statistical data and metadata out of SDMX-ML files, and storing in memory the extracted data as AS3 objects. It contains both the actual code as well as the unit tests covering it.
+This library covers the first two layers, i.e. extracting statistical data and metadata out of an SDMX data source, and storing in memory the extracted data as objects of the SDMX information model. It contains both the actual code as well as the unit tests covering it.
 
 Before describing the various packages that make up this library, let's give a brief overview of SDMX, from a developer's perspective.
 
@@ -30,8 +30,8 @@ The list below tells you what you need to know about the SDMX information model 
 
 SDMX-ML supports various use cases and, therefore, defines several XML formats. Currently, the library offers support for the following formats:
 
- # The Structure Definition format (SDMX-ML Structure format): This format is used to define the structure (concepts, code lists, dimensions, attributes, etc.) of the data structure definitions.
- # The data formats (SDMX-ML Compact Data, SDMX-ML Generic Data and SDMX-ML Utility formats): These formats are used to define to the data files. Out of the 4 SDMX-ML Data formats, only the SDMX-ML Cross-sectional Data format is currently not supported.
+ # The Structural Definition format (SDMX-ML Structure format): This format is used to define, among others, the structure (concepts, code lists, dimensions, attributes, etc.) of the data structure definitions.
+ # The data formats (SDMX-ML Compact Data, SDMX-ML Generic Data and SDMX-ML Utility formats): These formats are used to define the data files. Out of the 4 SDMX-ML Data formats, only the SDMX-ML Cross-sectional Data format is currently not supported.
 
 Now that we know the basics, let's briefly describe the packages that make up the library.
 
@@ -45,7 +45,7 @@ The event package contains the events that can be dispatched by the library clas
 
 == The model package ==
 
-The model package contains the representation, in AS3, of the SDMX information model. In order to better understand the classes defined in the package, it is recommended to read the section 02 document (information model) of the [http://sdmx.org/docs/2_0/SDMX_2_0%20SECTION_02_InformationModel.pdf SDMX Standards package]. 
+The model package contains the representation, in AS3, of the SDMX information model. In order to better understand the classes defined in the package, it is recommended to read section 02 document (information model) of the [http://sdmx.org/docs/2_0/SDMX_2_0%20SECTION_02_InformationModel.pdf SDMX Standards package]. 
 
 === The base package ===
 
@@ -63,13 +63,13 @@ The provisioning package links many of the artefacts of the SDMX information mod
 
 The structure package contains many of the classes that are represented in the SDMX-ML Structure format. Not all the classes have been implemented (for example, there is no support for processes or reporting taxonomies), but the classes needed for the data structure definition, as well as a few other important classes (e.g.: categories and category schemes) are available. 
 
-Most of the subpackages in the structure package are related to collections of items and therefore will follow the item scheme pattern. This is the case of the category package (which typically represents a hierarchy of economic concepts to which statistical data and metadata are attached), the code package (the code lists and the codes used by the dimensions and coded attributes in the data structure definition), the concept package (the concepts used in the data structure definition) and the organisation package (organizations participating in the exchange of statistical data and metadata, either as data provider, data consumer or maintenance agencies).
+Most of the subpackages in the structure package are related to collections of items and therefore will follow the item scheme pattern. This is the case of the category package (which typically represents a hierarchy of economic concepts to which statistical data and metadata are attached), the code package (the code lists and the codes used by the dimensions and coded attributes in the data structure definition), the concept package (the concepts used in the data structure definition) and the organisation package (organizations participating in the exchange of statistical data and metadata, either as data provider, data consumer or maintenance agency).
 
 The key family package follows the structure pattern and contains the classes needed to define a data structure definition. This includes the dimensions, the groups, the measures and the attributes (coded and uncoded). It also includes the classes that defines the flows of data that will be reported by data providers (dataflow definitions). 
 
 == The stores package ==
 
-The stores package contains the readers that will extract SDMX data and metadata out of SDMX data sources. Currently only plain SDMX-ML data files are supported as data sources (the xml package). However, there is not reason for such a limitation and, in the future, support for other types of data sources (e.g.: a local SQLite database or an SDMX web service) could be added. In order to make the data sources interchangeable at run time, all data sources should implement the contracts defined in the api package.
+The stores package contains the data providers that will extract SDMX data and metadata out of SDMX data sources. Currently only plain SDMX-ML data files are supported as data sources (the xml package). However, there is not reason for such a limitation and, in the future, support for other types of data sources (e.g.: a local SQLite database or an SDMX web service) could be added. In order to make the data sources interchangeable at run time, all data providers should implement the contracts defined in the api package.
 
 === The api package ===
 
