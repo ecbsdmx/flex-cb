@@ -57,7 +57,7 @@ The reporting package contains two subpackages: dataset and provisioning.
 
 The dataset package contains the classes needed to represent statistical data. This includes data set, group, time series and observations, as well as the attribute values (coded and uncoded). In a nutshell, this package defines the objects that will be extracted out of an SDMX-ML Data file (in the compact, generic or utility formats).
 
-The provisioning package links many of the artefacts of the SDMX information model and is key in a SDMX registry scenario. It defines classes like provision agreements (what data is reported by a data provider, following a predefined release calendar, etc.), potential data sources (simple ones like XML files posted on a web site or more complex one like an SDMX SOAP API), as well as constraints that apply to a set of data (for example, a data structure definition might define that, for a certain dimension, 150 codes would be valid. However, the provision agreement could specify that, out of the 150 possible codes, only 5 will be reported by that specific data provider. These 5 codes should be expressed as constraints attached to the provision agreement).
+The provisioning package links many of the artefacts of the SDMX information model and is key in a SDMX registry scenario. It defines classes like provision agreements (which data is reported by a data provider, following a predefined release calendar, etc.), potential data sources (simple ones like XML files posted on a web site or more complex one like an SDMX SOAP API), as well as constraints that apply to a set of data (for example, a data structure definition might define that, for a certain dimension, 150 codes would be valid. However, the provision agreement could specify that, out of the 150 possible codes, only 5 will be reported by that specific data provider. These 5 codes should be expressed as constraints attached to the provision agreement).
 
 === The structure package ===
 
@@ -79,7 +79,7 @@ The package defines the contract to be followed by the providers of statistical 
 
 === The xml package (the xml store) ===
 
-The xml package contains the data providers that will return data and metadata out of SDMX-ML data sources. Currently, the package offers support for retrieving structural metadata out of an SDMX-ML Structure file and for retrieving data out of an SDMX-ML Compact data file, an SDMX-ML Generic data file or an SDMX-ML Utility data file. Support for the other SDMX-ML formats (e.g.: the SDMX-ML Cross-section data format) is planned for a future release of the library.
+The xml package contains the data providers that will return data and metadata out of SDMX-ML data sources. Currently, the package offers support for retrieving structural metadata out of an SDMX-ML Structure file and for retrieving data out of an SDMX-ML Compact data file, an SDMX-ML Generic data file or an SDMX-ML Utility data file. Support for the other SDMX-ML formats (e.g.: the SDMX-ML Cross-section data format) is planned for a future release of the library. In order to better understand the differences between the various SDMX-ML formats, it is recommended to read the section 03 document (SDMX-ML) of the [http://sdmx.org/docs/2_0/SDMX_2_0_SECTION_03A_SDMX_ML.pdf SDMX Standards package]
 
 == The util package ==
 
