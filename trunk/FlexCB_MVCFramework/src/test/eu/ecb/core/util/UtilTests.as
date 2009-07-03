@@ -28,10 +28,13 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.util
 {
-	import flexunit.framework.TestSuite;
 	import eu.ecb.core.util.formatter.FormatterPackageTests;
+	import eu.ecb.core.util.helper.HelperTests;
 	import eu.ecb.core.util.math.MathTests;
+	import eu.ecb.core.util.string.StringTests;
 	import eu.ecb.core.util.validator.ValidatorTests;
+	
+	import flexunit.framework.TestSuite;
 	
 	/**
 	 *	@private 
@@ -41,7 +44,9 @@ package eu.ecb.core.util
 		public static function suite():TestSuite {
 			var suite:TestSuite = new TestSuite();
 			suite.addTest(FormatterPackageTests.suite());
+			suite.addTest(HelperTests.suite());
 			suite.addTest(MathTests.suite());
+			suite.addTest(StringTests.suite());
  			suite.addTest(ValidatorTests.suite());
  			return suite;
 		}
