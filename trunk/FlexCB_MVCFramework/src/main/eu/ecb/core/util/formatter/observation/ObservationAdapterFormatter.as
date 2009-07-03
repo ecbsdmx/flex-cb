@@ -28,15 +28,14 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.util.formatter.observation
 {
-	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
-	import mx.formatters.Formatter;
-	import org.sdmx.model.v2.reporting.dataset.GroupKey;
-	import org.sdmx.model.v2.reporting.dataset.AttributeValuesCollection;
-	import org.sdmx.model.v2.reporting.dataset.AttributeValue;
-	import org.sdmx.model.v2.structure.concept.Concept;
-	import org.sdmx.model.v2.reporting.dataset.CodedAttributeValue;
-	import org.sdmx.model.v2.reporting.dataset.UncodedAttributeValue;
 	import flash.errors.IllegalOperationError;
+	
+	import mx.controls.Alert;
+	
+	import org.sdmx.model.v2.reporting.dataset.AttributeValue;
+	import org.sdmx.model.v2.reporting.dataset.CodedAttributeValue;
+	import org.sdmx.model.v2.reporting.dataset.GroupKey;
+	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
 
 	public class ObservationAdapterFormatter implements IObservationFormatter
 	{
@@ -88,29 +87,24 @@ package eu.ecb.core.util.formatter.observation
 		public function set group(group:GroupKey):void
 		{
 			_group = group;
+			/*
+			This is ECB-specific and should be refactored. It expects to find 
+			the unit multiplier as a group-level attribute, with UNIT_MULT as 
+			id.
+			*/ 
 			if (null != _group && null != _group.attributeValues) {
 				for each (var attribute:AttributeValue in 
 					_group.attributeValues) {
-					var concept:Concept;
-					var value:String;
-					if (attribute is CodedAttributeValue) {
-						concept 
-							= (attribute as CodedAttributeValue).valueFor.
-							conceptIdentity;
-						value 
-							= (attribute as CodedAttributeValue).value.id;
-					} else if (attribute is UncodedAttributeValue) {
-						concept 
-							= (attribute as UncodedAttributeValue).valueFor.
-							conceptIdentity;
-						value = (attribute as UncodedAttributeValue).value;
-					}
-					if (concept.id == "UNIT_MULT") {
-						var unitMultValue:uint = value as uint;
-						_unitMult = "1";
-						for (var i:uint = 1; i <= unitMultValue as Number; i++){
+					if (attribute is CodedAttributeValue && (attribute as 
+						CodedAttributeValue).valueFor.conceptIdentity.id == 
+						"UNIT_MULT") {
+						var unitMultValue:uint = 
+							uint((attribute as CodedAttributeValue).value.id);
+						_unitMult = "1";							
+						for (var i:uint = 1; i <= unitMultValue; i++){
 							_unitMult = _unitMult + "0";
-						}
+						}	
+						break;
 					}
 				}
 			}		
