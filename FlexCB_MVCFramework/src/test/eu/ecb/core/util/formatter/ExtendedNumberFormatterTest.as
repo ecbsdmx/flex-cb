@@ -44,6 +44,15 @@ package eu.ecb.core.util.formatter
 			return new TestSuite(ExtendedNumberFormatterTest);
 		}
 		
+		public function testSetAndGetForceSigned():void
+		{
+			var formatter:ExtendedNumberFormatter = 
+				new ExtendedNumberFormatter();
+			assertFalse("By default, no forceSigned", formatter.forceSigned);
+			formatter.forceSigned = true;
+			assertTrue("Should be forceSigned", formatter.forceSigned);
+		}
+		
 		public function testStandardFormatting():void {
 			var formatter:ExtendedNumberFormatter = 
 				new ExtendedNumberFormatter();
@@ -67,6 +76,9 @@ package eu.ecb.core.util.formatter
 			var number2:Number = -0.789;
 			var result2:String = formatter.format(number2);
 			assertEquals("The result should be '-0.789'", "-0.789", result2);	
+			var number3:Number = .789;
+			var result3:String = formatter.format(number3);
+			assertEquals("The result should be '0.789'", "0.789", result3);
 		}
 		
 		public function testForcedSigned():void {

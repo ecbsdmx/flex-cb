@@ -46,10 +46,22 @@ package eu.ecb.core.event
 		}
 		
 		public function testCreateProgressEventEvent():void {
-			var message:String = "test";
+			var msg:String = "test";
 			var event:ProgressEventMessage = 
-				new ProgressEventMessage("testEvent", false, false, 0, 0, message);
-			assertEquals("The messages should be equal", message, event.message);
+				new ProgressEventMessage("testEvent", false, false, 0, 0, msg);
+			assertEquals("The messages should be equal", msg, event.message);
 		}	
+		
+		public function testCloneEvent():void
+		{
+			var msg:String = "test";
+			var event:ProgressEventMessage = 
+				new ProgressEventMessage("testEvent", false, false, 0, 0, msg);
+			var clone:ProgressEventMessage = 
+				event.clone() as ProgressEventMessage;
+			assertNotNull("Clone cannot be null", clone);
+			assertFalse("The 2 objects should be different", event == clone);
+			assertEquals("Msg should be equal", event.message, clone.message);		
+		}
 	}
 }
