@@ -80,7 +80,7 @@ package eu.ecb.core.util.formatter.observation
 			return new EXRObservationFormatter();
 		}
 		
-		public function testFormat():void
+		public override function testFormat():void
 		{
 			var dim0:Dimension = new Dimension("dim0", new Concept("FREQ"));
 			var dim1:Dimension = new Dimension("dim1", new Concept("CURRENCY"));
@@ -118,6 +118,46 @@ package eu.ecb.core.util.formatter.observation
 			_formatter.group  = group;
 			assertEquals("The formatted texts should be equal", 
 				"EUR 1 = RUB 35.4126", _formatter.format("35.4126"));
+		}
+		
+		public function testUnitMultipliers():void
+		{
+			var dim0:Dimension = new Dimension("dim0", new Concept("FREQ"));
+			var dim1:Dimension = new Dimension("dim1", new Concept("CURRENCY"));
+			var dim2:Dimension = new Dimension("dim2", new Concept("CURRENCY_DENOM"));
+			var dim3:Dimension = new Dimension("dim3", new Concept("EXR_TYPE"));
+			var dim4:Dimension = new Dimension("dim4", new Concept("EXR_SUFFIX"));
+
+			var groupKeyValues:KeyValuesCollection = new KeyValuesCollection();
+			groupKeyValues.addItem(new KeyValue(new Code("RUB"), dim1));
+			groupKeyValues.addItem(new KeyValue(new Code("EUR"), dim2));
+			groupKeyValues.addItem(new KeyValue(new Code("S"), dim3));
+			groupKeyValues.addItem(new KeyValue(new Code("A"), dim4));
+			var group:GroupKey = new GroupKey(new GroupKeyDescriptor("group"));
+			group.keyValues = groupKeyValues;
+			var unitMult:CodedAttributeValue = new CodedAttributeValue(group, 
+				new Code("2"), new CodedDataAttribute("UNIT_MULT", 
+				new Concept("UNIT_MULT"), new CodeList("CL_UNIT_MULT", 
+				new InternationalString(), new MaintenanceAgency("ECB"))));
+			var attributes:AttributeValuesCollection = 
+				new AttributeValuesCollection();
+			attributes.addItem(unitMult);		
+			group.attributeValues = attributes;
+
+			var seriesKeyValues:KeyValuesCollection = new KeyValuesCollection();
+			seriesKeyValues.addItem(new KeyValue(new Code("D"), dim0));
+			seriesKeyValues.addItem(new KeyValue(new Code("RUB"), dim1));
+			seriesKeyValues.addItem(new KeyValue(new Code("EUR"), dim2));
+			seriesKeyValues.addItem(new KeyValue(new Code("S"), dim3));
+			seriesKeyValues.addItem(new KeyValue(new Code("A"), dim4));
+			
+			var key:TimeseriesKey = new TimeseriesKey(new KeyDescriptor("id"));
+			key.keyValues = seriesKeyValues;
+			
+			_formatter.series = key;
+			_formatter.group  = group;
+			assertEquals("The formatted texts should be equal", 
+				"EUR 100 = RUB 35.4126", _formatter.format("35.4126"));
 		}
 	}
 }

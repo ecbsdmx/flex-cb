@@ -28,12 +28,15 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.util.formatter.observation
 {
+	import flash.errors.IllegalOperationError;
+	
 	import flexunit.framework.TestCase;
 	import flexunit.framework.TestSuite;
-	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
-	import org.sdmx.model.v2.structure.keyfamily.KeyDescriptor;
+	
 	import org.sdmx.model.v2.reporting.dataset.GroupKey;
+	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
 	import org.sdmx.model.v2.structure.keyfamily.GroupKeyDescriptor;
+	import org.sdmx.model.v2.structure.keyfamily.KeyDescriptor;
 
 	/**
 	 *	@private 
@@ -80,6 +83,14 @@ package eu.ecb.core.util.formatter.observation
 			_formatter.group = group;
 			assertEquals("The groups should be equal", group, 
 				_formatter.group);	
+		}
+		
+		public function testFormat():void
+		{
+			try {
+				_formatter.format("test");
+				fail("This should be implemented by subclasses");
+			} catch (error:IllegalOperationError) {}
 		}
 	}
 }

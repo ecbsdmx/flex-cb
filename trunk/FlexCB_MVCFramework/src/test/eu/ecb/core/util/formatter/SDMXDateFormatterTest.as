@@ -59,10 +59,16 @@ package eu.ecb.core.util.formatter
 		}
 		
 		public function testQuarterlyFrequency():void {
-			var date:Date = new Date("1980", "9", "13");
 			var formatter:SDMXDateFormatter = new SDMXDateFormatter();
 			formatter.frequency = "Q";
-			assertEquals("Expected formatted was: 1980 Q4", "1980 Q4", formatter.format(date));			
+			assertEquals("Expected formatted was: 1918 Q1", "1918 Q1", 
+				formatter.format(new Date("1918", "1", "18")));			
+			assertEquals("Expected formatted was: 1947 Q3", "1947 Q3", 
+				formatter.format(new Date("1947", "8", "25")));
+			assertEquals("Expected formatted was: 1980 Q4", "1980 Q4", 
+				formatter.format(new Date("1980", "9", "13")));
+			assertEquals("Expected formatted was: 2001 Q2", "2001 Q2", 
+				formatter.format(new Date("2001", "5", "6")));			
 		}
 		
 		public function testAnnualFrequency():void {
@@ -70,6 +76,34 @@ package eu.ecb.core.util.formatter
 			var formatter:SDMXDateFormatter = new SDMXDateFormatter();
 			formatter.frequency = "A";
 			assertEquals("Expected formatted was: 1980", "1980", formatter.format(date));			
+		}
+		
+		public function testUnknownFrequency():void 
+		{
+			var formatter:SDMXDateFormatter = new SDMXDateFormatter();
+			try {
+				formatter.frequency = "FAIL";
+				fail("Should not be possible to set unknown frequency");
+			} catch (error:ArgumentError) {}
+		}
+		
+		public function testSetAndGetShortFormat():void
+		{
+			var formatter:SDMXDateFormatter = new SDMXDateFormatter();
+			assertFalse("By default, not short format", 
+				formatter.isShortFormat);
+			formatter.isShortFormat = true;
+			assertTrue("Should be short format", formatter.isShortFormat);	
+		}
+		
+		public function testNotADate():void
+		{
+			var formatter:SDMXDateFormatter = new SDMXDateFormatter();
+			try {
+				formatter.format("Not a date");
+				fail("Should not be possible to format something else than a" + 
+						" date");
+			}  catch (error:ArgumentError) {}
 		}
 	}
 }
