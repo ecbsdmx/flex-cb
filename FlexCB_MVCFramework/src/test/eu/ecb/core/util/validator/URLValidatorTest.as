@@ -74,6 +74,7 @@ package eu.ecb.core.util.validator
 			assertEquals("http://192.357.2.1/data/index.xml should not be ok", ValidationResultEvent.INVALID, validator.validate("http://192.357.2.1/data/index.xml").type);
 			assertEquals("http:///user:pwd@www.ecb.europa.eu:8080/data/index.xml should not be ok", ValidationResultEvent.INVALID, validator.validate("http:///user:pwd@www.ecb.europa.eu:8080/data/index.xml").type);
 			assertEquals("http://www.ecb.europa.eu\data\index.php?test=0 should not be ok", ValidationResultEvent.INVALID, validator.validate("http://www.ecb.europa.eu\data\index.php?test=0").type);
+			assertEquals("http://$%^.168.2.1:abcd/data/index.xml should not be ok", ValidationResultEvent.INVALID, validator.validate("http://$%^.168.2.1:abcd/data/index.xml should not be ok").type);
 		}
 		
 		public function testAllowNoPath():void {
@@ -106,6 +107,18 @@ package eu.ecb.core.util.validator
 			assertEquals("ftp://www.ecb.europa.eu/data/index.html#intro should not be ok", ValidationResultEvent.INVALID, validator.validate("ftp://www.ecb.europa.eu/data/index.html#intro").type);
 			validator.schemes = new ArrayCollection(["http", "https", "ftp"]);
 			assertEquals("ftp://www.ecb.europa.eu/data/index.html#intro should now be ok", ValidationResultEvent.VALID, validator.validate("ftp://www.ecb.europa.eu/data/index.html#intro").type);
+		}
+		
+		public function testAllowNoAuthority():void
+		{
+			var validator:URLValidator = new URLValidator();
+			assertFalse("By default, allowNoAuthority should be false", validator.allowNoAuthority);
+			assertFalse("Authority cannot be null if allowNoAuthority is false", 
+				validator.isValidAuthority(null));
+			validator.allowNoAuthority = true;
+			assertTrue("allowNoAuthority should now be true", validator.allowNoAuthority);
+			assertTrue("Authority can be null if allowNoAuthority is true", 
+				validator.isValidAuthority(null));
 		}
 	}
 }
