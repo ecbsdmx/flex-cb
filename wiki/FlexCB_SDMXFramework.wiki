@@ -39,19 +39,19 @@ Now that we know the basics, let's briefly describe the packages that make up th
 
 The library contains 4 main packages. The most important ones are the *model* package (AS3 representation of the SDMX information model) and the *stores* packages (readers for the SDMX-ML files). The *event* package contains the events dispatched by library classes, while the *util* package contains a few utility classes (validators, etc).
 
-== The event package ==
+== The event package (org.sdmx.event) ==
 
 The event package contains the events that can be dispatched by the library classes.
 
-== The model package ==
+== The model package (org.sdmx.model) ==
 
 The model package contains the representation, in AS3, of the SDMX information model. In order to better understand the classes defined in the package, it is recommended to read section 02 document (information model) of the [http://sdmx.org/docs/2_0/SDMX_2_0%20SECTION_02_InformationModel.pdf SDMX Standards package]. 
 
-=== The base package ===
+=== The base package (org.sdmx.model.base) ===
 
 The base package contains the building blocks upon which the other layers of the model package are built. This includes abstract classes that are inherited by concrete implementations (e.g.: !IdentifiableArtefact, !MaintainableArtefact), classes that are used by other classes (e.g.: !InternationalString), as well as the patterns used in other layers (e.g.: item scheme pattern, which is used by all collections such as code lists and concept schemes, or the structure pattern which is used in the data structure definition).
 
-=== The reporting package ===
+=== The reporting package (org.sdmx.model.reporting) ===
 
 The reporting package contains two subpackages: dataset and provisioning.
 
@@ -59,7 +59,7 @@ The dataset package contains the classes needed to represent statistical data. T
 
 The provisioning package links many of the artefacts of the SDMX information model and is key in a SDMX registry scenario. It defines classes like provision agreements (which data is reported by a data provider, following a predefined release calendar, etc.), potential data sources (simple ones like XML files posted on a web site or more complex one like an SDMX SOAP API), as well as constraints that apply to a set of data (for example, a data structure definition might define that, for a certain dimension, 150 codes would be valid. However, the provision agreement could specify that, out of the 150 possible codes, only 5 will be reported by that specific data provider. These 5 codes should be expressed as constraints attached to the provision agreement).
 
-=== The structure package ===
+=== The structure package (org.sdmx.model.structure) ===
 
 The structure package contains many of the classes that are represented in the SDMX-ML Structure format. Not all the classes have been implemented (for example, there is no support for processes or reporting taxonomies), but the classes needed for the data structure definition, as well as a few other important classes (e.g.: categories and category schemes) are available. 
 
@@ -67,20 +67,20 @@ Most of the subpackages in the structure package are related to collections of i
 
 The key family package follows the structure pattern and contains the classes needed to define a data structure definition. This includes the dimensions, the groups, the measures and the attributes (coded and uncoded). It also includes the classes that defines the flows of data that will be reported by data providers (dataflow definitions). 
 
-== The stores package ==
+== The stores package (org.sdmx.stores) ==
 
 The stores package contains the data providers that will extract SDMX data and metadata out of SDMX data sources. Currently only plain SDMX-ML data files are supported as data sources (the xml package). However, there is not reason for such a limitation and, in the future, support for other types of data sources (e.g.: a local SQLite database or an SDMX web service) could be added. In order to make the data sources interchangeable at run time, all data providers should implement the contracts defined in the api package.
 
-=== The api package ===
+=== The api package (org.sdmx.stores.api) ===
 
 The api package defines the contracts to be implemented by the various data providers, so as to make them interchangeable at run time. This package distinguishes between an SDMX data source (a "repository" containing SDMX data and metadata, such as SDMX-ML files hosted on a web site) and an SDMX data provider (a class that, upon request from a controller, will communicate with the SDMX data source to retrieve statistical data and metadata).
 
 The package defines the contract to be followed by the providers of statistical data (IDataProvider), by the providers of the statistical metadata (IMaintainableArtefactProvider) and by the factories that will control access to the various data and metadata providers (ISDMXDaoProvider).
 
-=== The xml package (the xml store) ===
+=== The xml package (org.sdmx.stores.xml) ===
 
 The xml package contains the data providers that will return data and metadata out of SDMX-ML data sources. Currently, the package offers support for retrieving structural metadata out of an SDMX-ML Structure file and for retrieving data out of an SDMX-ML Compact data file, an SDMX-ML Generic data file or an SDMX-ML Utility data file. Support for the other SDMX-ML formats (e.g.: the SDMX-ML Cross-section data format) is planned for a future release of the library. In order to better understand the differences between the various SDMX-ML formats, it is recommended to read the section 03 document (SDMX-ML) of the [http://sdmx.org/docs/2_0/SDMX_2_0_SECTION_03A_SDMX_ML.pdf SDMX Standards package]
 
-== The util package ==
+== The util package (org.sdmx.util) ==
 
 The util package contains various utility classes related to date handling, data downloads over HTTP and input validation.
