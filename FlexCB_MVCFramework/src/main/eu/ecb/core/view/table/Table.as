@@ -30,11 +30,16 @@ package eu.ecb.core.view.table
 {
 	import eu.ecb.core.util.formatter.ExtendedNumberFormatter;
 	import eu.ecb.core.util.formatter.SDMXDateFormatter;
+	import eu.ecb.core.util.math.MathHelper;
 	import eu.ecb.core.view.SDMXViewAdapter;
 	
 	import mx.collections.ArrayCollection;
+	import mx.collections.IViewCursor;
+	import mx.collections.Sort;
+	import mx.collections.SortField;
 	import mx.controls.DataGrid;
 	import mx.controls.dataGridClasses.DataGridColumn;
+	import mx.core.ClassFactory;
 	import mx.events.DataGridEvent;
 	import mx.formatters.DateBase;
 	
@@ -42,6 +47,7 @@ package eu.ecb.core.view.table
 	import org.sdmx.model.v2.reporting.dataset.KeyValuesCollection;
 	import org.sdmx.model.v2.reporting.dataset.TimePeriod;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
+	import org.sdmx.util.date.SDMXDate;
 
 	[ResourceBundle("flex_cb_mvc_lang")]
 	/**
@@ -62,6 +68,11 @@ package eu.ecb.core.view.table
 		 * @private
 		 */
 		protected var _numberFormatter:ExtendedNumberFormatter;
+		
+		/**
+		 * @private
+		 */
+		protected var _changeNumberFormatter:ExtendedNumberFormatter;
 		
 		/**
 		 * @private
@@ -87,17 +98,7 @@ package eu.ecb.core.view.table
 		 * @private
 		 */
 		protected var _dimensionCode:String;
-		
-		/**
-		 * @private
-		 */
-		protected var _allObservationsMap:Object;
-		
-		/**
-		 * @private
-		 */
-		protected var _allObservations:ArrayCollection;
-		
+						
 		/**
 		 * @private
 		 */
@@ -108,6 +109,19 @@ package eu.ecb.core.view.table
 		 */
 		protected var _sortDimension:String;
 		
+		/**
+		 * @private
+		 */
+		protected var _createChangeColumn:Boolean;
+		
+		private var _sortCol:Sort;
+		
+		private var _sortObs:Sort;
+		
+		private var _dateConverter:SDMXDate;
+		
+		private var _isHidden:Boolean;
+		
 		/*===========================Constructor==============================*/
 		
 		public function Table(direction:String = "horizontal")
@@ -116,6 +130,8 @@ package eu.ecb.core.view.table
 			_dateFormatter = new SDMXDateFormatter();
 			_dateFormatter.isShortFormat = true;
 			_numberFormatter = new ExtendedNumberFormatter();
+			_changeNumberFormatter = new ExtendedNumberFormatter();
+			_changeNumberFormatter.forceSigned = true;	
 			_percentFormatter = new ExtendedNumberFormatter();
 			_percentFormatter.precision = 1;
 			_percentFormatter.forceSigned = true;
@@ -123,13 +139,22 @@ package eu.ecb.core.view.table
 				"flex_cb_mvc_lang", "monthNamesLong");
 			DateBase.monthNamesShort = resourceManager.getStringArray(
 				"flex_cb_mvc_lang", "monthNamesShort");	
+			_sortCol = new Sort();
+			_sortCol.fields = [new SortField("key")];	
+			_sortObs = new Sort();
+			_sortObs.fields = [new SortField("rowDimension")];	
+			_dateConverter = new SDMXDate();
+			
 		}
 		
 		/*============================Accessors===============================*/
 		
 		/**
 		 * The code for the dimension to be used for data columns (not the
-		 * reference column). For example, REF_AREA.
+		 * reference column). For example, REF_AREA. If no dimension is passed,
+		 * and there is only one series in the dataset, the class will use the 
+		 * measure for the 2nd column.
+		 * 
 		 * @param dimensionCode
 		 * 
 		 */
@@ -140,13 +165,33 @@ package eu.ecb.core.view.table
 				
 		/**
 		 * The code for the dimension to be used in the reference column (the 
-		 * 1st column of the table).
+		 * 1st column of the table). If no dimension is passed as reference
+		 * column, the class will use the time dimension as reference column
+		 * (it will be a list of reference periods).
 		 *  
 		 * @param dimensionCode
 		 */
 		public function set referenceColumn(dimensionCode:String):void
 		{
 			_referenceColumn = dimensionCode;	
+		}
+		
+		
+		/**
+		 * Whether or not a column displaying the changes with the previous
+		 * period should be created.
+		 *  
+		 * @param flag
+		 */
+		public function set createChangeColumn(flag:Boolean):void
+		{
+			_createChangeColumn = flag;
+		}
+		
+		public function set isHidden(flag:Boolean):void
+		{
+			_isHidden = flag;
+			invalidateProperties();
 		}
 		
 		/*========================Protected methods===========================*/
@@ -181,29 +226,29 @@ package eu.ecb.core.view.table
 				_dateFormatter.frequency = _referenceSeriesFrequency;
 			}
 			
-			if (_dataSetChanged) {
-				_dataSetChanged = false;
+			if (_filteredDataSetChanged && !_isHidden) {
+				_filteredDataSetChanged = false;
 				
 				//Create reference column
 				var columns:Array = new Array();
-				var dateColumn:DataGridColumn = new DataGridColumn();
-				dateColumn.width = 100;
-				dateColumn.dataField = "rowDimension";
+				var refCol:DataGridColumn = new DataGridColumn();
+				refCol.width = 100;
+				refCol.dataField = "rowDimension";
 
 				if (null == _referenceColumn) {
-					dateColumn.headerText = "Date";
-					dateColumn.labelFunction = formatDate;
+					refCol.headerText = "Date";
+					refCol.labelFunction = formatDate;
 				} else {
-					dateColumn.headerText = "Indicator";
-					dateColumn.labelFunction = formatIndicator;
+					refCol.headerText = "Indicator";
+					refCol.labelFunction = formatIndicator;
 				}
-				columns.push(dateColumn);
+				columns.push(refCol);
 				_dataGrid.columns = columns;
 				
 				//Need to fetch the position of column dimension (and row 
-				//dimension as well, if reference column is set.
-				var keyValues:KeyValuesCollection = (_dataSet.timeseriesKeys.
-					getItemAt(0) as TimeseriesKey).keyValues;
+				//dimension as well, if reference column is set).
+				var keyValues:KeyValuesCollection = (_filteredDataSet.
+					timeseriesKeys.getItemAt(0) as TimeseriesKey).keyValues;
 				var colDimensionPosition:uint;	
 				var rowDimensionPosition:uint;
 				for each (var key:KeyValue in keyValues) {
@@ -215,53 +260,81 @@ package eu.ecb.core.view.table
 					}
 				}
 				
-				//Need to populate the collection
-				_allObservations = new ArrayCollection();
-				_allObservationsMap = new Object();
-				var dimensionsMap:ArrayCollection = new ArrayCollection();
-				var dimensionsMapLabel:ArrayCollection = new ArrayCollection();
+				// This variable holds the observations
+				var observations:ArrayCollection = new ArrayCollection();
+				observations.sort = _sortObs;
+				observations.refresh();
+				var obsCursor:IViewCursor = observations.createCursor();
+				
+				// This variable holds the dimensions used for the columns.
 				var colDimensions:ArrayCollection = new ArrayCollection();
-				for each (var series:TimeseriesKey in _dataSet.timeseriesKeys) {
-					var objectKey:String = (series.keyValues.getItemAt(
+				colDimensions.sort = _sortCol;
+				colDimensions.refresh();
+				var colCursor:IViewCursor = colDimensions.createCursor();
+				
+				//Need to populate the two collections
+				var quickMode:Boolean = (null == _dimensionCode && 
+					1 == _filteredDataSet.timeseriesKeys.length); 
+				for each (var series:TimeseriesKey in 
+					_filteredDataSet.timeseriesKeys) {
+					var colKeyCode:String = (quickMode) ? "value" : 
+						(series.keyValues.getItemAt(
 						colDimensionPosition) as KeyValue).value.id;
-					if (!(colDimensions.contains(objectKey))) {
-						colDimensions.addItem(objectKey);
-					}	
-					var objectKeyLabel:String = (series.keyValues.getItemAt(
+					var colKeyDesc:String = (quickMode) ? "Value" :
+						(series.keyValues.getItemAt(
 						colDimensionPosition) as KeyValue).value.description.
 						localisedStrings.getDescriptionByLocale("en");	
-					if (!(dimensionsMap.contains(objectKey))) {
-						dimensionsMap.addItem(objectKey);
-						dimensionsMapLabel.addItem(objectKeyLabel);
+					if (!(colCursor.findAny({key: colKeyCode}))) {
+						colDimensions.addItem({key: colKeyCode, 
+						desc: colKeyDesc});
 					}
-					for each (var obs:TimePeriod in series.timePeriods) {
+					for (var j:uint = 0; j < series.timePeriods.length; j++) {
+						var obs:TimePeriod = 
+							series.timePeriods.getItemAt(j) as TimePeriod;
+						if (j == 0) { 	
+							_changeNumberFormatter.precision = 
+								obs.observationValue.indexOf(".") > -1 ? 
+					    			obs.observationValue.substring(
+					    				obs.observationValue.indexOf(".") + 1, 
+		    							obs.observationValue.length).length : 0;
+		    			}
 						var rowKey:String = (null == _referenceColumn) ? 
 							obs.periodComparator : (series.keyValues.getItemAt(
 							rowDimensionPosition) as KeyValue).value.id;
-						if (!(_allObservationsMap.hasOwnProperty(rowKey))) {
+						if (!(obsCursor.findAny({rowDimension: rowKey}))) {
 							var object:Object = new Object();
-							object["rowDimension"] = 
-								(null == _referenceColumn) ? 
-									obs.timeValue : (series.keyValues.
-									getItemAt(rowDimensionPosition) as 
-									KeyValue).value.id;
-							object[objectKey] = obs.observationValue;
-							_allObservationsMap[rowKey] = object;	
-							_allObservations.addItem(object);
-						} else if (!(_allObservationsMap[rowKey].
-							hasOwnProperty(objectKey))) {
-							_allObservationsMap[rowKey][objectKey]
-								= obs.observationValue;
+							object["rowDimension"] = rowKey;
+							object[colKeyCode] = obs.observationValue;
+							if (_createChangeColumn && 0 < j) {
+								createChangeObs(series.timePeriods.
+								getItemAt(j - 1) as TimePeriod, obs, object, 
+								colKeyCode);
+							} 
+							observations.addItem(object);
+						} else if (!quickMode && !(obsCursor.current.
+							hasOwnProperty(colKeyCode))) {
+							obsCursor.current[colKeyCode] = 
+								obs.observationValue;
+							if (_createChangeColumn && 0 < j) {
+								createChangeObs(series.timePeriods.getItemAt(
+								j + 1) as TimePeriod, obs, obsCursor.current, 
+								colKeyCode);
+							} 	
 						}
 					}
 				}
 				
 				//Need to add missing values
-				for each (var finalObs:Object in _allObservations) {
-					for each (var colKey:String in colDimensions) {
-						if (!(finalObs.hasOwnProperty(colKey))) {
+				for each (var finalObs:Object in observations) {
+					for each (var col:Object in colDimensions) {
+						if (!(finalObs.hasOwnProperty(col.key))) {
 							var obsNumber:Number;
-							finalObs[colKey] = obsNumber;
+							finalObs[col.key] = obsNumber;
+						}
+						if (_createChangeColumn && !(finalObs.hasOwnProperty(
+							col.key + "_change"))) {
+							var obsChange:Number;
+							finalObs[col.key + "_change"] = null;
 						}
 					}
 				}
@@ -270,21 +343,45 @@ package eu.ecb.core.view.table
 				var allColumns:Array = _dataGrid.columns;
 				var rows:uint;
 				var diff:int = 
-					allColumns.length - dimensionsMap.length - 1;
+					allColumns.length - colDimensions.length - 1;
+				if (_createChangeColumn) {
+					diff = diff * 2;
+				}	
 				if (diff < 0) {
 					createColumns(diff, allColumns);
 				} else if (diff > 0) {
 					deleteColumns(diff, allColumns);
 				}
 				
-				for (var i:uint = 0; i < dimensionsMap.length; i++) {
+				for (var i:uint = 0; i < colDimensions.length; i++) {
 					(allColumns[i + 1] as DataGridColumn).dataField = 
-						dimensionsMap.getItemAt(i) as String;
+						colDimensions.getItemAt(i).key;
 					(allColumns[i + 1] as DataGridColumn).headerText = 
-						dimensionsMapLabel.getItemAt(i) as String;	
+						colDimensions.getItemAt(i).desc;	
+					if (_createChangeColumn) {
+						(allColumns[i + 2] as DataGridColumn).dataField = 
+							colDimensions.getItemAt(i).key + "_change";
+						(allColumns[i + 2] as DataGridColumn).headerText = 
+							"Change";
+						(allColumns[i + 2] as DataGridColumn).labelFunction = 
+							null;
+						(allColumns[i + 2] as DataGridColumn).
+							sortCompareFunction = sortChanges;
+						(allColumns[i + 2] as DataGridColumn).itemRenderer = 
+							new ClassFactory(ChangeRenderer);
+						i++;
+					}	
 				}
 				_dataGrid.columns = allColumns;
-				_dataGrid.dataProvider = _allObservations;
+				
+				if (null == _referenceColumn) {
+					var sortByDate:Sort = new Sort();
+					sortByDate.fields = 
+						[new SortField("rowDimension", false, true, false)];
+					observations.sort = sortByDate;
+					observations.refresh();
+				}	
+				_dataGrid.dataProvider = observations;
 			}
 		}
 		
@@ -328,7 +425,8 @@ package eu.ecb.core.view.table
 		
 		protected function formatDate(item:Object, column:DataGridColumn):String 
 		{
-			return _dateFormatter.format(item.rowDimension);
+			return _dateFormatter.format(
+				_dateConverter.getDate(item.rowDimension));
 		}
 		
 		protected function formatValue(item:Object, 
@@ -366,6 +464,51 @@ package eu.ecb.core.view.table
 				allColumns.pop();	
 				supernumeraryColumns--;
 			}
+		}
+		
+		private function createChangeObs(currentObs:TimePeriod, 
+			nextObs:TimePeriod, object:Object, key:String):void
+		{
+             	object[key + "_change"] = _changeNumberFormatter.format(Number(
+             		nextObs.observationValue) - Number(currentObs.
+             		observationValue));
+             	if (!_isPercentage) {
+             		object[key + "_change"] = object[key + "_change"] + " (" + 
+             		((Number(currentObs.observationValue) != 0) ? (
+             		_percentFormatter.format(MathHelper.calculatePercentOfChange
+             		(Number(currentObs.observationValue), Number(nextObs.
+             		observationValue)))) + "%)" : "-)");
+             	}	
+		}
+		
+		private function sortChanges(obj1:Object, obj2:Object):int 
+		{
+			var returnValue:int;
+			var change1:String = obj1.value_change;
+			var change2:String = obj2.value_change;
+			if (null == change1 || 0 == change1.length) {
+				returnValue = -1;
+			} else if (null == change2 || 0 == change2.length) {
+				returnValue = 1;
+			} else {
+				var space1:int = change1.indexOf(" ");
+				var space2:int = change2.indexOf(" ");
+				var start1:uint = 
+					(change1.charAt(0) == "+") ? 1 : 0; 
+				var start2:uint = 
+					(change2.charAt(0) == "+") ? 1 : 0;
+				var value1:Number = Number(change1.substring(start1, space1));	 
+				var value2:Number = Number(change2.substring(start2, space2));	
+				
+				if (value1 > value2) {
+					returnValue = 1;
+				} else if (value1 < value2) {
+					returnValue = -1;
+				} else {
+					returnValue = 0;
+				}
+			}	
+			return returnValue;
 		}
 	}
 }

@@ -305,3 +305,28 @@ FormItem {
     paddingBottom: 0;
     paddingLeft:   0;
 }
+
+DataGrid {
+    background-color: #FFFFFF;
+    alternating-item-colors: #EBEEEF, #FFFFFF;
+    header-colors: #FFFFFF, #FFFFFF;
+    horizontal-grid-lines: true;
+    horizontal-grid-lines-color: #FFFFFF;
+    vertical-grid-lines: true;
+    vertical-grid-lines-color: #FFFFFF;
+    roll-over-color: #dee2e5;
+    border-thickness: 0;
+    border-color: #FFFFFF;
+    selection-color: #A6C4D7;
+    margin-top: 100;
+    verticalGridLines: false;
+    color: #000000;
+    headerStyleName: "mydataGridHeaderStyle";
+}
+
+.mydataGridHeaderStyle {
+   color: #707070;
+   fontWeight: bold;
+   fontStyle: normal;
+   textDecoration: none;
+}
