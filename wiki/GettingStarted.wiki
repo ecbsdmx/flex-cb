@@ -1,4 +1,4 @@
-#summary This page described how to get started with the FlexCB project and how to set up your development environment.
+#summary This page describes how to get started with the FlexCB project and how to set up your development environment.
 
 = Introduction =
 
@@ -7,7 +7,7 @@ This page described how to get started with the FlexCB project and how to set up
   * A working installation of a Subversion plugin for Adobe Flex Builder 3
   * A working copy of FlexUnit
 
-The source code for the FlexCB project is organized into various logical components. We recommend you setup independent projects for each of these components, mainly to save compilation time when making changes.
+The source code for the FlexCB project is organized into various logical components. We recommend you set up independent projects for each of these components, mainly to save compilation time when making changes.
 
 = SDMX and the dynamic visualization of statistical data =
 
@@ -23,7 +23,7 @@ For additional information regarding SDMX, please see http://www.sdmx.org. A des
 The code is organized into the following components:
 
 == 1. SDMX-ML Readers Package ==
-The SDMX-ML Readers package reads the data structure definitions and the data files, in the SDMX-ML Structure and Compact formats respectively. The readers will parse SDMX-ML data structure definitions and extracts code lists, concept schemes, organization schemes, data flows and key families. They will also parse SDMX-ML data files and extracts data sets, groups, series and observations. They will use the information available in the data structure definition (the dimensions, the attributes, the measures, etc) to interpret the statistical data. The readers will then translate the extracted data into objects of the SDMX information model (see next section).
+The SDMX-ML Readers package reads the data structure definitions and the data files, in the SDMX-ML Structure and Compact formats respectively. The readers will parse SDMX-ML data structure definitions and extract code lists, concept schemes, organization schemes, data flows and key families. They will also parse SDMX-ML data files and extract data sets, groups, series and observations. They will use the information available in the data structure definition (the dimensions, the attributes, the measures, etc) to interpret the statistical data. The readers will then translate the extracted data into objects of the SDMX information model (see next section).
 == 2. SDMX Information Model Package ==
 The SDMX Information Model Package represents the classes defined in the SDMX information model (code lists, concepts, dimensions, data sets, series, observations, etc) as objects that can be stored in memory. These are the objects that can then be visualized, using the views defined in the third package (see below).
 == 3. FlexCB MVC Package ==
@@ -62,7 +62,7 @@ We should now have a working copy of the FlexCB MVC library.
 
 == 3. The sample applications ==
 
-Three sample applications are provided with the FlexCB project. We will now setup one of them.
+Three sample applications are provided with the FlexCB project. We will now set up one of them.
   # Open Flex Builder and create a new project (File > New > Other > SVN > New project from SVN).
   # On the next screen, select the flex-cb repository on Google code.
   # On the next screen, browse the repository, select the trunk/FlexCB_SampleApp2 folder and click on Finish.
