@@ -33,12 +33,16 @@ package eu.ecb.core.view.panel
 	import eu.ecb.core.view.chart.ECBLineChart;
 	import eu.ecb.core.view.chart.PeriodSlider;
 	import eu.ecb.core.view.filter.PeriodZoomBox;
+	import eu.ecb.core.view.filter.ViewSelector;
 	import eu.ecb.core.view.summary.ChartSummaryBox;
+	import eu.ecb.core.view.summary.MetadataPanel;
 	import eu.ecb.core.view.summary.SeriesSummaryBox;
+	import eu.ecb.core.view.table.Table;
 	
 	import flash.events.DataEvent;
 	
 	import mx.binding.utils.BindingUtils;
+	import mx.collections.ArrayCollection;
 
 	/**
 	 * Creates a basic data panel, similar to the Flex panels available on the 
@@ -56,6 +60,7 @@ package eu.ecb.core.view.panel
 	 *  
 	 * @author Xavier Sosnovsky
 	 */
+	[ResourceBundle("flex_cb_mvc_lang")]
 	public class BasicDataPanel extends SDMXDataPanelAdapter
 	{
 		/*==============================Fields================================*/
@@ -88,7 +93,17 @@ package eu.ecb.core.view.panel
 		/**
 		 * @private
 		 */
+		protected var _viewSelectorBox:ViewSelector;
+		
+		/**
+		 * @private
+		 */
 		protected var _chart:ECBLineChart;
+		
+		/**
+		 * @private
+		 */
+		protected var _table:Table;
 		
 		/**
 		 * @private
@@ -99,6 +114,21 @@ package eu.ecb.core.view.panel
 		 * @private
 		 */
 		protected var _periodSlider:PeriodSlider;
+		
+		/**
+		 * @private
+		 */
+		protected var _viewStack:StackPanel;
+		
+		/**
+		 * @private
+		 */
+		protected var _chartAndSliderPanel:SDMXDataPanelAdapter;
+		
+		/**
+		 * @private
+		 */
+		protected var _metadataPanel:MetadataPanel;
 
 		/**
 		 * @private
@@ -140,6 +170,7 @@ package eu.ecb.core.view.panel
 		}
 
 		/*========================Public methods===========================*/
+		
 		public function get legend():ECBLegend {
 			return _legend;
 		}
@@ -169,6 +200,10 @@ package eu.ecb.core.view.panel
 				createZoomBox();
 			}
 			
+			if (null == _viewSelectorBox) {
+				createViewSelectorBox();
+			}
+			
 			if (null == _chartBox) {
 				createChartBox();
 			}
@@ -177,8 +212,24 @@ package eu.ecb.core.view.panel
 				createChartSummaryBox();
 			}
 			
+			if (null == _viewStack) {
+				createViewStack();
+			}
+			
+			if (null == _chartAndSliderPanel) {
+				createChartAndSliderPanel();
+			}
+			
 			if (null == _chart) {
 				createChart();
+			}
+			
+			if (null == _table) {
+				createTable();
+			}
+			
+			if (null == _metadataPanel) {
+				createMetadataPanel();
 			}
 			
 			if (null == _periodSlider) {
@@ -228,6 +279,15 @@ package eu.ecb.core.view.panel
 			_controller.handlePeriodChange(event);
 		}
 		
+		protected function handleViewChanged(event:DataEvent):void
+		{
+			event.stopImmediatePropagation();
+			_viewStack.displayPanel(uint(event.data));
+			_periodSlider.visible = 
+				!(uint(event.data) == _viewSelectorBox.views.length - 1);
+			_table.isHidden = (1 == uint(event.data)) ? false : true; 
+		}
+		
 		/**
 		 * @inheritDoc
 		 */ 		
@@ -241,8 +301,9 @@ package eu.ecb.core.view.panel
 			_filterBox.visible = true;
 			_filterBox.width = _chart.getExplicitOrMeasuredWidth();
 			_periodSlider.size = _chart.getExplicitOrMeasuredWidth();
-			if (_chartSummaryBox != null)
+			if (_chartSummaryBox != null) {
 				_chartSummaryBox.width = _chart.getExplicitOrMeasuredWidth();
+			}
 		}
 		
 		/**
@@ -255,8 +316,9 @@ package eu.ecb.core.view.panel
 				_chartSummaryBox.height = _isPercentage ? 25 : 40;
 				_chartSummaryBox.showChange = !_isPercentage;
 			}
-			if (_seriesSummaryBox != null)
-				_seriesSummaryBox.showChange = !_isPercentage;		
+			if (_seriesSummaryBox != null) {
+				_seriesSummaryBox.showChange = !_isPercentage;
+			}		
 			_chart.showChange = !_isPercentage;
 		}
 		
@@ -298,6 +360,19 @@ package eu.ecb.core.view.panel
 			_filterBox.addView(_periodZoomBox);
 		}
 		
+		protected function createViewSelectorBox():void
+		{
+			_viewSelectorBox = new ViewSelector();
+			_viewSelectorBox.height = 20;
+			_viewSelectorBox.addEventListener(
+				ViewSelector.SELECTED_VIEW_CHANGED,	handleViewChanged);
+			_filterBox.addView(_viewSelectorBox);
+			_viewSelectorBox.views = new ArrayCollection([
+				resourceManager.getString("flex_cb_mvc_lang", "chart_view"), 
+				resourceManager.getString("flex_cb_mvc_lang", "table_view"),
+				resourceManager.getString("flex_cb_mvc_lang", "md_view")]);
+		}
+		
 		/**
 		 * @private
 		 */
@@ -333,7 +408,7 @@ package eu.ecb.core.view.panel
 			_chart.showChange = _showChange;
 			_chart.addEventListener(ECBChartEvents.CHART_DRAGGED, 
 				handleDataChartDragged, false, 0, true);		
-			_chartBox.addView(_chart);
+			_chartAndSliderPanel.addView(_chart);
 		}
 		
 		/**
@@ -352,7 +427,7 @@ package eu.ecb.core.view.panel
 			_periodSlider.addEventListener(
 				ECBChartEvents.RIGHT_DIVIDER_DRAGGED,
 				handleRightDividerDragged, false, 0, true);	
-			_chartBox.addView(_periodSlider);
+			_chartAndSliderPanel.addView(_periodSlider);
 		}
 		
 		/**
@@ -362,6 +437,51 @@ package eu.ecb.core.view.panel
 		{
 			_legend = new ECBLegend();
 			_chartBox.addView(_legend);
+		}
+		
+		/**
+		 * @private
+		 */
+		protected function createViewStack():void
+		{
+			_viewStack = new StackPanel(_model, _controller);
+			_viewStack.percentWidth  = 100;
+			_viewStack.percentHeight = 100;
+			_chartBox.addChild(_viewStack);
+		}
+		
+		/**
+		 * @private
+		 */
+		protected function createMetadataPanel():void
+		{
+			_metadataPanel = new MetadataPanel();
+			_metadataPanel.width = _chart.getExplicitOrMeasuredWidth();
+			_viewStack.addView(_metadataPanel);
+		}
+		
+		/**
+		 * @private
+		 */
+		protected function createTable():void
+		{
+			_table = new Table();
+			_table.width = _chart.getExplicitOrMeasuredWidth();
+			_table.createChangeColumn = true;
+			_table.isHidden = true;
+			_viewStack.addView(_table);
+		}
+		
+		/**
+		 * @private
+		 */
+		protected function createChartAndSliderPanel():void
+		{
+			_chartAndSliderPanel = 
+				new SDMXDataPanelAdapter(_model, _controller);
+			_chartAndSliderPanel.percentHeight = 100;
+			_chartAndSliderPanel.percentWidth  = 100;
+			_viewStack.addView(_chartAndSliderPanel);
 		}
 	}
 }
