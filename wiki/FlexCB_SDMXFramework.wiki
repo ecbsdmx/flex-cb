@@ -4,7 +4,7 @@
 
 As mentioned in the [GettingStarted] page, the code is organized into 3 layers:
  # The data access layer, that extracts statistical data and metadata out of an SDMX data source (currently SDMX-ML files).
- # The information model layer, that converts the extract data to the various artefacts defined in the SDMX information model.
+ # The information model layer, that converts the extracted data to the various artifacts defined in the SDMX information model.
  # The MVC layer, that provides views displaying the objects of the SDMX information model in various ways (charts, tables, etc).
 
 This library covers the first two layers, i.e. extracting statistical data and metadata out of an SDMX data source, and storing in memory the extracted data as objects of the SDMX information model. It contains both the actual code as well as the unit tests covering it.
