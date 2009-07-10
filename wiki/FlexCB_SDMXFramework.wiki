@@ -41,7 +41,7 @@ The library contains 4 main packages. The most important ones are the *model* pa
 
 == The event package (org.sdmx.event) ==
 
-The event package contains the events that can be dispatched by the library classes.
+The event package contains the events that can be dispatched by the library classes. For example, events will be dispatched when an SDMX-ML file has been fetched and successfully parsed, and these can be captured by application controllers.
 
 == The model package (org.sdmx.model) ==
 
