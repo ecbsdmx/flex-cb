@@ -4,13 +4,17 @@ package eu.ecb.core.model
 	import flexunit.framework.TestSuite;
 	
 	import org.sdmx.model.v2.base.InternationalString;
+	import org.sdmx.model.v2.base.type.ConceptRole;
 	import org.sdmx.model.v2.reporting.dataset.DataSet;
 	import org.sdmx.model.v2.reporting.dataset.GroupKey;
 	import org.sdmx.model.v2.reporting.dataset.GroupKeysCollection;
+	import org.sdmx.model.v2.reporting.dataset.KeyValue;
+	import org.sdmx.model.v2.reporting.dataset.KeyValuesCollection;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKeysCollection;
 	import org.sdmx.model.v2.structure.category.CategorieSchemesCollection;
 	import org.sdmx.model.v2.structure.category.CategoryScheme;
+	import org.sdmx.model.v2.structure.code.Code;
 	import org.sdmx.model.v2.structure.concept.Concept;
 	import org.sdmx.model.v2.structure.keyfamily.DataflowDefinition;
 	import org.sdmx.model.v2.structure.keyfamily.DataflowsCollection;
@@ -204,9 +208,42 @@ package eu.ecb.core.model
 		
 		public function testDataSets():void
 		{
+			var key:KeyDescriptor = new KeyDescriptor("key");
+			var dimension1:Dimension = 
+				new Dimension("dim1", new Concept("FREQ"));
+			dimension1.conceptRole = ConceptRole.FREQUENCY;	
+			var dimension2:Dimension = 
+				new Dimension("dim2", new Concept("CURRENCY"));
+			var dimension3:Dimension = 
+				new Dimension("dim3", new Concept("CURRENCY_DENOM"));
+			var dimension4:Dimension = 
+				new Dimension("dim4", new Concept("EXR_TYPE"));
+			var dimension5:Dimension = 
+				new Dimension("dim5", new Concept("EXR_SUFFIX"));
+			key.addItem(dimension1);
+			key.addItem(dimension2);
+			key.addItem(dimension3);
+			key.addItem(dimension4);
+			key.addItem(dimension5);	
+			
+			var seriesKeyValues:KeyValuesCollection = new KeyValuesCollection();
+			seriesKeyValues.addItem(new KeyValue(new Code("D"), dimension1));
+			seriesKeyValues.addItem(new KeyValue(new Code("RUB"), dimension2));
+			seriesKeyValues.addItem(new KeyValue(new Code("EUR"), dimension3));
+			seriesKeyValues.addItem(new KeyValue(new Code("S"), dimension4));
+			seriesKeyValues.addItem(new KeyValue(new Code("A"), dimension5));	
+			
+			var seriesKeyValues2:KeyValuesCollection = new KeyValuesCollection();
+			seriesKeyValues2.addItem(new KeyValue(new Code("M"), dimension1));
+			seriesKeyValues2.addItem(new KeyValue(new Code("RUB"), dimension2));
+			seriesKeyValues2.addItem(new KeyValue(new Code("EUR"), dimension3));
+			seriesKeyValues2.addItem(new KeyValue(new Code("S"), dimension4));
+			seriesKeyValues2.addItem(new KeyValue(new Code("A"), dimension5));
+			
 			var keys1:TimeseriesKeysCollection = new TimeseriesKeysCollection();
-			var keyDescriptor:KeyDescriptor = new KeyDescriptor("test");
-			keys1.addItem(new TimeseriesKey(keyDescriptor));
+			var series1:TimeseriesKey = new TimeseriesKey(key);
+			series1.keyValues = seriesKeyValues;
+			keys1.addItem(series1);
 			var groups1:GroupKeysCollection = new GroupKeysCollection();
 			var groupDescriptor:GroupKeyDescriptor = 
 				new GroupKeyDescriptor("Test");
@@ -216,8 +253,9 @@ package eu.ecb.core.model
 			ds1.groupKeys = groups1;
 						
 			var keys2:TimeseriesKeysCollection = new TimeseriesKeysCollection();
-			var keyDescriptor:KeyDescriptor = new KeyDescriptor("test");
-			keys2.addItem(new TimeseriesKey(keyDescriptor));
+			var series2:TimeseriesKey = new TimeseriesKey(key);
+			series2.keyValues = seriesKeyValues2;
+			keys2.addItem(series2);
 			var groups2:GroupKeysCollection = new GroupKeysCollection();
 			var groupDescriptor:GroupKeyDescriptor = 
 				new GroupKeyDescriptor("Test2");
