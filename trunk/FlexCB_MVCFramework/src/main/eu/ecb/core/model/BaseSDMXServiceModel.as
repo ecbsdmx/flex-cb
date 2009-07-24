@@ -223,9 +223,6 @@ package eu.ecb.core.model
 		 */
 		public function get allCategorySchemes():CategorieSchemesCollection
 		{
-			if (null == _allCategorySchemes) {
-				_allCategorySchemes = new CategorieSchemesCollection();
-			}
 			return _allCategorySchemes;
 		}
 		
@@ -265,9 +262,6 @@ package eu.ecb.core.model
 		 */
 		public function get allDataflowDefinitions():DataflowsCollection
 		{
-			if (null == _allDataflowDefinitions) {
-				_allDataflowDefinitions = new DataflowsCollection();
-			}
 			return _allDataflowDefinitions;
 		}
 		
@@ -305,9 +299,6 @@ package eu.ecb.core.model
 		 */
 		public function get allKeyFamilies():KeyFamilies
 		{
-			if (null == _allKeyFamilies) {
-				_allKeyFamilies = new KeyFamilies();
-			}
 			return _allKeyFamilies;
 		}
 		
