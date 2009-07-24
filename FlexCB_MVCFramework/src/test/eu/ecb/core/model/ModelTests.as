@@ -37,6 +37,7 @@ package eu.ecb.core.model
 	{
 		public static function suite():TestSuite {
 			var suite:TestSuite = new TestSuite();
+			suite.addTest(BaseSDMXServiceModelTest.suite());
  			suite.addTest(SDMXDataModelTest.suite());
  			return suite;
 		}
