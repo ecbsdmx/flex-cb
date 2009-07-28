@@ -79,10 +79,11 @@ package eu.ecb.core.util.formatter
 				var number:Number = value as Number;
 				var formattedValue:String = super.format(value);
 				if (number < 1 && number > 0 && Number(formattedValue) != 0 && 
-					formattedValue.substr(0, 2) != "0.") {
+					formattedValue.substr(0, 2) != "0" + decimalSeparatorTo) {
 	            	formattedValue = "0" + formattedValue;
 			    } else if (number < 0 && number > -1 && 
-			    	formattedValue.substr(1, 2) != "0.") {
+			    	formattedValue.substr(1, 2) != "0" + decimalSeparatorTo &&
+			    	0 != Number(formattedValue)) {
 		            formattedValue = formattedValue.substr(0, 1) + "0" + 
 		            	formattedValue.substr(1, formattedValue.length - 1);
 		        }
