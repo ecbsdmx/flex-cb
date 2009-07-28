@@ -85,10 +85,19 @@ package eu.ecb.core.view.summary
 			_dateFormatter = new SDMXDateFormatter();
 			_numberFormatter = new ExtendedNumberFormatter();
 			_numberFormatter.forceSigned = true;
+			_numberFormatter.thousandsSeparatorTo = 
+				resourceManager.getString("flex_cb_mvc_lang", 
+				"thousands_separator");
+			_numberFormatter.decimalSeparatorTo = 
+				resourceManager.getString("flex_cb_mvc_lang", 
+				"decimal_separator");	
 			_percentFormatter = new ExtendedNumberFormatter();
 			_percentFormatter.forceSigned = true;
 			_percentFormatter.precision = 1;
 			_percentFormatter.forceSigned = true;
+			_percentFormatter.decimalSeparatorTo = 
+				resourceManager.getString("flex_cb_mvc_lang", 
+				"decimal_separator");
 			styleName = "textBox";
 			_isPercentage = false;
 			_showChange = true;
@@ -195,9 +204,11 @@ package eu.ecb.core.view.summary
 		    				obs2.observationValue.indexOf(".") + 1, 
 		    				obs2.observationValue.length).length : 0;				
 				if (_showChange) {	
-					_changeText.text = resourceManager.getString("flex_cb_mvc_lang", "ChartSummaryBox_change_from") + " " + 
-						_dateFormatter.format(obs1.timeValue) 
-						+ " " +resourceManager.getString("flex_cb_mvc_lang", "ChartSummaryBox_to") + " " 
+					_changeText.text = resourceManager.getString(
+						"flex_cb_mvc_lang", "ChartSummaryBox_change_from") + " " 
+						+ _dateFormatter.format(obs1.timeValue) 
+						+ " " + resourceManager.getString("flex_cb_mvc_lang", 
+						"ChartSummaryBox_to") + " " 
 						+ _dateFormatter.format(obs2.timeValue) + " ";
 			    	if (Number(obs2.observationValue) > 
 	             		Number(obs1.observationValue)) {
@@ -213,14 +224,17 @@ package eu.ecb.core.view.summary
 	           				Number(obs2.observationValue) - 
 	           				Number(obs1.observationValue));
 	           		if (_isPercentage) {
-		           		_changeValue.text = _changeValue.text + "%";
+		           		_changeValue.text = _changeValue.text + 
+		           			resourceManager.getString("flex_cb_mvc_lang", 
+							"percentage_sign");
 	           		} else {		
 		           		_changeValue.text = _changeValue.text +		
 		             		" (" + _percentFormatter.format(
 		             			MathHelper.calculatePercentOfChange(
 		             				Number(obs1.observationValue), 
 		             				Number(obs2.observationValue))) + 
-		             		"%)";
+		             		resourceManager.getString("flex_cb_mvc_lang", 
+							"percentage_sign");
 	           		}
 	           		_changeBox.visible = true;
 				} else {
@@ -244,20 +258,26 @@ package eu.ecb.core.view.summary
 		    		total = total + Number(currentObs.observationValue);
 		    	}
 		    	_numberFormatter.forceSigned = false;
-		    	_minMaxText.htmlText = resourceManager.getString("flex_cb_mvc_lang", "ChartSummaryBox_minimum") + " (" + 
+		    	_minMaxText.htmlText = resourceManager.getString(
+		    		"flex_cb_mvc_lang", "ChartSummaryBox_minimum") + " (" + 
 		    		_dateFormatter.format(minObs.timeValue) + "): " + 
 		    		"<font color='#000000'>" + 
-		    		minObs.observationValue;
+		    		_numberFormatter.format(Number(minObs.observationValue));
 		    	if (_isPercentage) {
-		    		_minMaxText.htmlText = _minMaxText.htmlText + "%"; 
+		    		_minMaxText.htmlText = _minMaxText.htmlText + 
+		    			resourceManager.getString("flex_cb_mvc_lang", 
+		    			"percentage_sign"); 
 		    	}	
 		    	_minMaxText.htmlText = _minMaxText.htmlText +
-		    		"</font> - "+resourceManager.getString("flex_cb_mvc_lang", "ChartSummaryBox_maximum") +" (" +
+		    		"</font> - "+ resourceManager.getString("flex_cb_mvc_lang", 
+		    		"ChartSummaryBox_maximum") +" (" +
 		    		_dateFormatter.format(maxObs.timeValue) + "): " + 
 		    		"<font color='#000000'>" + 
-		    		maxObs.observationValue;
+		    		_numberFormatter.format(Number(maxObs.observationValue));
 		    	if (_isPercentage) {
-		    		_minMaxText.htmlText = _minMaxText.htmlText + "%"; 
+		    		_minMaxText.htmlText = _minMaxText.htmlText + 
+		    			resourceManager.getString("flex_cb_mvc_lang", 
+						"percentage_sign");
 		    	}	
 		    	if (_showAverage) { 
 			    	calculateAverage(total);		
@@ -273,11 +293,14 @@ package eu.ecb.core.view.summary
 		protected function calculateAverage(total:Number):void
 		{
 			_minMaxText.htmlText = _minMaxText.htmlText + "</font> - " + 
-	    		resourceManager.getString("flex_cb_mvc_lang", "ChartSummaryBox_average") + ": " + "<font color='#000000'>" + 
+	    		resourceManager.getString("flex_cb_mvc_lang", 
+	    		"ChartSummaryBox_average") + ": " + "<font color='#000000'>" + 
 	    		_numberFormatter.format(
 	    			total / _filteredReferenceSeries.timePeriods.length);
 	    	if (_isPercentage) {
-	    		_minMaxText.htmlText = _minMaxText.htmlText + "%"; 
+	    		_minMaxText.htmlText = _minMaxText.htmlText + 
+	    			resourceManager.getString("flex_cb_mvc_lang", 
+						"percentage_sign");
 	    	}
 		}
 		
