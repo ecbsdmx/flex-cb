@@ -82,6 +82,7 @@ package eu.ecb.core.view.chart
 	 * 
 	 * @author Xavier Sosnovsky
 	 */ 
+	[ResourceBundle("flex_cb_mvc_lang")] 
 	public class ECBLineChart extends ECBChart {
 		
 		/*==============================Fields================================*/
@@ -118,13 +119,13 @@ package eu.ecb.core.view.chart
 		 */ 
       	protected var _dateFormatter:DateFormatter;
       	
-      	private var _isoDateFormatter:DateFormatter;
+      	protected var _isoDateFormatter:DateFormatter;
       	
-      	private var _percentFormatter:ExtendedNumberFormatter;
+      	protected var _percentFormatter:ExtendedNumberFormatter;
       	
-      	private var _numberFormatter:ExtendedNumberFormatter;
+      	protected var _numberFormatter:ExtendedNumberFormatter;
       	
-      	private var _observationValueFormatter:IObservationFormatter;
+      	protected var _observationValueFormatter:IObservationFormatter;
       	
       	private var _isDragging:Boolean;
       	
@@ -180,20 +181,23 @@ package eu.ecb.core.view.chart
 			_percentFormatter.forceSigned = true;
 			_percentFormatter.precision = 1;
 			_percentFormatter.forceSigned = true;
+			_percentFormatter.decimalSeparatorTo = 
+				resourceManager.getString("flex_cb_mvc_lang", 
+				"decimal_separator");
 			_numberFormatter = new ExtendedNumberFormatter();
 			_numberFormatter.forceSigned = true;
+			_numberFormatter.thousandsSeparatorTo = 
+				resourceManager.getString("flex_cb_mvc_lang", 
+				"thousands_separator");
+			_numberFormatter.decimalSeparatorTo = 
+				resourceManager.getString("flex_cb_mvc_lang", 
+				"decimal_separator");	
 			_dateAxisFormatter = new SDMXDateFormatter();
 			_dateAxisFormatter.isShortFormat = true;
 			_referenceSeriesFrequency = "M";
 			_isFirst = true;
 			_showECBToolTip = true;
 			_baseAtZero = true;
-		}
-		
-		/*=========================Public methods=============================*/
-		
-		public function get chart():LineChart {
-			return _chart;
 		}
 		
 		/*========================Protected methods===========================*/
@@ -289,6 +293,13 @@ package eu.ecb.core.view.chart
 				_indexColor = new Array;
 			}
 			_indexColor = index;
+		}
+		
+		/**
+		 * The AS3 line chart used by this class 
+		 */
+		public function get chart():LineChart {
+			return _chart;
 		}
 		
 		/*========================Protected methods===========================*/
@@ -499,7 +510,8 @@ package eu.ecb.core.view.chart
 				if (_referenceSeriesFrequency == "M" || 
 					_referenceSeriesFrequency == "Q") {
 		    		_isoDateFormatter.formatString = "YYYY-MM";
-		    		_dateFormatter.formatString = "MMMM YYYY";
+		    		_dateFormatter.formatString = resourceManager.getString(
+		    			"flex_cb_mvc_lang", "monthly_date_format_long");
 		    	} else if (_referenceSeriesFrequency == "B" || 
 		    		_referenceSeriesFrequency == "D") {
 		    		_isoDateFormatter.formatString = "YYYY-MM-DD";
@@ -550,10 +562,20 @@ package eu.ecb.core.view.chart
 				dataTip = dataTip + observationValueFormatter.format(
 						obs.observationValue);		
 			} else {
-				dataTip = dataTip + obs.observationValue;
+				_numberFormatter.precision = 
+					obs.observationValue.indexOf(".") > -1 ? 
+			    		obs.observationValue.substring(
+		    				obs.observationValue.indexOf(".") + 1, 
+		    				obs.observationValue.length).length : 0;	
+		    	_numberFormatter.forceSigned = false;			
+				dataTip = dataTip + _numberFormatter.format(Number(
+					obs.observationValue));
+				_numberFormatter.forceSigned = true;	
 			}
 			if (_isPercentage) {
-				dataTip = dataTip + "%";
+				dataTip = dataTip + 
+					resourceManager.getString("flex_cb_mvc_lang", 
+					"percentage_sign");
 			}
 			dataTip = dataTip + "</font>";
 			return dataTip;		
@@ -695,10 +717,19 @@ package eu.ecb.core.view.chart
 						_boxText = _boxText + observationValueFormatter.format(
 							lastObs.observationValue);		
 					} else {
-						_boxText = _boxText + lastObs.observationValue;
+						_numberFormatter.precision = 
+							lastObs.observationValue.indexOf(".") > -1 ? 
+			    				lastObs.observationValue.substring(
+		    					lastObs.observationValue.indexOf(".") + 1, 
+		    					lastObs.observationValue.length).length : 0;
+		    			_numberFormatter.forceSigned = false;			
+						_boxText = _boxText + _numberFormatter.format(
+							Number(lastObs.observationValue));
+						_numberFormatter.forceSigned = true;	
 					}
 					if (_isPercentage) {
-						_boxText = _boxText + "%";
+						_boxText = _boxText + resourceManager.getString(
+							"flex_cb_mvc_lang", "percentage_sign");
 					}
 					_boxText = _boxText + "</font>";
 					var position:uint = 
@@ -730,14 +761,16 @@ package eu.ecb.core.view.chart
 	             				Number(lastObs.observationValue) - 
 	             				Number(previousObs.observationValue));
 	             		if (_isPercentage) {		
-	             			_boxText = _boxText + "%";
+	             			_boxText = _boxText + resourceManager.getString(
+	             				"flex_cb_mvc_lang", "percentage_sign");
 	             		} else {
 	             			_boxText = _boxText + " (" + 
 	             				_percentFormatter.format(
 	             				MathHelper.calculatePercentOfChange(
 	             					Number(previousObs.observationValue), 
 	             					Number(lastObs.observationValue))) 
-		             			+ "%)";	
+		             			+ resourceManager.getString("flex_cb_mvc_lang", 
+								"percentage_sign") + ")";	
 	             		}
 	             		_boxText = _boxText + "</font>";
 	             		color = null;
