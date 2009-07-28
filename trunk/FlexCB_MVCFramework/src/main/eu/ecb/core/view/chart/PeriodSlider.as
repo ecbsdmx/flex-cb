@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -199,7 +197,6 @@ package eu.ecb.core.view.chart
 				
 				_leftCanvasBox = new Canvas();
 				_leftCanvasBox.height = _periodChart.height - 2;
-				_leftCanvasBox.styleName = "ecbPeriodCanvasLeftBox";
 				_overlayCanvas.addChild(_leftCanvasBox);
 				
 				_middleCanvasBox = new Canvas();
@@ -216,7 +213,6 @@ package eu.ecb.core.view.chart
 				
 				_rightCanvasBox = new Canvas();
 				_rightCanvasBox.height = _periodChart.height - 2;
-				_rightCanvasBox.styleName = "ecbPeriodCanvasRightBox";
 				_overlayCanvas.addChild(_rightCanvasBox);
 				
 				_periodChart.annotationElements = [_overlayCanvas];
@@ -242,7 +238,7 @@ package eu.ecb.core.view.chart
 				_slider.height = 20;
 				_slider.percentWidth = 100;
 				_slider.allowTrackClick = true;
-				_slider.allowThumbOverlap = false;
+				_slider.allowThumbOverlap = true;
 				_slider.liveDragging = true;
 				_slider.showDataTip = false;
 				_slider.thumbCount = 2;
@@ -326,7 +322,7 @@ package eu.ecb.core.view.chart
 					.length - 1 - _rightIndex)/ratio);
 				_middleCanvasBox.width = Math.round(_overlayCanvas.width - 
 					_leftCanvasBox.width - _rightCanvasBox.width) - (2 * 
-					Number(_overlayCanvas.getStyle("dividerThickness"))) - 15;
+					Number(_overlayCanvas.getStyle("dividerThickness")));
 				_slider.values = [_leftIndex, _rightIndex];				
 			}
 		}
@@ -362,14 +358,24 @@ package eu.ecb.core.view.chart
 						_referenceSeries.timePeriods.length;
 				var logicalDelta:Number = 
 					Math.round(physicalDelta / physicalSpacing);
+				if (_rightIndex < _referenceSeries.timePeriods.length - 1 &&
+					logicalDelta + _rightIndex > 
+						_referenceSeries.timePeriods.length - 1) {
+					logicalDelta = _referenceSeries.timePeriods.length - 1 - 
+						_rightIndex;		
+				}		
 				if (Math.abs(logicalDelta) >= 1 && 
 					logicalDelta + _leftIndex >= 0 &&
 					logicalDelta + _rightIndex <= 
-						_referenceSeries.timePeriods.length - 1) {	
+						_referenceSeries.timePeriods.length - 1) {
+					_mouseXRef += logicalDelta * physicalSpacing;			
 					dispatchEvent(new DataEvent(ECBChartEvents.CHART_DRAGGED, 
 						false, false, String(logicalDelta)));
-					_mouseXRef += logicalDelta * physicalSpacing;		
-				}		
+				} else if (_leftIndex > 0 && logicalDelta + _leftIndex < 0) {
+					_mouseXRef += 1 * physicalSpacing;			
+					dispatchEvent(new DataEvent(ECBChartEvents.CHART_DRAGGED, 
+						false, false, String(logicalDelta)));
+				}	
 			}
 		}        
 		
