@@ -73,7 +73,9 @@ package eu.ecb.core.util.formatter
 						(isShortFormat) ? "D MMM YYYY" : "D MMMM YYYY";				
 					break;
 				case "M":
-					formatString = (isShortFormat) ? "MMM YYYY" : "MMMM YYYY";				
+					formatString = (isShortFormat) ? "MMM YYYY" : 
+						resourceManager.getString("flex_cb_mvc_lang", 
+						"monthly_date_format_long");				
 					break;
 				case "Q":
 					break; //Will depend on the value passed (see format method)	
