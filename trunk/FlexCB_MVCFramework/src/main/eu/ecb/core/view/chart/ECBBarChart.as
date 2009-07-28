@@ -28,21 +28,17 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view.chart
 {
-	import mx.containers.HBox;
-	import mx.charts.ColumnChart;
-	import mx.charts.chartClasses.CartesianChart;
-	import mx.charts.BarChart;
-	import mx.charts.LinearAxis;
 	import mx.charts.AxisRenderer;
-	import mx.graphics.Stroke;
+	import mx.charts.BarChart;
 	import mx.charts.CategoryAxis;
-	import mx.charts.series.ColumnSeries;
-	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
-	import eu.ecb.core.util.helper.SeriesColors;
-	import org.sdmx.model.v2.reporting.dataset.KeyValue;
+	import mx.charts.ColumnChart;
 	import mx.charts.HitData;
-	import mx.charts.series.items.ColumnSeriesItem;
+	import mx.charts.LinearAxis;
+	import mx.charts.chartClasses.CartesianChart;
+	import mx.charts.chartClasses.IAxis;
 	import mx.charts.events.ChartItemEvent;
+	import mx.charts.series.items.ColumnSeriesItem;
+	import mx.graphics.Stroke;
 
 	/**
 	 * Event triggered when an item is double-clicked on the chart.
@@ -116,6 +112,7 @@ package eu.ecb.core.view.chart
 				
 				var verticalAxis:LinearAxis = new LinearAxis();
 				verticalAxis.baseAtZero = true;
+				verticalAxis.labelFunction = formatYAxisLabel;
 				_chart.verticalAxis = verticalAxis;
 				
 				var horizontalAxis:CategoryAxis = new CategoryAxis();
@@ -145,6 +142,11 @@ package eu.ecb.core.view.chart
 		protected function formatDataTip(data:HitData):String 
 		{
     		return String(ColumnSeriesItem(data.chartItem).yValue);
+		}
+		
+		protected function formatYAxisLabel(labelValue:Object, 
+			previousValue:Object, axis:IAxis):String {
+	        return String(labelValue);
 		}
 	}
 }
