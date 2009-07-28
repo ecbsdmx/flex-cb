@@ -28,18 +28,21 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.controller
 {
-	import flexunit.framework.TestCase;
-	import flexunit.framework.TestSuite;
-	import mx.core.UIComponent;
-	import mx.charts.LineChart;
 	import eu.ecb.core.model.IModel;
 	import eu.ecb.core.model.SDMXDataModel;
+	
+	import flexunit.framework.TestCase;
+	import flexunit.framework.TestSuite;
 
 	/**
 	 *	@private 
 	 */
 	public class ControllerAdapterTest extends TestCase
 	{
+		protected var _controller:IController;
+		
+		protected var _model:IModel;
+		
 		public function ControllerAdapterTest(methodName:String = null)
 		{
 			super(methodName);
@@ -50,11 +53,20 @@ package eu.ecb.core.controller
 			return new TestSuite(ControllerAdapterTest);
 		}
 		
+		override public function setUp():void {
+			super.setUp();
+			_controller = createController();
+			assertNotNull("Problem creating controller", _controller);
+		}
+		
+		public function createController():IController {
+			_model = new SDMXDataModel();
+			return new ControllerAdapter(_model);
+		}
+		
 		public function testSetModel():void {
-			var model:IModel = new SDMXDataModel();
-			var controller:IController = 
-				new ControllerAdapter(model);
-			assertEquals("The models should be equal", model, controller.model);
+			assertEquals("The models should be equal", 
+				_model, _controller.model);
 		}
 	}
 }
