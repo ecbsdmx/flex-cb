@@ -102,5 +102,14 @@ package eu.ecb.core.util.formatter
 				fail("The formatter should accept numbers only");
 			} catch (error:ArgumentError) {}	
 		}
+		
+		public function testSmallNegativeNumber():void {
+			var formatter:ExtendedNumberFormatter = 
+				new ExtendedNumberFormatter();
+			formatter.precision = 1;
+			var number:Number = -0.02;
+			var result:String = formatter.format(number);
+			assertEquals("The result should be '0.0'", "0.0", result);
+		}
 	}
 }
