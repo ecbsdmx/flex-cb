@@ -416,6 +416,9 @@ PL, SK, BG, RO, NZ, DZ, AR, BR, HR, IN, ID, IL, MY, MX, MA, PH, RU, ZA, TW, TH, 
  SI, AU, CA, CN, DK, HK, JP, NO, SG, KR, SE, CH, GB, US, CY, CZ, EE, HU, LV, LT, MT, PL, SK, BG, RO, NZ, DZ, AR, BR, HR, IN, ID, IL, MY, MX, MA, PH, RU, ZA,
 TW, TH, TR, IS, CL, VE)</Description>
 			</Code>
+			<Code value="Z59">
+				<Description>Euro area-16 countries vis-à-vis the EER-21 group of trading partners (AU, CA, DK, HK, JP, NO, SG, KR, SE, CH, GB, US, BG, CZ, EE, LV, LT, HU, PL, RO and CN)</Description>
+			</Code>
 			<Code value="ZAR">
 				<Description xml:lang="en">South African Rand</Description>
 			</Code>

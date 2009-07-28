@@ -234,6 +234,14 @@ package eu.ecb.core.controller
 		}
 		
 		/**
+		 * @private
+		 */ 
+		public function get dataFile():URLRequest
+		{
+			return _dataURL;
+		}
+		
+		/**
 		 * The source to be used for the provider of structural metadata.
 		 *  
 		 * @param structureFile
@@ -248,6 +256,14 @@ package eu.ecb.core.controller
 		}
 		
 		/**
+		 * @private
+		 */
+		public function get structureFile():URLRequest
+		{
+			return _structureURL;
+		}
+		
+		/**
 		 * Whether or not observation-level attributes should be fetched. This
 		 * can be set to false for performance reasons.
 		 *  
@@ -259,6 +275,14 @@ package eu.ecb.core.controller
 		}
 		
 		/**
+		 * @private
+		 */
+		public function get disableObservationAttribute():Boolean
+		{
+			return _disableObservationAttribute;
+		}
+		
+		/**
 		 * The optimisation level defines which optimisation settings will be 
 		 * applied when reading data.
 		 * 
@@ -267,6 +291,14 @@ package eu.ecb.core.controller
 		public function set optimisationLevel(level:uint):void
 		{
 			_optimisationLevel = level;
+		}
+		
+		/**
+		 * @private
+		 */
+		public function get optimisationLevel():uint
+		{
+			return _optimisationLevel;
 		}
 		
 		/*==========================Public methods============================*/
