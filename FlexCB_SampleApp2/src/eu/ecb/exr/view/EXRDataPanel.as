@@ -64,7 +64,7 @@ package eu.ecb.exr.view
 		}
 		
 		/*========================Protected methods===========================*/
-				
+		
 		override protected function createChildren():void 
 		{
 			if (null == _localeButton) {
@@ -131,6 +131,7 @@ package eu.ecb.exr.view
 		{
 			super.commitFilteredDataSet();
 			_filtersPanel.width = _chart.getExplicitOrMeasuredWidth();
+			_localeButton.width = _chart.getExplicitOrMeasuredWidth();
 		}
 		
 		private function handleCurrencySwitched(event:Event):void
