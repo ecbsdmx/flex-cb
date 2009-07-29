@@ -47,7 +47,7 @@
 				var view:EXRDataPanel = new EXRDataPanel(model, controller, 
 					true);
 				view.width = 700;
-				view.height = 620;
+				view.height = 700;
 				addChild(view);
 				controller.loadData();
 			}
