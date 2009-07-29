@@ -5,7 +5,7 @@
 This page described how to get started with the FlexCB project and how to set up your development environment. To follow this tutorial, you will need:
   * A working installation of Adobe Flex Builder 3 Professional Edition
   * A working installation of a Subversion plugin for Adobe Flex Builder 3
-  * A working copy of FlexUnit
+  * A working copy of !FlexUnit
 
 The source code for the FlexCB project is organized into various logical components. We recommend you set up independent projects for each of these components, mainly to save compilation time when making changes.
 
@@ -22,12 +22,12 @@ For additional information regarding SDMX, please see http://www.sdmx.org. A des
 
 The code is organized into the following components:
 
-== 1. SDMX-ML Readers Package ==
-The SDMX-ML Readers package reads the data structure definitions and the data files, in the SDMX-ML Structure and Compact formats respectively. The readers will parse SDMX-ML data structure definitions and extract code lists, concept schemes, organization schemes, data flows and key families. They will also parse SDMX-ML data files and extract data sets, groups, series and observations. They will use the information available in the data structure definition (the dimensions, the attributes, the measures, etc) to interpret the statistical data. The readers will then translate the extracted data into objects of the SDMX information model (see next section).
-== 2. SDMX Information Model Package ==
-The SDMX Information Model Package represents the classes defined in the SDMX information model (code lists, concepts, dimensions, data sets, series, observations, etc) as objects that can be stored in memory. These are the objects that can then be visualized, using the views defined in the third package (see below).
-== 3. FlexCB MVC Package ==
-The FlexCB MVC Package provides views displaying the objects of the SDMX information model in various ways (charts, tables, metadata panels, etc). It also supports the possibility to combine various views on a screen.
+== 1. The data access layer ==
+The data access layer contains readers that extract statistical data and metadata out of an SDMX data source (currently SDMX-ML files). The readers will parse SDMX data structure definitions and extract code lists, concept schemes, organization schemes, data flows and key families. They will also parse SDMX data files and extract data sets, groups, series and observations. They will use the information available in the data structure definition (the dimensions, the attributes, the measures, etc) to interpret the statistical data. The readers will then translate the extracted data into objects of the SDMX information model (see next section).
+== 2. The SDMX Information Model layer ==
+The SDMX Information Model layer represents the classes defined in the SDMX information model (code lists, concepts, dimensions, data sets, series, observations, etc) as objects that can be stored in memory. These are the objects that can then be visualized, using the views defined in the third package (see below).
+== 3. The MVC layer==
+The MVC layer provides views displaying the objects of the SDMX information model in various ways (charts, tables, metadata panels, etc). It also supports the possibility to combine various views on a screen.
 It follows the Model-View-Controller pattern and implements a few other design patterns (Command, Abstract Factory, Singleton, Observer, etc.).
 
 = Download of the source code =
