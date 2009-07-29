@@ -13,9 +13,9 @@ Since it is sometime difficult to figure out how to checkout code and commit cha
 2) Ask an administrator (Xavier!) to add you to the project.
 
 
-== Option 1: Subclipse ==
+== Option 1: Subclipse or Subversive (both SVN plugin for Eclipse) ==
 
-3) Install Subclipse (http://subclipse.tigris.org/), the Subversion plugin for Eclipse (www.eclipse.org).
+3) Install Subclipse (http://subclipse.tigris.org/) or Subversive (http://www.eclipse.org/subversive/downloads.php), the Subversion plugins for Eclipse (www.eclipse.org). In case you opt for Subversive, make sure you also install the Connectors.
 
 4) In Eclipse, select _Windows_ | _Preferences_. Then, on the left, go to _General_ | _Network Connections_. Enter your proxy configuration than click _OK_.
 
