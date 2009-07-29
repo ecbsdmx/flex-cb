@@ -34,7 +34,7 @@ It follows the Model-View-Controller pattern and implements a few other design p
 As mentioned in the introduction, we will organize the source code into various libraries and projects.
 
 == 1. The SDMX library==
-This library will contain the SDMX-ML reader package as well as the SDMX information model package.
+This library will contain the data access layer as well as the SDMX information model layer.
   # Open Flex Builder and create a new project (File > New > Other > SVN > New project from SVN).
   # On the next screen, select the flex-cb repository on Google code.
   # On the next screen, browse the repository, select the trunk/FlexCB_SDMXFramework folder and click on Finish.
@@ -54,7 +54,7 @@ This library will contain the FlexCB MVC package.
   # On the next screen, select "Check out as a project configured using the New Project Wizard".
   # On the next screen, select Flex Builder > Flex Library Project. We named it "FlexCB_MVCFramework".
   # On the next screen, add the FlexUnit swc file and the FlexCB_SDMXFramework library to the Library path.
-  # Add src/main and src/test to the Source path of the library project (Project > Properties > Flex Library Build Path > Source path > Add folder). 
+  # Add src/main, src/test and locale/{locale} to the Source path of the library project (Project > Properties > Flex Library Build Path > Source path > Add folder). 
   # Add all the classes, except the asset directory (below src/main/eu/ecb/assets), to the library project classes (Project > Properties > Flex Library Build Path > Classes) and make sure that the "Main source folder" field is empty.
   # Add the asset directory to the library assets (Project > Properties > Flex Library Build Path > Assets).
   
@@ -65,9 +65,9 @@ We should now have a working copy of the FlexCB MVC library.
 Three sample applications are provided with the FlexCB project. We will now set up one of them.
   # Open Flex Builder and create a new project (File > New > Other > SVN > New project from SVN).
   # On the next screen, select the flex-cb repository on Google code.
-  # On the next screen, browse the repository, select the trunk/FlexCB_SampleApp2 folder and click on Finish.
+  # On the next screen, browse the repository, select the trunk/FlexCB_SampleApp1 folder and click on Finish.
   # On the next screen, select "Check out as a project configured using the New Project Wizard".
-  # On the next screen, select Flex Builder > Flex Project. We named it "FlexCB_SampleApp2".
+  # On the next screen, select Flex Builder > Flex Project. We named it "FlexCB_SampleApp1".
   # On the next screen, add the FlexCB_MVCFramework library to the Library path.
   # Run the application from Flex Builder.
   
