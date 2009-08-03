@@ -1,0 +1,45 @@
+#summary A description of the FlexCB_MVCFramework library
+
+= Introduction =
+
+As mentioned in the GettingStarted page, the code is organized into 3 layers:
+
+ # The data access layer, that extracts statistical data and metadata out of an SDMX data source (currently SDMX-ML files).
+ # The information model layer, that converts the extracted data to the various artifacts defined in the SDMX information model.
+ # The MVC layer, that provides views displaying the objects of the SDMX information model in various ways (charts, tables, etc). 
+
+This library covers the third layer, i.e. displaying the data in various ways. This library follows the Model-View-Controller (MVC) design pattern. 
+
+= The main components =
+
+The FlexCB code is organized around the following concepts:
+ # SDMX service: An SDMX service is an !ActionScript component that offers a set of SDMX-related services such as the possibility to retrieve and display statistical data and metadata.
+ # SDMX data provider: An !ActionScript component that, upon request from an SDMX service, extracts statistical data and metadata out of an SDMX data source (e.g.: SDMX-ML files published on a website, SDMX-compliant web service, etc).
+ # SDMX data source: A repository containing SDMX data and metadata.
+
+A FlexCB application is typically made of an SDMX service and an SDMX data provider and is used to connect to an SDMX data source of your choice. The SDMX data provider is covered by the FlexCB_SDMXFramework library, while the FlexCB_MVCFramework covers the SDMX service functionality. As mentioned above, this library follows the MVC design patterns and therefore features the following components:
+ # The controllers offer a standard set of operations that an SDMX service will support. It will instruct an SDMX data provider to query an SDMX data source and it will update the model accordingly.
+ # The models store in memory the statistical data and metadata retrieved from the SDMX data source. It can also store items needed by the views.
+ # The views display the statistical data and metadata stored in the model in various ways (charts, tables, etc). Quite often, one of these views will play the role of a mediator and will centralize all communications between the controller and the various views. In this library, the panels play the role of mediators. 
+
+= The packages =
+
+== The controller package (eu.ecb.core.controller) ==
+
+This package contains the controllers (see above). The BaseSDMXServiceController offers a basic set of operations to be supported by SDMX services, such as the possibility to fetch data structure definitions or SDMX data in various formats. The SDMXDataController extends the BaseSDMXServiceController and adds operations which are triggered by views, such as changing the reference period.
+
+== The event package (eu.ecb.core.event) ==
+
+The event package contains the events that can be dispatched by the library classes. For example, a !ProgressEventMessage will be dispatched when operations are being performed. 
+
+== The model package (eu.ecb.core.model) ==
+
+The models store in memory the statistical data and metadata retrieved from the SDMX data source and it can also store items needed by the views. The BaseSDMXServiceModel offers the accessors needed to store the data requested by the BaseSDMXServiceController, such as category schemes, key families and data sets. For each of these accessors, there will be one accessor containing all artefacts of that type extracted since the application started. For example, the accessor dataSet will contain the latest data set that has been extracted, while the accessor allDataSets will contain all data sets extracted since the application started up. The SDMXDataModel extends the BaseSDMXServiceModel and adds information needed by the views, such as the frequency of the selected data or the periods covered by the data set.
+
+== The util package (eu.ecb.core.util) ==
+
+The util package contains various utility classes such as formatters, validators or various helper components (for strings, colors). 
+
+== The view package (eu.ecb.core.view) ==
+
+The view package contains the components which are displayed on the screen. Some of these components will display the statistical data and metadata in various ways, such as line charts, bar charts, data grids and metadata panels. Other components will play the role of filters, allowing to granularly select what needs to be displayed on the screen (e.g.: period selector, dimensions-based selector, etc). Other components will offer summaries about the data being displayed (minimum, maximum and average values, etc). The panel components play the role of mediators and follow the composite pattern. One of their main tasks is to centralize all communications between the various views and the controller.
