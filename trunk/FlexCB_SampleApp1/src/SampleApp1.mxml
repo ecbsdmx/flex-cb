@@ -43,15 +43,20 @@
 			import eu.ecb.core.controller.SDMXDataController;
 
 			private function setup():void {
+				var dataFile:String = (Application.application.parameters.
+					hasOwnProperty("dataFile")) ? Application.application.
+					parameters.dataFile : "data/inflation.xml.zlib";
+				var dsdFile:String = (Application.application.parameters.
+					hasOwnProperty("dsdFile")) ? Application.application.
+					parameters.dsdFile : "data/ecb_icp1.xml";	
 				var model:SDMXDataModel = new SDMXDataModel();
 				var controller:SDMXDataController =
 					new SDMXDataController(model,
-						new URLRequest("data/inflation.xml.zlib"),
-						new URLRequest("data/ecb_icp1.xml"), false);
+					new URLRequest(dataFile), new URLRequest(dsdFile), false);
 				var view:SDMXDataPanelAdapter = new BasicDataPanel(model, 
 					controller, true);
 				view.width = 700;
-				view.height = 590;
+				view.height = 630;
 				addChild(view);
 				controller.fetchData();		
 			}
