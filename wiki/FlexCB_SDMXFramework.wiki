@@ -84,3 +84,33 @@ The xml package contains the data providers that will return data and metadata o
 == The util package (org.sdmx.util) ==
 
 The util package contains various utility classes related to date handling, data downloads over HTTP and input validation.
+
+= Examples =
+
+The following shows how a data structure definition file can be processed. The code is not sequential: as the process is event-based, various methods should handle the different events, but the important parts have been summarized below. For examples of production code performing a similar activity, please refer to the eu.ecb.core.controller.BaseSDMXServiceController class.
+
+{{{
+// Intantiates the factory that controls the access to the classes that will connect to an SDMX data source
+var factory:ISDMXDaoFactory = new SDMXMLDaoFactory();
+
+// Add the method that will handle the event indicating that the factory is ready to be used
+factory.addEventListener(BaseSDMXDaoFactory.INIT_READY, handleStructureFactoryReady);
+
+// Pass the SDMX data source to the factory
+factory.sourceURL = "data/dsd.xml";
+
+// Once the factory is ready to be used, we can start the work to talk to the data source.
+// First, we need to get the class that will perform the query against the SDMX data source
+var provider:IMaintainableArtefactProvider = factory.getKeyFamilyDAO();
+
+// Add the method that will handle the event indicating that the desired key family has been retrieved from the data source.
+provider.addEventListener(BaseSDMXDaoFactory.KEY_FAMILIES_EVENT, handleKeyFamily);
+
+// Retrieves from the data source the version "2.0" of the data structure definition "ECB_EXR1" maintained by the ECB.
+provider.getMaintainableArtefact("ECB_EXR1", "ECB", "2.0");
+
+// In the handleKeyFamily method, an SDMXDataEvent will be received, containing the key family mentioned above. 
+// The retrieved data could now, for instance, be passed to the application model
+var model:ISDMXServiceModel = new BaseSDMXServiceModel();
+model.keyFamilies = event.data as KeyFamilies;
+}}}
