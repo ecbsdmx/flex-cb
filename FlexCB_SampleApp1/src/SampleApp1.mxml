@@ -35,7 +35,6 @@
 	<mx:Style source="src/main/eu/ecb/assets/styles/ecb.css"/>
 	<mx:Script>
 		<![CDATA[
-			import eu.ecb.core.controller.PassiveSDMXDataController;
 			import eu.ecb.core.controller.BaseSDMXServiceController;
 			import eu.ecb.core.model.SDMXDataModel;
 			import eu.ecb.core.view.panel.SDMXDataPanelAdapter;
