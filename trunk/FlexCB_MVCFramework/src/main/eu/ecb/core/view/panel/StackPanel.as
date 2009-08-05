@@ -26,7 +26,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view.panel
 {
-	import eu.ecb.core.controller.PassiveSDMXDataController;
+	import eu.ecb.core.controller.BaseSDMXServiceController;
 	import eu.ecb.core.model.SDMXDataModel;
 	import eu.ecb.core.view.ISDMXServiceView;
 	import eu.ecb.core.view.ISDMXView;
@@ -52,7 +52,7 @@ package eu.ecb.core.view.panel
 		/*===========================Constructor==============================*/
 		 
 		public function StackPanel(model:SDMXDataModel, 
-			controller:PassiveSDMXDataController, direction:String="vertical")
+			controller:BaseSDMXServiceController, direction:String="vertical")
 		{
 			super(model, controller, direction);
 		}

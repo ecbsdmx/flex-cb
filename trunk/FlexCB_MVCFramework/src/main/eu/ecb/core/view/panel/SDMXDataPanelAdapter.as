@@ -26,7 +26,8 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view.panel
 {
-	import eu.ecb.core.controller.PassiveSDMXDataController;
+	import eu.ecb.core.controller.BaseSDMXServiceController;
+	import eu.ecb.core.controller.ISDMXServiceController;
 	import eu.ecb.core.model.SDMXDataModel;
 	import eu.ecb.core.view.ISDMXServiceView;
 	import eu.ecb.core.view.ISDMXView;
@@ -82,12 +83,12 @@ package eu.ecb.core.view.panel
 		/**
 		 * @private
 		 */
-		protected var _controller:PassiveSDMXDataController;
+		protected var _controller:ISDMXServiceController;
 		
 		/*===========================Constructor==============================*/
 		
 		public function SDMXDataPanelAdapter(model:SDMXDataModel, 
-			controller:PassiveSDMXDataController, direction:String = "vertical")
+			controller:ISDMXServiceController, direction:String = "vertical")
 		{
 			super(direction);
 			_model = model;

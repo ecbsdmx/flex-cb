@@ -30,6 +30,7 @@ package eu.ecb.core.controller
 	import eu.ecb.core.model.ISDMXDataModel;
 	
 	import flash.events.Event;
+	import flash.events.DataEvent;
 	import flash.net.URLRequest;
 	
 	import mx.collections.ArrayCollection;
@@ -51,7 +52,7 @@ package eu.ecb.core.controller
 	 * @author Xavier Sosnovsky
 	 * @author Karine Feraboli
 	 */
-	public class SDMXDataController extends PassiveSDMXDataController
+	public class SDMXDataController extends BaseSDMXServiceController
 	{	
 		/*==============================Fields================================*/
 		
@@ -165,6 +166,74 @@ package eu.ecb.core.controller
 					Math.round( (1 /_totalNrOfFiles) * 100) + "%)"));
 				fetchData();
 			}	
+		}
+		
+		/**
+		 * Call this function when a view updates the currently selected period.
+		 * The new period is passed to the model, which will update the list
+		 * of periods and the filtered dataset.
+		 * 
+		 * @param event A DataEvent containing the new period (e.g.: "1y")
+		 * 
+		 * @see eu.ecb.core.model.SDMXDataModel#periods
+		 * @see eu.ecb.core.model.SDMXDataModel#filteredDataSet
+		 * @see eu.ecb.core.view.filter.PeriodZoomBox
+		 */
+		public function handlePeriodChange(event:DataEvent):void 
+		{
+			event.stopImmediatePropagation();
+			(model as ISDMXDataModel).handlePeriodChange(event);
+		}
+		
+		/**
+		 * Call this function when a chart is being dragged.
+		 * 
+		 * @param event A DataEvent containing an integer indicating by how many
+		 * observations the filtered dataset should be moved to the left 
+		 * (negative) or to the right (positive).
+		 * 
+		 * @see eu.ecb.core.model.SDMXDataModel#periods
+		 * @see eu.ecb.core.model.SDMXDataModel#filteredDataSet
+		 * @see eu.ecb.core.view.chart.ECBLineChart
+		 */
+		public function handleChartDragged(event:DataEvent):void 
+		{
+			event.stopImmediatePropagation();
+			(model as ISDMXDataModel).handleChartDragged(event);
+		}
+		
+		/**
+		 * Call this function when the left thumb of a period slider is moved.
+		 * 
+		 * @param event A DataEvent containing an integer indicating by how many
+		 * observations the filtered dataset should be moved to the left 
+		 * (negative) or to the right (positive).
+		 * 
+		 * @see eu.ecb.core.model.SDMXDataModel#periods
+		 * @see eu.ecb.core.model.SDMXDataModel#filteredDataSet
+		 * @see eu.ecb.core.view.chart.PeriodSlider
+		 */
+		public function handleLeftDividerDragged(event:DataEvent):void 
+		{
+			event.stopImmediatePropagation();
+			(model as ISDMXDataModel).handleDividerDragged(event, "left");
+		}
+		
+		/**
+		 * Call this function when the right thumb of a period slider is moved.
+		 * 
+		 * @param event A DataEvent containing an integer indicating by how many
+		 * observations the filtered dataset should be moved to the left 
+		 * (negative) or to the right (positive).
+		 * 
+		 * @see eu.ecb.core.model.SDMXDataModel#periods
+		 * @see eu.ecb.core.model.SDMXDataModel#filteredDataSet
+		 * @see eu.ecb.core.view.chart.PeriodSlider
+		 */
+		public function handleRightDividerDragged(event:DataEvent):void 
+		{
+			(model as ISDMXDataModel).handleDividerDragged(event, "right");
+			event.stopImmediatePropagation();
 		}
 		
 		/*=========================Protected methods==========================*/

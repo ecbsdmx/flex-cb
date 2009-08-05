@@ -301,6 +301,17 @@ package eu.ecb.core.controller
 			return _optimisationLevel;
 		}
 		
+		/**
+		 * When a data set is already available and there is no need to ask
+		 * the controller to fetch it, it can be assigned using this method.
+		 * 
+		 * @param ds The data set assigned to this controller 
+		 */
+		public function set dataSet(ds:DataSet):void
+		{
+			(model as ISDMXServiceModel).allDataSets = ds;		
+		}
+		
 		/*==========================Public methods============================*/
 		
 		/**

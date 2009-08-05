@@ -26,7 +26,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view.panel
 {
-	import eu.ecb.core.controller.PassiveSDMXDataController;
+	import eu.ecb.core.controller.SDMXDataController;
 	import eu.ecb.core.model.SDMXDataModel;
 	import eu.ecb.core.view.chart.ECBChartEvents;
 	import eu.ecb.core.view.chart.ECBLegend;
@@ -143,7 +143,7 @@ package eu.ecb.core.view.panel
 		/*===========================Constructor==============================*/
 		
 		public function BasicDataPanel(model:SDMXDataModel, 
-			controller:PassiveSDMXDataController, showChange:Boolean = false,
+			controller:SDMXDataController, showChange:Boolean = false,
 			showSeriesSummaryBox:Boolean = true,
 			showChartSummaryBox:Boolean = true)
 		{
@@ -247,7 +247,7 @@ package eu.ecb.core.view.panel
 		protected function handleDataChartDragged(event:DataEvent):void 
 		{
 			event.stopImmediatePropagation();
-			_controller.handleChartDragged(event);
+			(_controller as SDMXDataController).handleChartDragged(event);
 		}
 		
 		/**
@@ -256,7 +256,7 @@ package eu.ecb.core.view.panel
 		protected function handleLeftDividerDragged(event:DataEvent):void 
 		{
 			_periodZoomBox.removeSelectedPeriodHighlight();
-			_controller.handleLeftDividerDragged(event);
+			(_controller as SDMXDataController).handleLeftDividerDragged(event);
 			event.stopImmediatePropagation();
 		}
 		
@@ -266,7 +266,8 @@ package eu.ecb.core.view.panel
 		protected function handleRightDividerDragged(event:DataEvent):void 
 		{
 			_periodZoomBox.removeSelectedPeriodHighlight();
-			_controller.handleRightDividerDragged(event);
+			(_controller as SDMXDataController).
+				handleRightDividerDragged(event);
 			event.stopImmediatePropagation();			
 		}
 		
@@ -276,7 +277,7 @@ package eu.ecb.core.view.panel
 		protected function handlePeriodChanged(event:DataEvent):void 
 		{
 			event.stopImmediatePropagation();
-			_controller.handlePeriodChange(event);
+			(_controller as SDMXDataController).handlePeriodChange(event);
 		}
 		
 		protected function handleViewChanged(event:DataEvent):void
@@ -444,7 +445,8 @@ package eu.ecb.core.view.panel
 		 */
 		protected function createViewStack():void
 		{
-			_viewStack = new StackPanel(_model, _controller);
+			_viewStack = new StackPanel(_model, 
+				(_controller as SDMXDataController));
 			_viewStack.percentWidth  = 100;
 			_viewStack.percentHeight = 100;
 			_chartBox.addChild(_viewStack);

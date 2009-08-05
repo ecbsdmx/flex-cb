@@ -39,7 +39,6 @@ package eu.ecb.core.controller
 			var suite:TestSuite = new TestSuite();
 			suite.addTest(ControllerAdapterTest.suite());
 			suite.addTest(BaseSDMXServiceControllerTest.suite());
-			suite.addTest(PassiveSDMXDataControllerTest.suite());
 			suite.addTest(SDMXDataControllerTest.suite());
  			return suite;
 		}
