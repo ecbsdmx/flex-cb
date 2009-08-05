@@ -70,4 +70,34 @@ Three sample applications are provided with the FlexCB project. We will now set 
   # On the next screen, select Flex Builder > Flex Project. We named it "FlexCB_SampleApp1".
   # On the next screen, add the FlexCB_MVCFramework library to the Library path.
   # Run the application from Flex Builder.
-  
+
+The FlexCB_SampleApp1 application will by default display price inflation in the euro area. You can change this without recompiling the application by adding the following line in the index.template.html file below the html-template of the Flex project:
+
+{{{
+"flashVars", "dataFile=data/inflation.xml.zlib&dsdFile=data/ecb_icp1.xml"
+}}}
+
+This line should be added in the following block of code:
+
+{{{
+} else if (hasRequestedVersion) {
+    // if we've detected an acceptable version
+    // embed the Flash Content SWF when all tests are passed
+    AC_FL_RunContent(
+        "src", "${swf}",
+        "width", "${width}",
+        "height", "${height}",
+        "align", "middle",
+        "id", "${application}",
+        "quality", "high",
+        "bgcolor", "${bgcolor}",
+        "name", "${application}",
+        "allowScriptAccess","sameDomain",
+        "type", "application/x-shockwave-flash",
+        "flashVars", "dataFile=data/inflation.xml.zlib&dsdFile=data/ecb_icp1.xml",
+        "pluginspage", "http://www.adobe.com/go/getflashplayer"
+    );
+}
+}}}
+
+The dataFile variable should point to an SDMX-ML data file, in one of the 3 supported SDMX-ML Data formats (SDMX-ML Compact Data, SDMX-ML Generic Data and SDMX-ML Utility Data), and the dsdFile variable should point to a data structure definition, expressed in version 2 of the SDMX-ML Structure format.  
