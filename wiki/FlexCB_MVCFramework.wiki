@@ -43,3 +43,27 @@ The util package contains various utility classes such as formatters, validators
 == The view package (eu.ecb.core.view) ==
 
 The view package contains the components which are displayed on the screen. Some of these components will display the statistical data and metadata in various ways, such as line charts, bar charts, data grids and metadata panels. Other components will play the role of filters, allowing to granularly select what needs to be displayed on the screen (e.g.: period selector, dimensions-based selector, etc). Other components will offer summaries about the data being displayed (minimum, maximum and average values, etc). The panel components play the role of mediators and follow the composite pattern. One of their main tasks is to centralize all communications between the various views and the controller.
+
+= Examples =
+
+The following shows how the key components of the library are working together.
+
+{{{
+// Instantiates the model to be used by this application
+var model:SDMXDataModel = new SDMXDataModel();
+
+// Instantiates the controller to be used by this application.
+// We also pass the SDMX-ML data file containing the data to be visualized 
+// as well as the SDMX-ML structure file needed to interpret the data
+var controller:SDMXDataController = 
+    new SDMXDataController(model, new URLRequest("data.xml"), new URLRequest("structure.xml"));
+
+// Instantiates the view to be used by this application. Other views can be freely selected, as needed.
+var view:SDMXDataPanelAdapter = new BasicDataPanel(model, controller);
+
+// Adds the view to the stage
+addChild(view);
+
+// Instructs the constructor to fetch the data
+controller.fetchData();
+}}}
