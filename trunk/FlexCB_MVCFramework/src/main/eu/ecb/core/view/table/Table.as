@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -114,6 +112,8 @@ package eu.ecb.core.view.table
 		 */
 		protected var _createChangeColumn:Boolean;
 		
+		protected var _obsDisplaySort:Sort;
+		
 		private var _sortCol:Sort;
 		
 		private var _sortObs:Sort;
@@ -139,10 +139,6 @@ package eu.ecb.core.view.table
 				"flex_cb_mvc_lang", "monthNamesLong");
 			DateBase.monthNamesShort = resourceManager.getStringArray(
 				"flex_cb_mvc_lang", "monthNamesShort");	
-			_sortCol = new Sort();
-			_sortCol.fields = [new SortField("key")];	
-			_sortObs = new Sort();
-			_sortObs.fields = [new SortField("rowDimension")];	
 			_dateConverter = new SDMXDate();
 			
 		}
@@ -259,6 +255,12 @@ package eu.ecb.core.view.table
 						rowDimensionPosition = keyValues.getItemIndex(key);
 					}
 				}
+				
+				// Set the sort fields
+				_sortCol = new Sort();
+				_sortCol.fields = [new SortField("key")];	
+				_sortObs = new Sort();
+				_sortObs.fields = [new SortField("rowDimension")];	
 				
 				// This variable holds the observations
 				var observations:ArrayCollection = new ArrayCollection();
@@ -380,6 +382,12 @@ package eu.ecb.core.view.table
 						[new SortField("rowDimension", false, true, false)];
 					observations.sort = sortByDate;
 					observations.refresh();
+				} else {
+					if (null == _obsDisplaySort) {
+						_obsDisplaySort = _sortObs;
+					}
+					observations.sort = _obsDisplaySort;
+					observations.refresh();
 				}	
 				_dataGrid.dataProvider = observations;
 			}
@@ -404,7 +412,8 @@ package eu.ecb.core.view.table
 		
 		protected function sortValues(obj1:Object, obj2:Object):int {
 			for (var property:String in obj1) {
-				if (property != "rowDimension" && property != "mx_internal_uid")
+				if (property != "rowDimension" && property != "mx_internal_uid"
+					&& property != "value_change")
 				{
 					_sortDimension = property;
 					break;
@@ -491,14 +500,16 @@ package eu.ecb.core.view.table
 			} else if (null == change2 || 0 == change2.length) {
 				returnValue = 1;
 			} else {
-				var space1:int = change1.indexOf(" ");
-				var space2:int = change2.indexOf(" ");
+				var end1:int = (change1.indexOf(" ") > -1) ? 
+					change1.indexOf(" ") : change1.length;
+				var end2:int = (change2.indexOf(" ") > -1) ? 
+					change2.indexOf(" ") : change2.length;
 				var start1:uint = 
 					(change1.charAt(0) == "+") ? 1 : 0; 
 				var start2:uint = 
 					(change2.charAt(0) == "+") ? 1 : 0;
-				var value1:Number = Number(change1.substring(start1, space1));	 
-				var value2:Number = Number(change2.substring(start2, space2));	
+				var value1:Number = Number(change1.substring(start1, end1));	 
+				var value2:Number = Number(change2.substring(start2, end2));	
 				
 				if (value1 > value2) {
 					returnValue = 1;
