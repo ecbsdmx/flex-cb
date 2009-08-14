@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -70,7 +68,6 @@ package eu.ecb.core.view.filter
 	 * 
 	 * @author Xavier Sosnovsky
 	 */ 
-	
 	[ResourceBundle("flex_cb_mvc_lang")]
 	public class FiltersPanel extends SDMXViewAdapter 
 	{
@@ -90,8 +87,23 @@ package eu.ecb.core.view.filter
 		
 		private var _form:Form;
 		
+		/**
+		 * The collection of all cube regions available for the supplied 
+		 * dataset. The variable contains all possible values and is
+		 * recalculated when a new dataset is supplied to the panel.
+		 */ 
+		private var _initialCubeRegions:Object;
+		
+		/**
+		 * The collection of cube regions displayed in the filters. This will 
+		 * be the same, when the application starts up but will then be
+		 * updated and reflect selections made by users. 
+		 */
 		private var _cubeRegions:Object;
 		
+		/**
+		 * The filters selected by the user. 
+		 */
 		private var _selectedFilters:Object;
 		
 		private var _isInitialization:Boolean;
@@ -108,11 +120,17 @@ package eu.ecb.core.view.filter
 		
 		/*========================Protected methods===========================*/
 		
-		override protected function resourcesChanged():void {
+		/**
+		 * inheritDoc
+		 */
+		override protected function resourcesChanged():void 
+		{
 			if (!initialized) return;
 			super.resourcesChanged();
-			_panel.title = resourceManager.getString("flex_cb_mvc_lang", "FiltersPanel_filter_options");
-			_submitButton.label = resourceManager.getString("flex_cb_mvc_lang", "FiltersPanel_submit");	
+			_panel.title = resourceManager.getString("flex_cb_mvc_lang", 
+				"FiltersPanel_filter_options");
+			_submitButton.label = resourceManager.getString("flex_cb_mvc_lang", 
+				"FiltersPanel_submit");	
 		}
 		
 		/**
@@ -145,32 +163,43 @@ package eu.ecb.core.view.filter
 		
 		//Populate methods
 		/**
-		 * Method that builds the set of cube regions. It goes over all
-		 * dimensions and finds all codes available in the list of series for
-		 * all dimensions.
+		 * Method called at start up, that builds the set of cube regions. 
+		 * It goes over all dimensions and finds all codes available in the list 
+		 * of series for all dimensions.
+		 * 
+		 * At start up the _initialCubeRegions and the _cubeRegions variables
+		 * contain the same data.
 		 */ 
 		private function populateCubeRegions(
-			matchingSeries:TimeseriesKeysCollection):Boolean {
+			matchingSeries:TimeseriesKeysCollection):Boolean 
+		{
 			var hasFilters:Boolean = false;
+			_initialCubeRegions = new Object();			
 			_cubeRegions = new Object();
 			if (matchingSeries != null) {
 				for each (var series:TimeseriesKey in matchingSeries) {
 					for each (var keyValue:KeyValue in series.keyValues) {
 						if (!(_cubeRegions.hasOwnProperty(keyValue.valueFor.
 							conceptIdentity.id))) {
-							_cubeRegions[keyValue.valueFor.conceptIdentity.id] = 
+							_cubeRegions[keyValue.valueFor.
+								conceptIdentity.id] = 
 								new ArrayCollection([keyValue.value]);
 						} else {
 						 	if (!((_cubeRegions[keyValue.valueFor.
 						 		conceptIdentity.id] as ArrayCollection).
 						 		contains(keyValue.value))) {
-						 		(_cubeRegions[keyValue.valueFor.conceptIdentity.
-						 		id] as ArrayCollection).addItem(keyValue.value);
+						 		(_cubeRegions[keyValue.valueFor.
+						 			conceptIdentity.id] as ArrayCollection).
+						 			addItem(keyValue.value);
 						 		hasFilters = true;
 						 	}
 						}	
 					}
 				}	
+				for (var dim:String in _cubeRegions) {
+					_initialCubeRegions[dim] = new ArrayCollection(
+						(_cubeRegions[dim] as ArrayCollection).toArray());
+				}
 			}
 			return hasFilters;
 		}	
@@ -180,7 +209,8 @@ package eu.ecb.core.view.filter
 		 * at startup. It will build an object with all possible dimensions are
 		 * set to the default value of null.
 		 */ 
-		private function populateFilters():void {
+		private function populateFilters():void 
+		{
 			_selectedFilters = new Object();
 			for each (var keyValue:KeyValue in _referenceSeries.keyValues) {
 				_selectedFilters[keyValue.valueFor.conceptIdentity.id] = null;
@@ -193,7 +223,8 @@ package eu.ecb.core.view.filter
 		 * called at startup, only if we have more than one possible code for 
 		 * at least one cube region. 
 		 */ 
-		private function createFilterPanel():void {
+		private function createFilterPanel():void 
+		{
 			var form:Form = new Form();
 			
 			//We loop over the dimensions. For each of the dimensions, if we 
@@ -221,7 +252,8 @@ package eu.ecb.core.view.filter
 		}
 		
 		private function createFormItem(keyValue:KeyValue, 
-			dimensionNumber:uint):FormItem {
+			dimensionNumber:uint):FormItem 
+		{
 			var formItem:FormItem = new FormItem();
 			formItem.label = keyValue.valueFor.conceptIdentity.name.
 				localisedStrings.getDescriptionByLocale("en") + ":";
@@ -252,18 +284,22 @@ package eu.ecb.core.view.filter
 			return formItem;
 		}
 		
-		private function createSubmitButton():Button {
+		private function createSubmitButton():Button 
+		{
 			var submitButton:Button = new Button();
 			//submitButton.width = 100;
-			submitButton.label = resourceManager.getString("flex_cb_mvc_lang", "FiltersPanel_submit");
+			submitButton.label = resourceManager.getString("flex_cb_mvc_lang", 
+				"FiltersPanel_submit");
 			submitButton.addEventListener(MouseEvent.CLICK, submitChanges);
 			_submitButton = submitButton;
 			return _submitButton;
 		}
 		
-		private function createPanel(form:Form):Panel {
+		private function createPanel(form:Form):Panel 
+		{
 			var panel:Panel = new Panel();
-			panel.title = resourceManager.getString("flex_cb_mvc_lang", "FiltersPanel_filter_options");
+			panel.title = resourceManager.getString("flex_cb_mvc_lang", 
+				"FiltersPanel_filter_options");
 			panel.layout = "vertical";
 			panel.styleName = "filters";
 			panel.width = width;
@@ -277,7 +313,8 @@ package eu.ecb.core.view.filter
 		 * This method builds the series key and dispatchs an event with the
 		 * key. It is called when the submit button is pressed.
 		 */ 
-		private function submitChanges(event:MouseEvent):void {
+		private function submitChanges(event:MouseEvent):void 
+		{
 			var query:String = "";
 			var formItemNumber:uint = 0;
 			for each (var keyValue:KeyValue in _referenceSeries.keyValues) {
@@ -306,84 +343,129 @@ package eu.ecb.core.view.filter
 		 * choices so that combinations of code leading to no data cannot be
 		 * made.
 		 */ 
-		private function filterChanged(event:ListEvent):void {
+		private function filterChanged(event:ListEvent):void 
+		{
 			//We add the filter selected by the user to the list of selected 
 			//filters
 			_selectedFilters[event.target.id] = event.target.selectedItem;
-			
+
 			//We need to get the list of matching series, based on the updated
-			//filters and then update the cube regions
-			populateCubeRegions(findMatchingSeries());
+			//filters and then update the cube regions. We first reset the 
+			//values in cube regions to the list of all possible values.
+			for (var dim:String in _cubeRegions) {
+				_cubeRegions[dim] = new ArrayCollection(
+					(_initialCubeRegions[dim] as ArrayCollection).toArray());
+			}
+			findMatchingSeries();
 			
 			var formItemCount:uint = 0;
 			for each (var keyValue:KeyValue in _referenceSeries.keyValues) {
 				if (formItemCount < _form.getChildren().length) {
 					var formItem:ComboBox = (_form.getChildAt(formItemCount) as 
 						FormItem).getChildAt(0) as ComboBox;
-					if ((_cubeRegions[keyValue.valueFor.conceptIdentity.id] as 
-						ArrayCollection).length == 1 &&
-						formItem.id == keyValue.valueFor.conceptIdentity.id) {
-						if (null == _selectedFilters[formItem.id]) {
-							formItem.enabled = false;	
-							var dataProvider:ArrayCollection = 
-								new ArrayCollection();
-							var code:Code = 
-								(_cubeRegions[keyValue.valueFor.conceptIdentity.
-								id] as ArrayCollection).getItemAt(0) as Code;
+					if (formItem.id == keyValue.valueFor.conceptIdentity.id) {
+						var dataProvider:ArrayCollection = 
+							new ArrayCollection();
+						var codeNumber:uint = 0;
+						var selectedCodeIndex:uint = 0;
+						for each(var code:Code in _cubeRegions[keyValue.
+							valueFor.conceptIdentity.id] as ArrayCollection) {
 							var item:Object = new Object();
 							item["label"] = code.description.localisedStrings.
 								getDescriptionByLocale("en");
 							item["id"] = code.id;
-							dataProvider.addItem(item);		
-							formItem.dataProvider = dataProvider;
-						}	
-						formItemCount++;
-					} else if ((_cubeRegions[keyValue.valueFor.conceptIdentity.
-						id] as ArrayCollection).length > 1) {
-						var dataProvider2:ArrayCollection = 
-							new ArrayCollection();
-						var codeNumber:uint = 0;
-						var selectedCodeIndex:uint = 0;
-						for each(var code2:Code in _cubeRegions[keyValue.
-							valueFor.conceptIdentity.id] as ArrayCollection) {
-							var item2:Object = new Object();
-							item2["label"] = code2.description.localisedStrings.
-								getDescriptionByLocale("en");
-							item2["id"] = code2.id;
-							if (formItem.selectedItem.id == code2.id) {
+							if (formItem.selectedItem.id == code.id) {
 								selectedCodeIndex = codeNumber;
 							} 
-							dataProvider2.addItem(item2);		
+							dataProvider.addItem(item);		
 							codeNumber++;
 						}
-						formItem.dataProvider = dataProvider2;
+						formItem.dataProvider = dataProvider;
 						formItem.selectedIndex = selectedCodeIndex;
-						formItem.enabled = true;
+						formItem.enabled = dataProvider.length > 1;
 						formItemCount++;
-					}
+					}	
 				}
 			}
 		}
 		
-		private function findMatchingSeries():TimeseriesKeysCollection {
-			var matchingSeries:TimeseriesKeysCollection = 
-				new TimeseriesKeysCollection();
-			for each (var series:TimeseriesKey in _fullDataSet.timeseriesKeys) {
-				var added:Boolean = true;
+		/**
+		 * For all the filters that have been selected, we need to find the 
+		 * collection of matching series. Important note: Filters are applied
+		 * individually and not combined (so we have ONE collection of matching
+		 * series PER filter selected, instead of ONE collection of series 
+		 * matching the combination of filters).
+		 */
+		private function findMatchingSeries():void {
+			for (var filter:String in _selectedFilters) {	
+				if (null != _selectedFilters[filter]) {
+					var matchingSeries:TimeseriesKeysCollection = 
+						new TimeseriesKeysCollection();
+					for each (var series:TimeseriesKey in 
+						_fullDataSet.timeseriesKeys) {
+						var added:Boolean = true;
+						for each (var keyValue:KeyValue in series.keyValues) {
+							if (filter == keyValue.valueFor.
+								conceptIdentity.id	&& keyValue.value.id != 
+								_selectedFilters[filter].id) {
+								added = false;
+								break;
+							}
+						}
+						if (added) {
+							matchingSeries.addItem(series);			
+						}
+					}
+					applyFilter(matchingSeries, filter);
+				}
+			}	
+		}
+		
+		/**
+		 * For all the dimensions other than the filtered dimension, we build
+		 * a collection of values available in the collection of matching 
+		 * series. By doing so, we guarantee that only filters that lead to
+		 * data can be selected. 
+		 */
+		private function applyFilter(matchingSeries:ArrayCollection, 
+			filter:String):void
+		{
+			var filters:Object = new Object();
+			for each (var series:TimeseriesKey in matchingSeries) {
 				for each (var keyValue:KeyValue in series.keyValues) {
-					if (null != _selectedFilters[keyValue.valueFor.
-						conceptIdentity.id]
-						&& keyValue.value.id != _selectedFilters[keyValue.
-							valueFor.conceptIdentity.id].id) {
-						added = false;
-						break;
+					if (keyValue.valueFor.conceptIdentity.id != filter) {
+						if (!(filters.hasOwnProperty(keyValue.valueFor.
+							conceptIdentity.id))) {
+							filters[keyValue.valueFor.
+								conceptIdentity.id] = 
+								new ArrayCollection([keyValue.value]);
+						} else {
+						 	if (!((filters[keyValue.valueFor.
+						 		conceptIdentity.id] as ArrayCollection).
+						 		contains(keyValue.value))) {
+						 		(filters[keyValue.valueFor.
+						 			conceptIdentity.id] as ArrayCollection).
+						 			addItem(keyValue.value);
+						 	}
+						}	
 					}
 				}
-				if (added) {
-					matchingSeries.addItem(series);			
+			}
+			
+			// Once all possible values are known, we update the collection
+			// of filters used in the GUI.
+			for (var slice:String in _cubeRegions) {
+				var collection:ArrayCollection = new ArrayCollection(
+					(_cubeRegions[slice] as ArrayCollection).toArray());
+				for each (var item:Object in collection) {
+					if (null != filters[slice] &&
+						!((filters[slice] as ArrayCollection).contains(item))) {
+						(_cubeRegions[slice] as ArrayCollection).removeItemAt(
+							(_cubeRegions[slice] as ArrayCollection).
+							getItemIndex(item));
+					}
 				}
 			}
-			return matchingSeries;
 		}
 	}
 }
