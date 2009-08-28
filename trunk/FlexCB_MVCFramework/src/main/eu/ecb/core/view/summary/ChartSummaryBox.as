@@ -28,18 +28,19 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view.summary
 {
-	import mx.containers.VBox;
-	import org.sdmx.model.v2.reporting.dataset.DataSet;
+	import eu.ecb.core.util.formatter.ExtendedNumberFormatter;
 	import eu.ecb.core.util.formatter.SDMXDateFormatter;
+	import eu.ecb.core.util.math.MathHelper;
+	import eu.ecb.core.view.SDMXViewAdapter;
+	
+	import flash.events.Event;
+	
+	import mx.binding.utils.ChangeWatcher;
 	import mx.containers.HBox;
 	import mx.controls.Label;
-	import org.sdmx.model.v2.reporting.dataset.TimePeriod;
-	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
-	import eu.ecb.core.util.formatter.ExtendedNumberFormatter;
-	import eu.ecb.core.util.math.MathHelper;
 	import mx.controls.Text;
-	import flash.events.Event;
-	import eu.ecb.core.view.SDMXViewAdapter;
+	
+	import org.sdmx.model.v2.reporting.dataset.TimePeriod;
 	
 	/**
 	 * This component displays a box containing:
@@ -103,6 +104,7 @@ package eu.ecb.core.view.summary
 			_showChange = true;
 			_showAverage = true;
 			percentWidth = 100;
+			ChangeWatcher.watch(this, "width", handleChangedWidth);
 		}
 		
 		/*========================Protected methods===========================*/
@@ -234,7 +236,7 @@ package eu.ecb.core.view.summary
 		             				Number(obs1.observationValue), 
 		             				Number(obs2.observationValue))) + 
 		             		resourceManager.getString("flex_cb_mvc_lang", 
-							"percentage_sign");
+							"percentage_sign") + ")";
 	           		}
 	           		_changeBox.visible = true;
 				} else {
@@ -312,6 +314,11 @@ package eu.ecb.core.view.summary
 			super.measure();
 			_minMaxText.width = _changeBox.width = width - 
 				getStyle("paddingLeft") - getStyle("paddingRight");
+		}
+		
+		protected function handleChangedWidth(event:Event):void
+		{
+			invalidateSize();
 		}
 		
 		/**

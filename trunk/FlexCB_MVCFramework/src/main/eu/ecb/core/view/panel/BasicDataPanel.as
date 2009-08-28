@@ -314,7 +314,7 @@ package eu.ecb.core.view.panel
 		{
 			super.commitIsPercentage();
 			if (_chartSummaryBox != null) {
-				_chartSummaryBox.height = _isPercentage ? 25 : 40;
+				//_chartSummaryBox.height = _isPercentage ? 25 : 40;
 				_chartSummaryBox.showChange = !_isPercentage;
 			}
 			if (_seriesSummaryBox != null) {
@@ -405,7 +405,7 @@ package eu.ecb.core.view.panel
 		protected function createChart():void
 		{
 			_chart = new ECBLineChart();
-			_chart.width = width - 50;
+			_chart.width = width - 25;
 			_chart.showChange = _showChange;
 			_chart.addEventListener(ECBChartEvents.CHART_DRAGGED, 
 				handleDataChartDragged, false, 0, true);		
