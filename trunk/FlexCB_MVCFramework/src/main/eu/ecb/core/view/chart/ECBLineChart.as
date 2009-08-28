@@ -581,6 +581,17 @@ package eu.ecb.core.view.chart
 			return dataTip;		
 		}
 		
+		protected function setMouseDown(event:MouseEvent):void {
+			event.stopImmediatePropagation();
+			event = null;
+			_cursorId = CursorManager.setCursor(_dragCursor);
+			_mouseXRef = this.mouseX;
+			_isDragging = true;
+			if (_showECBToolTip) {
+				cleanDataTips();
+			}
+		}
+		
 		/*=========================Private methods============================*/
 		
 		/**
@@ -884,17 +895,6 @@ package eu.ecb.core.view.chart
 				_isFirst = true;
 		    }
         }
-        
-		private function setMouseDown(event:MouseEvent):void {
-			event.stopImmediatePropagation();
-			event = null;
-			_cursorId = CursorManager.setCursor(_dragCursor);
-			_mouseXRef = this.mouseX;
-			_isDragging = true;
-			if (_showECBToolTip) {
-				cleanDataTips();
-			}
-		}
         
         private function moveOverChart(event:MouseEvent):void 
         {
