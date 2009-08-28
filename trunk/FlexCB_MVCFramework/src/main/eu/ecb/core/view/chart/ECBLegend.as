@@ -75,6 +75,8 @@ package eu.ecb.core.view.chart
 		
 		private var _highlightedSeries:ArrayCollection;
 		
+		private var _mouseOverEnabled:Boolean;
+		
 		/*===========================Constructor==============================*/
 		
 		public function ECBLegend(direction:String = "vertical")
@@ -119,6 +121,17 @@ package eu.ecb.core.view.chart
 		public function get alwaysDisplay():Boolean
 		{
 			return _alwaysDisplay;
+		}
+		
+		/**
+		 * Whether or not highlight and select functionality of legend items
+		 * should be enabled.
+		 *  
+		 * @param flag
+		 */
+		public function set mouseOverEnabled(flag:Boolean):void
+		{
+			_mouseOverEnabled = flag;
 		}
 		
 		/*========================Protected methods===========================*/
@@ -230,12 +243,14 @@ package eu.ecb.core.view.chart
 						uicomponent.graphics.drawCircle(5, 11, 5);
 						addChild(uicomponent);
 						var legendItem:Label = new Label();
-						legendItem.addEventListener(MouseEvent.CLICK, 
-							handleLegendClicked);
-						legendItem.addEventListener(MouseEvent.MOUSE_OVER,
-							handleMouseOver);	
-						legendItem.addEventListener(MouseEvent.MOUSE_OUT,
-							handleMouseOut);	
+						if (_mouseOverEnabled) {
+							legendItem.addEventListener(MouseEvent.CLICK, 
+								handleLegendClicked);
+							legendItem.addEventListener(MouseEvent.MOUSE_OVER,
+								handleMouseOver);	
+							legendItem.addEventListener(MouseEvent.MOUSE_OUT,
+								handleMouseOut);	
+						}
 						legendItem.id = series.seriesKey;						
 						legendItem.setStyle("paddingLeft", 12);
 						switch(titleType) {
