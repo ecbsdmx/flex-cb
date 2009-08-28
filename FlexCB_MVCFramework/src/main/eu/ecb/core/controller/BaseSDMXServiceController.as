@@ -343,6 +343,7 @@ package eu.ecb.core.controller
 			if (_structureToFetch) {
 				prepareStructureProvider();
 			} else if (null != dataflowID && null != (_model as 
+				ISDMXServiceModel).allDataflowDefinitions && null != (_model as 
 				ISDMXServiceModel).allDataflowDefinitions.getDataflowById(
 				dataflowID, agencyID, version)) {
 				//If we have it and we do not need to load another structure 
