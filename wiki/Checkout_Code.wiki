@@ -1,5 +1,5 @@
 #summary Checking out code with TortoiseSVN or Subclipse through a proxy using a Google account.
-#labels Subversion,TortoiseSVN,Subclipse
+#labels Subversion,TortoiseSVN,Subclipse,Subversive
 
 = Introduction =
 
