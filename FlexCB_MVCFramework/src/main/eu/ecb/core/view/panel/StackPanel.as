@@ -26,14 +26,13 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view.panel
 {
-	import eu.ecb.core.controller.BaseSDMXServiceController;
-	import eu.ecb.core.model.SDMXDataModel;
 	import eu.ecb.core.view.ISDMXServiceView;
 	import eu.ecb.core.view.ISDMXView;
 	
 	import flash.display.DisplayObject;
 	
 	import mx.containers.ViewStack;
+	import mx.events.MenuEvent;
 
 	/**
 	 * This panel wraps a AS3 ViewStack in an SDMXDataPanelAdapter.
@@ -51,10 +50,10 @@ package eu.ecb.core.view.panel
 		
 		/*===========================Constructor==============================*/
 		 
-		public function StackPanel(model:SDMXDataModel, 
-			controller:BaseSDMXServiceController, direction:String="vertical")
+		public function StackPanel(direction:String="vertical")
 		{
-			super(model, controller, direction);
+			super(direction);
+			_stack = new ViewStack();
 		}
 		
 		/*==========================Public methods============================*/
@@ -86,6 +85,13 @@ package eu.ecb.core.view.panel
 			}
 		}
 		
+		public function handleStackItemSelected(event:MenuEvent):void
+		{
+			if (event.index < _stack.getChildren().length) {
+				_stack.selectedIndex = event.index;
+			}
+		}
+		
 		/*========================Protected methods===========================*/
 		
 		/**
@@ -95,9 +101,9 @@ package eu.ecb.core.view.panel
 		{
 			super.createChildren();
 			
-			if (null == _stack) {
-				_stack = new ViewStack();
-				_stack.percentWidth = 100;
+			if (null != _stack) {
+				_stack.percentWidth  = 100;
+				_stack.percentHeight = 100
 				addChild(_stack);
 			}
 		}
