@@ -26,6 +26,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view.panel
 {
+	import eu.ecb.core.controller.ISDMXServiceController;
 	import eu.ecb.core.controller.SDMXDataController;
 	import eu.ecb.core.model.SDMXDataModel;
 	import eu.ecb.core.view.chart.ECBChartEvents;
@@ -40,8 +41,10 @@ package eu.ecb.core.view.panel
 	import eu.ecb.core.view.table.Table;
 	
 	import flash.events.DataEvent;
+	import flash.events.Event;
 	
 	import mx.binding.utils.BindingUtils;
+	import mx.binding.utils.ChangeWatcher;
 	import mx.collections.ArrayCollection;
 
 	/**
@@ -139,6 +142,16 @@ package eu.ecb.core.view.panel
 		 * @private
 		 */
 		protected var _showChartSummaryBox:Boolean;
+		
+		/**
+		 * @private
+		 */		
+		protected var _model:SDMXDataModel;
+		
+		/**
+		 * @private
+		 */
+		protected var _controller:ISDMXServiceController;
 						
 		/*===========================Constructor==============================*/
 		
@@ -147,7 +160,9 @@ package eu.ecb.core.view.panel
 			showSeriesSummaryBox:Boolean = true,
 			showChartSummaryBox:Boolean = true)
 		{
-			super(model, controller);
+			super();
+			_model = model;
+			_controller = controller;
 			styleName = "dataPanel";
 			_showChange = showChange;
 			_showSeriesSummaryBox = showSeriesSummaryBox;
@@ -167,6 +182,7 @@ package eu.ecb.core.view.panel
 			BindingUtils.bindProperty(this, "filteredReferenceSeries", _model, 
 				"filteredReferenceSeries");
 			BindingUtils.bindProperty(this, "periods", _model, "periods");
+			ChangeWatcher.watch(this, "width", handleChangedWidth);
 		}
 
 		/*========================Public methods===========================*/
@@ -180,6 +196,15 @@ package eu.ecb.core.view.panel
 		}		
 				
 		/*========================Protected methods===========================*/
+		
+		/**
+		 * @inheritDoc
+		 */
+		override protected function resourcesChanged():void {
+			if (!initialized) return;
+			super.resourcesChanged();
+			_model.updateLanguage();	
+		}
 		
 		/**
 		 * @inheritDoc
@@ -300,11 +325,6 @@ package eu.ecb.core.view.panel
 			}
 			_chartBox.visible = true;
 			_filterBox.visible = true;
-			_filterBox.width = _chart.getExplicitOrMeasuredWidth();
-			_periodSlider.size = _chart.getExplicitOrMeasuredWidth();
-			if (_chartSummaryBox != null) {
-				_chartSummaryBox.width = _chart.getExplicitOrMeasuredWidth();
-			}
 		}
 		
 		/**
@@ -330,7 +350,6 @@ package eu.ecb.core.view.panel
 		{
 			_seriesSummaryBox = new SeriesSummaryBox();
 			_seriesSummaryBox.showChange = _showChange;
-			_seriesSummaryBox.height = 20;
 			addView(_seriesSummaryBox);
 		}
 		
@@ -339,8 +358,7 @@ package eu.ecb.core.view.panel
 		 */
 		protected function createFilterBox():void
 		{
-			_filterBox = new SDMXDataPanelAdapter(_model, _controller, 
-				"horizontal");
+			_filterBox = new SDMXDataPanelAdapter("horizontal");
 			_filterBox.styleName = "filterBox";
 			_filterBox.visible = false;
 			_filterBox.percentWidth = 100;
@@ -355,7 +373,6 @@ package eu.ecb.core.view.panel
 		{
 			_periodZoomBox = new PeriodZoomBox();
 			_periodZoomBox.percentWidth = 100;
-			_periodZoomBox.height = 20;
 			_periodZoomBox.addEventListener("selectedPeriodChanged",
 				handlePeriodChanged);
 			_filterBox.addView(_periodZoomBox);
@@ -364,7 +381,6 @@ package eu.ecb.core.view.panel
 		protected function createViewSelectorBox():void
 		{
 			_viewSelectorBox = new ViewSelector();
-			_viewSelectorBox.height = 20;
 			_viewSelectorBox.addEventListener(
 				ViewSelector.SELECTED_VIEW_CHANGED,	handleViewChanged);
 			_filterBox.addView(_viewSelectorBox);
@@ -379,7 +395,7 @@ package eu.ecb.core.view.panel
 		 */
 		protected function createChartBox():void
 		{
-			_chartBox = new SDMXDataPanelAdapter(_model, _controller);
+			_chartBox = new SDMXDataPanelAdapter();
 			_chartBox.styleName = "chartBox";
 			_chartBox.visible = false;
 			_chartBox.percentWidth  = 100;
@@ -393,8 +409,7 @@ package eu.ecb.core.view.panel
 		protected function createChartSummaryBox():void
 		{
 			_chartSummaryBox = new ChartSummaryBox();
-			_chartSummaryBox.width = width - 30;
-			_chartSummaryBox.setStyle("verticalAlign", "top");
+			_chartSummaryBox.percentWidth = 100;
 			_chartSummaryBox.showChange = _showChange;
 			_chartBox.addView(_chartSummaryBox);
 		}
@@ -405,7 +420,7 @@ package eu.ecb.core.view.panel
 		protected function createChart():void
 		{
 			_chart = new ECBLineChart();
-			_chart.width = width - 25;
+			_chart.percentWidth = 100;
 			_chart.showChange = _showChange;
 			_chart.addEventListener(ECBChartEvents.CHART_DRAGGED, 
 				handleDataChartDragged, false, 0, true);		
@@ -418,7 +433,7 @@ package eu.ecb.core.view.panel
 		protected function createPeriodSlider():void
 		{
 			_periodSlider = new PeriodSlider();
-			_periodSlider.width = _chart.getExplicitOrMeasuredWidth();
+			_periodSlider.percentWidth = 100;
 			_periodSlider.height = 70;
 			_periodSlider.addEventListener(ECBChartEvents.CHART_DRAGGED, 
 				handleDataChartDragged, false, 0, true);
@@ -445,8 +460,7 @@ package eu.ecb.core.view.panel
 		 */
 		protected function createViewStack():void
 		{
-			_viewStack = new StackPanel(_model, 
-				(_controller as SDMXDataController));
+			_viewStack = new StackPanel();
 			_viewStack.percentWidth  = 100;
 			_viewStack.percentHeight = 100;
 			_chartBox.addChild(_viewStack);
@@ -458,7 +472,7 @@ package eu.ecb.core.view.panel
 		protected function createMetadataPanel():void
 		{
 			_metadataPanel = new MetadataPanel();
-			_metadataPanel.width = _chart.getExplicitOrMeasuredWidth();
+			_metadataPanel.percentWidth = 100;
 			_viewStack.addView(_metadataPanel);
 		}
 		
@@ -468,7 +482,7 @@ package eu.ecb.core.view.panel
 		protected function createTable():void
 		{
 			_table = new Table();
-			_table.width = _chart.getExplicitOrMeasuredWidth();
+			_table.percentWidth = 100;
 			_table.createChangeColumn = true;
 			_table.isHidden = true;
 			_viewStack.addView(_table);
@@ -479,11 +493,18 @@ package eu.ecb.core.view.panel
 		 */
 		protected function createChartAndSliderPanel():void
 		{
-			_chartAndSliderPanel = 
-				new SDMXDataPanelAdapter(_model, _controller);
+			_chartAndSliderPanel = new SDMXDataPanelAdapter();
 			_chartAndSliderPanel.percentHeight = 100;
 			_chartAndSliderPanel.percentWidth  = 100;
 			_viewStack.addView(_chartAndSliderPanel);
+		}
+		
+		protected function handleChangedWidth(event:Event):void
+		{
+			if (null != _periodSlider) {
+				_chart.width = _filterBox.width = _periodSlider.width = 
+					_table.width = _metadataPanel.width = width - 25;
+			}
 		}
 	}
 }
