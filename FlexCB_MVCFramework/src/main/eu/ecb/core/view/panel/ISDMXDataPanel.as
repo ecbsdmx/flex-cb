@@ -44,15 +44,6 @@ package eu.ecb.core.view.panel
 	public interface ISDMXDataPanel extends IEventDispatcher, ISDMXView, 
 		ISDMXComposite
 	{
-		
-		/**
-		 * Whether or not information about growth rates over time should be
-		 * displayed in the panel.
-		 *  
-		 * @param showChange
-		 */
-		function set showChange(showChange:Boolean):void;
-		
 		/**
 		 * The desired panel height.
 		 *  
