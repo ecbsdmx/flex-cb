@@ -52,16 +52,6 @@ package eu.ecb.core.view.chart
 		/**
 		 * @private
 		 */ 
-		protected var _showChange:Boolean;
-		
-		/**
-		 * @private
-		 */ 
-		protected var _showChangeChanged:Boolean;
-		
-		/**
-		 * @private
-		 */ 
 		protected var _showEffect:Boolean;
 		
 		/*===========================Constructor==============================*/
@@ -75,17 +65,6 @@ package eu.ecb.core.view.chart
 		}
 		
 		/*============================Accessors===============================*/
-		
-		/**
-		 * Whether or not information about growth rates over time should be
-		 * displayed in the panel.
-		 *  
-		 * @param showChange
-		 */
-		public function set showChange(flag:Boolean):void
-		{
-			_showChange = flag;
-		}
 		
 		/**
 		 * Whether or not a transition effect should be visible when series
