@@ -65,44 +65,13 @@ package eu.ecb.core.view.panel
 		 */
 		protected var _desiredWidthChanged:Boolean;
 		
-		/**
-		 * @private
-		 */
-		protected var _showChange:Boolean;
-		
-		/**
-		 * @private
-		 */
-		protected var _showChangeChanged:Boolean;
-			
-		/**
-		 * @private
-		 */		
-		protected var _model:SDMXDataModel;
-		
-		/**
-		 * @private
-		 */
-		protected var _controller:ISDMXServiceController;
-		
 		/*===========================Constructor==============================*/
 		
-		public function SDMXDataPanelAdapter(model:SDMXDataModel, 
-			controller:ISDMXServiceController, direction:String = "vertical")
+		public function SDMXDataPanelAdapter(direction:String = "vertical")
 		{
 			super(direction);
-			_model = model;
-			_controller = controller;
 			percentWidth = 100;
 			percentHeight = 100;
-		}
-		
-		/*========================Protected methods===========================*/
-				
-		override protected function resourcesChanged():void {
-			if (!initialized) return;
-			super.resourcesChanged();
-			_model.updateLanguage();	
 		}
 		
 		/*============================Accessors===============================*/
@@ -129,16 +98,6 @@ package eu.ecb.core.view.panel
 				_desiredWidthChanged = true;
 				invalidateProperties();
 			}
-		}
-		
-		/**
-		 * @inheritDoc
-		 */ 
-		public function set showChange(showChange:Boolean):void
-		{
-			_showChange = showChange;
-			_showChangeChanged = true;
-			invalidateProperties();
 		}
 		
 		/*==========================Public methods============================*/
