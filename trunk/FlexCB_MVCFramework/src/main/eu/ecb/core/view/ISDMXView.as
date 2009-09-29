@@ -108,5 +108,13 @@ package eu.ecb.core.view
 		 *  Whether or not the data being displayed represent percentage
 		 */
 		function set isPercentage(isPercentage:Boolean):void		
+		
+		/**
+		 * Whether or not information about growth rates over time should be
+		 * displayed in the panel.
+		 *  
+		 * @param showChange
+		 */
+		function set showChange(showChange:Boolean):void;
 	}
 }

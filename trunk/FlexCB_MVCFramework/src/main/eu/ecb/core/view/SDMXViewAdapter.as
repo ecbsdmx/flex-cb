@@ -133,6 +133,16 @@ package eu.ecb.core.view
 		 */
 		protected var _periodsChanged:Boolean;
 		
+		/**
+		 * @private
+		 */
+		protected var _showChange:Boolean;
+		
+		/**
+		 * @private
+		 */
+		protected var _showChangeChanged:Boolean;
+		
 		/*===========================Constructor==============================*/
 				
 		public function SDMXViewAdapter(direction:String = "vertical") 
@@ -259,6 +269,16 @@ package eu.ecb.core.view
 		{
 			_isPercentage = isPercentage;
 			_isPercentageChanged = true;
+			invalidateProperties();
+		}
+		
+		/**
+		 * @inheritDoc
+		 */ 
+		public function set showChange(showChange:Boolean):void
+		{
+			_showChange = showChange;
+			_showChangeChanged = true;
 			invalidateProperties();
 		}
 	}
