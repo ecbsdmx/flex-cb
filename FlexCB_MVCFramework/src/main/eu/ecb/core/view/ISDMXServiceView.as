@@ -26,6 +26,8 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view
 {
+	import mx.core.IUIComponent;
+	
 	import org.sdmx.model.v2.reporting.dataset.DataSet;
 	import org.sdmx.model.v2.structure.category.CategorieSchemesCollection;
 	import org.sdmx.model.v2.structure.keyfamily.DataflowsCollection;
@@ -37,8 +39,18 @@ package eu.ecb.core.view
 	 *  
 	 * @author Xavier Sosnovsky
 	 */
-	public interface ISDMXServiceView
+	public interface ISDMXServiceView extends IUIComponent
 	{
+		/**
+		 * @private
+		 */ 
+		function set id(id:String):void;
+		
+		/**
+		 * Each Flex-CB view can be identified by an ID. 
+		 */ 
+		function get id():String;
+		
 		/**
 		 * The category schemes to be displayed by the view 
 		 */
