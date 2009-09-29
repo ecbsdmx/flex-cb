@@ -62,8 +62,6 @@ package eu.ecb.core.view.summary
 		
 		private var _numberFormatter:ExtendedNumberFormatter;
 		
-		private var _showChange:Boolean;
-		
 		/*===========================Constructor==============================*/
 		
 		public function SeriesSummaryBox(direction:String = "horizontal")
@@ -78,21 +76,7 @@ package eu.ecb.core.view.summary
 			_percentFormatter.forceSigned = true;
 			_showChange = true;
 			percentWidth = 100;
-			percentHeight = 100;
 			styleName = "changeWithPreviousBox";
-		}
-		
-		/*============================Accessors===============================*/
-		
-		/**
-		 * Whether or not information about growth rates over time should be
-		 * displayed in the panel.
-		 *  
-		 * @param showChange
-		 */
-		public function set showChange(flag:Boolean):void
-		{
-			_showChange = flag;
 		}
 		
 		/*========================Protected methods===========================*/
