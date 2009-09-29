@@ -29,8 +29,10 @@ package eu.ecb.core.view.chart
 	import eu.ecb.core.view.SDMXViewAdapter;
 	
 	import flash.events.DataEvent;
-	import flash.events.MouseEvent;
+	import flash.events.Event;
+	import flash.events.MouseEvent;  
 	
+	import mx.binding.utils.ChangeWatcher;
 	import mx.charts.AreaChart;
 	import mx.charts.AxisRenderer;
 	import mx.charts.DateTimeAxis;
@@ -122,18 +124,7 @@ package eu.ecb.core.view.chart
 			super(direction);
 			styleName = "ecbPeriodChartBox";
 			_previousRemainder = 0;
-		}
-		
-		/*============================Accessors===============================*/
-		
-		/**
-		 * The desired size for the slider
-		 */ 
-		public function set size(size:Number):void 
-		{
-			if (size != width) {
-				width = size;
-			}
+			ChangeWatcher.watch(this, "width", handleChangedWidth);
 		}
 		
 		/*========================Protected methods===========================*/
@@ -151,7 +142,7 @@ package eu.ecb.core.view.chart
 				_periodChart.height = 60;
 				_periodChart.showDataTips = false;
 				_periodChart.seriesFilters = new Array();
-				_periodChart.width = 100;	
+				_periodChart.percentWidth = 100	
 
 				var verticalAxis:LinearAxis = new LinearAxis();
 				verticalAxis.baseAtZero = false;
@@ -419,5 +410,23 @@ package eu.ecb.core.view.chart
         		_rightIndex = event.value;	
         	}
         }
+        
+        private function handleChangedWidth(event:Event):void
+		{
+			if (null != _slider && null != _referenceSeries) {
+				_periodChart.width = Math.round(width);
+				_overlayCanvas.width = Math.ceil( _periodChart.width + 
+					_periodChart.computedGutters.width - 22);
+				_slider.width = _overlayCanvas.width + 13;
+				var ratio:Number = (_referenceSeries.timePeriods.length / 
+					_overlayCanvas.width);
+				_leftCanvasBox.width = Math.round(_leftIndex / ratio);
+				_rightCanvasBox.width = Math.round((_referenceSeries.timePeriods
+					.length - 1 - _rightIndex)/ratio);
+				_middleCanvasBox.width = Math.round(_overlayCanvas.width - 
+					_leftCanvasBox.width - _rightCanvasBox.width) - (2 * 
+					Number(_overlayCanvas.getStyle("dividerThickness")));
+			} 
+		}
 	}
 }
