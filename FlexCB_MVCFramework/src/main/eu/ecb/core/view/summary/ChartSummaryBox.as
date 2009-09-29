@@ -74,8 +74,6 @@ package eu.ecb.core.view.summary
 		 */
 		protected var _minMaxText:Text;
 		
-		private var _showChange:Boolean;
-		
 		private var _showAverage:Boolean;
 		
 		/*===========================Constructor==============================*/
@@ -104,7 +102,7 @@ package eu.ecb.core.view.summary
 			_showChange = true;
 			_showAverage = true;
 			percentWidth = 100;
-			ChangeWatcher.watch(this, "width", handleChangedWidth);
+			//ChangeWatcher.watch(this, "width", handleChangedWidth);
 		}
 		
 		/*========================Protected methods===========================*/
@@ -124,7 +122,7 @@ package eu.ecb.core.view.summary
 		 *  
 		 * @param showChange
 		 */
-		public function set showChange(flag:Boolean):void
+		override public function set showChange(flag:Boolean):void
 		{
 			_showChange = flag;
 			if (null != _changeBox) {
@@ -173,7 +171,7 @@ package eu.ecb.core.view.summary
 			if (null == _minMaxText) {
 				_minMaxText = new Text();
 				_minMaxText.percentWidth  = 100;
-				_minMaxText.percentHeight = 100;
+				//_minMaxText.percentHeight = 100;
 				addChild(_minMaxText);
 			}
 		}
@@ -304,21 +302,6 @@ package eu.ecb.core.view.summary
 	    			resourceManager.getString("flex_cb_mvc_lang", 
 						"percentage_sign");
 	    	}
-		}
-		
-		/**
-		 * @inheritDoc
-		 */
-		override protected function measure():void
-		{
-			super.measure();
-			_minMaxText.width = _changeBox.width = width - 
-				getStyle("paddingLeft") - getStyle("paddingRight");
-		}
-		
-		protected function handleChangedWidth(event:Event):void
-		{
-			invalidateSize();
 		}
 		
 		/**
