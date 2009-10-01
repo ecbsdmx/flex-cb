@@ -140,10 +140,11 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 							attribute.localRepresentation = 
 								new LengthRange(0, items.TextFormat.@maxLength, 
 									DataType.INTEGER);
-						} else {
-							throw new SyntaxError("Unknown type: " + 
-								items.TextFormat.@textType);
 						}
+					} else if (items.TextFormat.attribute("textType").
+						length() == 0) {
+						attribute.localRepresentation = 
+							new LengthRange(NaN, NaN, DataType.STRING);
 					} else {
 						throw new SyntaxError("Unknown local representation: " + 
 							items.TextFormat);
