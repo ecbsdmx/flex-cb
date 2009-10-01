@@ -772,7 +772,8 @@ package eu.ecb.core.model
 		 * @private
 		 */
 		protected function filterData(item:Object):Boolean {
-            return item.timeValue >= _startDate && item.timeValue <= _endDate;
+            return item.timeValue >= _startDate && 
+            	((null != _endDate) ? item.timeValue <= _endDate : true);
         }
         
 		/**
@@ -792,8 +793,13 @@ package eu.ecb.core.model
 					}
 				}
 				if (null == _selectedPeriod) {
-					throw new ArgumentError("Could not find the default " + 
-						"period");
+					if (periods.length > 1) {
+						throw new ArgumentError("Could not find the default " + 
+							"period");
+					} else if (periods.length == 1) {
+						_selectedPeriod = period;
+						period.selected = true;
+					}
 				}
 			}	
 	    	switch(_selectedPeriod.identifier) {
