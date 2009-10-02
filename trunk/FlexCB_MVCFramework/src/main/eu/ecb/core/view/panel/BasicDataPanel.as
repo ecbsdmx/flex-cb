@@ -152,13 +152,24 @@ package eu.ecb.core.view.panel
 		 * @private
 		 */
 		protected var _controller:ISDMXServiceController;
-						
+
+		/**
+		 * @private
+		 */
+		protected var _showTableView:Boolean;
+		
+		/**
+		 * @private
+		 */
+		protected var _showMetadataView:Boolean;								
+														
 		/*===========================Constructor==============================*/
 		
 		public function BasicDataPanel(model:SDMXDataModel, 
 			controller:SDMXDataController, showChange:Boolean = false,
 			showSeriesSummaryBox:Boolean = true,
-			showChartSummaryBox:Boolean = true)
+			showChartSummaryBox:Boolean = true, showTableView:Boolean = true,
+			showMetadataView:Boolean = true)
 		{
 			super();
 			_model = model;
@@ -167,6 +178,8 @@ package eu.ecb.core.view.panel
 			_showChange = showChange;
 			_showSeriesSummaryBox = showSeriesSummaryBox;
 			_showChartSummaryBox = showChartSummaryBox;
+			_showTableView = showTableView;
+			_showMetadataView = showMetadataView;
 			BindingUtils.bindProperty(this, "referenceSeriesFrequency", _model, 
 				"referenceSeriesFrequency");
 			BindingUtils.bindProperty(this, "referenceSeries", _model, 
@@ -249,11 +262,11 @@ package eu.ecb.core.view.panel
 				createChart();
 			}
 			
-			if (null == _table) {
+			if (null == _table && _showTableView) {
 				createTable();
 			}
 			
-			if (null == _metadataPanel) {
+			if (null == _metadataPanel && _showMetadataView) {
 				createMetadataPanel();
 			}
 			
@@ -310,8 +323,9 @@ package eu.ecb.core.view.panel
 			event.stopImmediatePropagation();
 			_viewStack.displayPanel(uint(event.data));
 			_periodSlider.visible = 
-				!(uint(event.data) == _viewSelectorBox.views.length - 1);
-			_table.isHidden = (1 == uint(event.data)) ? false : true; 
+				(uint(event.data) == 0);			
+			if (_table != null)
+				_table.isHidden = (1 == uint(event.data)) ? false : true; 			
 		}
 		
 		/**
@@ -385,9 +399,15 @@ package eu.ecb.core.view.panel
 				ViewSelector.SELECTED_VIEW_CHANGED,	handleViewChanged);
 			_filterBox.addView(_viewSelectorBox);
 			_viewSelectorBox.views = new ArrayCollection([
-				resourceManager.getString("flex_cb_mvc_lang", "chart_view"), 
-				resourceManager.getString("flex_cb_mvc_lang", "table_view"),
-				resourceManager.getString("flex_cb_mvc_lang", "md_view")]);
+					resourceManager.getString("flex_cb_mvc_lang", "chart_view")]);					
+			if (_showTableView) {
+				_viewSelectorBox.views.addItem(
+					resourceManager.getString("flex_cb_mvc_lang", "table_view"));
+			}
+			if (_showMetadataView) {
+				_viewSelectorBox.views.addItem(					 
+					resourceManager.getString("flex_cb_mvc_lang", "md_view"));
+			}
 		}
 		
 		/**
@@ -502,8 +522,12 @@ package eu.ecb.core.view.panel
 		protected function handleChangedWidth(event:Event):void
 		{
 			if (null != _periodSlider) {
-				_chart.width = _filterBox.width = _periodSlider.width = 
-					_table.width = _metadataPanel.width = width - 25;
+				var w:int = width - 25;			
+				_chart.width = _filterBox.width = _periodSlider.width = w;
+				if (_table != null) 
+					_table.width = w;
+				if (_metadataPanel != null)
+					_metadataPanel.width = w; 
 			}
 		}
 	}
