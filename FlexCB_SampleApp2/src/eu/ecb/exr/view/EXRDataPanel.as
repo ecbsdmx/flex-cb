@@ -30,8 +30,8 @@ package eu.ecb.exr.view
 {
 	import ca.boc.exr.buttons.LocaleSwitchButton;
 	
-	import eu.ecb.core.controller.SDMXDataController;
-	import eu.ecb.core.model.SDMXDataModel;
+	import eu.ecb.core.controller.ISDMXViewController;
+	import eu.ecb.core.model.ISDMXViewModel;
 	import eu.ecb.core.util.formatter.observation.EXRObservationFormatter;
 	import eu.ecb.core.view.filter.FiltersPanel;
 	import eu.ecb.core.view.panel.BasicDataPanel;
@@ -40,8 +40,6 @@ package eu.ecb.exr.view
 	
 	import flash.events.DataEvent;
 	import flash.events.Event;
-	
-	import mx.binding.utils.BindingUtils;
 
 	public class EXRDataPanel extends BasicDataPanel
 	{
@@ -57,8 +55,8 @@ package eu.ecb.exr.view
 		
 		/*===========================Constructor==============================*/
 		
-		public function EXRDataPanel(model:SDMXDataModel, 
-			controller:SDMXDataController, showChange:Boolean = false)
+		public function EXRDataPanel(model:ISDMXViewModel, 
+			controller:ISDMXViewController, showChange:Boolean = false)
 		{
 			super(model, controller, showChange);
 		}
@@ -85,7 +83,6 @@ package eu.ecb.exr.view
 			if (null == _seriesSummaryBox) {
 				_seriesSummaryBox = new EXRSeriesSummaryBox();
 				_seriesSummaryBox.showChange = _showChange;
-				_seriesSummaryBox.height = 20;
 				addChild(_seriesSummaryBox);
 			}
 
@@ -132,6 +129,12 @@ package eu.ecb.exr.view
 			super.commitFilteredDataSet();
 			_filtersPanel.width = _chart.getExplicitOrMeasuredWidth();
 			_localeButton.width = _chart.getExplicitOrMeasuredWidth();
+		}
+		
+		override protected function handleChangedWidth(event:Event):void
+		{
+			super.handleChangedWidth(event);
+			_filtersPanel.width = _localeButton.width = width - 25;
 		}
 		
 		private function handleCurrencySwitched(event:Event):void

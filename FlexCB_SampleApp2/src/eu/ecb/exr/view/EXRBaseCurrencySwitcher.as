@@ -28,19 +28,19 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.exr.view
 {
-	import mx.controls.LinkButton;
-	import flash.events.MouseEvent;
-	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
-	import org.sdmx.model.v2.reporting.dataset.KeyValue;
-	import mx.containers.HBox;
+	import eu.ecb.core.view.BaseSDMXViewComposite;
+	
 	import flash.events.Event;
+	import flash.events.MouseEvent;
+	
+	import mx.controls.LinkButton;
 	import mx.managers.HistoryManager;
 	import mx.managers.IHistoryManagerClient;
-	import mx.controls.Alert;
-	import eu.ecb.core.view.SDMXViewAdapter;
+	
+	import org.sdmx.model.v2.reporting.dataset.KeyValue;
 	
 	[ResourceBundle("flex_cb_sample_app_2_lang")]
-	public class EXRBaseCurrencySwitcher extends SDMXViewAdapter 
+	public class EXRBaseCurrencySwitcher extends BaseSDMXViewComposite 
 		implements IHistoryManagerClient
 	{
 		/*==============================Fields================================*/

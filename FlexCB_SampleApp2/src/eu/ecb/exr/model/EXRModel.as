@@ -28,7 +28,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.exr.model
 {
-	import eu.ecb.core.model.SDMXDataModel;
+	import eu.ecb.core.model.BaseSDMXViewModel;
 	import eu.ecb.core.util.formatter.ExtendedNumberFormatter;
 	
 	import flash.events.Event;
@@ -49,7 +49,7 @@ package eu.ecb.exr.model
 	import org.sdmx.model.v2.structure.code.Code;
 	import org.sdmx.util.date.SDMXDate;
 	
-	public class EXRModel extends SDMXDataModel
+	public class EXRModel extends BaseSDMXViewModel
 	{
 		private var _initialBaseDataSet:DataSet;
 		
@@ -64,7 +64,7 @@ package eu.ecb.exr.model
 			super();
 		}
 		
-		override public function set allDataSets(ds:DataSet):void 
+		override public function set dataSet(ds:DataSet):void 
 		{
 			if (null == ds) {
 				throw new ArgumentError("The data set cannot be null");
@@ -104,7 +104,6 @@ package eu.ecb.exr.model
 				// If this is an update of a dataset, we need to recreate
 				// various information holders.
 				createReferenceSeries();
-				createReferenceSeriesFrequency();
 				createSelectedPeriods();
 				createFilteredDataSet();
 				
@@ -145,7 +144,6 @@ package eu.ecb.exr.model
 			_initialBaseDataSet = null;
 			_reverseBaseDataSet = null;
 			createReferenceSeries();
-			createReferenceSeriesFrequency();
 			createSelectedPeriods();
 			createFilteredDataSet();
 			dispatchEvent(new Event(DATA_SET_UPDATED));

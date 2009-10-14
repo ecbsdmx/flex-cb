@@ -28,21 +28,18 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.exr.controller
 {
-	import eu.ecb.core.controller.SDMXDataController;
-	import eu.ecb.core.model.ISDMXDataModel;
+	import eu.ecb.core.controller.BaseSDMXViewController;
+	import eu.ecb.core.model.ISDMXViewModel;
 	import eu.ecb.exr.model.EXRModel;
 	
 	import flash.events.DataEvent;
 	import flash.events.Event;
-	import flash.net.URLRequest;
 
-	public class EXRController extends SDMXDataController
+	public class EXRController extends BaseSDMXViewController
 	{
-		public function EXRController(model:ISDMXDataModel, dataFile:URLRequest, 
-			structureFile:URLRequest, 
-			disableObservationAttribute:Boolean = true)
+		public function EXRController(model:ISDMXViewModel)
 		{
-			super(model, dataFile, structureFile, disableObservationAttribute);
+			super(model);
 		}
 		
 		public function handleCurrencySwitched(event:Event):void
