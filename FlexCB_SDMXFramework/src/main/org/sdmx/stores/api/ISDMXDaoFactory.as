@@ -120,5 +120,21 @@ package org.sdmx.stores.api
 		 * in the SDMX-ML Utility Data format from an SDMX data source.
 		 */ 
 		function getUtilityDataDAO():IDataProvider;
+		
+		/**
+		 * Configure the SDMX data provider so as to fetch (or not) 
+		 * observation-level attributes. For example, this can be set to false 
+		 * for performance reasons.
+		 *  
+		 * @param flag
+		 */
+		function set disableObservationAttribute(flag:Boolean):void;
+		
+		/**
+		 * Configure the optimisation level of the SDMX data provider.
+		 * 
+		 * @param level
+		 */
+		function set optimisationLevel(level:uint):void;
 	}
 }
