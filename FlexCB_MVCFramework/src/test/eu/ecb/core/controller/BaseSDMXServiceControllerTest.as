@@ -1,7 +1,8 @@
 package eu.ecb.core.controller
 {
 	import eu.ecb.core.model.BaseSDMXServiceModel;
-	import eu.ecb.core.model.ISDMXDataModel;
+	import eu.ecb.core.model.ISDMXServiceModel;
+	import eu.ecb.core.model.ISDMXViewModel;
 	
 	import flash.events.Event;
 	import flash.net.URLRequest;
@@ -43,45 +44,26 @@ package eu.ecb.core.controller
 		public function testSetAndGetDataFile():void
 		{
 			assertNull("No data file by default", 
-				(_controller as BaseSDMXServiceController).dataFile);
+				(_controller as BaseSDMXServiceController).dataSource);
 			var dataFile:URLRequest = new URLRequest("test.xml");
-			(_controller as BaseSDMXServiceController).dataFile = dataFile;
+			(_controller as BaseSDMXServiceController).dataSource = dataFile;
 			assertEquals("data files should be equal", dataFile,
-				(_controller as BaseSDMXServiceController).dataFile);	
+				(_controller as BaseSDMXServiceController).dataSource);	
 		}
 		
 		public function testSetAndGetStructureFile():void
 		{
 			assertNull("No structure file by default", 
-				(_controller as BaseSDMXServiceController).structureFile);
+				(_controller as BaseSDMXServiceController).structureSource);
 			var file:URLRequest = new URLRequest("testS.xml");
-			(_controller as BaseSDMXServiceController).structureFile = file;
+			(_controller as BaseSDMXServiceController).structureSource = file;
 			assertEquals("structure files should be equal", file,
-				(_controller as BaseSDMXServiceController).structureFile);	
-		}
-		
-		public function testSetAndGetObservationAttributeFLag():void
-		{
-			assertFalse("Flag not disabled by default", (_controller as 
-				BaseSDMXServiceController).disableObservationAttribute);
-			(_controller as BaseSDMXServiceController).
-				disableObservationAttribute = true;	
-			assertTrue("Flag should now be disabled", (_controller as 
-				BaseSDMXServiceController).disableObservationAttribute);	
-		}
-		
-		public function testSetAndGetOptimisationLevel():void
-		{
-			assertEquals("No optimisation by default", 0, (_controller as 
-				BaseSDMXServiceController).optimisationLevel);
-			(_controller as BaseSDMXServiceController).optimisationLevel = 1
-			assertEquals("Optimisation level should be 1", 1, (_controller as 
-				BaseSDMXServiceController).optimisationLevel);
+				(_controller as BaseSDMXServiceController).structureSource);	
 		}
 		
 		public function testFetchKeyFamily():void
 		{
-			(_controller as BaseSDMXServiceController).structureFile = 
+			(_controller as BaseSDMXServiceController).structureSource = 
 				new URLRequest("testData/ecb_exr1.xml");
 			_model.addEventListener(BaseSDMXServiceModel.
 				KEY_FAMILIES_UPDATED, addAsync(handleKF, 3000));
@@ -90,9 +72,9 @@ package eu.ecb.core.controller
 		
 		public function testFetchDataSet():void
 		{
-			(_controller as BaseSDMXServiceController).structureFile = 
+			(_controller as BaseSDMXServiceController).structureSource = 
 				new URLRequest("testData/ecb_exr1.xml");
-			(_controller as BaseSDMXServiceController).dataFile = 
+			(_controller as BaseSDMXServiceController).dataSource = 
 				new URLRequest("testData/aud_monthly.xml");	
 			_model.addEventListener(BaseSDMXServiceModel.
 				DATA_SET_UPDATED, addAsync(handleDS, 3000));
@@ -101,9 +83,9 @@ package eu.ecb.core.controller
 		
 		public function testFetchDataSetWithFormat():void
 		{
-			(_controller as BaseSDMXServiceController).structureFile = 
+			(_controller as BaseSDMXServiceController).structureSource = 
 				new URLRequest("testData/ecb_exr1.xml");
-			(_controller as BaseSDMXServiceController).dataFile = 
+			(_controller as BaseSDMXServiceController).dataSource = 
 				new URLRequest("testData/aud_monthly.xml");	
 			_model.addEventListener(BaseSDMXServiceModel.
 				DATA_SET_UPDATED, addAsync(handleDS, 3000));
@@ -160,21 +142,21 @@ package eu.ecb.core.controller
 			_testDataSet = event.data as DataSet;
 			_model.addEventListener(BaseSDMXServiceModel.DATA_SET_UPDATED, 
 				handleDS1);
-			(_controller as SDMXDataController).dataSet = _testDataSet;
+			(_controller as BaseSDMXServiceController).dataSet = _testDataSet;
 		}
 		
 		private function handleDS1(event:Event):void
 		{
 			assertTrue("DS should contain the same number of series", 1 == 
-				(_model as ISDMXDataModel).dataSet.timeseriesKeys.length == 
-				(_model as ISDMXDataModel).allDataSets.timeseriesKeys.length);
+				(_model as ISDMXServiceModel).dataSet.timeseriesKeys.length == 
+				(_model as ISDMXServiceModel).allDataSets.timeseriesKeys.length);
 			assertTrue("DS should contain the same series", (_testDataSet.
 				timeseriesKeys.getItemAt(0) as TimeseriesKey).seriesKey == 
-				((_model as ISDMXDataModel).dataSet.timeseriesKeys.getItemAt(0) 
+				((_model as ISDMXServiceModel).dataSet.timeseriesKeys.getItemAt(0) 
 				as TimeseriesKey).seriesKey);
 			assertTrue("ADS should contain the same series", (_testDataSet.
 				timeseriesKeys.getItemAt(0) as TimeseriesKey).seriesKey == 
-				((_model as ISDMXDataModel).allDataSets.timeseriesKeys.
+				((_model as ISDMXServiceModel).allDataSets.timeseriesKeys.
 				getItemAt(0) as TimeseriesKey).seriesKey);	
 		}
 private var _structureXML:XML =

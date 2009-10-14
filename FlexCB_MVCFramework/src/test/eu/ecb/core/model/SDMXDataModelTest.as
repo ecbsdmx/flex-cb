@@ -28,10 +28,10 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.model
 {
-	import flexunit.framework.TestSuite;
-	
 	import flash.events.DataEvent;
 	import flash.events.Event;
+	
+	import flexunit.framework.TestSuite;
 	
 	import mx.collections.ArrayCollection;
 	
@@ -62,7 +62,7 @@ package eu.ecb.core.model
 	 */ 
 	public class SDMXDataModelTest extends BaseSDMXServiceModelTest
 	{
-		private var _exrModel:ISDMXDataModel;
+		private var _exrModel:ISDMXViewModel;
 		
 		private var _exrDataSet:DataSet;
 		
@@ -79,29 +79,29 @@ package eu.ecb.core.model
 		}
 		
 		override public function createModel():ISDMXServiceModel {
-			return new SDMXDataModel();
+			return new BaseSDMXViewModel();
 		}
 		
 		public function testSetNullDataSet():void {
-			var model:SDMXDataModel = new SDMXDataModel();
+			var model:ISDMXViewModel = new BaseSDMXViewModel();
 			var dataSet:DataSet;
 			try {
-				model.allDataSets = dataSet;
+				model.dataSet = dataSet;
 				fail("It should not be possible to set a null dataSet");
 			} catch (error:ArgumentError) {}
 		}
 		
 		public function testSetEmptyDataSet():void {
-			var model:SDMXDataModel =  new SDMXDataModel();
+			var model:ISDMXViewModel =  new BaseSDMXViewModel();
 			var dataSet:DataSet = new DataSet();
 			try {
-				model.allDataSets = dataSet;
+				model.dataSet = dataSet;
 				fail("It should not be possible to set an empty dataSet");
 			}  catch (error:ArgumentError) {}
 		}
 		
 		public function testGetAndSetDataSet():void {
-			var model:SDMXDataModel =  new SDMXDataModel();
+			var model:ISDMXViewModel =  new BaseSDMXViewModel();
 			var keys:TimeseriesKeysCollection = new TimeseriesKeysCollection();
 			var keyDescriptor:KeyDescriptor = new KeyDescriptor("test");
 			var series1:TimeseriesKey = new TimeseriesKey(keyDescriptor);
@@ -117,7 +117,7 @@ package eu.ecb.core.model
 		}
 		
 		public function testSortTimeSeries():void {
-			var model:SDMXDataModel =  new SDMXDataModel();		
+			var model:ISDMXViewModel =  new BaseSDMXViewModel();		
 
 			var key:TimeseriesKey = new TimeseriesKey(new KeyDescriptor("id"));
 			key.keyValues = getKeyValues();
@@ -152,7 +152,7 @@ package eu.ecb.core.model
 		}
 				
 		public function testGetDefaultSelectedSeries():void {
-			var model:SDMXDataModel =  new SDMXDataModel();
+			var model:ISDMXViewModel =  new BaseSDMXViewModel();
 			var keys:TimeseriesKeysCollection = new TimeseriesKeysCollection();
 			var keyDescriptor:KeyDescriptor = new KeyDescriptor("test");
 			var series1:TimeseriesKey = new TimeseriesKey(keyDescriptor);
@@ -168,7 +168,7 @@ package eu.ecb.core.model
 		}
 		
 		public function testGetFrequency():void {
-			var model:SDMXDataModel =  new SDMXDataModel();		
+			var model:ISDMXViewModel =  new BaseSDMXViewModel();		
 
 			var key:TimeseriesKey = new TimeseriesKey(new KeyDescriptor("id"));
 			key.keyValues = getKeyValues();
@@ -182,7 +182,7 @@ package eu.ecb.core.model
 		}
 		
 		public function testNoFrequencyFound():void {
-			var model:SDMXDataModel = new SDMXDataModel();		
+			var model:ISDMXViewModel = new BaseSDMXViewModel();		
 
 			var key:TimeseriesKey = new TimeseriesKey(new KeyDescriptor("id"));
 			var dim0:Dimension = new Dimension("dim0", new Concept("FREQ"));
@@ -211,7 +211,7 @@ package eu.ecb.core.model
 		
 		public function testSetAndGetIsPercentage():void
 		{
-			var model:SDMXDataModel = new SDMXDataModel();
+			var model:ISDMXViewModel = new BaseSDMXViewModel();
 			assertFalse("No is percentage by default", model.isPercentage);
 			model.isPercentage = true;
 			assertTrue("is percentage", model.isPercentage);
@@ -219,7 +219,7 @@ package eu.ecb.core.model
 		
 		public function testSetAndGetSelectedDataSet():void
 		{
-			var model:SDMXDataModel = new SDMXDataModel();
+			var model:ISDMXViewModel = new BaseSDMXViewModel();
 			var ds:DataSet = new DataSet();
 			assertNull("No selected ds by default", model.selectedDataSet);
 			model.selectedDataSet = ds;
@@ -228,7 +228,7 @@ package eu.ecb.core.model
 		
 		public function testSetAndGetHighlightedDataSet():void
 		{
-			var model:SDMXDataModel = new SDMXDataModel();
+			var model:ISDMXViewModel = new BaseSDMXViewModel();
 			var ds:DataSet = new DataSet();
 			assertNull("No highlighted ds by default", 
 				model.highlightedDataSet);
@@ -238,7 +238,7 @@ package eu.ecb.core.model
 		
 		public function testSetAndGetPeriods():void
 		{
-			var model:SDMXDataModel = new SDMXDataModel();
+			var model:ISDMXViewModel = new BaseSDMXViewModel();
 			var periods:ArrayCollection = new ArrayCollection();
 			assertNull("No period by default", model.periods);
 			model.periods = periods;
@@ -273,8 +273,9 @@ package eu.ecb.core.model
 		
 		private function handleDataSet(event:SDMXDataEvent):void
 		{
-			_exrModel = new SDMXDataModel();
-			_exrModel.addEventListener(BaseSDMXServiceModel.DATA_SET_UPDATED, 
+			_exrModel = new BaseSDMXViewModel();
+			_exrModel.addEventListener(
+				BaseSDMXServiceModel.ALL_DATA_SETS_UPDATED, 
 				handleEXRModelReady);
 			_exrDataSet = event.data as DataSet;
 			_exrModel.dataSet = _exrDataSet; 	
@@ -295,19 +296,14 @@ package eu.ecb.core.model
 			assertEquals("Reference series should be =", _exrDataSet.
 				timeseriesKeys.getItemAt(0), _exrModel.referenceSeries);	
 			assertEquals("There should be 5 periods", 5, 
-				_exrModel.periods.length);
-			assertEquals("The filtered ref series should be =", 
-				"M.AUD.EUR.SP00.A", (_exrModel.filteredDataSet.timeseriesKeys.
-				getItemAt(0) as TimeseriesKey).seriesKey); 	
+				_exrModel.periods.length);	
 			assertEquals("The filtered ref series should be =", 
 				"M.AUD.EUR.SP00.A", 
 				_exrModel.filteredReferenceSeries.seriesKey);
-			assertEquals("Filetered ref series in the filtered ds", 
-				_exrModel.filteredReferenceSeries,
-				_exrModel.filteredDataSet.timeseriesKeys.getItemAt(0));	
 			assertEquals("There should be 61 observations", 61, 
 				_exrModel.filteredReferenceSeries.timePeriods.length);
-			_exrModel.addEventListener(SDMXDataModel.FILTERED_DATASET_UPDATED, 
+			_exrModel.addEventListener(
+				BaseSDMXViewModel.FILTERED_REFERENCE_SERIES_UPDATED,
 				handleFilteredDS1);		
 			_exrModel.handlePeriodChange(new DataEvent("test", false, false, 
 				"2y"));		
@@ -315,11 +311,13 @@ package eu.ecb.core.model
 		
 		private function handleFilteredDS1(event:Event):void
 		{
-			_exrModel.removeEventListener(SDMXDataModel.FILTERED_DATASET_UPDATED, 
+			_exrModel.removeEventListener(
+				BaseSDMXViewModel.FILTERED_REFERENCE_SERIES_UPDATED, 
 				handleFilteredDS1);		
 			assertEquals("There should be 25 observations", 25, 
 				_exrModel.filteredReferenceSeries.timePeriods.length);
-			_exrModel.addEventListener(SDMXDataModel.FILTERED_DATASET_UPDATED, 
+			_exrModel.addEventListener(
+				BaseSDMXViewModel.FILTERED_REFERENCE_SERIES_UPDATED, 
 				handleFilteredDS2);
 			_exrModel.handleDividerDragged(new DataEvent("test", false, false, 
 				"-7"), "left");		
@@ -327,11 +325,13 @@ package eu.ecb.core.model
 		
 		private function handleFilteredDS2(event:Event):void
 		{
-			_exrModel.removeEventListener(SDMXDataModel.FILTERED_DATASET_UPDATED, 
+			_exrModel.removeEventListener(
+				BaseSDMXViewModel.FILTERED_REFERENCE_SERIES_UPDATED, 
 				handleFilteredDS2);	
 			assertEquals("There should be 32 observations", 32, 
 				_exrModel.filteredReferenceSeries.timePeriods.length);
-			_exrModel.addEventListener(SDMXDataModel.FILTERED_DATASET_UPDATED, 
+			_exrModel.addEventListener(
+				BaseSDMXViewModel.FILTERED_REFERENCE_SERIES_UPDATED,
 				handleFilteredDS3);
 			_exrModel.handleChartDragged(new DataEvent("test", false, false, 
 				"1"));	
@@ -339,14 +339,16 @@ package eu.ecb.core.model
 		
 		private function handleFilteredDS3(event:Event):void
 		{
-			_exrModel.removeEventListener(SDMXDataModel.FILTERED_DATASET_UPDATED, 
+			_exrModel.removeEventListener(
+				BaseSDMXViewModel.FILTERED_REFERENCE_SERIES_UPDATED, 
 				handleFilteredDS3);	
-			assertEquals("There should be 21 observations", 31, 
+			assertEquals("There should be 31 observations", 31, 
 				_exrModel.filteredReferenceSeries.timePeriods.length);
 			assertEquals("First obs period should be 2006-12", "2006-12", 
 				(_exrModel.filteredReferenceSeries.timePeriods.getItemAt(0) as 
 				TimePeriod).periodComparator);
-			_exrModel.addEventListener(SDMXDataModel.FILTERED_DATASET_UPDATED, 
+			_exrModel.addEventListener(
+				BaseSDMXViewModel.FILTERED_REFERENCE_SERIES_UPDATED,
 				handleFilteredDS4);		
 			_exrModel.handlePeriodChange(new DataEvent("test", false, false, 
 				"All"));			
@@ -354,12 +356,14 @@ package eu.ecb.core.model
 		
 		private function handleFilteredDS4(event:Event):void
 		{
-			_exrModel.removeEventListener(SDMXDataModel.FILTERED_DATASET_UPDATED, 
+			_exrModel.removeEventListener(
+				BaseSDMXViewModel.FILTERED_REFERENCE_SERIES_UPDATED, 
 				handleFilteredDS4);	
 			assertEquals("All observations", 
 				_exrModel.referenceSeries.timePeriods.length, 
 				_exrModel.filteredReferenceSeries.timePeriods.length);
-			_exrModel.addEventListener(SDMXDataModel.FILTERED_DATASET_UPDATED, 
+			_exrModel.addEventListener(
+				BaseSDMXViewModel.FILTERED_REFERENCE_SERIES_UPDATED,
 				handleFilteredDS5);		
 			_exrModel.handleDividerDragged(new DataEvent("test", false, false, 
 				"-1"), "right");					
@@ -367,7 +371,8 @@ package eu.ecb.core.model
 		
 		private function handleFilteredDS5(event:Event):void
 		{
-			_exrModel.removeEventListener(SDMXDataModel.FILTERED_DATASET_UPDATED, 
+			_exrModel.removeEventListener(
+				BaseSDMXViewModel.FILTERED_REFERENCE_SERIES_UPDATED, 
 				handleFilteredDS5);	
 			assertEquals("All observations - 1", 
 				_exrModel.referenceSeries.timePeriods.length - 1, 
