@@ -13,20 +13,22 @@ This library covers the third layer, i.e. displaying the data in various ways. T
 = The main components =
 
 The FlexCB code is organized around the following concepts:
- # SDMX service: An SDMX service is an !ActionScript component that offers a set of SDMX-related services such as the possibility to retrieve and display statistical data and metadata.
- # SDMX data provider: An !ActionScript component that, upon request from an SDMX service, extracts statistical data and metadata out of an SDMX data source (e.g.: SDMX-ML files published on a website, SDMX-compliant web service, etc).
- # SDMX data source: A repository containing SDMX data and metadata.
+ # SDMX service: An SDMX service is an !ActionScript component that offers a set of SDMX-related services such as the possibility to retrieve and display statistical data and metadata. Each of these SDMX Services follows the Model-View-Controller design pattern. Therefore, they will be made of components that fulfill the contracts defined in interfaces such as ISDMXServiceController, ISDMXServiceModel and ISDMXServiceView.
+ # SDMX source: A repository containing SDMX data and metadata. This can be a simple SDMX-ML file published on a web server but could also be a full-fledged SDMX SOAP or Restful web service.
+ # SDMX provider: An !ActionScript component that, upon request from an SDMX service controller, extracts statistical data and metadata out of an SDMX source. SDMX metadata providers retrieve metadata, while SDMX data providers retrieve statistical data. Access to the SDMX providers is controlled by SDMX Dao factories (following the Factory design pattern). 
 
-A FlexCB application is typically made of an SDMX service and an SDMX data provider and is used to connect to an SDMX data source of your choice. The SDMX data provider is covered by the FlexCB_SDMXFramework library, while the FlexCB_MVCFramework covers the SDMX service functionality. As mentioned above, this library follows the MVC design patterns and therefore features the following components:
- # The controllers offer a standard set of operations that an SDMX service will support. It will instruct an SDMX data provider to query an SDMX data source and it will update the model accordingly.
- # The models store in memory the statistical data and metadata retrieved from the SDMX data source. It can also store items needed by the views.
- # The views display the statistical data and metadata stored in the model in various ways (charts, tables, etc). Quite often, one of these views will play the role of a mediator and will centralize all communications between the controller and the various views. In this library, the panels play the role of mediators. 
+So, in summary, a FlexCB application is typically made of an SDMX service and SDMX (data & metadata) providers (whose access to is controlled by SDMX DAO factories) and is used to connect to an SDMX source of your choice. 
+
+The SDMX provider is covered by the FlexCB_SDMXFramework library, while the FlexCB_MVCFramework covers the SDMX service functionality.
 
 = The packages =
 
 == The controller package (eu.ecb.core.controller) ==
+The Flex-CB controllers offer a standard set of operations that an SDMX service will support (like a dictionary of all the features of an application). It executes actions, as requested by users of the application via views. It will, for instance, instruct an SDMX provider to query an SDMX source. Most of the time, the model will be modified to reflect those actions. The Controllers currently available in Flex-CB are listed below:
 
-This package contains the controllers (see above). The BaseSDMXServiceController offers a basic set of operations to be supported by SDMX services, such as the possibility to fetch data structure definitions or SDMX data in various formats. The SDMXDataController extends the BaseSDMXServiceController and adds operations which are triggered by views, such as changing the reference period.
+ # IController: Base interface that defines the basic behavior of controllers in an MVC design pattern. Concrete implementation: !BaseController.
+ # ISDMXServiceController: Contract to be fullfilled by controllers of applications offering a set of SDMX services. Extends IController. Methods defined in the interface allow to: a) Supply the SDMX DAO factories that will manage the access to the SDMX data and metadata providers; b) Supply the SDMX sources to be used by the SDMX data and metadata providers; c) Instructs the SDMX providers to perform operations such as fetching data or structural metadata. Concrete implementation: BaseSDMXServiceController.
+ # ISDMXViewController: Contract to be fullfilled by controllers that react to actions performed by the user on views (e.g.: dragging a period slider). Extends ISDMXServiceController. Concrete implementation: BaseSDMXViewController. 
 
 == The event package (eu.ecb.core.event) ==
 
@@ -34,7 +36,10 @@ The event package contains the events that can be dispatched by the library clas
 
 == The model package (eu.ecb.core.model) ==
 
-The models store in memory the statistical data and metadata retrieved from the SDMX data source and it can also store items needed by the views. The BaseSDMXServiceModel offers the accessors needed to store the data requested by the BaseSDMXServiceController, such as category schemes, key families and data sets. For each of these accessors, there will be one accessor containing all artefacts of that type extracted since the application started. For example, the accessor dataSet will contain the latest data set that has been extracted, while the accessor allDataSets will contain all data sets extracted since the application started up. The SDMXDataModel extends the BaseSDMXServiceModel and adds information needed by the views, such as the frequency of the selected data or the periods covered by the data set.
+The Flex-CB models store in memory the statistical data and metadata retrieved from the SDMX source. They can also store items needed by the views. The models have no dependencies on the views or the controllers, but simply encapsulate the data access layer. They use the observer pattern to notify the interested components of changes happening in the model. The Models currently available in Flex-CB are listed below:
+ # IModel: Marker interface to indicate that the components acts as a Flex-CB model. 
+ # ISDMXServiceModel: Contract to be fullfilled by models of applications offering a set of SDMX compliant services. The model offers accessors to the various collections of data and structural metadata. Extends IModel. Concrete implementation: BaseSDMXServiceModel. 
+ # ISDMXViewModel: Contract to be fulfilled by models that react to actions performed by the user on views. Compared to the ISDMXServiceModel, this interface adds methods to access data optimized for certain views (such as filtered datasets) as well as methods to modify data, following actions performed by the users in views (like dragging a thumb of a period slider).
 
 == The util package (eu.ecb.core.util) ==
 
@@ -42,24 +47,33 @@ The util package contains various utility classes such as formatters, validators
 
 == The view package (eu.ecb.core.view) ==
 
-The view package contains the components which are displayed on the screen. Some of these components will display the statistical data and metadata in various ways, such as line charts, bar charts, data grids and metadata panels. Other components will play the role of filters, allowing to granularly select what needs to be displayed on the screen (e.g.: period selector, dimensions-based selector, etc). Other components will offer summaries about the data being displayed (minimum, maximum and average values, etc). The panel components play the role of mediators and follow the composite pattern. One of their main tasks is to centralize all communications between the various views and the controller.
+The Flex-CB views display the statistical data and metadata stored in the model in various ways (charts, tables, etc). Quite often, one of these views will play the role of a mediator and will centralize all communications between the controller and the various views. Flex-CB views are organized as follow:
+ # IView: Marker interface to indicate that the components acts as a Flex-CB view.
+ # ISDMXServiceView: Contract to be fullfilled by views of applications offering a set of SDMX compliant services. Extends IView. Concrete implementation: BaseSDMXServiceView.
+ # ISDMXView: Contract to be implemented by views supporting advanced visual representations of SDMX data. Compared to the ISDMXServiceView, this interface offers to possibility to retrieve  data optimized for certain views (such as filtered datasets, periods for filtering, etc). Extends ISDMXServiceView. Concrete implementation: BaseSDMXView.
+ # ISDMXComposite: Interface, inspired by the Composite pattern, to be implemented by views which hold other views. This is the case of views that act as mediators but there might be other examples. Extends IView. Concrete implementation: BaseSDMXViewComposite (Implements both ISDMXComposite and ISDMXView).
+ # ISDMXMediator: Interface to be implemented by views which play the role of a mediator. Mediators centralize all communications between the controller, the model and the various views. Because mediators contain views, they extend the ISDMXComposite interface. Concrete implementation: BaseSDMXMediator.
 
 = Examples =
 
-The following shows how the key components of the library are working together.
+The following shows how the key components of the library are working together.	
 
 {{{
 // Instantiates the model to be used by this application
-var model:SDMXDataModel = new SDMXDataModel();
+var model:ISDMXViewModel = new BaseSDMXViewModel();
 
 // Instantiates the controller to be used by this application.
 // We also pass the SDMX-ML data file containing the data to be visualized 
 // as well as the SDMX-ML structure file needed to interpret the data
-var controller:SDMXDataController = 
-    new SDMXDataController(model, new URLRequest("data.xml"), new URLRequest("structure.xml"));
+var controller:ISDMXViewController = new BaseSDMXViewController(model);
 
-// Instantiates the view to be used by this application. Other views can be freely selected, as needed.
-var view:SDMXDataPanelAdapter = new BasicDataPanel(model, controller);
+// Sets the SDMX data and metadata source to be used by the controller;
+controller.dataSource = new URLRequest(dataFile);
+controller.structureSource = new URLRequest(dsdFile);
+
+// Instantiates the view to be used by this application. This view plays
+// the role of a mediator but other views can be freely selected.
+var view:ISDMXMediator = new BasicDataPanel(model, controller);
 
 // Adds the view to the stage
 addChild(view);
