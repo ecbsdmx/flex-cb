@@ -1,4 +1,4 @@
-// Copyright (C) 2008 European Central Bank. All rights reserved.
+﻿// Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
 // with or without modification, are permitted
@@ -26,9 +26,11 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view.panel
 {
-	import eu.ecb.core.controller.ISDMXServiceController;
-	import eu.ecb.core.controller.SDMXDataController;
-	import eu.ecb.core.model.SDMXDataModel;
+	import eu.ecb.core.controller.ISDMXViewController;
+	import eu.ecb.core.model.BaseSDMXViewModel;
+	import eu.ecb.core.model.ISDMXViewModel;
+	import eu.ecb.core.view.BaseSDMXViewComposite;
+	import eu.ecb.core.view.BaseSDMXMediator;
 	import eu.ecb.core.view.chart.ECBChartEvents;
 	import eu.ecb.core.view.chart.ECBLegend;
 	import eu.ecb.core.view.chart.ECBLineChart;
@@ -64,7 +66,7 @@ package eu.ecb.core.view.panel
 	 * @author Xavier Sosnovsky
 	 */
 	[ResourceBundle("flex_cb_mvc_lang")]
-	public class BasicDataPanel extends SDMXDataPanelAdapter
+	public class BasicDataPanel extends BaseSDMXMediator
 	{
 		/*==============================Fields================================*/
 		
@@ -76,7 +78,7 @@ package eu.ecb.core.view.panel
 		/**
 		 * @private
 		 */
-		protected var _filterBox:SDMXDataPanelAdapter;
+		protected var _filterBox:BaseSDMXViewComposite;
 		
 		/**
 		 * @private
@@ -86,7 +88,7 @@ package eu.ecb.core.view.panel
 		/**
 		 * @private
 		 */
-		protected var _chartBox:SDMXDataPanelAdapter;
+		protected var _chartBox:BaseSDMXViewComposite;
 		
 		/**
 		 * @private
@@ -126,7 +128,7 @@ package eu.ecb.core.view.panel
 		/**
 		 * @private
 		 */
-		protected var _chartAndSliderPanel:SDMXDataPanelAdapter;
+		protected var _chartAndSliderPanel:BaseSDMXViewComposite;
 		
 		/**
 		 * @private
@@ -145,35 +147,23 @@ package eu.ecb.core.view.panel
 		
 		/**
 		 * @private
-		 */		
-		protected var _model:SDMXDataModel;
-		
-		/**
-		 * @private
-		 */
-		protected var _controller:ISDMXServiceController;
-
-		/**
-		 * @private
 		 */
 		protected var _showTableView:Boolean;
 		
 		/**
 		 * @private
 		 */
-		protected var _showMetadataView:Boolean;								
-														
+		protected var _showMetadataView:Boolean;
+						
 		/*===========================Constructor==============================*/
 		
-		public function BasicDataPanel(model:SDMXDataModel, 
-			controller:SDMXDataController, showChange:Boolean = false,
+		public function BasicDataPanel(model:ISDMXViewModel, 
+			controller:ISDMXViewController, showChange:Boolean = false,
 			showSeriesSummaryBox:Boolean = true,
 			showChartSummaryBox:Boolean = true, showTableView:Boolean = true,
 			showMetadataView:Boolean = true)
 		{
-			super();
-			_model = model;
-			_controller = controller;
+			super(model, controller);
 			styleName = "dataPanel";
 			_showChange = showChange;
 			_showSeriesSummaryBox = showSeriesSummaryBox;
@@ -216,7 +206,7 @@ package eu.ecb.core.view.panel
 		override protected function resourcesChanged():void {
 			if (!initialized) return;
 			super.resourcesChanged();
-			_model.updateLanguage();	
+			(_model as BaseSDMXViewModel).updateLanguage();	
 		}
 		
 		/**
@@ -285,7 +275,7 @@ package eu.ecb.core.view.panel
 		protected function handleDataChartDragged(event:DataEvent):void 
 		{
 			event.stopImmediatePropagation();
-			(_controller as SDMXDataController).handleChartDragged(event);
+			(_controller as ISDMXViewController).handleChartDragged(event);
 		}
 		
 		/**
@@ -294,7 +284,7 @@ package eu.ecb.core.view.panel
 		protected function handleLeftDividerDragged(event:DataEvent):void 
 		{
 			_periodZoomBox.removeSelectedPeriodHighlight();
-			(_controller as SDMXDataController).handleLeftDividerDragged(event);
+			(_controller as ISDMXViewController).handleLeftDividerDragged(event);
 			event.stopImmediatePropagation();
 		}
 		
@@ -304,7 +294,7 @@ package eu.ecb.core.view.panel
 		protected function handleRightDividerDragged(event:DataEvent):void 
 		{
 			_periodZoomBox.removeSelectedPeriodHighlight();
-			(_controller as SDMXDataController).
+			(_controller as ISDMXViewController).
 				handleRightDividerDragged(event);
 			event.stopImmediatePropagation();			
 		}
@@ -315,7 +305,7 @@ package eu.ecb.core.view.panel
 		protected function handlePeriodChanged(event:DataEvent):void 
 		{
 			event.stopImmediatePropagation();
-			(_controller as SDMXDataController).handlePeriodChange(event);
+			(_controller as ISDMXViewController).handlePeriodChange(event);
 		}
 		
 		protected function handleViewChanged(event:DataEvent):void
@@ -372,7 +362,7 @@ package eu.ecb.core.view.panel
 		 */
 		protected function createFilterBox():void
 		{
-			_filterBox = new SDMXDataPanelAdapter("horizontal");
+			_filterBox = new BaseSDMXViewComposite("horizontal");
 			_filterBox.styleName = "filterBox";
 			_filterBox.visible = false;
 			_filterBox.percentWidth = 100;
@@ -399,14 +389,14 @@ package eu.ecb.core.view.panel
 				ViewSelector.SELECTED_VIEW_CHANGED,	handleViewChanged);
 			_filterBox.addView(_viewSelectorBox);
 			_viewSelectorBox.views = new ArrayCollection([
-					resourceManager.getString("flex_cb_mvc_lang", "chart_view")]);					
+				resourceManager.getString("flex_cb_mvc_lang", "chart_view")]);					
 			if (_showTableView) {
 				_viewSelectorBox.views.addItem(
-					resourceManager.getString("flex_cb_mvc_lang", "table_view"));
+				resourceManager.getString("flex_cb_mvc_lang", "table_view"));
 			}
 			if (_showMetadataView) {
 				_viewSelectorBox.views.addItem(					 
-					resourceManager.getString("flex_cb_mvc_lang", "md_view"));
+				resourceManager.getString("flex_cb_mvc_lang", "md_view"));
 			}
 		}
 		
@@ -415,7 +405,7 @@ package eu.ecb.core.view.panel
 		 */
 		protected function createChartBox():void
 		{
-			_chartBox = new SDMXDataPanelAdapter();
+			_chartBox = new BaseSDMXViewComposite();
 			_chartBox.styleName = "chartBox";
 			_chartBox.visible = false;
 			_chartBox.percentWidth  = 100;
@@ -513,7 +503,7 @@ package eu.ecb.core.view.panel
 		 */
 		protected function createChartAndSliderPanel():void
 		{
-			_chartAndSliderPanel = new SDMXDataPanelAdapter();
+			_chartAndSliderPanel = new BaseSDMXViewComposite();
 			_chartAndSliderPanel.percentHeight = 100;
 			_chartAndSliderPanel.percentWidth  = 100;
 			_viewStack.addView(_chartAndSliderPanel);
@@ -524,10 +514,12 @@ package eu.ecb.core.view.panel
 			if (null != _periodSlider) {
 				var w:int = width - 25;			
 				_chart.width = _filterBox.width = _periodSlider.width = w;
-				if (_table != null) 
+				if (_table != null) {
 					_table.width = w;
-				if (_metadataPanel != null)
-					_metadataPanel.width = w; 
+				}
+				if (_metadataPanel != null) {
+					_metadataPanel.width = w;
+				} 
 			}
 		}
 	}
