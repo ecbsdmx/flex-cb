@@ -1,11 +1,11 @@
 package eu.ecb.core.controller
 {
 	import eu.ecb.core.model.BaseSDMXServiceModel;
-	import eu.ecb.core.model.ISDMXDataModel;
-	import eu.ecb.core.model.SDMXDataModel;
+	import eu.ecb.core.model.BaseSDMXViewModel;
+	import eu.ecb.core.model.ISDMXViewModel;
 	
-	import flash.events.Event;
 	import flash.events.DataEvent;
+	import flash.events.Event;
 	import flash.net.URLRequest;
 	
 	import flexunit.framework.TestSuite;
@@ -37,30 +37,33 @@ package eu.ecb.core.controller
 		
 		override public function createController():IController 
 		{
-			_model = new SDMXDataModel();
-			return new SDMXDataController(_model as ISDMXDataModel, 
-				new URLRequest("testData/aud_monthly.xml"), 
-				new URLRequest("testData/ecb_exr1.xml"), false);
+			_model = new BaseSDMXViewModel();
+			var controller:ISDMXViewController =
+				new BaseSDMXViewController(_model as ISDMXViewModel);
+			controller.dataSource = new URLRequest("testData/aud_monthly.xml");
+			controller.structureSource = 
+				new URLRequest("testData/ecb_exr1.xml");
+			return controller;	
 		}
 		
 		override public function testSetAndGetDataFile():void
 		{
 			assertEquals("Data files should be = ", "testData/aud_monthly.xml", 
-				(_controller as SDMXDataController).dataFile.url);
+				(_controller as ISDMXViewController).dataSource.url);
 		}
 		
 		override public function testSetAndGetStructureFile():void
 		{
 			assertEquals("Structure files should be = ", 
 				"testData/ecb_exr1.xml", 
-				(_controller as SDMXDataController).structureFile.url);	
+				(_controller as ISDMXViewController).structureSource.url);	
 		}
 		
 		public function testLoadData():void
 		{
 			_model.addEventListener(BaseSDMXServiceModel.
 				DATA_SET_UPDATED, addAsync(handleDS, 3000));
-			(_controller as SDMXDataController).loadData();	
+			(_controller as ISDMXViewController).fetchData();	
 		}
 		
 		public function testFetchingMultipleFiles():void
@@ -70,7 +73,7 @@ package eu.ecb.core.controller
 			var files:ArrayCollection = new ArrayCollection();
 			files.addItem(new URLRequest("testData/neer.xml"));
 			files.addItem(new URLRequest("testData/aud_monthly.xml"));	
-			(_controller as SDMXDataController).fetchFiles(files);
+			(_controller as ISDMXViewController).fetchDataFiles(files);
 		}
 		
 		protected function handleMultipleDS(event:Event):void
@@ -116,84 +119,84 @@ package eu.ecb.core.controller
 		private function handleDataSet(event:SDMXDataEvent):void
 		{
 			_testDataSet = event.data as DataSet;
-			_model.addEventListener(BaseSDMXServiceModel.DATA_SET_UPDATED, 
+			_model.addEventListener(BaseSDMXServiceModel.ALL_DATA_SETS_UPDATED, 
 				handleDS1);
-			(_controller as SDMXDataController).dataSet = _testDataSet;
+			(_controller as ISDMXViewController).dataSet = _testDataSet;
 		}
 		
 		private function handleDS1(event:Event):void
 		{
 			assertTrue("DS should contain the same number of series", 1 == 
-				(_model as ISDMXDataModel).dataSet.timeseriesKeys.length == 
-				(_model as ISDMXDataModel).allDataSets.timeseriesKeys.length);
+				(_model as ISDMXViewModel).dataSet.timeseriesKeys.length == 
+				(_model as ISDMXViewModel).allDataSets.timeseriesKeys.length);
 			assertTrue("DS should contain the same series", (_testDataSet.
 				timeseriesKeys.getItemAt(0) as TimeseriesKey).seriesKey == 
-				((_model as ISDMXDataModel).dataSet.timeseriesKeys.getItemAt(0) 
+				((_model as ISDMXViewModel).dataSet.timeseriesKeys.getItemAt(0) 
 				as TimeseriesKey).seriesKey);
 			assertTrue("ADS should contain the same series", (_testDataSet.
 				timeseriesKeys.getItemAt(0) as TimeseriesKey).seriesKey == 
-				((_model as ISDMXDataModel).allDataSets.timeseriesKeys.
+				((_model as ISDMXViewModel).allDataSets.timeseriesKeys.
 				getItemAt(0) as TimeseriesKey).seriesKey);	
-			_model.addEventListener(SDMXDataModel.
-				FILTERED_REFERENCE_SERIES_UPDATED, handleChange1);	
-			(_controller as SDMXDataController).handleLeftDividerDragged(
+			_model.addEventListener(BaseSDMXServiceModel.ALL_DATA_SETS_UPDATED,
+				handleChange1);	
+			(_controller as ISDMXViewController).handleLeftDividerDragged(
 				new DataEvent("test", false, false, "-1"));	
 		}
 		
 		private function handleChange1(event:Event):void
 		{
-			_model.removeEventListener(SDMXDataModel.
+			_model.removeEventListener(BaseSDMXViewModel.
 				FILTERED_REFERENCE_SERIES_UPDATED, handleChange1);	
 			assertEquals("Start dates should be equal", "2004-05", ((_model as 
-				SDMXDataModel).filteredReferenceSeries.timePeriods.getItemAt(0)
+				BaseSDMXViewModel).filteredReferenceSeries.timePeriods.getItemAt(0)
 				as TimePeriod).periodComparator);
-			_model.addEventListener(SDMXDataModel.
+			_model.addEventListener(BaseSDMXViewModel.
 				FILTERED_REFERENCE_SERIES_UPDATED, handleChange2);	
-			(_controller as SDMXDataController).handleRightDividerDragged(
+			(_controller as ISDMXViewController).handleRightDividerDragged(
 				new DataEvent("test", false, false, "-1"));				
 		}
 		
 		private function handleChange2(event:Event):void
 		{
-			_model.removeEventListener(SDMXDataModel.
+			_model.removeEventListener(BaseSDMXViewModel.
 				FILTERED_REFERENCE_SERIES_UPDATED, handleChange2);	
 			assertEquals("End dates should be equal", "2009-05", ((_model as 
-				SDMXDataModel).filteredReferenceSeries.timePeriods.getItemAt(
-				(_model as SDMXDataModel).filteredReferenceSeries.timePeriods.
+				BaseSDMXViewModel).filteredReferenceSeries.timePeriods.getItemAt(
+				(_model as BaseSDMXViewModel).filteredReferenceSeries.timePeriods.
 				length - 1)	as TimePeriod).periodComparator);
-			_model.addEventListener(SDMXDataModel.
+			_model.addEventListener(BaseSDMXViewModel.
 				FILTERED_REFERENCE_SERIES_UPDATED, handleChange3);	
-			(_controller as SDMXDataController).handleChartDragged(
+			(_controller as ISDMXViewController).handleChartDragged(
 				new DataEvent("test", false, false, "1"));			
 		}
 		
 		private function handleChange3(event:Event):void
 		{
-			_model.removeEventListener(SDMXDataModel.
+			_model.removeEventListener(BaseSDMXViewModel.
 				FILTERED_REFERENCE_SERIES_UPDATED, handleChange3);	
 			assertEquals("Start dates should be equal", "2004-06", ((_model as 
-				SDMXDataModel).filteredReferenceSeries.timePeriods.getItemAt(0)
+				BaseSDMXViewModel).filteredReferenceSeries.timePeriods.getItemAt(0)
 				as TimePeriod).periodComparator);	
 			assertEquals("End dates should be equal", "2009-06", ((_model as 
-				SDMXDataModel).filteredReferenceSeries.timePeriods.getItemAt(
-				(_model as SDMXDataModel).filteredReferenceSeries.timePeriods.
+				BaseSDMXViewModel).filteredReferenceSeries.timePeriods.getItemAt(
+				(_model as BaseSDMXViewModel).filteredReferenceSeries.timePeriods.
 				length - 1)	as TimePeriod).periodComparator);
-			_model.addEventListener(SDMXDataModel.
+			_model.addEventListener(BaseSDMXViewModel.
 				FILTERED_REFERENCE_SERIES_UPDATED, handleChange4);	
-			(_controller as SDMXDataController).handlePeriodChange(
+			(_controller as ISDMXViewController).handlePeriodChange(
 				new DataEvent("test", false, false, "All"));			
 		}
 		
 		private function handleChange4(event:Event):void
 		{
-			_model.removeEventListener(SDMXDataModel.
+			_model.removeEventListener(BaseSDMXViewModel.
 				FILTERED_REFERENCE_SERIES_UPDATED, handleChange4);	
 			assertEquals("Start dates should be equal", "1999-01", ((_model as 
-				SDMXDataModel).filteredReferenceSeries.timePeriods.getItemAt(0)
+				BaseSDMXViewModel).filteredReferenceSeries.timePeriods.getItemAt(0)
 				as TimePeriod).periodComparator);	
 			assertEquals("End dates should be equal", "2009-06", ((_model as 
-				SDMXDataModel).filteredReferenceSeries.timePeriods.getItemAt(
-				(_model as SDMXDataModel).filteredReferenceSeries.timePeriods.
+				BaseSDMXViewModel).filteredReferenceSeries.timePeriods.getItemAt(
+				(_model as BaseSDMXViewModel).filteredReferenceSeries.timePeriods.
 				length - 1)	as TimePeriod).periodComparator);
 		}
 				

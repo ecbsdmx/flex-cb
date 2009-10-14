@@ -28,8 +28,8 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.controller
 {
+	import eu.ecb.core.model.BaseSDMXViewModel;
 	import eu.ecb.core.model.IModel;
-	import eu.ecb.core.model.SDMXDataModel;
 	
 	import flexunit.framework.TestCase;
 	import flexunit.framework.TestSuite;
@@ -60,8 +60,8 @@ package eu.ecb.core.controller
 		}
 		
 		public function createController():IController {
-			_model = new SDMXDataModel();
-			return new ControllerAdapter(_model);
+			_model = new BaseSDMXViewModel();
+			return new BaseController(_model);
 		}
 		
 		public function testSetModel():void {
