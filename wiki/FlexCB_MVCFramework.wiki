@@ -47,7 +47,7 @@ The util package contains various utility classes such as formatters, validators
 
 == The view package (eu.ecb.core.view) ==
 
-The Flex-CB views display the statistical data and metadata stored in the model in various ways (charts, tables, etc). Quite often, one of these views will play the role of a mediator and will centralize all communications between the controller and the various views. Flex-CB views are organized as follow:
+The Flex-CB views display the statistical data and metadata stored in the model in various ways (charts, tables, etc). Quite often, one of these views will play the role of a mediator and will centralize all communications between the controller and the various views. Flex-CB views are organized as follows:
  # IView: Marker interface to indicate that the components acts as a Flex-CB view.
  # ISDMXServiceView: Contract to be fullfilled by views of applications offering a set of SDMX compliant services. Extends IView. Concrete implementation: BaseSDMXServiceView.
  # ISDMXView: Contract to be implemented by views supporting advanced visual representations of SDMX data. Compared to the ISDMXServiceView, this interface offers to possibility to retrieve  data optimized for certain views (such as filtered datasets, periods for filtering, etc). Extends ISDMXServiceView. Concrete implementation: BaseSDMXView.
