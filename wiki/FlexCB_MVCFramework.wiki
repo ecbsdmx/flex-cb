@@ -24,7 +24,7 @@ The SDMX provider is covered by the FlexCB_SDMXFramework library, while the Flex
 = The packages =
 
 == The controller package (eu.ecb.core.controller) ==
-The Flex-CB controllers offer a standard set of operations that an SDMX service will support (like a dictionary of all the features of an application). It executes actions, as requested by users of the application via views. It will, for instance, instruct an SDMX provider to query an SDMX source. Most of the time, the model will be modified to reflect those actions. The Controllers currently available in Flex-CB are listed below:
+The Flex-CB controllers offer a standard set of operations that an SDMX service will support (like a dictionary of all the features of an application). It executes actions as requested by users of the application via views. It will, for instance, instruct an SDMX provider to query an SDMX source. Most of the time, the model will be modified to reflect those actions. The Controllers currently available in Flex-CB are listed below:
 
  # IController: Base interface that defines the basic behavior of controllers in an MVC design pattern. Concrete implementation: !BaseController.
  # ISDMXServiceController: Contract to be fullfilled by controllers of applications offering a set of SDMX services. Extends IController. Methods defined in the interface allow to: a) Supply the SDMX DAO factories that will manage the access to the SDMX data and metadata providers; b) Supply the SDMX sources to be used by the SDMX data and metadata providers; c) Instructs the SDMX providers to perform operations such as fetching data or structural metadata. Concrete implementation: BaseSDMXServiceController.
