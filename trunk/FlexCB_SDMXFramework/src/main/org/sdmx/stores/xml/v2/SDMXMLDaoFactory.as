@@ -149,6 +149,8 @@ package org.sdmx.stores.xml.v2
 		{
 			var dao:SDMXMLDataDao = new SDMXMLDataDao();
 			dao.dataFile = _sourceFile;
+			dao.disableObservationAttribute = _disableObservationAttribute;
+			dao.optimisationLevel = _optimisationLevel;
 			return dao;
 		}
 	}

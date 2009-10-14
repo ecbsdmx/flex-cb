@@ -199,7 +199,20 @@ package org.sdmx.stores.api
 		
 		/*==============================Fields================================*/
 		
+		/**
+		 * @private
+		 */ 
 		protected var _sourceURL:URLRequest;
+		
+		/**
+		 * @private
+		 */
+		protected var _disableObservationAttribute:Boolean;
+		
+		/**
+		 * @private
+		 */
+		protected var _optimisationLevel:uint;
 		
 		/*===========================Constructor==============================*/
 		
@@ -299,6 +312,22 @@ package org.sdmx.stores.api
 		public function getUtilityDataDAO():IDataProvider
 		{
 			return null;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */ 
+		public function set disableObservationAttribute(flag:Boolean):void
+		{
+			_disableObservationAttribute = flag;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */ 
+		public function set optimisationLevel(level:uint):void
+		{
+			_optimisationLevel = level;
 		}
 	}
 }
