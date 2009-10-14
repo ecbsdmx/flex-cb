@@ -28,16 +28,14 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view.summary
 {
-	import mx.containers.VBox;
-	import mx.controls.Label;
-	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
-	import org.sdmx.model.v2.reporting.dataset.TimePeriod;
-	import eu.ecb.core.util.formatter.SDMXDateFormatter;
 	import eu.ecb.core.util.formatter.ExtendedNumberFormatter;
+	import eu.ecb.core.util.formatter.SDMXDateFormatter;
 	import eu.ecb.core.util.math.MathHelper;
-	import mx.containers.HBox;
+	import eu.ecb.core.view.BaseSDMXView;
+	
 	import mx.controls.Text;
-	import eu.ecb.core.view.SDMXViewAdapter;
+	
+	import org.sdmx.model.v2.reporting.dataset.TimePeriod;
 
 	/**
 	 * This component displays a box containing the last observation value and 
@@ -48,7 +46,7 @@ package eu.ecb.core.view.summary
 	 *  
 	 * @author Xavier Sosnovsky
 	 */
-	public class SeriesSummaryBox extends SDMXViewAdapter
+	public class SeriesSummaryBox extends BaseSDMXView
 	{
 		/*==============================Fields================================*/
 		

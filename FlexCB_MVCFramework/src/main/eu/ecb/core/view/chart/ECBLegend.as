@@ -29,7 +29,7 @@
 package eu.ecb.core.view.chart
 {
 	import eu.ecb.core.util.helper.SeriesColors;
-	import eu.ecb.core.view.SDMXViewAdapter;
+	import eu.ecb.core.view.BaseSDMXView;
 	
 	import flash.events.DataEvent;
 	import flash.events.MouseEvent;
@@ -64,7 +64,7 @@ package eu.ecb.core.view.chart
 	 * 
 	 * @author Xavier Sosnovsky
 	 */
-	public class ECBLegend extends SDMXViewAdapter
+	public class ECBLegend extends BaseSDMXView
 	{
 		
 		/*==============================Fields================================*/

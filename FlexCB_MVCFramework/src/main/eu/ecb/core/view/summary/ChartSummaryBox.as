@@ -31,11 +31,8 @@ package eu.ecb.core.view.summary
 	import eu.ecb.core.util.formatter.ExtendedNumberFormatter;
 	import eu.ecb.core.util.formatter.SDMXDateFormatter;
 	import eu.ecb.core.util.math.MathHelper;
-	import eu.ecb.core.view.SDMXViewAdapter;
+	import eu.ecb.core.view.BaseSDMXView;
 	
-	import flash.events.Event;
-	
-	import mx.binding.utils.ChangeWatcher;
 	import mx.containers.HBox;
 	import mx.controls.Label;
 	import mx.controls.Text;
@@ -50,7 +47,7 @@ package eu.ecb.core.view.summary
 	 * @author Xavier Sosnovsky
 	 */
 	[ResourceBundle("flex_cb_mvc_lang")]
-	public class ChartSummaryBox extends SDMXViewAdapter
+	public class ChartSummaryBox extends BaseSDMXView
 	{
 		/*==============================Fields================================*/
 		

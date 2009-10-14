@@ -38,7 +38,7 @@ package eu.ecb.core.view
 	 * 
 	 * @author Xavier Sosnovsky
 	 */
-	public class SDMXServiceViewAdapter extends Box implements ISDMXServiceView
+	public class BaseSDMXServiceView extends Box implements ISDMXServiceView
 	{
 		/*==============================Fields================================*/
 		
@@ -84,7 +84,7 @@ package eu.ecb.core.view
 		
 		/*===========================Constructor==============================*/
 		
-		public function SDMXServiceViewAdapter(direction:String = "vertical")
+		public function BaseSDMXServiceView(direction:String = "vertical")
 		{
 			super();
 			this.direction = direction;

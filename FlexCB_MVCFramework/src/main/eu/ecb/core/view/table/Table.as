@@ -29,7 +29,7 @@ package eu.ecb.core.view.table
 	import eu.ecb.core.util.formatter.ExtendedNumberFormatter;
 	import eu.ecb.core.util.formatter.SDMXDateFormatter;
 	import eu.ecb.core.util.math.MathHelper;
-	import eu.ecb.core.view.SDMXViewAdapter;
+	import eu.ecb.core.view.BaseSDMXView;
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.IViewCursor;
@@ -53,7 +53,7 @@ package eu.ecb.core.view.table
 	 *  
 	 * @author Xavier Sosnovsky
 	 */
-	public class Table extends SDMXViewAdapter
+	public class Table extends BaseSDMXView
 	{
 		/*==============================Fields================================*/
 		

@@ -33,7 +33,7 @@ package eu.ecb.core.view
 	 * 
 	 * @author Xavier Sosnovsky
 	 */ 
-	public interface ISDMXComposite
+	public interface ISDMXComposite extends IView
 	{
 		/**
 		 * Adds a view to the collection of views currently held by the object.

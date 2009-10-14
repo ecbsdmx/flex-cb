@@ -28,7 +28,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view.filter
 {
-	import eu.ecb.core.view.SDMXViewAdapter;
+	import eu.ecb.core.view.BaseSDMXView;
 	
 	import flash.events.DataEvent;
 	import flash.events.MouseEvent;
@@ -58,7 +58,7 @@ package eu.ecb.core.view.filter
 	 * 
 	 * @author Xavier Sosnovsky 
 	 */
-	public class ViewSelector extends SDMXViewAdapter
+	public class ViewSelector extends BaseSDMXView
 	{
 		/*=============================Constants==============================*/
 		

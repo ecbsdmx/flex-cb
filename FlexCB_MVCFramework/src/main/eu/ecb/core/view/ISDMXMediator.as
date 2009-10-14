@@ -26,48 +26,37 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view
 {
-	import org.sdmx.model.v2.reporting.dataset.DataSet;
-	import org.sdmx.model.v2.structure.category.CategorieSchemesCollection;
-	import org.sdmx.model.v2.structure.keyfamily.DataflowsCollection;
-	import org.sdmx.model.v2.structure.keyfamily.KeyFamilies;
+	import eu.ecb.core.controller.ISDMXServiceController;
+	import eu.ecb.core.model.ISDMXServiceModel;
 	
 	/**
-	 * Contract to be implemented by views of applications offering a set of 
-	 * SDMX compliant services.
-	 *  
+	 * Interface to be implemented by views which play the role of a mediator.
+	 * Mediators centralize all communications between the controller and the
+	 * various views. Because mediators contain views, they must also implement
+	 * the ISDMXComposite interface.
+	 * 
 	 * @author Xavier Sosnovsky
-	 */
-	public interface ISDMXServiceView extends IView
+	 */ 
+	public interface ISDMXMediator extends ISDMXComposite
 	{
 		/**
 		 * @private
 		 */ 
-		function set id(id:String):void;
+		function set controller(controller:ISDMXServiceController):void;
 		
 		/**
-		 * Each Flex-CB view can be identified by an ID. 
+		 * The controller to be used by the mediator 
+		 */
+		function get controller():ISDMXServiceController;
+		
+		/**
+		 * @private
 		 */ 
-		function get id():String;
+		function set model(model:ISDMXServiceModel):void;
 		
 		/**
-		 * The category schemes to be displayed by the view 
+		 * The model to be used by the mediator 
 		 */
-		function set categorySchemes(cs:CategorieSchemesCollection):void;
-		
-		/**
-		 * The dataflow definition to be displayed by the view 
-		 */
-		function set dataflowDefinitions(dd:DataflowsCollection):void;
-		
-		/**
-		 * The key families to be displayed by the view. 
-		 */
-		function set keyFamilies(kf:KeyFamilies):void;
-		
-		/**
-		 * The SDMX data set containing the desired subset of data to be 
-		 * displayed by the view. 
-		 */ 
-		function set dataSet(ds:DataSet):void;
+		function get model():ISDMXServiceModel;
 	}
 }

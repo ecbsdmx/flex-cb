@@ -37,7 +37,7 @@ package eu.ecb.core.view
 	 * 
 	 * @author Xavier Sosnovsky
 	 */
-	public class SDMXViewAdapter extends SDMXServiceViewAdapter 
+	public class BaseSDMXView extends BaseSDMXServiceView 
 		implements ISDMXView
 	{
 		
@@ -143,24 +143,42 @@ package eu.ecb.core.view
 		 */
 		protected var _showChangeChanged:Boolean;
 		
+		/**
+		 * @private
+		 */
+		protected var _desiredHeight:Number;
+		
+		/**
+		 * @private
+		 */
+		protected var _desiredHeightChanged:Boolean;
+		
+		/**
+		 * @private
+		 */
+		protected var _desiredWidth:Number;
+		
+		/**
+		 * @private
+		 */
+		protected var _desiredWidthChanged:Boolean;
+		
+		/**
+		 * @private
+		 */
+		protected var _selectedDate:String;
+		
+		/**
+		 * @private
+		 */
+		protected var _selectedDateChanged:Boolean;
+		
 		/*===========================Constructor==============================*/
 				
-		public function SDMXViewAdapter(direction:String = "vertical") 
+		public function BaseSDMXView(direction:String = "vertical") 
 		{
 			super(direction);
 		}
-		
-		/*========================Protected methods===========================*/
-		
-		override protected function resourcesChanged():void {
-			if (!initialized) return;
-			super.resourcesChanged();
-			
-			DateBase.dayNamesLong=resourceManager.getStringArray("flex_cb_mvc_lang", "dayNamesLong");
-			DateBase.monthNamesLong=resourceManager.getStringArray("flex_cb_mvc_lang", "monthNamesLong");
-			DateBase.monthNamesShort=resourceManager.getStringArray("flex_cb_mvc_lang", "monthNamesShort");
-		
-		}		
 		
 		/*============================Accessors===============================*/
 		
@@ -281,5 +299,53 @@ package eu.ecb.core.view
 			_showChangeChanged = true;
 			invalidateProperties();
 		}
+		
+		/**
+		 * @inheritDoc
+		 */ 		
+		public function set desiredHeight(desiredHeight:Number):void
+		{
+			if (_desiredHeight != desiredHeight) {
+				_desiredHeight = desiredHeight;
+				_desiredHeightChanged = true;
+				invalidateProperties();
+			}
+		}
+		
+		/**
+		 * @inheritDoc
+		 */ 
+		public function set desiredWidth(desiredWidth:Number):void
+		{
+			if (_desiredWidth != desiredWidth) {
+				_desiredWidth = desiredWidth;
+				_desiredWidthChanged = true;
+				invalidateProperties();
+			}
+		}
+		
+		/**
+		 * @inheritDoc
+		 */ 
+		public function set selectedDate(date:String):void
+		{
+			if (_selectedDate != date) {
+				_selectedDate = date;
+				_selectedDateChanged = true;
+				invalidateProperties();
+			}
+		}
+		
+		/*========================Protected methods===========================*/
+		
+		override protected function resourcesChanged():void {
+			if (!initialized) return;
+			super.resourcesChanged();
+			
+			DateBase.dayNamesLong=resourceManager.getStringArray("flex_cb_mvc_lang", "dayNamesLong");
+			DateBase.monthNamesLong=resourceManager.getStringArray("flex_cb_mvc_lang", "monthNamesLong");
+			DateBase.monthNamesShort=resourceManager.getStringArray("flex_cb_mvc_lang", "monthNamesShort");
+		
+		}	
 	}
 }

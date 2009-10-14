@@ -28,7 +28,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view.summary
 {
-	import eu.ecb.core.view.SDMXViewAdapter;
+	import eu.ecb.core.view.BaseSDMXView;
 	
 	import mx.containers.HBox;
 	import mx.controls.Text;
@@ -47,7 +47,7 @@ package eu.ecb.core.view.summary
 	 * 
 	 * @author Xavier Sosnovsky
 	 */
-	public class MetadataPanel extends SDMXViewAdapter
+	public class MetadataPanel extends BaseSDMXView
 	{
 		/*===========================Constructor==============================*/
 		
