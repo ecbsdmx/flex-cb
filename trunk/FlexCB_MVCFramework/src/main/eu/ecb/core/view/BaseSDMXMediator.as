@@ -1,6 +1,4 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
-// Copyright (C) 2008 European Central Bank. All rights reserved.
+// Copyright (C) 2009 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
 // with or without modification, are permitted
@@ -26,37 +24,75 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-package eu.ecb.core.view.panel
+package eu.ecb.core.view
 {
-	import org.sdmx.model.v2.reporting.dataset.DataSet;
-	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
-	import mx.collections.ArrayCollection;
-	import flash.events.IEventDispatcher;
-	import eu.ecb.core.view.ISDMXView;
-	import eu.ecb.core.view.ISDMXComposite;
+	import eu.ecb.core.controller.ISDMXServiceController;
+	import eu.ecb.core.model.ISDMXServiceModel;
+	import eu.ecb.core.view.ISDMXMediator;
+	import eu.ecb.core.view.BaseSDMXViewComposite;
 	
 	/**
-	 * Default interface with the minimum contract to be implemented by SDMX 
-	 * panels.
+	 * Basic implementation of the ISDMXMediator interface.
 	 * 
 	 * @author Xavier Sosnovsky
 	 */
-	public interface ISDMXDataPanel extends IEventDispatcher, ISDMXView, 
-		ISDMXComposite
+	public class BaseSDMXMediator extends BaseSDMXViewComposite
+		implements ISDMXMediator
 	{
-		/**
-		 * The desired panel height.
-		 *  
-		 * @param desiredHeight
-		 * 
-		 */
-		function set desiredHeight(desiredHeight:Number):void;
+		/*==============================Fields================================*/
 		
 		/**
-		 * The desire panel width.
-		 * 
-		 * @param desiredWidth
+		 * @private
 		 */
-		function set desiredWidth(desiredWidth:Number):void;
+		protected var _controller:ISDMXServiceController;
+		
+		/**
+		 * @private
+		 */
+		protected var _model:ISDMXServiceModel;
+		
+		/*===========================Constructor==============================*/
+		
+		public function BaseSDMXMediator(model:ISDMXServiceModel, 
+			controller:ISDMXServiceController, direction:String="vertical")
+		{
+			super(direction);
+			this.model = model;
+			this.controller = controller;
+		}
+		
+		/*============================Accessors===============================*/
+		
+		/**
+		 * @inheritDoc
+		 */ 
+		public function set controller(controller:ISDMXServiceController):void
+		{
+			_controller = controller;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */ 
+		public function get controller():ISDMXServiceController
+		{
+			return _controller;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */ 
+		public function set model(model:ISDMXServiceModel):void
+		{
+			_model = model;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */ 
+		public function get model():ISDMXServiceModel
+		{
+			return _model;
+		}
 	}
 }

@@ -34,11 +34,18 @@ package eu.ecb.core.model
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
 	
 	/**
-	 * Interface for SDMX Data model classes.
+	 * Interface for SDMX Data model classes. Compared to the ISDMXServiceModel
+	 * this interface offers:
+	 * <ul>
+	 * <li>Access to data optimized for certain views (such as filtered
+	 * datasets)</li>
+	 * <li>Offers methods to modify data, following actions performed by the
+	 * users in certain views (like dragging a thumb of a period slider)</li>
+	 * </ul>
 	 * 
 	 * @author Xavier Sosnovsky
 	 */ 
-	public interface ISDMXDataModel extends ISDMXServiceModel
+	public interface ISDMXViewModel extends ISDMXServiceModel
 	{
 		/**
 		 * The SDMX data set, after all its series have been filtered
@@ -51,6 +58,15 @@ package eu.ecb.core.model
 		 * @private
 		 */ 
 		function set filteredDataSet(dataSet:DataSet):void;
+		
+		/**
+		 * The data set containing all series and groups stored in the model,
+		 * after filtering has been applied. 
+		 * 
+		 * @return The data set containing all series and groups stored in the 
+		 * model after filtering has been applied. 
+		 */
+		function get allFilteredDataSets():DataSet;
 		
 		/**
 		 * The SDMX data set containing the series which have been selected,
@@ -156,6 +172,13 @@ package eu.ecb.core.model
 		function set isPercentage(isPercentage:Boolean):void
 		
 		/**
+		 * Sets the desired start date, for the filtering method. This should
+		 * be used to bypass the default settings for creating the filtered
+		 * data set.
+		 */ 
+		function set startDate(date:Date):void
+		
+		/**
 		 * Updates the model when the currently selected period is changed by a
 		 * view.
 		 * 
@@ -184,5 +207,16 @@ package eu.ecb.core.model
 		 */
 		function handleDividerDragged(event:DataEvent, 
 			dividerPosition:String):void;
+			
+		/**
+		 * Returns a dataset containing the series corresponding to the
+		 * supplied series keys, after filtering has been applied.
+		 * 
+		 * @param seriesKeys The keys of the series to be returned
+		 * @return The dataset containing the series corresponding to the
+		 * supplied series keys, after filtering has been applied.
+		 */
+		function getFilteredDataSetWithSeries(
+			seriesKeys:ArrayCollection):DataSet;	
 	}
 }

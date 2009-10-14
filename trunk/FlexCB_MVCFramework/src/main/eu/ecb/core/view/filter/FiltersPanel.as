@@ -26,7 +26,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view.filter
 {
-	import eu.ecb.core.view.SDMXViewAdapter;
+	import eu.ecb.core.view.BaseSDMXView;
 	
 	import flash.events.DataEvent;
 	import flash.events.MouseEvent;
@@ -69,7 +69,7 @@ package eu.ecb.core.view.filter
 	 * @author Xavier Sosnovsky
 	 */ 
 	[ResourceBundle("flex_cb_mvc_lang")]
-	public class FiltersPanel extends SDMXViewAdapter 
+	public class FiltersPanel extends BaseSDMXView 
 	{
 		
 		/*=============================Constants==============================*/

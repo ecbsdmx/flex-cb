@@ -62,11 +62,12 @@ package eu.ecb.core.controller
 	[Event(name="taskStarted", type="flash.events.Event")]
 		
 	/**
-	 * Base implementation of the IController interface.
+	 * Base implementation of the IController interface. It also contains a 
+	 * few constants used by events.
 	 * 
 	 * @author Xavier Sosnovsky
 	 */ 
-	public class ControllerAdapter extends EventDispatcher 
+	public class BaseController extends EventDispatcher 
 		implements IController
 	{
 		/*==============================Fields================================*/
@@ -123,7 +124,7 @@ package eu.ecb.core.controller
 		 * controller
 		 * 
 		 */
-		public function ControllerAdapter(model:IModel) {
+		public function BaseController(model:IModel) {
 			super();
 			this.model = model;
 		}

@@ -113,8 +113,8 @@ package eu.ecb.core.model
 	 * @author Karine Feraboli
 	 */
 	[ResourceBundle("flex_cb_mvc_lang")]
-	public class SDMXDataModel extends BaseSDMXServiceModel 
-		implements ISDMXDataModel
+	public class BaseSDMXViewModel extends BaseSDMXServiceModel 
+		implements ISDMXViewModel
 	{
 				
 		/*=============================Constants==============================*/
@@ -212,6 +212,11 @@ package eu.ecb.core.model
 		
 		/**
 		 * @private
+		 */ 
+		protected var _allFilteredDataSets:DataSet;
+		
+		/**
+		 * @private
 		 */
 		protected var _selectedDataSet:DataSet;
 		
@@ -290,9 +295,14 @@ package eu.ecb.core.model
 		 */
 		private var _rightIndex:int;
 		
+		/**
+		 * @private
+		 */ 
+		private var _startDateSet:Boolean;
+		
 		/*===========================Constructor==============================*/
 		
-		public function SDMXDataModel()
+		public function BaseSDMXViewModel()
 		{
 			super();
 			_dateFormatter = new DateFormatter();
@@ -315,9 +325,12 @@ package eu.ecb.core.model
 		 */ 
 		override public function set dataSet(ds:DataSet):void 
 		{
+			if (null == ds || null == ds.timeseriesKeys || 
+				0 == ds.timeseriesKeys.length) {
+				throw new ArgumentError("The dataset cannot be null or empty");	
+			}
 			_dataSet = ds;
 			createReferenceSeries();
-			createReferenceSeriesFrequency();
 			createSelectedPeriods();
 			createFilteredDataSet();
 			super.dataSet = ds;
@@ -338,7 +351,19 @@ package eu.ecb.core.model
 		public function set filteredDataSet(dataSet:DataSet):void
 		{
 			_filteredDataSet = dataSet;
+			if (null!= dataSet && null != dataSet.timeseriesKeys) { 
+				addFilteredDataSet(dataSet);
+			}
 			dispatchEvent(new Event(FILTERED_DATASET_UPDATED));
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		[Bindable("allFilteredDataSetsUpdated")]
+		public function get allFilteredDataSets():DataSet
+		{
+			return _allFilteredDataSets; 
 		}
 		
 		/**
@@ -483,6 +508,15 @@ package eu.ecb.core.model
 			dispatchEvent(new Event(IS_PERCENTAGE_UPDATED));
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
+		public function set startDate(date:Date):void
+		{
+			_startDate = date;
+			_startDateSet = true;
+		}
+		
 		/*==========================Public methods============================*/
 		
 		/**
@@ -491,6 +525,7 @@ package eu.ecb.core.model
 		public function handlePeriodChange(event:DataEvent):void 
 		{
 			event.stopImmediatePropagation();
+			_startDateSet = false;
 			_hasDefaultPeriod = true;
 			_selectedPeriod = null;
 			for each (var period:Object in periods) {
@@ -520,6 +555,7 @@ package eu.ecb.core.model
 		public function handleChartDragged(event:DataEvent):void
 		{
 			event.stopImmediatePropagation();
+			_startDateSet = false;
 			_leftIndex = (_leftIndex + Number(event.data) > 0) ? 
 				_leftIndex + Number(event.data) : 0;
 			_rightIndex = (_rightIndex + Number(event.data) < 
@@ -542,11 +578,12 @@ package eu.ecb.core.model
 			dividerPosition:String):void
 		{
 			event.stopImmediatePropagation();
+			_startDateSet = false;
 			_hasDefaultPeriod = false;
 			if ("left" == dividerPosition) {
 				_leftIndex = (_leftIndex + int(event.data) > 0) ? 
 					_leftIndex + int(event.data) : 0;
-				if (!(_leftIndex < _rightIndex)) {
+				if (!(_leftIndex < _rightIndex) && _rightIndex > 1) {
 					_leftIndex = _rightIndex - 2;	
 				}	
 				_startDate = 
@@ -568,17 +605,53 @@ package eu.ecb.core.model
 			triggerDataFiltering();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */ 
+		public function getFilteredDataSetWithSeries(
+			seriesKeys:ArrayCollection):DataSet
+		{
+			var matchingDataSet:DataSet = new DataSet();
+			matchingDataSet.attributeValues = 
+				_allFilteredDataSets.attributeValues;
+			matchingDataSet.describedBy = _allFilteredDataSets.describedBy;
+			var matchingSeries:TimeseriesKeysCollection = 
+				new TimeseriesKeysCollection();
+			var matchingGroup:GroupKeysCollection = new GroupKeysCollection();	
+			for each (var seriesKey:String in seriesKeys) {
+				var s:TimeseriesKey = 
+					_allFilteredDataSets.timeseriesKeys.
+						getTimeseriesKey(seriesKey);
+				if (null != s) {	
+					matchingSeries.addItem(s);
+					var groups:GroupKeysCollection = 
+						_allFilteredDataSets.groupKeys.
+						getGroupsForTimeseries(s);
+					if (null != groups) {
+						for each (var group:GroupKey in groups) { 
+							matchingGroup.addItem(group);
+						}
+					}	
+				}
+			}
+			matchingDataSet.timeseriesKeys = matchingSeries;
+			matchingDataSet.groupKeys = matchingGroup;
+			return matchingDataSet;
+		}
+		
+		/*=========================Protected methods==========================*/
+		
 		// "Creational" methods
 		/**
 		 * @private
 		 */
 		protected function createReferenceSeries():void
 	    {
-			var tmpSeries:TimeseriesKey = dataSet.timeseriesKeys.getItemAt(
+			var tmpSeries:TimeseriesKey = _dataSet.timeseriesKeys.getItemAt(
 				_referenceSeriesIndex) as TimeseriesKey;
-			if ((dataSet.groupKeys.getGroupsForTimeseries(tmpSeries) 
+			if ((_dataSet.groupKeys.getGroupsForTimeseries(tmpSeries) 
 				as GroupKeysCollection).length != 0) {
-				var group:GroupKey = (dataSet.groupKeys.
+				var group:GroupKey = (_dataSet.groupKeys.
 					getGroupsForTimeseries(tmpSeries) as 
 					GroupKeysCollection).getItemAt(0) as GroupKey;	
 				if (null != group) {	
@@ -597,6 +670,17 @@ package eu.ecb.core.model
 					}
 				}	
 			}
+			_referenceSeriesFrequency = null;
+			for each (var keyValue:KeyValue in tmpSeries.keyValues) {
+				if (keyValue.valueFor.conceptRole == ConceptRole.FREQUENCY){
+					referenceSeriesFrequency = keyValue.value.id;
+					break;
+				}
+			}
+			if (null == referenceSeriesFrequency) {
+				throw new ArgumentError("Frequency could not be found");
+			}
+			sortSeries(tmpSeries);
 			referenceSeries = tmpSeries;
 	    }
 	    
@@ -606,22 +690,25 @@ package eu.ecb.core.model
 	    protected function createFilteredDataSet():void
 	    {
 			var tmpDataSet:DataSet = new DataSet();
-			tmpDataSet.attributeValues = dataSet.attributeValues;
-			tmpDataSet.dataExtractionDate = dataSet.dataExtractionDate;
-			tmpDataSet.describedBy = dataSet.describedBy;
-			tmpDataSet.groupKeys = dataSet.groupKeys;
-			tmpDataSet.reportingBeginDate = dataSet.reportingBeginDate;
-			tmpDataSet.reportingEndDate = dataSet.reportingEndDate;
+			tmpDataSet.attributeValues = _dataSet.attributeValues;
+			tmpDataSet.dataExtractionDate = _dataSet.dataExtractionDate;
+			tmpDataSet.describedBy = _dataSet.describedBy;
+			tmpDataSet.groupKeys = _dataSet.groupKeys;
+			tmpDataSet.reportingBeginDate = _dataSet.reportingBeginDate;
+			tmpDataSet.reportingEndDate = _dataSet.reportingEndDate;
 			var seriesCollection:TimeseriesKeysCollection = 
 				new TimeseriesKeysCollection();
-			for each (var series:TimeseriesKey in dataSet.timeseriesKeys) {
+			for each (var series:TimeseriesKey in _dataSet.timeseriesKeys) {
 				seriesCollection.addItem(createFilteredSeries(series));					
 			}
 			tmpDataSet.timeseriesKeys = seriesCollection;
 			filteredDataSet = tmpDataSet;
-			filteredReferenceSeries = filteredDataSet.timeseriesKeys.
+			_filteredReferenceSeries = filteredDataSet.timeseriesKeys.
 				getItemAt(_referenceSeriesIndex) as TimeseriesKey;
-			if (_rightIndex == 0 && referenceSeries.timePeriods.length > 0) {	
+			if (_startDateSet) {
+				triggerDataFiltering();
+			} else if (_rightIndex == 0 && 
+				referenceSeries.timePeriods.length > 0) {	
 				updatedFilteredCollection(getPreviousDate(
            			(referenceSeries.timePeriods.getItemAt(
            				referenceSeries.timePeriods.length - 1) 
@@ -650,24 +737,7 @@ package eu.ecb.core.model
            	return filteredSeries;			
 		}
 	    
-	    /**
-		 * @private
-		 */
-	    protected function createReferenceSeriesFrequency():void
-	    {
-	    	_referenceSeriesFrequency = null;
-			for each (var keyValue:KeyValue in referenceSeries.keyValues) {
-				if (keyValue.valueFor.conceptRole == ConceptRole.FREQUENCY){
-					referenceSeriesFrequency = keyValue.value.id;
-					break;
-				}
-			}
-			if (null == referenceSeriesFrequency) {
-				throw new ArgumentError("Frequency could not be found");
-			}
-	    }
-	    
-	    /**
+	  	/**
 		 * @private
 		 */
 		protected function createSelectedPeriods():void {
@@ -909,5 +979,32 @@ package eu.ecb.core.model
 	    	dispatchEvent(new Event(FILTERED_DATASET_UPDATED));	
 	    	dispatchEvent(new Event(FILTERED_REFERENCE_SERIES_UPDATED));	
 	    } 
+	    
+	    /**
+		 * Adds a dataset to the collection containing all data available in the
+		 * model, after filtering has been applied.
+		 * 
+		 * @param ds The data set to be added
+		 */
+		protected function addFilteredDataSet(ds:DataSet):void
+		{
+			if (null == _allFilteredDataSets) {
+				_allFilteredDataSets = new DataSet();
+			}
+			
+			for each (var series:TimeseriesKey in ds.timeseriesKeys){
+				if (!(_allFilteredDataSets.timeseriesKeys.contains(series))) {
+					sortSeries(series);
+					_allFilteredDataSets.timeseriesKeys.addItem(series);
+				}
+			}
+			
+			for each (var group:GroupKey in ds.groupKeys) {
+				if (!(_allFilteredDataSets.groupKeys.contains(group))) {
+					_allFilteredDataSets.groupKeys.addItem(group);
+				}
+			}
+			dispatchEvent(new Event("allFilteredDataSetsUpdated"));
+		}
 	}
 }

@@ -29,12 +29,15 @@ package eu.ecb.core.model
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	
+	import mx.collections.ArrayCollection;
 	import mx.collections.Sort;
 	import mx.collections.SortField;
 	
 	import org.sdmx.model.v2.reporting.dataset.DataSet;
 	import org.sdmx.model.v2.reporting.dataset.GroupKey;
+	import org.sdmx.model.v2.reporting.dataset.GroupKeysCollection;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
+	import org.sdmx.model.v2.reporting.dataset.TimeseriesKeysCollection;
 	import org.sdmx.model.v2.structure.category.CategorieSchemesCollection;
 	import org.sdmx.model.v2.structure.category.CategoryScheme;
 	import org.sdmx.model.v2.structure.keyfamily.DataflowDefinition;
@@ -317,7 +320,9 @@ package eu.ecb.core.model
 		public function set dataSet(ds:DataSet):void
 		{
 			_dataSet = ds;
-			addDataSet(ds);
+			if (null!= ds && null != ds.timeseriesKeys) { 
+				addDataSet(ds);
+			}
 			dispatchEvent(new Event(DATA_SET_UPDATED));
 		}
 		
@@ -330,21 +335,36 @@ package eu.ecb.core.model
 			return _allDataSets;
 		}
 		
+		/*==========================Public methods============================*/
+		
 		/**
-		 * @private
+		 * @inheritDoc
 		 */ 
-		public function set allDataSets(ds:DataSet):void 
+		public function getDataSetWithSeries(seriesKeys:ArrayCollection):DataSet
 		{
-			if (null == ds) {
-				throw new ArgumentError("The data set cannot be null");
-			} else if (null == ds.timeseriesKeys || 
-				0 == ds.timeseriesKeys.length) {
-				throw new ArgumentError("There should be some time series in " + 
-						"the data set");
-			} else {
-				addDataSet(ds);	
-				dataSet = _allDataSets;
+			var matchingDataSet:DataSet = new DataSet();
+			matchingDataSet.attributeValues = _allDataSets.attributeValues;
+			matchingDataSet.describedBy = _allDataSets.describedBy;
+			var matchingSeries:TimeseriesKeysCollection = 
+				new TimeseriesKeysCollection();
+			var matchingGroup:GroupKeysCollection = new GroupKeysCollection();	
+			for each (var seriesKey:String in seriesKeys) {
+				var s:TimeseriesKey = 
+					_allDataSets.timeseriesKeys.getTimeseriesKey(seriesKey);
+				if (null != s) {	
+					matchingSeries.addItem(s);
+					var groups:GroupKeysCollection = _allDataSets.groupKeys.
+						getGroupsForTimeseries(s);
+					if (null != groups) {
+						for each (var group:GroupKey in groups) { 
+							matchingGroup.addItem(group);
+						}
+					}	
+				}
 			}
+			matchingDataSet.timeseriesKeys = matchingSeries;
+			matchingDataSet.groupKeys = matchingGroup;
+			return matchingDataSet;
 		}
 		
 		/*=========================Protected methods==========================*/
@@ -360,7 +380,7 @@ package eu.ecb.core.model
 			if (null == _allDataSets) {
 				_allDataSets = new DataSet();
 			}
-
+			
 			for each (var series:TimeseriesKey in ds.timeseriesKeys){
 				if (!(_allDataSets.timeseriesKeys.contains(series))) {
 					sortSeries(series);

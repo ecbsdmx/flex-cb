@@ -24,14 +24,12 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-package eu.ecb.core.view.panel
+package eu.ecb.core.view
 {
-	import eu.ecb.core.controller.BaseSDMXServiceController;
-	import eu.ecb.core.controller.ISDMXServiceController;
-	import eu.ecb.core.model.SDMXDataModel;
+	import eu.ecb.core.view.BaseSDMXView;
+	import eu.ecb.core.view.ISDMXComposite;
 	import eu.ecb.core.view.ISDMXServiceView;
 	import eu.ecb.core.view.ISDMXView;
-	import eu.ecb.core.view.SDMXViewAdapter;
 	
 	import flash.display.DisplayObject;
 
@@ -40,64 +38,16 @@ package eu.ecb.core.view.panel
 	 * 
 	 * @author Xavier Sosnovsky
 	 */
-	public class SDMXDataPanelAdapter extends SDMXViewAdapter
-		implements ISDMXDataPanel
+	public class BaseSDMXViewComposite extends BaseSDMXView
+		implements ISDMXComposite
 	{
-		/*==============================Fields================================*/
-		
-		/**
-		 * @private
-		 */
-		protected var _desiredHeight:Number;
-		
-		/**
-		 * @private
-		 */
-		protected var _desiredHeightChanged:Boolean;
-		
-		/**
-		 * @private
-		 */
-		protected var _desiredWidth:Number;
-		
-		/**
-		 * @private
-		 */
-		protected var _desiredWidthChanged:Boolean;
-		
 		/*===========================Constructor==============================*/
 		
-		public function SDMXDataPanelAdapter(direction:String = "vertical")
+		public function BaseSDMXViewComposite(direction:String = "vertical")
 		{
 			super(direction);
 			percentWidth = 100;
 			percentHeight = 100;
-		}
-		
-		/*============================Accessors===============================*/
-		
-		/**
-		 * @inheritDoc
-		 */ 		
-		public function set desiredHeight(desiredHeight:Number):void
-		{
-			if (_desiredHeight != desiredHeight) {
-				_desiredHeight = desiredHeight;
-				_desiredHeightChanged = true;
-				invalidateProperties();
-			}
-		}
-		
-		/**
-		 * @inheritDoc
-		 */ 
-		public function set desiredWidth(desiredWidth:Number):void
-		{
-			if (_desiredWidth != desiredWidth) {
-				_desiredWidth = desiredWidth;
-				_desiredWidthChanged = true;
-				invalidateProperties();
-			}
 		}
 		
 		/*==========================Public methods============================*/

@@ -28,9 +28,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view.chart
 {
-	import mx.containers.HBox;
-	import org.sdmx.model.v2.reporting.dataset.DataSet;
-	import eu.ecb.core.view.SDMXViewAdapter;
+	import eu.ecb.core.view.BaseSDMXView;
 
 	/**
 	 * Event triggered when an item is clicked on the chart.
@@ -44,7 +42,7 @@ package eu.ecb.core.view.chart
 	 * 
 	 * @author Xavier Sosnovsky
 	 */
-	public class ECBChart extends SDMXViewAdapter
+	public class ECBChart extends BaseSDMXView
 	{
 		
 		/*==============================Fields================================*/

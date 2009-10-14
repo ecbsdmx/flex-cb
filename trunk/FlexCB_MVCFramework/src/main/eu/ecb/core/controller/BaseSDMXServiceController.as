@@ -26,14 +26,21 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.controller
 {
+	import eu.ecb.core.event.ProgressEventMessage;
 	import eu.ecb.core.model.BaseSDMXServiceModel;
 	import eu.ecb.core.model.ISDMXServiceModel;
 	
 	import flash.events.Event;
 	import flash.net.URLRequest;
 	
+	import mx.collections.ArrayCollection;
+	
 	import org.sdmx.event.SDMXDataEvent;
 	import org.sdmx.model.v2.reporting.dataset.DataSet;
+	import org.sdmx.model.v2.reporting.dataset.GroupKey;
+	import org.sdmx.model.v2.reporting.dataset.GroupKeysCollection;
+	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
+	import org.sdmx.model.v2.reporting.dataset.TimeseriesKeysCollection;
 	import org.sdmx.model.v2.structure.category.CategorieSchemesCollection;
 	import org.sdmx.model.v2.structure.keyfamily.DataflowDefinition;
 	import org.sdmx.model.v2.structure.keyfamily.DataflowsCollection;
@@ -56,37 +63,36 @@ package eu.ecb.core.controller
 	 * 
 	 * @author Xavier Sosnovsky
 	 */ 
-	public class BaseSDMXServiceController extends ControllerAdapter implements 
+	public class BaseSDMXServiceController extends BaseController implements 
 		ISDMXServiceController
 	{		
 		/*==============================Fields================================*/
 		
+		//The SDMX DAO factories
 		/**
-		 * The factory that will return the SDMX data providers to be used by 
-		 * the controller when fetching SDMX-ML data.
+		 * @private 
 		 */ 
 		protected var _dataProvidersFactory:ISDMXDaoFactory;
 		
 		/**
-		 * The factory that will return the SDMX data providers to be used by 
-		 * the controller when fetching SDMX-ML structural metadata. It can be
-		 * the same as the dataProvidersFactory, if the factory is able to 
-		 * handle both SDMX-ML data and SDMX-ML structure queries.
+		 * @private 
 		 */ 
 		protected var _structureProvidersFactory:ISDMXDaoFactory
 		
+		//The SDMX data and metadata providers
 		/**
-         * The specialized data provider that will retrieve category schemes 
+         * The specialized metadata provider that will retrieve category schemes 
          */
         protected var _categorySchemeProvider:IMaintainableArtefactProvider;
         
         /**
-         * The specialized data provider that will retrieve dataflow definitions 
+         * The specialized metadata provider that will retrieve dataflow 
+         * definitions 
          */
         protected var _dataflowProvider:IMaintainableArtefactProvider;
         
         /**
-         * The specialized data provider that will retrieve key families
+         * The specialized metadata provider that will retrieve key families
          */
         protected var _keyFamilyProvider:IMaintainableArtefactProvider;
         
@@ -95,17 +101,8 @@ package eu.ecb.core.controller
          */
         protected var _dataProvider:IDataProvider;
         
+        //The SDMX sources
         /**
-         * The list of dataflows for which a key family needs to be fetched 
-         */
-        protected var _dataflowsWithNoKeyFamily:DataflowsCollection;
-        
-        /**
-         * The list of all dataflows fetched 
-         */
-        protected var _fetchedDataflows:DataflowsCollection; 
-        
-		/**
 		 * The source of the provider responsible for fetching metadata 
 		 */
 		protected var _structureURL:URLRequest;
@@ -127,18 +124,28 @@ package eu.ecb.core.controller
 		 */ 
 		protected var _dataToFetch:Boolean;
 		
-		/**
-		 * Whether or not observation-level attributes should be fetched. This
-		 * can be set to false for performance reasons.
-		 */ 		
-		protected var _disableObservationAttribute:Boolean;
-		
-		/**
-		 * The optimisation level defines which optimisation settings will be 
-		 * applied when reading data.
+        //Handling of dataflows        
+        /**
+         * The list of dataflows for which a key family needs to be fetched 
+         */
+        protected var _dataflowsWithNoKeyFamily:DataflowsCollection;
+        
+        /**
+         * The list of all dataflows fetched 
+         */
+        protected var _fetchedDataflows:DataflowsCollection; 
+        
+        /**
+		 * The object containing the parameters for dataflows queries. 
 		 */
-		protected var _optimisationLevel:uint;
+		protected var _dataflowsParams:Object;
 		
+		/**
+		 * Whether or not the current query to be peformed is a dataflow query. 
+		 */
+		protected var _isDataflowQuery:Boolean;
+        
+		//Handling of category schemes		
 		/**
 		 * The object containing the parameters for category schemes queries. 
 		 */
@@ -150,16 +157,7 @@ package eu.ecb.core.controller
 		 */
 		protected var _isCategorySchemeQuery:Boolean;
 		
-		/**
-		 * The object containing the parameters for dataflows queries. 
-		 */
-		protected var _dataflowsParams:Object;
-		
-		/**
-		 * Whether or not the current query to be peformed is a dataflow query. 
-		 */
-		protected var _isDataflowQuery:Boolean;
-		
+		//Handling of key families
 		/**
 		 * The object containing the parameters for key family queries. 
 		 */
@@ -170,6 +168,7 @@ package eu.ecb.core.controller
 		 */
 		protected var _isKeyFamilyQuery:Boolean;
 		
+		//Handling of data
 		/**
 		 * The object containing the parameters for dataflows queries. 
 		 */
@@ -185,10 +184,30 @@ package eu.ecb.core.controller
 		 */
 		protected var _dataFormat:String;
 		
+		/**
+		 * @private 
+		 */
+		protected var _nrOfFilesToFetch:uint;
+		
+		/**
+		 * @private 
+		 */
+		protected var _filesToFetch:ArrayCollection;
+		
+		/**
+		 * @private
+		 */ 
+		protected var _totalNrOfFiles:uint;
+		
+		/**
+		 * @private 
+		 */
+		protected var _tmpDataSet:DataSet;
+		
 		/*===========================Constructor==============================*/
 		
 		/**
-		 * Instantiates a new instance of the SDMX service controller.
+		 * Instantiates a new instance of a base SDMX service controller.
 		 *  
 		 * @param model The model that will be populated with data returned by
 		 * the SDMX data providers.
@@ -204,112 +223,99 @@ package eu.ecb.core.controller
 			structureFactory:ISDMXDaoFactory = null)
 		{
 			super(model);
-			_dataProvidersFactory = (null == dataFactory) ? 
-				new SDMXMLDaoFactory() : dataFactory;
-			_dataProvidersFactory.addEventListener(
-				BaseSDMXDaoFactory.DAO_ERROR_EVENT, handleError);	
-			if (null != structureFactory) {
-				_structureProvidersFactory = structureFactory;
-			} else if (null != dataFactory) {
-				_structureProvidersFactory = dataFactory;
-			} else {
-				_structureProvidersFactory = new SDMXMLDaoFactory();
-			}
-			_structureProvidersFactory.addEventListener(
-				BaseSDMXDaoFactory.DAO_ERROR_EVENT, handleError);		
+			dataProvidersFactory = dataFactory;
+			structureProvidersFactory = structureFactory;	
+			_nrOfFilesToFetch = 0;
 		}
 		
 		/*============================Accessors===============================*/
 		
 		/**
-		 * The source to be used for the provider of data.
-		 *  
-		 * @param dataFile
+		 * @inheritDoc
+		 */ 
+		public function set dataProvidersFactory(factory:ISDMXDaoFactory):void
+		{
+			_dataProvidersFactory = 
+				(null == factory) ? new SDMXMLDaoFactory() : factory;
+			_dataProvidersFactory.addEventListener(
+				BaseSDMXDaoFactory.DAO_ERROR_EVENT, handleError);	
+		}
+		
+		/**
+		 * @inheritDoc
 		 */
-		public function set dataFile(dataFile:URLRequest):void
+		public function get dataProvidersFactory():ISDMXDaoFactory
+		{
+			return _dataProvidersFactory;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */ 
+		public function set structureProvidersFactory(
+			factory:ISDMXDaoFactory):void
+		{
+			if (null != factory) {
+				_structureProvidersFactory = factory;
+			} else {
+				_structureProvidersFactory = dataProvidersFactory;
+			}
+			_structureProvidersFactory.addEventListener(
+				BaseSDMXDaoFactory.DAO_ERROR_EVENT, handleError);
+		}
+		
+		/**
+		 * @inheritDoc
+		 */ 
+		public function get structureProvidersFactory():ISDMXDaoFactory
+		{
+			return _structureProvidersFactory;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */ 
+		public function set dataSource(dataSource:URLRequest):void
 		{
 			_dataToFetch = true;
-			_dataURL = dataFile;
+			_dataURL = dataSource;
 			_dataProvider = null;
 		}
 		
 		/**
-		 * @private
-		 */ 
-		public function get dataFile():URLRequest
+		 * @inheritDoc
+		 */  
+		public function get dataSource():URLRequest
 		{
 			return _dataURL;
 		}
 		
 		/**
-		 * The source to be used for the provider of structural metadata.
-		 *  
-		 * @param structureFile
-		 */
-		public function set structureFile(structureFile:URLRequest):void
+		 * @inheritDoc
+		 */ 
+		public function set structureSource(structureSource:URLRequest):void
 		{
 			_structureToFetch = true;
-			_structureURL = structureFile;
+			_structureURL = structureSource;
 			_categorySchemeProvider = null;
 			_dataflowProvider = null;
 			_keyFamilyProvider = null;
 		}
 		
 		/**
-		 * @private
-		 */
-		public function get structureFile():URLRequest
+		 * @inheritDoc
+		 */ 
+		public function get structureSource():URLRequest
 		{
 			return _structureURL;
 		}
 		
 		/**
-		 * Whether or not observation-level attributes should be fetched. This
-		 * can be set to false for performance reasons.
-		 *  
-		 * @param flag
-		 */
-		public function set disableObservationAttribute(flag:Boolean):void
-		{
-			_disableObservationAttribute = flag;
-		}
-		
-		/**
-		 * @private
-		 */
-		public function get disableObservationAttribute():Boolean
-		{
-			return _disableObservationAttribute;
-		}
-		
-		/**
-		 * The optimisation level defines which optimisation settings will be 
-		 * applied when reading data.
-		 * 
-		 * @param level
-		 */
-		public function set optimisationLevel(level:uint):void
-		{
-			_optimisationLevel = level;
-		}
-		
-		/**
-		 * @private
-		 */
-		public function get optimisationLevel():uint
-		{
-			return _optimisationLevel;
-		}
-		
-		/**
-		 * When a data set is already available and there is no need to ask
-		 * the controller to fetch it, it can be assigned using this method.
-		 * 
-		 * @param ds The data set assigned to this controller 
-		 */
+		 * @inheritDoc
+		 */ 
 		public function set dataSet(ds:DataSet):void
 		{
-			(model as ISDMXServiceModel).allDataSets = ds;		
+			(model as ISDMXServiceModel).dataSet = ds;		
 		}
 		
 		/*==========================Public methods============================*/
@@ -391,8 +397,48 @@ package eu.ecb.core.controller
 			} else if (_dataToFetch) {
 				prepareDataProvider();
 			} else {
+				if (null != _tmpDataSet && (null == _filesToFetch || 
+					_filesToFetch.length == 0)) {
+					_tmpDataSet.timeseriesKeys = null;
+					_tmpDataSet.groupKeys = null;
+					_tmpDataSet.attributeValues = null;
+				}
 				performDataRequest();
 			}
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function fetchDataFiles(files:ArrayCollection):void
+		{
+			dispatchEvent(new Event(TASK_STARTED));
+			var isFetching:Boolean = false;
+			if (null != _filesToFetch && _filesToFetch.length > 0) {
+				isFetching = true;
+				for each (var file:URLRequest in files) {
+					_filesToFetch.addItem(file);
+				}
+				_nrOfFilesToFetch = _filesToFetch.length + 1;
+				_totalNrOfFiles = _filesToFetch.length + 1;
+			} else {
+				_filesToFetch = files;
+				_nrOfFilesToFetch = _filesToFetch.length;
+				_totalNrOfFiles = _filesToFetch.length;
+			}
+			if (null != _tmpDataSet && !isFetching) {
+				_tmpDataSet.timeseriesKeys = null;
+				_tmpDataSet.groupKeys = null;
+				_tmpDataSet.attributeValues = null;
+			}
+			
+			if (!isFetching) {
+				this.dataSource = _filesToFetch.removeItemAt(0) as URLRequest;
+				dispatchEvent(new ProgressEventMessage(TASK_PROGRESS, false, 
+					false, 0, 0, "Please wait: Loading data (" + 
+					Math.round( (1 /_totalNrOfFiles) * 100) + "%)"));
+				fetchData();
+			}	
 		}
 		
 		/*==========================Protected methods=========================*/
@@ -450,6 +496,12 @@ package eu.ecb.core.controller
 			}
 		}
 		
+		/**
+		 * Handles the reception of the key family returned by the data
+		 * provider, following a request to fetch a key family.
+		 * 
+		 * @param event The event containing the key family
+		 */
 		protected function handleKeyFamily(event:SDMXDataEvent):void
 		{
 			event.stopImmediatePropagation();
@@ -458,14 +510,20 @@ package eu.ecb.core.controller
 			_isKeyFamilyQuery = false;
 			
 			var foundDataflows:DataflowsCollection = new DataflowsCollection();
-			for each (var refDataflow:DataflowDefinition in 
-				_dataflowsWithNoKeyFamily) {
-				var kf:KeyFamily = (event.data as KeyFamilies).
-					getKeyFamilyByID(refDataflow.structure.id, refDataflow.
-					structure.maintainer.id, refDataflow.structure.version);	
-				if (null != kf)	{ 
-					refDataflow.structure = kf;
-					foundDataflows.addItem(refDataflow);
+			if (null != _dataflowsWithNoKeyFamily) {
+				var tmpColl:ArrayCollection = new ArrayCollection(
+					_dataflowsWithNoKeyFamily.toArray().concat());
+				for each (var refDataflow:DataflowDefinition in 
+					tmpColl) {
+					var kf:KeyFamily = (event.data as KeyFamilies).
+						getKeyFamilyByID(refDataflow.structure.id, refDataflow.
+						structure.maintainer.id, refDataflow.structure.version);	
+					if (null != kf)	{ 
+						refDataflow.structure = kf;
+						foundDataflows.addItem(refDataflow);
+						_dataflowsWithNoKeyFamily.removeItemAt(
+							_dataflowsWithNoKeyFamily.getItemIndex(refDataflow));
+					}
 				}
 			}
 			(_model as BaseSDMXServiceModel).dataflowDefinitions = 
@@ -491,12 +549,51 @@ package eu.ecb.core.controller
 		 */
 		protected function handleData(event:SDMXDataEvent):void
 		{
-			(_model as BaseSDMXServiceModel).dataSet = event.data as DataSet;
+			if (_nrOfFilesToFetch > 0) {
+				_nrOfFilesToFetch--;
+			}
+			if (null == _tmpDataSet) {
+				_tmpDataSet = event.data as DataSet;
+			} else {
+				if (null == _tmpDataSet.timeseriesKeys) {
+					_tmpDataSet.timeseriesKeys = new TimeseriesKeysCollection();
+				}
+				for each (var s:TimeseriesKey in (event.data as 
+					DataSet).timeseriesKeys) {		            
+					_tmpDataSet.timeseriesKeys.addItem(s);
+				}
+			
+				if (null == _tmpDataSet.groupKeys) {
+					_tmpDataSet.groupKeys = new GroupKeysCollection();
+				}
+				for each (var group:GroupKey in (event.data as 
+					DataSet).groupKeys) {
+					_tmpDataSet.groupKeys.addItem(group);
+				}
+			}
+			if (0 == _nrOfFilesToFetch) {
+				dispatchEvent(new Event(TASK_COMPLETED));
+				this.dataSet = _tmpDataSet;
+			} else {
+				dispatchEvent(new ProgressEventMessage(TASK_PROGRESS, false, 
+					false, _totalNrOfFiles - _filesToFetch.length + 1, 
+					_totalNrOfFiles, "Please wait: Loading data (" + 
+					Math.round(((_totalNrOfFiles -	_filesToFetch.length + 1) /
+						_totalNrOfFiles) * 100) + "%)"));
+				this.dataSource = _filesToFetch.removeItemAt(0) as URLRequest;
+				fetchData();
+			}
 			event.stopImmediatePropagation();
 			event = null;
 			_isDataQuery = false;
 		}
 		
+		/**
+		 * Handles the notification from the SDMX DAO factory that the SDMX
+		 * provider for structural metadata is ready to be used.
+		 *  
+		 * @param event
+		 */
 		protected function handleStructureFactoryReady(event:Event):void
 		{
 			event.stopImmediatePropagation();
@@ -521,6 +618,10 @@ package eu.ecb.core.controller
 			}
 		}
 		
+		/**
+		 * Prepares the SDMX provider for structural metadata to be used by the 
+		 * controller.  
+		 */
 		protected function prepareStructureProvider():void
 		{
 			_structureProvidersFactory.addEventListener(
@@ -528,6 +629,10 @@ package eu.ecb.core.controller
 			_structureProvidersFactory.sourceURL = _structureURL;	
 		}
 		
+		/**
+		 * Instructs the SDMX provider for structural metadata to retrieve 
+		 * category schemes from the SDMX source. 
+		 */
 		protected function performCategorySchemeRequest():void {
 			if (null == _categorySchemeProvider) {
 				_categorySchemeProvider = createStructureProvider(
@@ -539,6 +644,10 @@ package eu.ecb.core.controller
 				_categorySchemeParams["version"]);	
 		}
 		
+		/**
+		 * Instructs the SDMX provider for structural metadata to retrieve 
+		 * dataflow definitions from the SDMX source. 
+		 */
 		protected function performDataflowRequest():void {
 			if (null == _dataflowProvider) {
 				_dataflowProvider = createStructureProvider("Dataflow", 
@@ -550,6 +659,10 @@ package eu.ecb.core.controller
 				_dataflowsParams["version"]);	
 		}
 		
+		/**
+		 * Instructs the SDMX provider for structural metadata to retrieve 
+		 * data structure definitions from the SDMX source. 
+		 */
 		protected function performKeyFamilyRequest():void {
 			if (null == _keyFamilyProvider) {
 				_keyFamilyProvider = createStructureProvider("KeyFamily", 
@@ -560,6 +673,12 @@ package eu.ecb.core.controller
 				_keyFamilyParams["version"]);	
 		}
 		
+		/**
+		 * Handles the notification from the SDMX DAO factory that the SDMX
+		 * provider for data is ready to be used.
+		 *  
+		 * @param event
+		 */
 		protected function handleDataFactoryReady(event:Event):void
 		{
 			event.stopImmediatePropagation();
@@ -568,6 +687,9 @@ package eu.ecb.core.controller
 			performDataRequest();				
 		}
 		
+		/**
+		 * Prepares the SDMX provider for data to be used by the controller.  
+		 */
 		protected function prepareDataProvider():void
 		{
 			_dataProvidersFactory.addEventListener(
@@ -575,6 +697,10 @@ package eu.ecb.core.controller
 			_dataProvidersFactory.sourceURL = _dataURL;	
 		}
 		
+		/**
+		 * Instructs the SDMX provider for data to retrieve data from the SDMX 
+		 * source. 
+		 */
 		protected function performDataRequest():void {
 			if (null == _dataProvider) {
 				_dataProvider = createDataProvider();
@@ -594,9 +720,6 @@ package eu.ecb.core.controller
 				_dataProvider.keyFamilies = 
 					(_model as ISDMXServiceModel).allKeyFamilies;
 			}
-			_dataProvider.optimisationLevel = _optimisationLevel;
-			_dataProvider.disableObservationAttribute = 
-				_disableObservationAttribute;
 			_dataProvider.addEventListener(BaseSDMXDaoFactory.DATA_EVENT, 
 				handleData);
 			_dataProvider.addEventListener(BaseSDMXDaoFactory.DAO_ERROR_EVENT, 

@@ -32,9 +32,11 @@ package eu.ecb.core.view
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
 	
 	/**
-	 * Contract to be implemented by classes supporting visual representations
-	 * of SDMX data.
-	 *  
+	 * Contract to be implemented by views supporting advanced visual 
+	 * representations of SDMX data. Compared to the ISDMXServiceView,
+	 * this interface offers to possibility to set data optimized for certain 
+	 * views (such as filtered datasets) or to define periods for filtering.
+	 * 
 	 * @author Xavier Sosnovsky
 	 */
 	public interface ISDMXView extends ISDMXServiceView
@@ -116,5 +118,27 @@ package eu.ecb.core.view
 		 * @param showChange
 		 */
 		function set showChange(showChange:Boolean):void;
+		
+		/**
+		 * The desired panel height.
+		 *  
+		 * @param desiredHeight
+		 * 
+		 */
+		function set desiredHeight(desiredHeight:Number):void;
+		
+		/**
+		 * The desire panel width.
+		 * 
+		 * @param desiredWidth
+		 */
+		function set desiredWidth(desiredWidth:Number):void;
+		
+		/**
+		 * The currently selected date
+		 * 
+		 * @param date
+		 */
+		function set selectedDate(date:String):void;
 	}
 }

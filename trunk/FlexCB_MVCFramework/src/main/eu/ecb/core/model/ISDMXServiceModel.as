@@ -26,6 +26,8 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.model
 {
+	import mx.collections.ArrayCollection;
+	
 	import org.sdmx.model.v2.reporting.dataset.DataSet;
 	import org.sdmx.model.v2.structure.category.CategorieSchemesCollection;
 	import org.sdmx.model.v2.structure.keyfamily.DataflowsCollection;
@@ -113,11 +115,16 @@ package eu.ecb.core.model
 		 * @return The data set containing all series and groups stored in the 
 		 * model. 
 		 */
-		function get allDataSets():DataSet;
+		function get allDataSets():DataSet;		
 		
 		/**
-		 * @private
+		 * Returns a dataset containing the series corresponding to the
+		 * supplied series keys.
+		 * 
+		 * @param seriesKeys The keys of the series to be returned
+		 * @return The dataset containing the series corresponding to the
+		 * supplied series keys.
 		 */
-		function set allDataSets(ds:DataSet):void;
+		function getDataSetWithSeries(seriesKeys:ArrayCollection):DataSet;
 	}
 }

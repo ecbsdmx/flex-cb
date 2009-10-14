@@ -26,11 +26,11 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view.chart
 {
-	import eu.ecb.core.view.SDMXViewAdapter;
+	import eu.ecb.core.view.BaseSDMXView;
 	
 	import flash.events.DataEvent;
 	import flash.events.Event;
-	import flash.events.MouseEvent;  
+	import flash.events.MouseEvent;
 	
 	import mx.binding.utils.ChangeWatcher;
 	import mx.charts.AreaChart;
@@ -78,7 +78,7 @@ package eu.ecb.core.view.chart
 	 * 
 	 * @author Xavier Sosnovsky
 	 */
-	public class PeriodSlider extends SDMXViewAdapter
+	public class PeriodSlider extends BaseSDMXView
 	{
 		
 		/*==============================Fields================================*/

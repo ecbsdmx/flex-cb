@@ -26,20 +26,22 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view.panel
 {
+	import eu.ecb.core.view.BaseSDMXViewComposite;
 	import eu.ecb.core.view.ISDMXServiceView;
 	import eu.ecb.core.view.ISDMXView;
 	
 	import flash.display.DisplayObject;
+	import flash.events.Event;
 	
 	import mx.containers.ViewStack;
 	import mx.events.MenuEvent;
 
 	/**
-	 * This panel wraps a AS3 ViewStack in an SDMXDataPanelAdapter.
+	 * This panel wraps a AS3 ViewStack in a BaseSDMXViewComposite.
 	 *  
 	 * @author Xavier Sosnovsky
 	 */
-	public class StackPanel extends SDMXDataPanelAdapter
+	public class StackPanel extends BaseSDMXViewComposite
 	{
 		/*==============================Fields================================*/
 		
@@ -85,10 +87,12 @@ package eu.ecb.core.view.panel
 			}
 		}
 		
-		public function handleStackItemSelected(event:MenuEvent):void
+		public function handleStackItemSelected(event:Event):void
 		{
-			if (event.index < _stack.getChildren().length) {
-				_stack.selectedIndex = event.index;
+			if (event is MenuEvent) {
+				if ((event as MenuEvent).index < _stack.getChildren().length) {
+					_stack.selectedIndex = (event as MenuEvent).index;
+				}
 			}
 		}
 		

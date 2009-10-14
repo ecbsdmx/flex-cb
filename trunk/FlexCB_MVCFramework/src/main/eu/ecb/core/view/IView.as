@@ -26,48 +26,19 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view
 {
-	import org.sdmx.model.v2.reporting.dataset.DataSet;
-	import org.sdmx.model.v2.structure.category.CategorieSchemesCollection;
-	import org.sdmx.model.v2.structure.keyfamily.DataflowsCollection;
-	import org.sdmx.model.v2.structure.keyfamily.KeyFamilies;
-	
+	import mx.core.IUIComponent;
+
 	/**
-	 * Contract to be implemented by views of applications offering a set of 
-	 * SDMX compliant services.
-	 *  
+	 * Marker interface for view classes. 
+	 * 
+	 * Views translate model data into user interface elements. Multiple views 
+	 * can be used to translate the same model data, depending on the needs
+	 * (for example, a line chart and a table could both be used to display
+	 * a dataset). 
+	 * 
 	 * @author Xavier Sosnovsky
 	 */
-	public interface ISDMXServiceView extends IView
+	public interface IView extends IUIComponent
 	{
-		/**
-		 * @private
-		 */ 
-		function set id(id:String):void;
-		
-		/**
-		 * Each Flex-CB view can be identified by an ID. 
-		 */ 
-		function get id():String;
-		
-		/**
-		 * The category schemes to be displayed by the view 
-		 */
-		function set categorySchemes(cs:CategorieSchemesCollection):void;
-		
-		/**
-		 * The dataflow definition to be displayed by the view 
-		 */
-		function set dataflowDefinitions(dd:DataflowsCollection):void;
-		
-		/**
-		 * The key families to be displayed by the view. 
-		 */
-		function set keyFamilies(kf:KeyFamilies):void;
-		
-		/**
-		 * The SDMX data set containing the desired subset of data to be 
-		 * displayed by the view. 
-		 */ 
-		function set dataSet(ds:DataSet):void;
 	}
 }
