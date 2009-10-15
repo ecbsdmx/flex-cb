@@ -35,21 +35,24 @@
 	<mx:Style source="src/main/eu/ecb/assets/styles/ecb.css"/>
 	<mx:Script>
 		<![CDATA[
+			import org.sdmx.stores.api.BaseSDMXDaoFactory;
+			import org.sdmx.stores.api.ISDMXDaoFactory;
 			import eu.ecb.exr.controller.EXRController;
 			import eu.ecb.exr.view.EXRDataPanel;
 			import eu.ecb.exr.model.EXRModel;
 
 			private function setup():void {
 				var model:EXRModel    = new EXRModel();
-				var controller:EXRController = new EXRController(model, 
-					new URLRequest("data/all.xml"), 
-					new URLRequest("data/ecb_exr1.xml"), true);
+				var controller:EXRController = new EXRController(model);
+				controller.dataSource = new URLRequest("data/all.xml");
+				controller.structureSource = 
+					new URLRequest("data/ecb_exr1.xml");
 				var view:EXRDataPanel = new EXRDataPanel(model, controller, 
 					true);
-				view.width = 700;
-				view.height = 700;
+				view.percentWidth  = 100;
+				view.percentHeight = 100;
 				addChild(view);
-				controller.loadData();
+				controller.fetchData();
 			}
 		]]>
 	</mx:Script>
