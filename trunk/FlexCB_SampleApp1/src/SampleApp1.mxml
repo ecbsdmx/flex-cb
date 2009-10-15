@@ -45,7 +45,7 @@
 			private function setup():void {
 				var dataFile:String = (Application.application.parameters.
 					hasOwnProperty("dataFile")) ? Application.application.
-					parameters.dataFile : "data/inflation.xml";
+					parameters.dataFile : "data/inflation.xml.zlib";
 				var dsdFile:String = (Application.application.parameters.
 					hasOwnProperty("dsdFile")) ? Application.application.
 					parameters.dsdFile : "data/ecb_icp1.xml";	
