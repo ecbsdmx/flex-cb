@@ -57,6 +57,7 @@ package org.sdmx.stores.xml.v2
 		private function handleDataFactoryReady(event:Event):void
 		{
 			_dataDao = _factory.getCompactDataDAO();
+			_dataDao.keyFamilies = _dsds;
 			_dataDao.getData();	
 			_dataDao.addEventListener(BaseSDMXDaoFactory.DATA_EVENT,
 				handleDataSet);	

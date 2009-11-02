@@ -513,21 +513,7 @@ package org.sdmx.stores.xml.v2.generic
 			<Truncated>false</Truncated>
 			<Name xml:lang="en">Trans46302</Name>
 			<Prepared>2001-03-11T09:30:47-05:00</Prepared>
-			<Sender id="BIS">
-				<Name xml:lang="en">Bank for International Settlements</Name>
-				<Contact>
-					<Name xml:lang="en">G.B. Smith</Name>
-					<Telephone>+000.000.0000</Telephone>
-				</Contact>
-			</Sender>
-			<Receiver id="ECB">
-				<Name xml:lang="en">European Central Bank</Name>
-				<Contact>
-					<Name xml:lang="en">B.S. Featherstone</Name>
-					<Department xml:lang="en">Statistics Division</Department>
-					<Telephone>+000.000.0001</Telephone>
-				</Contact>
-			</Receiver>
+			<Sender id="BIS"/>
 			<DataSetAgency>BIS</DataSetAgency>
 			<DataSetID>BIS_JD_237</DataSetID>
 			<DataSetAction>Append</DataSetAction>
@@ -537,13 +523,12 @@ package org.sdmx.stores.xml.v2.generic
 	</Header>
 	<DataSet>
 		<generic:KeyFamilyRef>BIS_JOINT_DEBT</generic:KeyFamilyRef>
-		<generic:Group type="SiblingGroup">
+		<generic:Group type="Group">
 			<generic:GroupKey>
 				<generic:Value concept="JD_TYPE" value="P"/>
 				<generic:Value concept="JD_CATEGORY" value="A"/>
 				<generic:Value concept="VIS_CTY" value="MX"/>
 			</generic:GroupKey>
-			
 			<generic:Attributes>
 				<generic:Value concept="AVAILABILITY" value="A"/>
 				<generic:Value concept="DECIMALS" value="2"/>
@@ -568,7 +553,6 @@ package org.sdmx.stores.xml.v2.generic
 						<generic:Value concept="OBS_STATUS" value="A"/>
 					</generic:Attributes>
 				</generic:Obs>
-				
 				<generic:Obs>
 					<generic:Time>2000-02</generic:Time>
 					<generic:ObsValue  value="3.14"/>
@@ -646,7 +630,6 @@ package org.sdmx.stores.xml.v2.generic
 						<generic:Value concept="OBS_STATUS" value="A"/>
 					</generic:Attributes>
 				</generic:Obs>
-
 			</generic:Series>
 			<generic:Series>
 				<generic:SeriesKey>
@@ -667,11 +650,8 @@ package org.sdmx.stores.xml.v2.generic
 					</generic:Attributes>
 				</generic:Obs>
 			</generic:Series>			
-			
-			
 		</generic:Group>
 	</DataSet>
-	
 </GenericData>
 	}
 }
