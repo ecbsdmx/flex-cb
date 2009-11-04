@@ -35,7 +35,7 @@ package eu.ecb.core.util.formatter
      * accomodate default ECB formatting and frequencies.
      * 
      * There are two possible formats, a short one and a verbose one. 
-     * By default, the short one will be displayed. The format will be 
+     * By default, the long one will be displayed. The format will be 
      * depending on the frequency. If no frequency is set, an exception will be
      * thrown.
      * 
