@@ -101,5 +101,23 @@ package eu.ecb.core.controller
 			event.stopImmediatePropagation();
 			(model as ISDMXViewModel).handleDividerDragged(event, "right");
 		}
+		
+		/**
+		 * @inheritDoc
+		 */ 
+		public function handleLegendItemSelected(event:DataEvent):void
+		{
+			event.stopImmediatePropagation();
+			(model as ISDMXViewModel).handleLegendItemSelected(event);
+		}
+		
+		/**
+		 * @inheritDoc
+		 */ 
+		public function handleLegendItemHighlighted(event:DataEvent):void
+		{
+			event.stopImmediatePropagation();
+			(model as ISDMXViewModel).handleLegendItemHighlighted(event);
+		}
 	}
 }

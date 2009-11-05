@@ -608,6 +608,54 @@ package eu.ecb.core.model
 		/**
 		 * @inheritDoc
 		 */ 
+		public function handleLegendItemSelected(event:DataEvent):void
+		{
+			if (null == _selectedDataSet) {
+				_selectedDataSet = new DataSet();
+			}
+			if (null == _selectedDataSet.timeseriesKeys || 
+				0 == _selectedDataSet.timeseriesKeys.length ||
+				null == _selectedDataSet.timeseriesKeys.getTimeseriesKey(
+					event.data)) {
+				_selectedDataSet.timeseriesKeys.addItem(
+					_filteredDataSet.timeseriesKeys.getTimeseriesKey(
+						event.data));			
+			} else {
+				_selectedDataSet.timeseriesKeys.removeItemAt(
+					_selectedDataSet.timeseriesKeys.getItemIndex(
+					_filteredDataSet.timeseriesKeys.getTimeseriesKey(
+						event.data)));
+			}
+			dispatchEvent(new Event(SELECTED_DATASET_UPDATED));
+		}
+		
+		/**
+		 * @inheritDoc
+		 */ 
+		public function handleLegendItemHighlighted(event:DataEvent):void
+		{
+			if (null == _highlightedDataSet) {
+				_highlightedDataSet = new DataSet();
+			}
+			if (null == _highlightedDataSet.timeseriesKeys || 
+				0 == _highlightedDataSet.timeseriesKeys.length ||
+				null == _highlightedDataSet.timeseriesKeys.getTimeseriesKey(
+					event.data)) {
+				_highlightedDataSet.timeseriesKeys.addItem(
+					_filteredDataSet.timeseriesKeys.getTimeseriesKey(
+						event.data));			
+			} else {
+				_highlightedDataSet.timeseriesKeys.removeItemAt(
+					_highlightedDataSet.timeseriesKeys.getItemIndex(
+					_filteredDataSet.timeseriesKeys.getTimeseriesKey(
+						event.data)));
+			}
+			dispatchEvent(new Event(HIGHLIGHTED_DATASET_UPDATED));
+		}	
+		
+		/**
+		 * @inheritDoc
+		 */ 
 		public function getFilteredDataSetWithSeries(
 			seriesKeys:ArrayCollection):DataSet
 		{

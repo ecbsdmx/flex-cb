@@ -209,6 +209,26 @@ package eu.ecb.core.model
 			dividerPosition:String):void;
 			
 		/**
+		 * Updates the model when a legend item has been selected (after a 
+		 * mouse click). If the series is already selected, it will be removed
+		 * from the selection. Else, it will be added to the list of selected 
+		 * series.
+		 * 
+		 * @param event The data event that contains the series key of the 
+		 * selected legend item
+		 */
+		function handleLegendItemSelected(event:DataEvent):void;
+		
+		/**
+		 * Updates the model when a legend item has been highlighted (after a 
+		 * mouse over).
+		 * 
+		 * @param event The data event that contains the series key of the 
+		 * highlighted legend item
+		 */
+		function handleLegendItemHighlighted(event:DataEvent):void;	
+			
+		/**
 		 * Returns a dataset containing the series corresponding to the
 		 * supplied series keys, after filtering has been applied.
 		 * 
