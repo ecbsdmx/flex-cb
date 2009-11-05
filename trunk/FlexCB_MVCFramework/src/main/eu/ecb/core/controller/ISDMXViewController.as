@@ -88,5 +88,23 @@ package eu.ecb.core.controller
 		 * @see eu.ecb.core.view.chart.PeriodSlider
 		 */
 		function handleRightDividerDragged(event:DataEvent):void; 
+		
+		/**
+		 * Call this function when a legend item has been selected (after a 
+		 * mouse click).
+		 * 
+		 * @param event The data event that contains the series key of the 
+		 * selected legend item
+		 */
+		function handleLegendItemSelected(event:DataEvent):void;
+		
+		/**
+		 * Call this function when a legend item has been highlighted (after a 
+		 * mouse over).
+		 * 
+		 * @param event The data event that contains the series key of the 
+		 * highlighted legend item
+		 */
+		function handleLegendItemHighlighted(event:DataEvent):void;
 	}
 }
