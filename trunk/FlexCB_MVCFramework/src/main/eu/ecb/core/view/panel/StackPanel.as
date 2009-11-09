@@ -31,7 +31,7 @@ package eu.ecb.core.view.panel
 	import eu.ecb.core.view.ISDMXView;
 	
 	import flash.display.DisplayObject;
-	import flash.events.Event;
+	import flash.events.DataEvent;
 	
 	import mx.containers.ViewStack;
 	import mx.events.MenuEvent;
@@ -80,6 +80,11 @@ package eu.ecb.core.view.panel
 			}
 		}
 		
+		/**
+		 * Displays the panel with supplied index
+		 *  
+		 * @param index The index of the panel to be displayed
+		 */
 		public function displayPanel(index:uint):void
 		{
 			if (index < _stack.getChildren().length) {
@@ -87,12 +92,16 @@ package eu.ecb.core.view.panel
 			}
 		}
 		
-		public function handleStackItemSelected(event:Event):void
+		/**
+		 * Displays the panel with index supplied in the data event
+		 *  
+		 * @param event The event containing the index of the panel to be 
+		 * displayed
+		 */ 
+		public function handleStackItemSelected(event:DataEvent):void
 		{
-			if (event is MenuEvent) {
-				if ((event as MenuEvent).index < _stack.getChildren().length) {
-					_stack.selectedIndex = (event as MenuEvent).index;
-				}
+			if (Number(event.data) < _stack.getChildren().length) {
+				_stack.selectedIndex = Number(event.data);
 			}
 		}
 		
