@@ -73,6 +73,8 @@ package eu.ecb.core.view.summary
 		
 		private var _showAverage:Boolean;
 		
+		private var _autoHide:Boolean;
+		
 		/*===========================Constructor==============================*/
 		
 		public function ChartSummaryBox(direction:String = "vertical")
@@ -138,6 +140,11 @@ package eu.ecb.core.view.summary
 		public function set showAverage(flag:Boolean):void
 		{
 			_showAverage = flag;
+		}
+		
+		public function set autoHide(flag:Boolean):void
+		{
+			_autoHide = flag;
 		}
 		
 		/*========================Protected methods===========================*/
@@ -282,6 +289,30 @@ package eu.ecb.core.view.summary
 		    	_minMaxText.htmlText = _minMaxText.htmlText + "</font>";	
 		    	_numberFormatter.forceSigned = true;	
 			}
+			
+			if (_filteredDataSetChanged) {
+				_filteredDataSetChanged = false;
+				invalidateDisplayList();
+			}
+		}
+		
+		override protected function updateDisplayList(unscaledWidth:Number, 
+			unscaledHeight:Number):void 
+		{
+			super.updateDisplayList(unscaledWidth, unscaledHeight);
+			if (_autoHide && null != _filteredDataSet && null != 
+				_filteredDataSet.timeseriesKeys && 
+				1 < _filteredDataSet.timeseriesKeys.length) {
+				this.width  = 0;
+				this.height = 0;
+				this.visible = false;
+			} else if (_autoHide && null != _filteredDataSet && null != 
+				_filteredDataSet.timeseriesKeys && 
+				1 == _filteredDataSet.timeseriesKeys.length) {
+				this.percentWidth  = 100;
+				this.height = _changeBox.height + _minMaxText.height;
+				this.visible = true;
+			}		
 		}
 		
 		/**
