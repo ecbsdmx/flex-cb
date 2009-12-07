@@ -35,6 +35,8 @@ package org.sdmx.model.v2.reporting.dataset
 	 */ 
 	public class Key extends AttachableArtefactAdapter 
 		implements AttachableArtefact {
+			
+		/*==============================Fields================================*/	
 		
 		private var _keyValues:KeyValuesCollection;
 		
