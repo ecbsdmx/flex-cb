@@ -66,7 +66,7 @@ package org.sdmx.model.v2.reporting.dataset
 		}
 		
 		/**
-		 * @privat
+		 * @private
 		 */ 
 		public override function setItemAt(item:Object, index:int):Object {
 			if (!(item is GroupKey)) {
