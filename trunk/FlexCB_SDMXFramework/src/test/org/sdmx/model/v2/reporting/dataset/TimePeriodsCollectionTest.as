@@ -79,5 +79,23 @@ package org.sdmx.model.v2.reporting.dataset
 				fail("Time periods collections can only contain time periods");
 			} catch (error:ArgumentError) {}
 		}	
+		
+		public function testGetItemAtPeriod():void {
+			var collection:TimePeriodsCollection = new TimePeriodsCollection();
+			var obs1:TimePeriod = new TimePeriod("2009-01", 
+				new UncodedObservation("1.25", new UncodedMeasure("measure", 
+				new Concept("m"))));
+			var obs2:TimePeriod = new TimePeriod("2009-02", 
+				new UncodedObservation("1.35", new UncodedMeasure("measure", 
+				new Concept("m"))));	
+			var obs3:TimePeriod = new TimePeriod("2009-03", 
+				new UncodedObservation("1.40", new UncodedMeasure("measure", 
+				new Concept("m"))));	
+			collection.addItem(obs1);
+			collection.addItem(obs2);
+			collection.addItem(obs3);
+			assertEquals("Should have 3 obs", 3, collection.length);
+			assertEquals("2nd", obs2, collection.getTimePeriod("2009-02"));
+		}
 	}
 }

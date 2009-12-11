@@ -38,20 +38,31 @@ package org.sdmx.model.v2.reporting.dataset
 			suite.addTest(AttachableArtefactAdapterTest.suite());
 			suite.addTest(AttributeValuesCollectionTest.suite());
 			suite.addTest(AttributeValueTest.suite());
+			suite.addTest(BaseDataSetTest.suite());
+			suite.addTest(BaseXSComponentTest.suite());
 			suite.addTest(CodedAttributeValueTest.suite());
 			suite.addTest(CodedObservationTest.suite());
+			suite.addTest(CodedXSObservationTest.suite());
 			suite.addTest(DataSetTest.suite());
 			suite.addTest(GroupKeysCollectionTest.suite());
 			suite.addTest(GroupKeyTest.suite());
 			suite.addTest(KeyTest.suite());
 			suite.addTest(KeyValuesCollectionTest.suite());
 			suite.addTest(KeyValueTest.suite());
+			suite.addTest(SectionTest.suite());
+			suite.addTest(SectionsCollectionTest.suite());
 			suite.addTest(TimePeriodsCollectionTest.suite());
 			suite.addTest(TimePeriodTest.suite());
 			suite.addTest(TimeseriesKeysCollectionTest.suite());
 			suite.addTest(TimeseriesKeyTest.suite());
 			suite.addTest(UncodedAttributeValueTest.suite());
  			suite.addTest(UncodedObservationTest.suite());	
+ 			suite.addTest(UncodedXSObservationTest.suite());
+ 			suite.addTest(XSDataSetTest.suite());
+ 			suite.addTest(XSGroupsCollectionTest.suite());
+ 			suite.addTest(XSGroupTest.suite());
+ 			suite.addTest(XSObservationsCollectionTest.suite());
+ 			suite.addTest(XSObsTest.suite());
  			return suite;
 		}
 	}
