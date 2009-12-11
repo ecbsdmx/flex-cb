@@ -26,13 +26,15 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.model.v2.reporting.dataset
 {
+	import org.sdmx.model.v2.base.SDMXArtefact;
+	
 	/**
 	 * Interface indicating that an SDMX artefact can have attributes
 	 * attached to it.
 	 * 
 	 * @author Xavier Sosnovsky
 	 */ 
-	public interface AttachableArtefact {
+	public interface AttachableArtefact extends SDMXArtefact {
 		
 		/**
 		 * The collection of attributes attached to the artefact
