@@ -39,7 +39,8 @@ package org.sdmx.model.v2.base.type
 			suite.addTest(ConceptRoleTest.suite());
  			suite.addTest(DataTypeTest.suite());			
  			suite.addTest(FacetTypeTest.suite());
- 			suite.addTest(UsageStatusTest.suite()); 			
+ 			suite.addTest(UsageStatusTest.suite()); 	
+ 			suite.addTest(XSAttachmentLevelTest.suite());		
  			return suite;
 		}
 	}

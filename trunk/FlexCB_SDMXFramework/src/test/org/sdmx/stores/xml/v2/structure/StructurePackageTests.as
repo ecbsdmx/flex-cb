@@ -41,6 +41,7 @@ package org.sdmx.stores.xml.v2.structure
 			var suite:TestSuite = new TestSuite();
 			suite.addTest(SDMXMLKeyFamilyDaoTest.suite());
 			suite.addTest(StructureReaderTest.suite());
+			suite.addTest(XSKeyFamilyTest.suite());
 			suite.addTest(BasePackageTests.suite());
 			suite.addTest(CollectionPackageTests.suite());
 			suite.addTest(KeyFamilyPackageTests.suite());

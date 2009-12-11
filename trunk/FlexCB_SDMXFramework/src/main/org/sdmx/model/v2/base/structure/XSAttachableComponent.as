@@ -1,4 +1,4 @@
-// Copyright (C) 2008 European Central Bank. All rights reserved.
+// Copyright (C) 2009 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
 // with or without modification, are permitted
@@ -26,59 +26,56 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.model.v2.base.structure
 {
-	import org.sdmx.model.v2.base.type.UsageStatus;
+	import org.sdmx.model.v2.base.type.XSAttachmentLevel;
 	import org.sdmx.model.v2.structure.concept.Concept;
 
 	/**
-	 * An abstract class used to provide qualitative information.
+	 * Specifies, in cross-sectional key families, to which level (DataSet,
+	 * Group, Section, XSObservation) the dimensions and attributes should be 
+	 * attached.
 	 * 
 	 * @author Xavier Sosnovsky
 	 * 
-	 * @see org.sdmx.model.v2.base.type.UsageStatus
-	 */ 
-	public class Attribute extends XSAttachableComponent {
-
+	 * @see ComponentList
+	 * @see org.sdmx.model.v2.base.type.XSAttachmentLevel
+	 */
+	public class XSAttachableComponent extends Component
+	{
 		/*==============================Fields================================*/
 		
-		private var _usageStatus:String;
+		/**
+		 * @private
+		 */ 
+		protected var _xsAttachmentLevel:String;
 		
 		/*===========================Constructor==============================*/
-
-		/**
-		 * Constructs an attribute.
-		 *  
-		 * @param identifier The attribute id
-		 * @param conceptIdentity The concept representing the attribute (for
-		 * example, the attribute OBS_CONF represents the concept of an 
-		 * observation confidentiality).
-		 */
-		public function Attribute(identifier:String, conceptIdentity:Concept) {
-			super(identifier, conceptIdentity);
+		
+		public function XSAttachableComponent(identifier:String, 
+			concept:Concept)
+		{
+			super(identifier, concept);
 		}
 		
 		/*============================Accessors===============================*/
 		
 		/**
-	 	 * @private 
-	 	 */
-	 	[Inspectable(enumeration=Mandatory,Conditional)] 
-		public function set usageStatus(usageStatus:String):void {
-			if (!UsageStatus.contains(usageStatus)) {
-				throw new TypeError(usageStatus + 
-					" is not a valid SDMX usage status");
-			} else {
-				_usageStatus = usageStatus;
+		 * @private
+		 */ 
+		public function set xsAttachmentLevel(level:String):void
+		{
+			if (!(XSAttachmentLevel.contains(level))) {
+				throw new ArgumentError(level + " not in the list of allowed" + 
+					"cross-sectional attachment levels");
 			}
+			_xsAttachmentLevel = level;
 		}
 		
 		/**
-		 * The usage status (Mandatory or Conditional) of the attribute. 
-		 * 
-		 * @throws TypeError <code>TypeError</code>: If the supplied usage 
-		 * status is not in the list of valid SDMX status.
-		 */
-		public function get usageStatus():String {
-			return _usageStatus;
+		 * The cross-sectional attachement level of the component
+		 */ 
+		public function get xsAttachmentLevel():String
+		{
+			return _xsAttachmentLevel;
 		}
 	}
 }

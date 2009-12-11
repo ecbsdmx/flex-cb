@@ -1,4 +1,4 @@
-// Copyright (C) 2008 European Central Bank. All rights reserved.
+// Copyright (C) 2009 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
 // with or without modification, are permitted
@@ -24,61 +24,25 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-package org.sdmx.model.v2.base.structure
+package org.sdmx.model.v2.structure.keyfamily
 {
-	import org.sdmx.model.v2.base.type.UsageStatus;
+	import org.sdmx.model.v2.base.structure.UncodedArtefact;
+	import org.sdmx.model.v2.structure.code.Code;
 	import org.sdmx.model.v2.structure.concept.Concept;
 
 	/**
-	 * An abstract class used to provide qualitative information.
+	 * A cross-sectional measure that is uncoded.
 	 * 
-	 * @author Xavier Sosnovsky
-	 * 
-	 * @see org.sdmx.model.v2.base.type.UsageStatus
+     * @author Xavier Sosnovsky
 	 */ 
-	public class Attribute extends XSAttachableComponent {
-
-		/*==============================Fields================================*/
-		
-		private var _usageStatus:String;
-		
+	public class UncodedXSMeasure extends XSMeasure implements UncodedArtefact
+	{
 		/*===========================Constructor==============================*/
-
-		/**
-		 * Constructs an attribute.
-		 *  
-		 * @param identifier The attribute id
-		 * @param conceptIdentity The concept representing the attribute (for
-		 * example, the attribute OBS_CONF represents the concept of an 
-		 * observation confidentiality).
-		 */
-		public function Attribute(identifier:String, conceptIdentity:Concept) {
-			super(identifier, conceptIdentity);
-		}
 		
-		/*============================Accessors===============================*/
-		
-		/**
-	 	 * @private 
-	 	 */
-	 	[Inspectable(enumeration=Mandatory,Conditional)] 
-		public function set usageStatus(usageStatus:String):void {
-			if (!UsageStatus.contains(usageStatus)) {
-				throw new TypeError(usageStatus + 
-					" is not a valid SDMX usage status");
-			} else {
-				_usageStatus = usageStatus;
-			}
-		}
-		
-		/**
-		 * The usage status (Mandatory or Conditional) of the attribute. 
-		 * 
-		 * @throws TypeError <code>TypeError</code>: If the supplied usage 
-		 * status is not in the list of valid SDMX status.
-		 */
-		public function get usageStatus():String {
-			return _usageStatus;
+		public function UncodedXSMeasure(identifier:String, concept:Concept, 
+			code:Code, dimension:MeasureTypeDimension)
+		{
+			super(identifier, concept, code, dimension);
 		}
 	}
 }

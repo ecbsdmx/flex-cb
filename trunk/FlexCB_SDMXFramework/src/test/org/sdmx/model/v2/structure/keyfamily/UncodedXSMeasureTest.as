@@ -1,4 +1,4 @@
-// Copyright (C) 2008 European Central Bank. All rights reserved.
+// Copyright (C) 2009 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
 // with or without modification, are permitted
@@ -24,25 +24,29 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-package org.sdmx.model.v2.base.structure
+package org.sdmx.model.v2.structure.keyfamily
 {
 	import flexunit.framework.TestSuite;
 	
-	/**
-	 *	@private 
-	 */
-	public class StructurePackageTests
+	import org.sdmx.model.v2.structure.code.Code;
+	import org.sdmx.model.v2.structure.concept.Concept;
+	
+	public class UncodedXSMeasureTest extends XSMeasureTest
 	{
-		public static function suite():TestSuite {
-			var suite:TestSuite = new TestSuite();
-			suite.addTest(AttributeTest.suite());
-			suite.addTest(ComponentListTest.suite());
-			suite.addTest(ComponentTest.suite());
-			suite.addTest(LengthRangeTest.suite());
- 			suite.addTest(StructureTest.suite());	
- 			suite.addTest(StructureUsageTest.suite());	
- 			suite.addTest(XSAttachableComponentTest.suite());
- 			return suite;
+		public function UncodedXSMeasureTest(methodName:String=null)
+		{
+			super(methodName);
 		}
+		
+		public static function suite():TestSuite {
+			return new TestSuite(UncodedXSMeasureTest);
+		}
+		
+		override public function createMeasure():XSMeasure {
+			_code = new Code("RU");
+			_dimension = 
+				new MeasureTypeDimension("REF_AREA", new Concept("REF_AREA"));
+			return new UncodedXSMeasure(_id, _item, _code, _dimension);
+		}		
 	}
 }

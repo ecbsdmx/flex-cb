@@ -1,4 +1,4 @@
-// Copyright (C) 2008 European Central Bank. All rights reserved.
+// Copyright (C) 2009 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
 // with or without modification, are permitted
@@ -24,61 +24,77 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-package org.sdmx.model.v2.base.structure
+package org.sdmx.model.v2.structure.keyfamily
 {
-	import org.sdmx.model.v2.base.type.UsageStatus;
+	import org.sdmx.model.v2.base.structure.Component;
+	import org.sdmx.model.v2.structure.code.Code;
 	import org.sdmx.model.v2.structure.concept.Concept;
 
 	/**
-	 * An abstract class used to provide qualitative information.
+	 * The phenomenon to be measured in a cross-sectional dataset.
 	 * 
-	 * @author Xavier Sosnovsky
-	 * 
-	 * @see org.sdmx.model.v2.base.type.UsageStatus
+     * @author Xavier Sosnovsky
 	 */ 
-	public class Attribute extends XSAttachableComponent {
-
+	public class XSMeasure extends Component
+	{
 		/*==============================Fields================================*/
 		
-		private var _usageStatus:String;
+		/**
+		 * @private
+		 */ 
+		protected var _code:Code;
+		
+		/**
+		 * @private
+		 */
+		protected var _measureDimension:MeasureTypeDimension;
 		
 		/*===========================Constructor==============================*/
-
-		/**
-		 * Constructs an attribute.
-		 *  
-		 * @param identifier The attribute id
-		 * @param conceptIdentity The concept representing the attribute (for
-		 * example, the attribute OBS_CONF represents the concept of an 
-		 * observation confidentiality).
-		 */
-		public function Attribute(identifier:String, conceptIdentity:Concept) {
-			super(identifier, conceptIdentity);
+		
+		public function XSMeasure(identifier:String, concept:Concept, code:Code,
+			dimension:MeasureTypeDimension)
+		{
+			super(identifier, concept);
+			this.code = code;
+			measureDimension = dimension; 
 		}
 		
 		/*============================Accessors===============================*/
 		
 		/**
-	 	 * @private 
-	 	 */
-	 	[Inspectable(enumeration=Mandatory,Conditional)] 
-		public function set usageStatus(usageStatus:String):void {
-			if (!UsageStatus.contains(usageStatus)) {
-				throw new TypeError(usageStatus + 
-					" is not a valid SDMX usage status");
-			} else {
-				_usageStatus = usageStatus;
-			}
+		 * @private
+		 */ 
+		public function set code(code:Code):void
+		{
+			_code = code;
 		}
 		
 		/**
-		 * The usage status (Mandatory or Conditional) of the attribute. 
-		 * 
-		 * @throws TypeError <code>TypeError</code>: If the supplied usage 
-		 * status is not in the list of valid SDMX status.
-		 */
-		public function get usageStatus():String {
-			return _usageStatus;
+		 * The code value for the measure type dimension that defines the 
+		 * measure. If the measure type dimension is, for example, "REF_AREA",
+		 * a valid code would be "FR".
+		 */ 
+		public function get code():Code
+		{	
+			return _code;
+		}
+		
+		/**
+		 * @private
+		 */ 
+		public function set measureDimension(
+			dimension:MeasureTypeDimension):void
+		{
+			_measureDimension = dimension; 
+		}
+		
+		/**
+		 * The measure type dimension (e.g.: REF_AREA) that gives its
+		 * identity to the cross-sectional measure.
+		 */ 
+		public function get measureDimension():MeasureTypeDimension
+		{
+			return _measureDimension;
 		}
 	}
 }

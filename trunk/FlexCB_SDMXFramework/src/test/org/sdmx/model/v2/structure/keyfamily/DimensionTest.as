@@ -26,14 +26,15 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.model.v2.structure.keyfamily
 {
-	import org.sdmx.model.v2.base.structure.ComponentTest;
 	import flexunit.framework.TestSuite;
+	
 	import org.sdmx.model.v2.base.structure.Component;
+	import org.sdmx.model.v2.base.structure.XSAttachableComponentTest;
 
 	/**
 	 * @private
 	 */
-	public class DimensionTest extends ComponentTest
+	public class DimensionTest extends XSAttachableComponentTest
 	{
 		public function DimensionTest(methodName:String = null) {
 			super(methodName);

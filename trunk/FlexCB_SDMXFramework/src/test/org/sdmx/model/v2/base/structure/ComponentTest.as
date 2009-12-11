@@ -103,8 +103,6 @@ package org.sdmx.model.v2.base.structure
 		}
 						
 		public function testSetAndGetLocalRepresentation():void {
-			assertNull("There should be no default representation assigned to " + 
-					"the component", _component.localRepresentation);
 			var clName:InternationalString = new InternationalString();
 			clName.localisedStrings.addItem(new LocalisedString(new Locale("en"), "Exch. rate series variation code list"));
 			var codeList:CodeList = new CodeList("CL_EXR_SUFFIX", clName, new MaintenanceAgency("OECB"));

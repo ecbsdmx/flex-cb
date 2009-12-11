@@ -29,17 +29,18 @@
 package org.sdmx.stores.xml.v2.structure.keyfamily
 {
 	import org.sdmx.model.v2.base.SDMXArtefact;
-	import org.sdmx.model.v2.structure.code.CodeLists;
-	import org.sdmx.model.v2.structure.concept.Concepts;
-	import org.sdmx.model.v2.structure.concept.Concept;
-	import org.sdmx.model.v2.structure.code.CodeList;
-	import org.sdmx.model.v2.structure.keyfamily.CodedDataAttribute;
-	import org.sdmx.model.v2.structure.keyfamily.UncodedDataAttribute;
-	import org.sdmx.model.v2.base.type.ConceptRole;
-	import org.sdmx.model.v2.structure.keyfamily.DataAttribute;
 	import org.sdmx.model.v2.base.structure.LengthRange;
-	import org.sdmx.model.v2.structure.keyfamily.GroupKeyDescriptor;
+	import org.sdmx.model.v2.base.type.ConceptRole;
 	import org.sdmx.model.v2.base.type.DataType;
+	import org.sdmx.model.v2.base.type.XSAttachmentLevel;
+	import org.sdmx.model.v2.structure.code.CodeList;
+	import org.sdmx.model.v2.structure.code.CodeLists;
+	import org.sdmx.model.v2.structure.concept.Concept;
+	import org.sdmx.model.v2.structure.concept.Concepts;
+	import org.sdmx.model.v2.structure.keyfamily.CodedDataAttribute;
+	import org.sdmx.model.v2.structure.keyfamily.DataAttribute;
+	import org.sdmx.model.v2.structure.keyfamily.GroupKeyDescriptor;
+	import org.sdmx.model.v2.structure.keyfamily.UncodedDataAttribute;
 	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
 
 	/**
@@ -177,6 +178,16 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 					throw new SyntaxError("Unknown group: " + 
 						items.attachmentGroup);
 				}
+			}
+			//cross-sectional attachement levels
+			if (items.@crossSectionalAttachObservation == true) {
+				attribute.xsAttachmentLevel = XSAttachmentLevel.XSOBSERVATION;
+			} else if (items.@crossSectionalAttachSection == true) {
+				attribute.xsAttachmentLevel = XSAttachmentLevel.SECTION;
+			} else if (items.@crossSectionalAttachGroup == true) {
+				attribute.xsAttachmentLevel = XSAttachmentLevel.GROUP;
+			} else if (items.@crossSectionalAttachDataSet == true) {
+				attribute.xsAttachmentLevel = XSAttachmentLevel.XSDATASET;
 			}
 			return attribute;
 		}
