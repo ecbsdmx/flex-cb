@@ -1,4 +1,4 @@
-// Copyright (C) 2008 European Central Bank. All rights reserved.
+// Copyright (C) 2009 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
 // with or without modification, are permitted
@@ -29,30 +29,26 @@ package org.sdmx.model.v2.reporting.dataset
 	import flash.utils.getQualifiedClassName;
 	
 	import mx.collections.ArrayCollection;
-	import mx.collections.IViewCursor;
-	import mx.collections.Sort;
-	import mx.collections.SortField;
 
 	/**
-	 * A collection of time periods. It extends the AS3 ArrayCollection
-	 * and simply restrict the items type to TimePeriod.
+	 * A collection of cross-sectional groups. It extends the AS3 
+	 * ArrayCollection and simply restricts the items type to XSGroup.
 	 * 
 	 * @author Xavier Sosnovsky
+	 * @author Karine Feraboli
 	 * 
-	 * @see TimePeriod
+	 * @see XSGroup
 	 */ 
-	public class TimePeriodsCollection extends ArrayCollection {
-		
+	public class XSGroupsCollection extends ArrayCollection
+	{
 		/*==============================Fields================================*/
 		
-		private static const ERROR_MSG:String = "Only time periods are " + 
-				"allowed in a timeperiods collection. Got: ";
-				
-		private var _cursor:IViewCursor;	
+		private static const ERROR_MSG:String = "Only cross-sectional groups" + 
+				" are allowed in a cross-sectional groups collection. Got: ";
 		
-		/*===========================Constructor==============================*/		
-				
-		public function TimePeriodsCollection(source:Array=null)
+		/*===========================Constructor==============================*/
+		
+		public function XSGroupsCollection(source:Array=null)
 		{
 			super(source);
 		}
@@ -60,10 +56,10 @@ package org.sdmx.model.v2.reporting.dataset
 		/*==========================Public methods============================*/
 		
 		/**
-	 	 * @private
-	 	 */
+		 * @inheritDoc
+		 */ 
 		public override function addItemAt(item:Object, index:int):void {
-			if (!(item is TimePeriod)) {
+			if (!(item is XSGroup)) {
 				throw new ArgumentError(ERROR_MSG + 
 						getQualifiedClassName(item) + ".");
 			} else {
@@ -72,35 +68,15 @@ package org.sdmx.model.v2.reporting.dataset
 		}
 		
 		/**
-	 	 * @private
-	 	 */
+		 * @inheritDoc
+		 */ 
 		public override function setItemAt(item:Object, index:int):Object {
-			if (!(item is TimePeriod)) {
+			if (!(item is XSGroup)) {
 				throw new ArgumentError(ERROR_MSG + 
 						getQualifiedClassName(item) + ".");
 			} else {
 				return super.setItemAt(item, index);
 			}
-		}
-		
-		/**
-		 * Get the time period identified by the supplied date.
-		 *  
-		 * @param date
-		 * @return The time period identified by the supplied date.
-		 */
-		public function getTimePeriod(date:String):TimePeriod 
-		{
-			if (null == _cursor) {
-				var obsSort:Sort = new Sort();
-            	obsSort.fields = [new SortField("periodComparator")];
-            	sort = obsSort
-				_cursor = createCursor();
-				refresh();
-			}
-				
-			return (_cursor.findAny({periodComparator: date})) ? 
-				_cursor.current as TimePeriod : null;
 		}
 	}
 }

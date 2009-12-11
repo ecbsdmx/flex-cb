@@ -1,4 +1,4 @@
-// Copyright (C) 2008 European Central Bank. All rights reserved.
+// Copyright (C) 2009 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
 // with or without modification, are permitted
@@ -26,40 +26,58 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.model.v2.reporting.dataset
 {
-	import mx.collections.ArrayCollection;
+	import org.sdmx.model.v2.structure.keyfamily.DataflowDefinition;
 	
-	internal class AttachableArtefactAdapter implements AttachableArtefact
+	/**
+	 * Contract to be implemented by DataSets
+	 *  
+	 * @author Xavier Sosnovsky
+	 * @author Karine Feraboli
+	 */ 
+	public interface IDataSet extends AttachableArtefact
 	{
-		
-		/*==============================Fields================================*/
-		
-		protected var _attributeValues:AttributeValuesCollection;
-		
-		/*===========================Constructor==============================*/
-		
-		public function AttachableArtefactAdapter() 
-		{
-			super();
-			_attributeValues = new AttributeValuesCollection();
-		}
-		
-		/*============================Accessors===============================*/
-		
 		/**
-		 * @inheritDoc
-		 */		
-		public function get attributeValues():AttributeValuesCollection 
-		{
-			return _attributeValues;
-		}
-		
-		/**
-		 * @inheritDoc
+		 * @private
 		 */ 
-		public function set attributeValues(
-			attributesValues:AttributeValuesCollection):void 
-		{
-			_attributeValues = attributesValues;
-		}
+		function set reportingBeginDate(beginDate:Date):void;
+		
+		/**
+		 * A specific time period that identifies the beginning period of a 
+		 * report.
+		 */ 
+		function get reportingBeginDate():Date;
+		
+		/**
+		 * @private
+		 */
+		function set reportingEndDate(endDate:Date):void;
+		
+		/**
+		 * A specific time period that identifies the end period of a 
+		 * report.
+		 */ 
+		function get reportingEndDate():Date;
+		
+		/**
+		 * @private
+		 */
+		function set dataExtractionDate(extractionDate:Date):void;
+		
+		/**
+		 * A specific time period that identifies the date and time that the 
+		 * data are extracted from a data source.
+		 */ 
+		function get dataExtractionDate():Date;
+		
+		/**
+		 * @private
+		 */
+		function set describedBy(describedBy:DataflowDefinition):void;
+		
+		/**
+		 * Associates a data flow definition and thereby a Key Family to the 
+		 * data set.
+		 */ 
+		function get describedBy():DataflowDefinition;
 	}
 }

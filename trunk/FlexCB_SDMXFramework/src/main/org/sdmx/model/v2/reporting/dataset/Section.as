@@ -1,4 +1,4 @@
-// Copyright (C) 2008 European Central Bank. All rights reserved.
+// Copyright (C) 2009 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
 // with or without modification, are permitted
@@ -26,40 +26,48 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.model.v2.reporting.dataset
 {
-	import mx.collections.ArrayCollection;
+	import org.sdmx.model.v2.structure.keyfamily.KeyDescriptor;
 	
-	internal class AttachableArtefactAdapter implements AttachableArtefact
+	/**
+	 * A set of key values that comprise a partial key and which group together 
+	 * a set of cross-sectional observations.
+	 * 
+	 * @author Xavier Sosnovsky
+	 * @author Karine Feraboli
+	 * 
+	 * @see XSObservation
+	 * @see XSObservationsCollection
+	 */ 
+	public class Section extends BaseXSComponent
 	{
-		
 		/*==============================Fields================================*/
 		
-		protected var _attributeValues:AttributeValuesCollection;
+		private var _observations:XSObservationsCollection;
 		
 		/*===========================Constructor==============================*/
 		
-		public function AttachableArtefactAdapter() 
+		public function Section()
 		{
 			super();
-			_attributeValues = new AttributeValuesCollection();
+			_observations = new XSObservationsCollection();
 		}
 		
 		/*============================Accessors===============================*/
 		
 		/**
-		 * @inheritDoc
-		 */		
-		public function get attributeValues():AttributeValuesCollection 
-		{
-			return _attributeValues;
-		}
-		
-		/**
-		 * @inheritDoc
+		 * @private
 		 */ 
-		public function set attributeValues(
-			attributesValues:AttributeValuesCollection):void 
-		{
-			_attributeValues = attributesValues;
-		}
+		 public function set observations(obs:XSObservationsCollection):void
+		 {
+		 	_observations = obs;
+		 }
+		 
+		 /**
+		  * The collection of observations contained in the section. 
+		  */ 
+		 public function get observations():XSObservationsCollection
+		 {
+		 	return _observations;
+		 }
 	}
 }

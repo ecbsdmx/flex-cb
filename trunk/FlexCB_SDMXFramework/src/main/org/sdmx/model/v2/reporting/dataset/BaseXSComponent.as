@@ -1,4 +1,4 @@
-// Copyright (C) 2008 European Central Bank. All rights reserved.
+// Copyright (C) 2009 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
 // with or without modification, are permitted
@@ -26,40 +26,69 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.model.v2.reporting.dataset
 {
-	import mx.collections.ArrayCollection;
+	import org.sdmx.model.v2.structure.keyfamily.KeyDescriptor;
 	
-	internal class AttachableArtefactAdapter implements AttachableArtefact
+	/**
+	 * Base implementation of the contract defined in the IXSComponent 
+	 * interface.
+	 *  
+	 * @author Xavier Sosnovsky
+	 * @author Karine Feraboli
+	 */ 
+	internal class BaseXSComponent extends AttachableArtefactAdapter 
+		implements IXSComponent
 	{
+		/*==============================Fields================================*/	
 		
-		/*==============================Fields================================*/
+		/**
+		 * @private
+		 */
+		protected var _keyValues:KeyValuesCollection;
 		
-		protected var _attributeValues:AttributeValuesCollection;
+		/**
+		 * @private
+		 */
+		protected var _valueFor:KeyDescriptor;
 		
 		/*===========================Constructor==============================*/
 		
-		public function AttachableArtefactAdapter() 
+		public function BaseXSComponent()
 		{
 			super();
-			_attributeValues = new AttributeValuesCollection();
 		}
 		
 		/*============================Accessors===============================*/
 		
 		/**
 		 * @inheritDoc
-		 */		
-		public function get attributeValues():AttributeValuesCollection 
-		{
-			return _attributeValues;
+		 */
+		public function set keyValues(keyValues:KeyValuesCollection):void {
+			_keyValues = keyValues;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function get keyValues():KeyValuesCollection {
+			return _keyValues;
+		}		
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function set valueFor(keyDescriptor:KeyDescriptor):void {
+			if (null == keyDescriptor) {
+				throw new ArgumentError("The key descriptor cannot be null");
+			} else {
+				_valueFor = keyDescriptor;
+			}
 		}
 		
 		/**
 		 * @inheritDoc
 		 */ 
-		public function set attributeValues(
-			attributesValues:AttributeValuesCollection):void 
-		{
-			_attributeValues = attributesValues;
+		public function get valueFor():KeyDescriptor {
+			return _valueFor;
 		}
 	}
 }
