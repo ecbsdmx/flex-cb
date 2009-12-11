@@ -31,6 +31,7 @@ package org.sdmx.util
 	import org.sdmx.util.date.DatePackageTests;
 	import org.sdmx.util.net.NetTests;
 	import org.sdmx.util.validator.ValidatorPackageTests;
+	import org.sdmx.util.xs.ECBXSDataSetGeneratorTest;
 	
 	/**
 	 *	@private 
@@ -41,6 +42,7 @@ package org.sdmx.util
 			suite.addTest(DatePackageTests.suite());
 			suite.addTest(NetTests.suite());
  			suite.addTest(ValidatorPackageTests.suite());
+ 			suite.addTest(ECBXSDataSetGeneratorTest.suite());
  			return suite;
 		}
 	}
