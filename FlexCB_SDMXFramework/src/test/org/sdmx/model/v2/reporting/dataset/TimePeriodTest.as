@@ -106,7 +106,7 @@ package org.sdmx.model.v2.reporting.dataset
 			
 			var date2:String = "2007-H2";
 			try {  
-				var period:TimePeriod = new TimePeriod(date, value);
+				var period2:TimePeriod = new TimePeriod(date, value);
 				fail("Not supported");
 			} catch (error:ArgumentError) {}
 		}

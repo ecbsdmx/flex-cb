@@ -39,20 +39,26 @@ package org.sdmx.model.v2.reporting.dataset
 			super(methodName);
 		}
 		
-		public static function suite():TestSuite {
+		public static function suite():TestSuite 
+		{
 			return new TestSuite(AttachableArtefactAdapterTest);
+		}
+		
+		public function createAttachableArtefact():AttachableArtefact
+		{
+			return new AttachableArtefactAdapter();
 		}
 		
 		public function testSetAndGetAttributeValuesCollection():void
 		{
+			var attachableArtefact:AttachableArtefact =
+				createAttachableArtefact();
 			var attributes:AttributeValuesCollection = 
 				new AttributeValuesCollection();
 			var attribute:AttributeValue = new AttributeValue(new DataSet());
 			attributes.addItem(attribute);	
-			var attachableArtefact:AttachableArtefactAdapter =
-				new AttachableArtefactAdapter();
-			assertTrue("By default, no attributes should be attached", 
-				null == attachableArtefact.attributeValues);
+			assertEquals("By default, no attributes should be attached", 0, 
+				attachableArtefact.attributeValues.length);
 			attachableArtefact.attributeValues = attributes;
 			assertEquals("The attributes should be equal", attributes,
 				attachableArtefact.attributeValues);	
