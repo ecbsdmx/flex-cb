@@ -26,14 +26,14 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.model.v2.base.structure
 {
-	import org.sdmx.model.v2.base.item.Item;
 	import flexunit.framework.TestSuite;
+	
 	import org.sdmx.model.v2.base.type.UsageStatus;
 	
 	/**
 	 *	@private 
 	 */
-	public class AttributeTest extends ComponentTest
+	public class AttributeTest extends XSAttachableComponentTest
 	{
 		private var _attribute:Attribute;
 		

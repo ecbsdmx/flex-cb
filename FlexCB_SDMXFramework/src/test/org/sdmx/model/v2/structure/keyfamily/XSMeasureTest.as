@@ -1,4 +1,4 @@
-// Copyright (C) 2008 European Central Bank. All rights reserved.
+// Copyright (C) 2009 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
 // with or without modification, are permitted
@@ -24,25 +24,54 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-package org.sdmx.model.v2.base.structure
+package org.sdmx.model.v2.structure.keyfamily
 {
 	import flexunit.framework.TestSuite;
 	
-	/**
-	 *	@private 
-	 */
-	public class StructurePackageTests
+	import org.sdmx.model.v2.base.structure.Component;
+	import org.sdmx.model.v2.base.structure.ComponentTest;
+	import org.sdmx.model.v2.structure.code.Code;
+	import org.sdmx.model.v2.structure.concept.Concept;
+
+	public class XSMeasureTest extends ComponentTest
 	{
+		protected var _code:Code;
+		
+		protected var _dimension:MeasureTypeDimension;
+		
+		public function XSMeasureTest(methodName:String=null)
+		{
+			super(methodName);
+		}
+		
 		public static function suite():TestSuite {
-			var suite:TestSuite = new TestSuite();
-			suite.addTest(AttributeTest.suite());
-			suite.addTest(ComponentListTest.suite());
-			suite.addTest(ComponentTest.suite());
-			suite.addTest(LengthRangeTest.suite());
- 			suite.addTest(StructureTest.suite());	
- 			suite.addTest(StructureUsageTest.suite());	
- 			suite.addTest(XSAttachableComponentTest.suite());
- 			return suite;
+			return new TestSuite(XSMeasureTest);
+		}
+		
+		public override function createComponent():Component {
+			return createMeasure();
+		}
+		
+		public function createMeasure():XSMeasure {
+			_code = new Code("RU");
+			_dimension = 
+				new MeasureTypeDimension("REF_AREA", new Concept("REF_AREA"));
+			return new XSMeasure(_id, _item, _code, _dimension);
+		}
+		
+		public function testSetAndGetCode():void
+		{
+			var measure:XSMeasure = createMeasure();
+			assertNotNull("measure is not null", measure);
+			assertEquals("codes should be equal", _code, measure.code);
+		}
+		
+		public function testSetAndGetDimension():void
+		{
+			var measure:XSMeasure = createMeasure();
+			assertNotNull("measure is not null", measure);
+			assertEquals("dimensions should be equal", _dimension, 
+				measure.measureDimension);
 		}
 	}
 }

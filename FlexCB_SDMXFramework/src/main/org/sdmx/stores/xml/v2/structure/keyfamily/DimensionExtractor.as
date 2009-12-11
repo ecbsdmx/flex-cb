@@ -29,12 +29,14 @@
 package org.sdmx.stores.xml.v2.structure.keyfamily
 {
 	import org.sdmx.model.v2.base.SDMXArtefact;
-	import org.sdmx.model.v2.structure.code.CodeLists;
-	import org.sdmx.model.v2.structure.code.CodeList;
-	import org.sdmx.model.v2.structure.concept.Concepts;
-	import org.sdmx.model.v2.structure.concept.Concept;
-	import org.sdmx.model.v2.structure.keyfamily.Dimension;
 	import org.sdmx.model.v2.base.type.ConceptRole;
+	import org.sdmx.model.v2.base.type.XSAttachmentLevel;
+	import org.sdmx.model.v2.structure.code.CodeList;
+	import org.sdmx.model.v2.structure.code.CodeLists;
+	import org.sdmx.model.v2.structure.concept.Concept;
+	import org.sdmx.model.v2.structure.concept.Concepts;
+	import org.sdmx.model.v2.structure.keyfamily.Dimension;
+	import org.sdmx.model.v2.structure.keyfamily.MeasureTypeDimension;
 	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
 
 	/**
@@ -92,7 +94,11 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 				throw new SyntaxError("Could not find any concept with id: " + 
 					items.@conceptRef);
 			}
-			var dimension:Dimension = 
+			var isXSMeasure:Boolean = (items.attribute(
+				"isMeasureDimension").length() > 0 && 
+				items.@isMeasureDimension == "true") ? true : false;
+			var dimension:Dimension = (isXSMeasure) ?
+				new MeasureTypeDimension(concept.id, concept) :  
 				new Dimension(concept.id, concept);
 			if (null != _codeLists) {	
 				var codelistEl:String = (items.attribute("codelist").length() > 
@@ -125,6 +131,17 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 				dimension.conceptRole = ConceptRole.NON_OBS_TIME;
 			} else if (items.@isIdentityDimension == true) {
 				dimension.conceptRole = ConceptRole.IDENTITY;
+			}
+			
+			//cross-sectional attachement levels
+			if (items.@crossSectionalAttachObservation == true) {
+				dimension.xsAttachmentLevel = XSAttachmentLevel.XSOBSERVATION;
+			} else if (items.@crossSectionalAttachSection == true) {
+				dimension.xsAttachmentLevel = XSAttachmentLevel.SECTION;
+			} else if (items.@crossSectionalAttachGroup == true) {
+				dimension.xsAttachmentLevel = XSAttachmentLevel.GROUP;
+			} else if (items.@crossSectionalAttachDataSet == true) {
+				dimension.xsAttachmentLevel = XSAttachmentLevel.XSDATASET;
 			}
 			return dimension;
 		}

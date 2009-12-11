@@ -26,9 +26,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.model.v2.structure.keyfamily
 {
-	import org.sdmx.model.v2.base.structure.Component;
-	import org.sdmx.model.v2.base.structure.CodedArtefact;
-	import org.sdmx.model.v2.base.item.ItemScheme;
+	import org.sdmx.model.v2.base.structure.XSAttachableComponent;
 	import org.sdmx.model.v2.structure.concept.Concept;
 
 	/**
@@ -39,7 +37,7 @@ package org.sdmx.model.v2.structure.keyfamily
 	 * 
 	 * @author Xavier Sosnovsky 
 	 */ 
-	public class Dimension extends Component {
+	public class Dimension extends XSAttachableComponent {
 
 		/*===========================Constructor==============================*/
 

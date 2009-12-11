@@ -29,12 +29,13 @@
 package org.sdmx.stores.xml.v2.structure.keyfamily
 {
 	import org.sdmx.model.v2.base.SDMXArtefact;
-	import org.sdmx.model.v2.structure.code.CodeLists;
-	import org.sdmx.model.v2.structure.code.CodeList;
-	import org.sdmx.model.v2.structure.concept.Concepts;
-	import org.sdmx.model.v2.structure.concept.Concept;
-	import org.sdmx.model.v2.structure.keyfamily.Dimension;
 	import org.sdmx.model.v2.base.type.ConceptRole;
+	import org.sdmx.model.v2.base.type.XSAttachmentLevel;
+	import org.sdmx.model.v2.structure.code.CodeList;
+	import org.sdmx.model.v2.structure.code.CodeLists;
+	import org.sdmx.model.v2.structure.concept.Concept;
+	import org.sdmx.model.v2.structure.concept.Concepts;
+	import org.sdmx.model.v2.structure.keyfamily.Dimension;
 	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
 
 	/**
@@ -111,6 +112,11 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 				} 
 			}	
 			dimension.conceptRole = ConceptRole.TIME;
+			
+			//cross-sectional attachement levels
+			if (items.@crossSectionalAttachGroup == true) {
+				dimension.xsAttachmentLevel = XSAttachmentLevel.GROUP;
+			}
 			return dimension;
 		}
 	}

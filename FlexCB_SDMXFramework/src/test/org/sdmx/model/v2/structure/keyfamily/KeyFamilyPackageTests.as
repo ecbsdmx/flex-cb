@@ -52,6 +52,9 @@ package org.sdmx.model.v2.structure.keyfamily
  			suite.addTest(MeasureTypeDimensionTest.suite());
  			suite.addTest(UncodedDataAttributeTest.suite());
  			suite.addTest(UncodedMeasureTest.suite());
+ 			suite.addTest(XSMeasureTest.suite());
+ 			suite.addTest(UncodedXSMeasureTest.suite());
+ 			suite.addTest(CodedXSMeasureTest.suite());
  			return suite;
 		}
 	}
