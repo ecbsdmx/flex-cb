@@ -1,4 +1,4 @@
-// Copyright (C) 2008 European Central Bank. All rights reserved.
+// Copyright (C) 2009 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
 // with or without modification, are permitted
@@ -26,40 +26,22 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.model.v2.reporting.dataset
 {
-	import mx.collections.ArrayCollection;
-	
-	internal class AttachableArtefactAdapter implements AttachableArtefact
+	import org.sdmx.model.v2.structure.keyfamily.KeyDescriptor;
+
+	/**
+	 * An observation in a cross-sectional dataset that optionally defines
+	 * a set of key values.
+	 * 
+	 * @author Xavier Sosnovsky
+	 * @author Karine Feraboli
+	 */ 
+	public class XSObservation extends BaseXSComponent
 	{
-		
-		/*==============================Fields================================*/
-		
-		protected var _attributeValues:AttributeValuesCollection;
-		
 		/*===========================Constructor==============================*/
 		
-		public function AttachableArtefactAdapter() 
+		public function XSObservation()
 		{
 			super();
-			_attributeValues = new AttributeValuesCollection();
-		}
-		
-		/*============================Accessors===============================*/
-		
-		/**
-		 * @inheritDoc
-		 */		
-		public function get attributeValues():AttributeValuesCollection 
-		{
-			return _attributeValues;
-		}
-		
-		/**
-		 * @inheritDoc
-		 */ 
-		public function set attributeValues(
-			attributesValues:AttributeValuesCollection):void 
-		{
-			_attributeValues = attributesValues;
 		}
 	}
 }

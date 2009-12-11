@@ -1,4 +1,4 @@
-// Copyright (C) 2008 European Central Bank. All rights reserved.
+// Copyright (C) 2009 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
 // with or without modification, are permitted
@@ -30,29 +30,26 @@ package org.sdmx.model.v2.reporting.dataset
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.IViewCursor;
-	import mx.collections.Sort;
-	import mx.collections.SortField;
 
 	/**
-	 * A collection of time periods. It extends the AS3 ArrayCollection
-	 * and simply restrict the items type to TimePeriod.
+	 * A collection of cross-sectional observations. It extends the AS3 
+	 * ArrayCollection and simply restricts the items type to XSObservation.
 	 * 
 	 * @author Xavier Sosnovsky
+	 * @author Karine Feraboli
 	 * 
-	 * @see TimePeriod
+	 * @see XSObservation
 	 */ 
-	public class TimePeriodsCollection extends ArrayCollection {
-		
+	public class XSObservationsCollection extends ArrayCollection
+	{
 		/*==============================Fields================================*/
 		
-		private static const ERROR_MSG:String = "Only time periods are " + 
-				"allowed in a timeperiods collection. Got: ";
-				
-		private var _cursor:IViewCursor;	
+		private static const ERROR_MSG:String = "Only cross-sectional obs" + 
+				" are allowed in a cross-sectional obs collection. Got: ";
 		
-		/*===========================Constructor==============================*/		
-				
-		public function TimePeriodsCollection(source:Array=null)
+		/*===========================Constructor==============================*/
+		
+		public function XSObservationsCollection(source:Array=null)
 		{
 			super(source);
 		}
@@ -60,10 +57,11 @@ package org.sdmx.model.v2.reporting.dataset
 		/*==========================Public methods============================*/
 		
 		/**
-	 	 * @private
-	 	 */
-		public override function addItemAt(item:Object, index:int):void {
-			if (!(item is TimePeriod)) {
+		 * @inheritDoc
+		 */ 
+		public override function addItemAt(item:Object, index:int):void 
+		{
+			if (!(item is XSObservation)) {
 				throw new ArgumentError(ERROR_MSG + 
 						getQualifiedClassName(item) + ".");
 			} else {
@@ -72,10 +70,11 @@ package org.sdmx.model.v2.reporting.dataset
 		}
 		
 		/**
-	 	 * @private
-	 	 */
-		public override function setItemAt(item:Object, index:int):Object {
-			if (!(item is TimePeriod)) {
+		 * @inheritDoc
+		 */ 
+		public override function setItemAt(item:Object, index:int):Object 
+		{
+			if (!(item is XSObservation)) {
 				throw new ArgumentError(ERROR_MSG + 
 						getQualifiedClassName(item) + ".");
 			} else {
@@ -84,23 +83,30 @@ package org.sdmx.model.v2.reporting.dataset
 		}
 		
 		/**
-		 * Get the time period identified by the supplied date.
+		 * Returns the cross-sectional observation whose measure can be 
+		 * identified with the supplied code id. 
 		 *  
-		 * @param date
-		 * @return The time period identified by the supplied date.
+		 * @param code The id of the code that identifies the measure
+		 * 
+		 * @return The cross-sectional observation whose measure can be 
+		 * identified with the supplied code id. 
 		 */
-		public function getTimePeriod(date:String):TimePeriod 
+		public function getObsByCode(codeId:String):XSObservation
 		{
-			if (null == _cursor) {
-				var obsSort:Sort = new Sort();
-            	obsSort.fields = [new SortField("periodComparator")];
-            	sort = obsSort
-				_cursor = createCursor();
-				refresh();
+			var cursor:IViewCursor = createCursor();
+			var foundObs:XSObservation;
+			while(!cursor.afterLast) {
+				var obs:XSObservation = cursor.current as XSObservation;
+				if ((obs is UncodedXSObservation && 
+					(obs as UncodedXSObservation).measure.code.id == codeId) || 
+					(obs is CodedXSObservation &&
+					(obs as CodedXSObservation).measure.code.id == codeId)) {
+					foundObs = obs;
+					break;
+				}	
+				cursor.moveNext();
 			}
-				
-			return (_cursor.findAny({periodComparator: date})) ? 
-				_cursor.current as TimePeriod : null;
+			return foundObs;
 		}
 	}
 }

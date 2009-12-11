@@ -1,4 +1,4 @@
-// Copyright (C) 2008 European Central Bank. All rights reserved.
+// Copyright (C) 2009 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
 // with or without modification, are permitted
@@ -26,40 +26,75 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.model.v2.reporting.dataset
 {
-	import mx.collections.ArrayCollection;
+	import mx.utils.StringUtil;
 	
-	internal class AttachableArtefactAdapter implements AttachableArtefact
+	import org.sdmx.model.v2.structure.keyfamily.KeyDescriptor;
+	import org.sdmx.model.v2.structure.keyfamily.UncodedXSMeasure;
+
+	/**
+	 * An observation in a cross-sectional dataset that is uncoded.
+	 * 
+	 * @author Xavier Sosnovsky
+	 * @author Karine Feraboli
+	 */ 
+	public class UncodedXSObservation extends XSObservation
 	{
-		
 		/*==============================Fields================================*/
 		
-		protected var _attributeValues:AttributeValuesCollection;
+		private var _value:String;
+		
+		private var _measure:UncodedXSMeasure;
 		
 		/*===========================Constructor==============================*/
 		
-		public function AttachableArtefactAdapter() 
+		public function UncodedXSObservation(value:String, 
+			measure:UncodedXSMeasure)
 		{
 			super();
-			_attributeValues = new AttributeValuesCollection();
+			this.value = value;
+			this.measure = measure;
 		}
 		
 		/*============================Accessors===============================*/
 		
 		/**
-		 * @inheritDoc
-		 */		
-		public function get attributeValues():AttributeValuesCollection 
-		{
-			return _attributeValues;
+	 	 * @private
+	 	 */
+		public function set value(value:String):void {
+			value = StringUtil.trim(value);
+			if (value.length == 0) {
+				throw new ArgumentError("An attribute value must be provided");			
+			} else {
+				_value = value;
+			}
 		}
 		
 		/**
-		 * @inheritDoc
+		 * The text value of the observation.
 		 */ 
-		public function set attributeValues(
-			attributesValues:AttributeValuesCollection):void 
+		public function get value():String {
+			return _value;
+		}
+		
+		/**
+		 * @private
+		 */
+		public function set measure(measure:UncodedXSMeasure):void 
 		{
-			_attributeValues = attributesValues;
+			if (null == measure) {
+				throw new ArgumentError("The measure cannot be null");	
+			} else {
+				_measure = measure;
+			}
+		}
+		
+		/**
+		 * Associates the coded cross-sectional measure defined in the 
+		 * key family.
+		 */
+		public function get measure():UncodedXSMeasure 
+		{
+			return _measure;
 		}
 	}
 }

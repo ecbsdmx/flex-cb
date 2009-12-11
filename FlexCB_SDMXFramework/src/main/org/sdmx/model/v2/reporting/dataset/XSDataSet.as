@@ -1,4 +1,4 @@
-// Copyright (C) 2008 European Central Bank. All rights reserved.
+// Copyright (C) 2009 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
 // with or without modification, are permitted
@@ -26,40 +26,81 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.model.v2.reporting.dataset
 {
-	import mx.collections.ArrayCollection;
+	import org.sdmx.model.v2.structure.keyfamily.KeyDescriptor;
 	
-	internal class AttachableArtefactAdapter implements AttachableArtefact
+	/**
+	 * An organised collection of cross-sectional data.
+	 *  
+	 * @author Xavier Sosnovsky
+	 * @author Karine Feraboli
+	 */ 
+	public class XSDataSet extends BaseDataSet implements IXSComponent
 	{
-		
 		/*==============================Fields================================*/
 		
-		protected var _attributeValues:AttributeValuesCollection;
+		private var _groups:XSGroupsCollection;
+		
+		private var _keyValues:KeyValuesCollection;
+		
+		private var _valueFor:KeyDescriptor;
 		
 		/*===========================Constructor==============================*/
 		
-		public function AttachableArtefactAdapter() 
+		public function XSDataSet()
 		{
 			super();
-			_attributeValues = new AttributeValuesCollection();
+			_groups = new XSGroupsCollection();
 		}
 		
 		/*============================Accessors===============================*/
 		
 		/**
-		 * @inheritDoc
-		 */		
-		public function get attributeValues():AttributeValuesCollection 
+		 * @private
+		 */ 
+		public function set groups(groups:XSGroupsCollection):void
 		{
-			return _attributeValues;
+			_groups = groups;
+		}
+		
+		/**
+		 * The collection of cross-sectional groups belonging to this
+		 * cross-sectional dataset.
+		 */
+		public function get groups():XSGroupsCollection
+		{
+			return _groups;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function set keyValues(keyValues:KeyValuesCollection):void {
+			_keyValues = keyValues;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function get keyValues():KeyValuesCollection {
+			return _keyValues;
+		}		
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function set valueFor(keyDescriptor:KeyDescriptor):void {
+			if (null == keyDescriptor) {
+				throw new ArgumentError("The key descriptor cannot be null");
+			} else {
+				_valueFor = keyDescriptor;
+			}
 		}
 		
 		/**
 		 * @inheritDoc
 		 */ 
-		public function set attributeValues(
-			attributesValues:AttributeValuesCollection):void 
-		{
-			_attributeValues = attributesValues;
+		public function get valueFor():KeyDescriptor {
+			return _valueFor;
 		}
 	}
 }

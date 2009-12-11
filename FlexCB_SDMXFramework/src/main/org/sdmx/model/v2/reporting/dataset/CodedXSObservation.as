@@ -1,4 +1,4 @@
-// Copyright (C) 2008 European Central Bank. All rights reserved.
+// Copyright (C) 2009 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
 // with or without modification, are permitted
@@ -26,40 +26,75 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.model.v2.reporting.dataset
 {
-	import mx.collections.ArrayCollection;
-	
-	internal class AttachableArtefactAdapter implements AttachableArtefact
+	import org.sdmx.model.v2.structure.code.Code;
+	import org.sdmx.model.v2.structure.keyfamily.CodedXSMeasure;
+	import org.sdmx.model.v2.structure.keyfamily.KeyDescriptor;
+
+	/**
+	 * An observation in a cross-sectional dataset that takes its value from
+	 * a code list.
+	 * 
+	 * @author Xavier Sosnovsky
+	 * @author Karine Feraboli
+	 */ 
+	public class CodedXSObservation extends XSObservation
 	{
-		
 		/*==============================Fields================================*/
 		
-		protected var _attributeValues:AttributeValuesCollection;
+		private var _value:Code;
+		
+		private var _measure:CodedXSMeasure;
 		
 		/*===========================Constructor==============================*/
 		
-		public function AttachableArtefactAdapter() 
+		public function CodedXSObservation(code:Code, measure:CodedXSMeasure)
 		{
 			super();
-			_attributeValues = new AttributeValuesCollection();
+			this.value = code;
+			this.measure = measure;
 		}
 		
 		/*============================Accessors===============================*/
 		
 		/**
-		 * @inheritDoc
-		 */		
-		public function get attributeValues():AttributeValuesCollection 
+		 * @private
+		 */
+		public function set value(code:Code):void 
 		{
-			return _attributeValues;
+			if (null == code) {
+				throw new ArgumentError("The code cannot be null");	
+			} else {
+				_value = code;
+			}
 		}
 		
 		/**
-		 * @inheritDoc
+		 * The code that is the value of the observation
 		 */ 
-		public function set attributeValues(
-			attributesValues:AttributeValuesCollection):void 
+		public function get value():Code 
 		{
-			_attributeValues = attributesValues;
+			return _value;
+		}
+		
+		/**
+		 * @private
+		 */
+		public function set measure(measure:CodedXSMeasure):void 
+		{
+			if (null == measure) {
+				throw new ArgumentError("The measure cannot be null");	
+			} else {
+				_measure = measure;
+			}
+		}
+		
+		/**
+		 * Associates the coded cross-sectional measure defined in the 
+		 * key family.
+		 */
+		public function get measure():CodedXSMeasure 
+		{
+			return _measure;
 		}
 	}
 }

@@ -1,4 +1,4 @@
-// Copyright (C) 2008 European Central Bank. All rights reserved.
+// Copyright (C) 2009 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
 // with or without modification, are permitted
@@ -26,40 +26,48 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.model.v2.reporting.dataset
 {
-	import mx.collections.ArrayCollection;
+	import org.sdmx.model.v2.structure.keyfamily.KeyDescriptor;
 	
-	internal class AttachableArtefactAdapter implements AttachableArtefact
+	/**
+	 * A set of key values that comprise a partial key and which group together 
+	 * a set of sections.
+	 * 
+	 * @author Xavier Sosnovsky
+	 * @author Karine Feraboli
+	 * 
+	 * @see Section
+	 * @see SectionsCollection
+	 */ 
+	public class XSGroup extends BaseXSComponent
 	{
-		
 		/*==============================Fields================================*/
 		
-		protected var _attributeValues:AttributeValuesCollection;
+		private var _sections:SectionsCollection;
 		
 		/*===========================Constructor==============================*/
 		
-		public function AttachableArtefactAdapter() 
+		public function XSGroup()
 		{
 			super();
-			_attributeValues = new AttributeValuesCollection();
+			_sections = new SectionsCollection();
 		}
 		
 		/*============================Accessors===============================*/
 		
 		/**
-		 * @inheritDoc
-		 */		
-		public function get attributeValues():AttributeValuesCollection 
+		 * @private
+		 */ 
+		public function set sections(sections:SectionsCollection):void
 		{
-			return _attributeValues;
+			_sections = sections;
 		}
 		
 		/**
-		 * @inheritDoc
+		 * The collection of sections belonging to the group
 		 */ 
-		public function set attributeValues(
-			attributesValues:AttributeValuesCollection):void 
+		public function get sections():SectionsCollection
 		{
-			_attributeValues = attributesValues;
+			return _sections;
 		}
 	}
 }

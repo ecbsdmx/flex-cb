@@ -1,4 +1,4 @@
-// Copyright (C) 2008 European Central Bank. All rights reserved.
+// Copyright (C) 2009 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
 // with or without modification, are permitted
@@ -26,40 +26,41 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.model.v2.reporting.dataset
 {
-	import mx.collections.ArrayCollection;
+	import org.sdmx.model.v2.structure.keyfamily.KeyDescriptor;
 	
-	internal class AttachableArtefactAdapter implements AttachableArtefact
+	/**
+	 * Contract to be implemented by the 4 main actors (XSDataSet, XSGroup, 
+	 * XSSection and XSObservation) of a cross-sectional scenario. In a 
+	 * cross-sectional scenario, the dimensions can be attached to 4
+	 * different levels and there is not concept of full key, like for 
+	 * time-series data. The full key can only be constructed by concatenating
+	 * the keys attached to the 4 different levels. 
+	 *  
+	 * @author Xavier Sosnovsky
+	 * @author Karine Feraboli
+	 */ 
+	public interface IXSComponent extends AttachableArtefact
 	{
-		
-		/*==============================Fields================================*/
-		
-		protected var _attributeValues:AttributeValuesCollection;
-		
-		/*===========================Constructor==============================*/
-		
-		public function AttachableArtefactAdapter() 
-		{
-			super();
-			_attributeValues = new AttributeValuesCollection();
-		}
-		
-		/*============================Accessors===============================*/
+		/**
+		 * @private
+		 */
+		function set keyValues(keyValues:KeyValuesCollection):void;
 		
 		/**
-		 * @inheritDoc
-		 */		
-		public function get attributeValues():AttributeValuesCollection 
-		{
-			return _attributeValues;
-		}
+		 * The collection of key values attached at that level in a 
+		 * cross-sectional scenario.
+		 */
+		function get keyValues():KeyValuesCollection;
 		
 		/**
-		 * @inheritDoc
+		 * @private
+		 */
+		function set valueFor(keyDescriptor:KeyDescriptor):void;
+		
+		/**
+		 * The key descriptor attached at that level in a cross-sectional 
+		 * scenario.
 		 */ 
-		public function set attributeValues(
-			attributesValues:AttributeValuesCollection):void 
-		{
-			_attributeValues = attributesValues;
-		}
+		function get valueFor():KeyDescriptor;
 	}
 }

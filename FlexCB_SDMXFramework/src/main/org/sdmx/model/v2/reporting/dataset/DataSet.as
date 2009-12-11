@@ -26,8 +26,6 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.model.v2.reporting.dataset
 {
-	import org.sdmx.util.date.SDMXDate;
-	import org.sdmx.model.v2.structure.keyfamily.DataflowDefinition;
 	import org.sdmx.model.v2.base.SDMXArtefact;
 	
 	/**
@@ -40,19 +38,10 @@ package org.sdmx.model.v2.reporting.dataset
 	 * @todo
 	 * 		o DataSet extends IdentifiableArtefact
 	 */ 
-	public class DataSet extends AttachableArtefactAdapter 
-		implements SDMXArtefact {
+	public class DataSet extends BaseDataSet {
 		
 		/*==============================Fields================================*/
-		
-		private var _reportingBeginDate:Date;
-		
-		private var _reportingEndDate:Date;
-		
-		private var _dataExtractionDate:Date;
-		
-		private var _describedBy:DataflowDefinition;
-		
+				
 		private var _groupKeys:GroupKeysCollection;
 		
 		private var _timeseriesKeys:TimeseriesKeysCollection;
@@ -63,84 +52,9 @@ package org.sdmx.model.v2.reporting.dataset
 			super();
 			_groupKeys = new GroupKeysCollection();
 			_timeseriesKeys = new TimeseriesKeysCollection();
-			_attributeValues = new AttributeValuesCollection();
 		}
 		
 		/*============================Accessors===============================*/
-		
-		/**
-		 * @private
-		 */ 
-		public function set reportingBeginDate(beginDate:Date):void {
-			if (null != _reportingEndDate && null != beginDate 
-				&& beginDate > _reportingEndDate) {
-					throw new ArgumentError("The start of the reporting " + 
-							"period cannot be after the end of the reporting " + 
-							"period");
-			} else {
-				_reportingBeginDate = beginDate;
-			}
-		}
-		
-		/**
-		 * A specific time period that identifies the beginning period of a 
-		 * report.
-		 */ 
-		public function get reportingBeginDate():Date {
-			return _reportingBeginDate;
-		}
-		
-		/**
-		 * @private
-		 */
-		public function set reportingEndDate(endDate:Date):void {
-			if (null != _reportingBeginDate && null != endDate 
-				&& endDate < _reportingBeginDate) {
-					throw new ArgumentError("The end of the reporting period " + 
-							"cannot be before the start of the reporting " + 
-							"period");
-			} else {
-				_reportingEndDate = endDate;
-			}
-		}
-		
-		/**
-		 * A specific time period that identifies the end period of a 
-		 * report.
-		 */ 
-		public function get reportingEndDate():Date {
-			return _reportingEndDate;
-		}
-		
-		/**
-		 * @private
-		 */
-		public function set dataExtractionDate(extractionDate:Date):void {
-			_dataExtractionDate = extractionDate;
-		}
-		
-		/**
-		 * A specific time period that identifies the date and time that the 
-		 * data are extracted from a data source.
-		 */ 
-		public function get dataExtractionDate():Date {
-			return _dataExtractionDate;
-		}
-		
-		/**
-		 * @private
-		 */
-		public function set describedBy(describedBy:DataflowDefinition):void {
-			_describedBy = describedBy;
-		}
-		
-		/**
-		 * Associates a data flow definition and thereby a Key Family to the 
-		 * data set.
-		 */ 
-		public function get describedBy():DataflowDefinition {
-			return _describedBy;
-		}
 		
 		/**
 		 * @private
@@ -150,7 +64,7 @@ package org.sdmx.model.v2.reporting.dataset
 		} 
 		
 		/**
-		 * The collection of groups belonging to the group
+		 * The collection of groups belonging to the dataset
 		 */
 		public function get groupKeys():GroupKeysCollection {
 			return _groupKeys;
