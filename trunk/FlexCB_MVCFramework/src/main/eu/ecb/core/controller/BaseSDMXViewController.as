@@ -119,5 +119,14 @@ package eu.ecb.core.controller
 			event.stopImmediatePropagation();
 			(model as ISDMXViewModel).handleLegendItemHighlighted(event);
 		}
+		
+		/**
+		 * @inheritDoc
+		 */ 
+		public function handleSelectedDateChanged(event:DataEvent):void
+		{
+			event.stopImmediatePropagation();
+			(model as ISDMXViewModel).handleSelectedDateChanged(event);
+		}
 	}
 }

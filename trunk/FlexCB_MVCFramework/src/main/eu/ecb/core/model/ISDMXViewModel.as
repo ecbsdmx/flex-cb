@@ -103,7 +103,17 @@ package eu.ecb.core.model
 		/**
 		 * @private
 		 */ 
-		function set referenceSeries(referenceSeries:TimeseriesKey):void; 
+		function set referenceSeries(referenceSeries:TimeseriesKey):void;
+		
+		/**
+		 * The series key of the series to be used as reference series. 
+		 */ 
+		function get referenceSeriesKey():String;
+		
+		/**
+		 * @private
+		 */ 
+		function set referenceSeriesKey(seriesKey:String):void;  
 		
 		/**
 		 * The filtered reference series. 
@@ -172,6 +182,18 @@ package eu.ecb.core.model
 		function set isPercentage(isPercentage:Boolean):void
 		
 		/**
+		 * The currently selected date (by default, this will correspond to 
+		 * the latest period for which data is available). Specially useful in 
+		 * a cross-sectional scenario.
+		 */ 
+		function get selectedDate():String;
+		
+		/**
+		 * @private
+		 */
+		function set selectedDate(date:String):void;
+		
+		/**
 		 * Sets the desired start date, for the filtering method. This should
 		 * be used to bypass the default settings for creating the filtered
 		 * data set.
@@ -227,6 +249,16 @@ package eu.ecb.core.model
 		 * highlighted legend item
 		 */
 		function handleLegendItemHighlighted(event:DataEvent):void;	
+		
+		/**
+		 * Updates the model when the currently selected date has been changed.
+		 * This is important in a cross-sectional scenario, to retrieve the 
+		 * proper slice of data for the selected period.
+		 * 
+		 * @param event The data event that contains the currently selected
+		 * date
+		 */
+		function handleSelectedDateChanged(event:DataEvent):void;
 			
 		/**
 		 * Returns a dataset containing the series corresponding to the
