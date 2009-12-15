@@ -125,12 +125,14 @@ package eu.ecb.core.view.chart
 				var verticalAxisRenderer:AxisRenderer = new AxisRenderer();
 				verticalAxisRenderer.setStyle("axisStroke", stroke);
 				verticalAxisRenderer.setStyle("tickStroke", stroke);
-				_chart.verticalAxisRenderer = verticalAxisRenderer;
+				verticalAxisRenderer.axis = verticalAxis;
+				_chart.verticalAxisRenderers = [verticalAxisRenderer];
 				
 				var horizontalAxisRenderer:AxisRenderer = new AxisRenderer();	
 				horizontalAxisRenderer.setStyle("axisStroke", stroke);
 				horizontalAxisRenderer.setStyle("tickStroke", stroke);
-				_chart.horizontalAxisRenderer = horizontalAxisRenderer;
+				horizontalAxisRenderer.axis = horizontalAxis;
+				_chart.horizontalAxisRenderers = [horizontalAxisRenderer];
 				
 				addChild(_chart);
 			}
