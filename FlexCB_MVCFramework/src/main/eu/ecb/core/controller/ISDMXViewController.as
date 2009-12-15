@@ -106,5 +106,16 @@ package eu.ecb.core.controller
 		 * highlighted legend item
 		 */
 		function handleLegendItemHighlighted(event:DataEvent):void;
+		
+		/**
+		 * Call this function when the currently selected date has been changed.
+		 * This is important in a cross-sectional scenario, to retrieve the 
+		 * proper slice of data for the selected period.
+		 * 
+		 * @param event The data event that contains the currently selected
+		 * date
+		 */
+		function handleSelectedDateChanged(event:DataEvent):void;
+		
 	}
 }

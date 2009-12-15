@@ -50,7 +50,7 @@ package eu.ecb.core.model
 	/**
 	 * Event dispatched when the filtered data set has been processed
 	 * 
-	 * @eventType eu.ecb.core.model.SDMXDataModel.FILTERED_DATASET_UPDATED
+	 * @eventType eu.ecb.core.model.BaseSDMXViewModel.FILTERED_DATASET_UPDATED
 	 */
 	[Event(name="filteredDataSetUpdated", type="flash.events.Event")]
 	
@@ -58,7 +58,7 @@ package eu.ecb.core.model
 	 * Event dispatched when the data set containing the selected series
 	 * has been processed updated.
 	 * 
-	 * @eventType eu.ecb.core.model.SDMXDataModel.SELECTED_DATASET_UPDATED
+	 * @eventType eu.ecb.core.model.BaseSDMXViewModel.SELECTED_DATASET_UPDATED
 	 */
 	[Event(name="selectedDataSetUpdated", type="flash.events.Event")]
 	
@@ -66,35 +66,43 @@ package eu.ecb.core.model
 	 * Event dispatched when the data set containing the highlighted series
 	 * has been processed updated.
 	 * 
-	 * @eventType eu.ecb.core.model.SDMXDataModel.HIGHLIGHTED_DATASET_UPDATED
+	 * @eventType eu.ecb.core.model.BaseSDMXViewModel.HIGHLIGHTED_DATASET_UPDATED
 	 */
 	[Event(name="highlightedDataSetUpdated", type="flash.events.Event")]
 	
 	/**
 	 * Event dispatched when the reference series has been processed
 	 * 
-	 * @eventType eu.ecb.core.model.SDMXDataModel.REFERENCE_SERIES_UPDATED
+	 * @eventType eu.ecb.core.model.BaseSDMXViewModel.REFERENCE_SERIES_UPDATED
 	 */
 	[Event(name="referenceSeriesUpdated", type="flash.events.Event")]
 	
 	/**
 	 * Event dispatched when the filtered reference series has been processed
 	 * 
-	 * @eventType eu.ecb.core.model.SDMXDataModel.FILTERED_REFERENCE_SERIES_UPDATED
+	 * @eventType eu.ecb.core.model.BaseSDMXViewModel.FILTERED_REFERENCE_SERIES_UPDATED
 	 */
 	[Event(name="filteredReferenceSeriesUpdated", type="flash.events.Event")]
 	
 	/**
 	 * Event dispatched when the reference series frequency has been updated
 	 * 
-	 * @eventType eu.ecb.core.model.SDMXDataModel.REFERENCE_SERIES_FREQUENCY_UPDATED
+	 * @eventType eu.ecb.core.model.BaseSDMXViewModel.REFERENCE_SERIES_FREQUENCY_UPDATED
 	 */
 	[Event(name="referenceSeriesFrequencyUpdated", type="flash.events.Event")]
 	
 	/**
+	 * Event dispatched when the key of the series to be used as reference 
+	 * series has been updated
+	 * 
+	 * @eventType eu.ecb.core.model.BaseSDMXViewModel.REFERENCE_SERIES_KEY_UPDATED
+	 */
+	[Event(name="referenceSeriesKeyUpdated", type="flash.events.Event")]
+	
+	/**
 	 * Event dispatched when the list of periods has been updated
 	 * 
-	 * @eventType eu.ecb.core.model.SDMXDataModel.PERIODS_UPDATED
+	 * @eventType eu.ecb.core.model.BaseSDMXViewModel.PERIODS_UPDATED
 	 */
 	[Event(name="periodsUpdated", type="flash.events.Event")]
 	
@@ -102,9 +110,16 @@ package eu.ecb.core.model
 	 * Event dispatched when the flag showing whether the reference series is
 	 * a percentage has been updated
 	 * 
-	 * @eventType eu.ecb.core.model.SDMXDataModel.IS_PERCENTAGE_UPDATED
+	 * @eventType eu.ecb.core.model.BaseSDMXViewModel.IS_PERCENTAGE_UPDATED
 	 */
 	[Event(name="isPercentageUpdated", type="flash.events.Event")]
+	
+	/**
+	 * Event dispatched when selected date has been updated.
+	 * 
+	 * @eventType eu.ecb.core.model.BaseSDMXViewModel.SELECTED_DATE_UPDATED
+	 */
+	[Event(name="selectedDateUpdated", type="flash.events.Event")]
 
 	/**
 	 * Holds SDMX IM artefacts such as datasets, time series, observations, etc. 
@@ -120,8 +135,8 @@ package eu.ecb.core.model
 		/*=============================Constants==============================*/
 		
 		/**
-		 * The SDMXDataModel.FILTERED_DATASET_UPDATED constant defines the value 
-		 * of the <code>type</code> property of the event object for a 
+		 * The BaseSDMXViewModel.FILTERED_DATASET_UPDATED constant defines the 
+		 * value of the <code>type</code> property of the event object for a 
 		 * <code>filteredDataSetUpdated</code> event.
 		 * 
 		 * @eventType filteredDataSetUpdated
@@ -130,8 +145,8 @@ package eu.ecb.core.model
 			"filteredDataSetUpdated";
 			
 		/**
-		 * The SDMXDataModel.SELECTED_DATASET_UPDATED constant defines the value 
-		 * of the <code>type</code> property of the event object for a 
+		 * The BaseSDMXViewModel.SELECTED_DATASET_UPDATED constant defines the 
+		 * value of the <code>type</code> property of the event object for a 
 		 * <code>selectedDataSetUpdated</code> event.
 		 * 
 		 * @eventType selectedDataSetUpdated
@@ -140,8 +155,8 @@ package eu.ecb.core.model
 			"selectedDataSetUpdated";	
 			
 		/**
-		 * The SDMXDataModel.HIGHLIGHTED_DATASET_UPDATED constant defines the 
-		 * value of the <code>type</code> property of the event object for a 
+		 * The BaseSDMXViewModel.HIGHLIGHTED_DATASET_UPDATED constant defines 
+		 * the value of the <code>type</code> property of the event object for a 
 		 * <code>highlightedDataSetUpdated</code> event.
 		 * 
 		 * @eventType highlightedDataSetUpdated
@@ -150,8 +165,8 @@ package eu.ecb.core.model
 			"highlightedDataSetUpdated";	
 			
 		/**
-		 * The SDMXDataModel.REFERENCE_SERIES_UPDATED constant defines the value  
-		 * of the <code>type</code> property of the event object for a 
+		 * The BaseSDMXViewModel.REFERENCE_SERIES_UPDATED constant defines the 
+		 * value of the <code>type</code> property of the event object for a 
 		 * <code>referenceSeriesUpdated</code> event.
 		 * 
 		 * @eventType referenceSeriesUpdated
@@ -160,9 +175,9 @@ package eu.ecb.core.model
 			"referenceSeriesUpdated";
 
 		/**
-		 * The SDMXDataModel.FILTERED_REFERENCE_SERIES_UPDATED constant defines 
-		 * the value of the <code>type</code> property of the event object for a 
-		 * <code>filteredReferenceSeriesUpdated</code> event.
+		 * The BaseSDMXViewModel.FILTERED_REFERENCE_SERIES_UPDATED constant 
+		 * defines the value of the <code>type</code> property of the event 
+		 * object for a <code>filteredReferenceSeriesUpdated</code> event.
 		 * 
 		 * @eventType filteredReferenceSeriesUpdated
 		 */
@@ -170,17 +185,27 @@ package eu.ecb.core.model
 			"filteredReferenceSeriesUpdated"
 		
 		/**
-		 * The SDMXDataModel.REFERENCE_SERIES_FREQUENCY_UPDATED constant defines 
-		 * the value of the <code>type</code> property of the event object for a 
-		 * <code>referenceSeriesFrequencyUpdated</code> event.
+		 * The BaseSDMXViewModel.REFERENCE_SERIES_FREQUENCY_UPDATED constant 
+		 * defines the value of the <code>type</code> property of the event 
+		 * object for a <code>referenceSeriesFrequencyUpdated</code> event.
 		 * 
 		 * @eventType referenceSeriesFrequencyUpdated
 		 */
 		public static const REFERENCE_SERIES_FREQUENCY_UPDATED:String = 
 			"referenceSeriesFrequencyUpdated"
+			
+		/**
+		 * The BaseSDMXViewModel.REFERENCE_SERIES_KEY_UPDATED constant 
+		 * defines the value of the <code>type</code> property of the event 
+		 * object for a <code>referenceSeriesKeyUpdated</code> event.
+		 * 
+		 * @eventType referenceSeriesKeyUpdated
+		 */
+		public static const REFERENCE_SERIES_KEY_UPDATED:String = 
+			"referenceSeriesKeyUpdated"	
 		
 		/**
-		 * The SDMXDataModel.PERIODS_UPDATED constant defines the value of 
+		 * The BaseSDMXViewModel.PERIODS_UPDATED constant defines the value of 
 		 * the <code>type</code> property of the event object for a 
 		 * <code>periodsUpdated</code> event.
 		 * 
@@ -189,14 +214,24 @@ package eu.ecb.core.model
 		public static const PERIODS_UPDATED:String = "periodsUpdated";
 		
 		/**
-		 * The SDMXDataModel.IS_PERCENTAGE_UPDATED constant defines the value of 
-		 * the <code>type</code> property of the event object for a 
+		 * The BaseSDMXViewModel.IS_PERCENTAGE_UPDATED constant defines the 
+		 * value of the <code>type</code> property of the event object for a 
 		 * <code>isPercentageUpdated</code> event.
 		 * 
 		 * @eventType isPercentageUpdated
 		 */
 		public static const IS_PERCENTAGE_UPDATED:String = 
 			"isPercentageUpdated";
+			
+		/**
+		 * The BaseSDMXViewModel.SELECTED_DATE_UPDATED constant defines the 
+		 * value of the <code>type</code> property of the event object for a 
+		 * <code>selectedDateUpdated</code> event.
+		 * 
+		 * @eventType selectedDateUpdated
+		 */
+		public static const SELECTED_DATE_UPDATED:String = 
+			"selectedDateUpdated";	
 		
 		/*==============================Fields================================*/
 		
@@ -258,7 +293,7 @@ package eu.ecb.core.model
 		/**
 		 * @private
 		 */
-		private var _referenceSeriesIndex:uint;
+		private var _referenceSeriesIndex:int;
 		
 		/**
 		 * @private
@@ -300,6 +335,10 @@ package eu.ecb.core.model
 		 */ 
 		private var _startDateSet:Boolean;
 		
+		private var _selectedDate:String;
+		
+		private var _referenceSeriesKey:String;
+		
 		/*===========================Constructor==============================*/
 		
 		public function BaseSDMXViewModel()
@@ -334,6 +373,13 @@ package eu.ecb.core.model
 			createSelectedPeriods();
 			createFilteredDataSet();
 			super.dataSet = ds;
+			if (null == _selectedDate && null != _referenceSeries && null !=
+				_referenceSeries.timePeriods && 
+				0 < _referenceSeries.timePeriods.length) {
+				selectedDate = (_referenceSeries.timePeriods.getItemAt(
+					_referenceSeries.timePeriods.length - 1) as TimePeriod).
+					periodComparator;
+			}
 		}
 		
 		/**
@@ -417,10 +463,28 @@ package eu.ecb.core.model
 		public function set referenceSeries(referenceSeries:TimeseriesKey):void
 		{
 			_referenceSeries = referenceSeries;
-			var tmpIndex:uint = 
+			var tmpIndex:int = 
 				_dataSet.timeseriesKeys.getItemIndex(referenceSeries);
 			_referenceSeriesIndex = (tmpIndex > -1) ? tmpIndex : 0;
 			dispatchEvent(new Event(REFERENCE_SERIES_UPDATED));
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		[Bindable("referenceSeriesKeyUpdated")]
+		public function get referenceSeriesKey():String 
+		{
+			return _referenceSeriesKey;
+		}
+		
+		/**
+		 * @private
+		 */
+		public function set referenceSeriesKey(seriesKey:String):void
+		{
+			_referenceSeriesKey = seriesKey;
+			dispatchEvent(new Event(REFERENCE_SERIES_KEY_UPDATED));
 		}
 		
 		/**
@@ -507,6 +571,25 @@ package eu.ecb.core.model
 			_isPercentage = flag;
 			dispatchEvent(new Event(IS_PERCENTAGE_UPDATED));
 		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		[Bindable("selectedDateUpdated")]
+		public function get selectedDate():String {
+			return _selectedDate;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		 public function set selectedDate(date:String):void
+		 {
+		 	if (date != _selectedDate) {
+		 		_selectedDate = date;
+		 		dispatchEvent(new Event(SELECTED_DATE_UPDATED));
+		 	}
+		 }
 		
 		/**
 		 * @inheritDoc
@@ -618,12 +701,12 @@ package eu.ecb.core.model
 				null == _selectedDataSet.timeseriesKeys.getTimeseriesKey(
 					event.data)) {
 				_selectedDataSet.timeseriesKeys.addItem(
-					_filteredDataSet.timeseriesKeys.getTimeseriesKey(
+					_allFilteredDataSets.timeseriesKeys.getTimeseriesKey(
 						event.data));			
 			} else {
 				_selectedDataSet.timeseriesKeys.removeItemAt(
 					_selectedDataSet.timeseriesKeys.getItemIndex(
-					_filteredDataSet.timeseriesKeys.getTimeseriesKey(
+					_selectedDataSet.timeseriesKeys.getTimeseriesKey(
 						event.data)));
 			}
 			dispatchEvent(new Event(SELECTED_DATASET_UPDATED));
@@ -642,16 +725,25 @@ package eu.ecb.core.model
 				null == _highlightedDataSet.timeseriesKeys.getTimeseriesKey(
 					event.data)) {
 				_highlightedDataSet.timeseriesKeys.addItem(
-					_filteredDataSet.timeseriesKeys.getTimeseriesKey(
+					_allFilteredDataSets.timeseriesKeys.getTimeseriesKey(
 						event.data));			
 			} else {
 				_highlightedDataSet.timeseriesKeys.removeItemAt(
 					_highlightedDataSet.timeseriesKeys.getItemIndex(
-					_filteredDataSet.timeseriesKeys.getTimeseriesKey(
+					_highlightedDataSet.timeseriesKeys.getTimeseriesKey(
 						event.data)));
 			}
 			dispatchEvent(new Event(HIGHLIGHTED_DATASET_UPDATED));
 		}	
+		
+		/**
+		 * @inheritDoc
+		 */ 
+		public function handleSelectedDateChanged(event:DataEvent):void
+		{
+			event.stopImmediatePropagation();
+			selectedDate = event.data;
+		}
 		
 		/**
 		 * @inheritDoc
@@ -695,8 +787,19 @@ package eu.ecb.core.model
 		 */
 		protected function createReferenceSeries():void
 	    {
-			var tmpSeries:TimeseriesKey = _dataSet.timeseriesKeys.getItemAt(
-				_referenceSeriesIndex) as TimeseriesKey;
+	    	var tmpSeries:TimeseriesKey;
+	    	var targetDataSet:DataSet = 
+	    		(null != _allDataSets) ? _allDataSets : _dataSet;
+	    	if (null != _referenceSeriesKey && null != _allDataSets) {
+	    		tmpSeries = targetDataSet.timeseriesKeys.
+	    			getTimeseriesKey(_referenceSeriesKey);
+	    	}
+	    	if (null == tmpSeries) {
+				tmpSeries = targetDataSet.timeseriesKeys.getItemAt(
+					_referenceSeriesIndex) as TimeseriesKey;
+	    	}
+	    	_referenceSeriesIndex = 
+	    		targetDataSet.timeseriesKeys.getItemIndex(tmpSeries);
 			if ((_dataSet.groupKeys.getGroupsForTimeseries(tmpSeries) 
 				as GroupKeysCollection).length != 0) {
 				var group:GroupKey = (_dataSet.groupKeys.
@@ -751,7 +854,11 @@ package eu.ecb.core.model
 			}
 			tmpDataSet.timeseriesKeys = seriesCollection;
 			filteredDataSet = tmpDataSet;
-			_filteredReferenceSeries = filteredDataSet.timeseriesKeys.
+			
+			var targetDataSet:DataSet = (null != _allFilteredDataSets) ? 
+				_allFilteredDataSets : _filteredDataSet;
+	    				
+			_filteredReferenceSeries = targetDataSet.timeseriesKeys.
 				getItemAt(_referenceSeriesIndex) as TimeseriesKey;
 			if (_startDateSet) {
 				triggerDataFiltering();
