@@ -133,6 +133,11 @@ package eu.ecb.core.view
 				_fullDataSetChanged = false;
 				commitFullDataSet();
 			}
+			
+			if (_selectedDateChanged) {
+				_selectedDateChanged = false;
+				commitSelectedDate();
+			}
 		}
 		
 		/**
@@ -229,6 +234,18 @@ package eu.ecb.core.view
 			for each (var view:DisplayObject in getChildren()) {
 				if (view is ISDMXView) {
 					(view as ISDMXView).fullDataSet = _fullDataSet;
+				}
+			}
+		}
+		
+		/**
+		 * @private
+		 */
+		protected function commitSelectedDate():void
+		{
+			for each (var view:DisplayObject in getChildren()) {
+				if (view is ISDMXView) {
+					(view as ISDMXView).selectedDate = _selectedDate;
 				}
 			}
 		}

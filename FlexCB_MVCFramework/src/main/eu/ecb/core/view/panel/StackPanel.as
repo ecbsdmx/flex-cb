@@ -218,5 +218,17 @@ package eu.ecb.core.view.panel
 				}
 			}
 		}
+		
+		/**
+		 * @private
+		 */
+		override protected function commitSelectedDate():void
+		{
+			for each (var view:DisplayObject in _stack.getChildren()) {
+				if (view is ISDMXView) {
+					(view as ISDMXView).selectedDate = _selectedDate;
+				}
+			}
+		}
 	}
 }
