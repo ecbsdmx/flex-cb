@@ -31,6 +31,8 @@ package eu.ecb.core.view.chart
 	import eu.ecb.core.util.formatter.ExtendedNumberFormatter;
 	import eu.ecb.core.util.formatter.SDMXDateFormatter;
 	import eu.ecb.core.util.formatter.observation.IObservationFormatter;
+	import eu.ecb.core.util.formatter.series.AttributesSeriesTitleFormatter;
+	import eu.ecb.core.util.formatter.series.ISeriesTitleFormatter;
 	import eu.ecb.core.util.helper.SeriesColors;
 	import eu.ecb.core.util.math.MathHelper;
 	
@@ -60,15 +62,13 @@ package eu.ecb.core.view.chart
 	import mx.graphics.Stroke;
 	import mx.managers.CursorManager;
 	
-	import org.sdmx.model.v2.reporting.dataset.AttributeValue;
-	import org.sdmx.model.v2.reporting.dataset.CodedAttributeValue;
+	import org.sdmx.model.v2.base.type.AttachmentLevel;
 	import org.sdmx.model.v2.reporting.dataset.DataSet;
 	import org.sdmx.model.v2.reporting.dataset.GroupKey;
 	import org.sdmx.model.v2.reporting.dataset.GroupKeysCollection;
 	import org.sdmx.model.v2.reporting.dataset.TimePeriod;
 	import org.sdmx.model.v2.reporting.dataset.TimePeriodsCollection;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
-	import org.sdmx.model.v2.reporting.dataset.UncodedAttributeValue;
 
 	/**
 	 * Event triggered when the chart is dragged in the left or right direction
@@ -151,10 +151,6 @@ package eu.ecb.core.view.chart
 		 */ 
 		protected var _showSeriesTitle:Boolean;
 		
-		private var _seriesTitleIndex:uint;
-		
-		private var _seriesTitleAttachmentLevel:uint;
-		
 		private var _baseAtZero:Boolean;
 		
 		private var _indexColor:Array;
@@ -162,6 +158,8 @@ package eu.ecb.core.view.chart
 		private var _effects:Object = new Object();
 		
 		private var _minimized:Object = new Object();
+		
+		private var _formatter:ISeriesTitleFormatter;
 		
 		/*===========================Constructor==============================*/
 
@@ -194,10 +192,16 @@ package eu.ecb.core.view.chart
 				"decimal_separator");	
 			_dateAxisFormatter = new SDMXDateFormatter();
 			_dateAxisFormatter.isShortFormat = true;
+			_chart = new LineChart();
 			_referenceSeriesFrequency = "M";
 			_isFirst = true;
 			_showECBToolTip = true;
 			_baseAtZero = true;
+			_formatter = new AttributesSeriesTitleFormatter();
+			(_formatter as AttributesSeriesTitleFormatter).attribute = 
+				"TITLE_COMPL";
+			(_formatter as AttributesSeriesTitleFormatter).attachmentLevel = 
+				AttachmentLevel.GROUP;
 		}
 		
 		/*========================Protected methods===========================*/
@@ -235,7 +239,7 @@ package eu.ecb.core.view.chart
 		public function set showECBToolTip(flag:Boolean):void
 		{
 			_showECBToolTip = flag;
-			if (!_showECBToolTip) {
+			if (!flag) {
 				_chart.showDataTips = true;
 				_chart.dataTipMode  = "multiple";
 				_chart.dataTipFunction = customizeDataTip;
@@ -248,27 +252,6 @@ package eu.ecb.core.view.chart
 		public function set showSeriesTitle(flag:Boolean):void
 		{
 			_showSeriesTitle = flag;
-		}
-		
-		/**
-		 * The index of the dimension or attribute to be used as series title.
-		 */ 
-		public function set seriesTitleIndex(index:uint):void
-		{
-			_seriesTitleIndex = index;
-		}
-		
-		/**
-		 * The attachment level (series, group) of the dimension or attribute to 
-		 * be used as series title.
-		 */ 
-		public function set seriesTitleAttachmentLevel(level:uint):void
-		{
-			if (level != 1 && level != 2) {
-				throw new ArgumentError("The attachement level must be 1 - " + 
-						"series - or 2 - group.");
-			}
-			_seriesTitleAttachmentLevel = level;
 		}
 		
 		/**
@@ -302,6 +285,13 @@ package eu.ecb.core.view.chart
 			return _chart;
 		}
 		
+		public function set titleFormatter(formatter:ISeriesTitleFormatter):void
+		{
+			if (null != formatter) {
+				_formatter = formatter;
+			}
+		}
+		
 		/*========================Protected methods===========================*/
 		
 		/**
@@ -310,63 +300,67 @@ package eu.ecb.core.view.chart
 		override protected function createChildren():void 
 		{
 			super.createChildren();
-			if (null == _chart) {
-				
-				//Displaying the chart
-				_chart = new LineChart();
-				_chart.showDataTips = false;
-				_chart.percentHeight = 100;
-				_chart.percentWidth = 100;
-				_chart.styleName = "ecbLineChart";
-				
-				_chart.addEventListener(MouseEvent.MOUSE_DOWN, setMouseDown, 
-					false, 0, true);
-				_chart.addEventListener(MouseEvent.MOUSE_UP, 
-					cleanItemsOnChart, false, 0, true);
-				_chart.addEventListener(MouseEvent.ROLL_OUT, 
-					cleanItemsOnChart, false, 0, true);
-				_chart.addEventListener(MouseEvent.MOUSE_MOVE, 
-					moveOverChart, false, 0, true);
-				_chart.addEventListener(ChartItemEvent.ITEM_CLICK,
-					handleItemClicked);	
-				
-				//Removes the shadow of the lines
-				_chart.seriesFilters = new Array();
-				
-				var verticalAxis:LinearAxis = new LinearAxis();
-				verticalAxis.baseAtZero = false;
-				_chart.verticalAxis = verticalAxis;
-				
-				var horizontalAxis:DateTimeAxis = new DateTimeAxis();
-				horizontalAxis.labelFunction = formatDateAxisLabels;
-				_chart.horizontalAxis = horizontalAxis;
-				
-				var stroke:Stroke = new Stroke();
-				stroke.color = 0xEDEFF1;
-				stroke.weight = 1;
-				
-				var gridLines:GridLines = new GridLines();
-				gridLines.styleName = "ecbLineChartGridLines";
-				gridLines.setStyle("horizontalOriginStroke", stroke);
-				gridLines.setStyle("horizontalStroke", stroke);
-				gridLines.setStyle("verticalOriginStroke", stroke);
-				gridLines.setStyle("verticalStroke", stroke);												
-				_chart.backgroundElements = [gridLines];
-				
-				var horizontalAxisRenderer:AxisRenderer = new AxisRenderer();	
-				horizontalAxisRenderer.styleName = "ecbLineChartHorizontalAxis";
-				horizontalAxisRenderer.setStyle("axisStroke", stroke);
-				horizontalAxisRenderer.setStyle("minorTickStroke", stroke);
-				horizontalAxisRenderer.setStyle("tickStroke", stroke);
-				_chart.horizontalAxisRenderer = horizontalAxisRenderer;
-				
-				var verticalAxisRenderer:AxisRenderer = new AxisRenderer();
-				verticalAxisRenderer.setStyle("axisStroke", stroke);
-				verticalAxisRenderer.setStyle("tickStroke", stroke);
-				_chart.verticalAxisRenderer = verticalAxisRenderer;
-				
-				addChild(_chart);
-			}
+			//Displaying the chart
+			
+			_chart.showDataTips = false;
+			_chart.percentHeight = 100;
+			_chart.percentWidth = 100;
+			_chart.styleName = "ecbLineChart";
+			
+			_chart.addEventListener(MouseEvent.MOUSE_DOWN, setMouseDown, 
+				false, 0, true);
+			_chart.addEventListener(MouseEvent.MOUSE_UP, 
+				cleanItemsOnChart, false, 0, true);
+			_chart.addEventListener(MouseEvent.ROLL_OUT, 
+				cleanItemsOnChart, false, 0, true);
+			_chart.addEventListener(MouseEvent.MOUSE_MOVE, 
+				moveOverChart, false, 0, true);
+			_chart.addEventListener(ChartItemEvent.ITEM_CLICK,
+				handleItemClicked);	
+			
+			//Configure the tool tips					
+			if (!_showECBToolTip) {
+				_chart.showDataTips = true;
+				_chart.dataTipMode  = "multiple";
+				_chart.dataTipFunction = customizeDataTip;
+			}	
+			
+			//Removes the shadow of the lines
+			_chart.seriesFilters = new Array();
+			
+			var verticalAxis:LinearAxis = new LinearAxis();
+			verticalAxis.baseAtZero = false;
+			_chart.verticalAxis = verticalAxis;
+			
+			var horizontalAxis:DateTimeAxis = new DateTimeAxis();
+			horizontalAxis.labelFunction = formatDateAxisLabels;
+			_chart.horizontalAxis = horizontalAxis;
+			
+			var stroke:Stroke = new Stroke();
+			stroke.color = 0xEDEFF1;
+			stroke.weight = 1;
+			
+			var gridLines:GridLines = new GridLines();
+			gridLines.styleName = "ecbLineChartGridLines";
+			gridLines.setStyle("horizontalOriginStroke", stroke);
+			gridLines.setStyle("horizontalStroke", stroke);
+			gridLines.setStyle("verticalOriginStroke", stroke);
+			gridLines.setStyle("verticalStroke", stroke);												
+			_chart.backgroundElements = [gridLines];
+			
+			var horizontalAxisRenderer:AxisRenderer = new AxisRenderer();	
+			horizontalAxisRenderer.styleName = "ecbLineChartHorizontalAxis";
+			horizontalAxisRenderer.setStyle("axisStroke", stroke);
+			horizontalAxisRenderer.setStyle("minorTickStroke", stroke);
+			horizontalAxisRenderer.setStyle("tickStroke", stroke);
+			_chart.horizontalAxisRenderer = horizontalAxisRenderer;
+			
+			var verticalAxisRenderer:AxisRenderer = new AxisRenderer();
+			verticalAxisRenderer.setStyle("axisStroke", stroke);
+			verticalAxisRenderer.setStyle("tickStroke", stroke);
+			_chart.verticalAxisRenderer = verticalAxisRenderer;
+			
+			addChild(_chart);
 		}
 		
 		/**
@@ -421,9 +415,11 @@ package eu.ecb.core.view.chart
 				for (var i:uint = 0; i < _filteredDataSet.timeseriesKeys.length; 
 					i++) {
 					var isSeriesChanged:Boolean = true;	
-					var periods:TimePeriodsCollection = (_filteredDataSet.
-						timeseriesKeys.getItemAt(i) as TimeseriesKey).
-						timePeriods; 	
+					var curSeries:TimeseriesKey = 
+						_filteredDataSet.timeseriesKeys.getItemAt(i) 
+						as TimeseriesKey;	
+					var periods:TimePeriodsCollection = curSeries.timePeriods; 	
+					
 					if (allLineSeries[i].dataProvider != periods) {
 						allLineSeries[i].dataProvider = periods;
 						isChanged = true;
@@ -445,8 +441,8 @@ package eu.ecb.core.view.chart
 								Math.round( Math.random()*0xFFFFFF );
 						}
 						if (null != _selectedDataSet && 
-							_selectedDataSet.timeseriesKeys.contains(
-							_filteredDataSet.timeseriesKeys.getItemAt(i))) {
+							_selectedDataSet.timeseriesKeys.contains(curSeries)) 
+						{
 							axisStroke.weight = 2;	
 						} else { 
 							axisStroke.weight = 1;
@@ -455,38 +451,17 @@ package eu.ecb.core.view.chart
 							axisStroke);
 					
 						if (_showSeriesTitle) {
-							var title:String;
-							var attribute:AttributeValue;
-							if (1 == _seriesTitleAttachmentLevel && (
-								_filteredDataSet.timeseriesKeys.getItemAt(i) as 
-								TimeseriesKey).attributeValues.length > 
-								_seriesTitleIndex) {
-								attribute = (_filteredDataSet.timeseriesKeys.
-									getItemAt(i) as	TimeseriesKey).
-									attributeValues.getItemAt(_seriesTitleIndex) 
-									as AttributeValue;
-							} else if (2 == _seriesTitleAttachmentLevel && 
-								(_filteredDataSet.groupKeys.
-								getGroupsForTimeseries(_filteredDataSet.
-								timeseriesKeys.getItemAt(i) as 
-								TimeseriesKey).getItemAt(0) as GroupKey).
-								attributeValues.length > _seriesTitleIndex) {
-								attribute = (_filteredDataSet.groupKeys.
-									getGroupsForTimeseries(_filteredDataSet.
-									timeseriesKeys.getItemAt(i) as TimeseriesKey
-									).getItemAt(0) as GroupKey).attributeValues.
-									getItemAt(_seriesTitleIndex) as 
-									AttributeValue;
-							}
-							if (attribute is CodedAttributeValue) {
-								title = 
-									(attribute as CodedAttributeValue).value.id;
-							} else if (attribute is UncodedAttributeValue) {
-								title = 
-									(attribute as UncodedAttributeValue).value;
-							}
-							allLineSeries[i].displayName = title;
-						}		
+							if (_formatter is AttributesSeriesTitleFormatter && 
+								(_formatter as AttributesSeriesTitleFormatter).
+								attachmentLevel == AttachmentLevel.GROUP) {
+								(_formatter as AttributesSeriesTitleFormatter).
+									titleSupplier = _filteredDataSet.groupKeys.
+									getGroupsForTimeseries(curSeries).
+									getItemAt(0) as GroupKey;
+							}	
+							allLineSeries[i].displayName = 
+								_formatter.getSeriesTitle(curSeries);	
+						}
 					}
 				}
 				if (isChanged) {
@@ -996,10 +971,10 @@ package eu.ecb.core.view.chart
 				i++) {
 				var series:TimeseriesKey = _filteredDataSet.timeseriesKeys.
 					getItemAt(i) as	TimeseriesKey; 
-				if ((null != _selectedDataSet && 
-					_selectedDataSet.timeseriesKeys.contains(series)) ||
-					(null != _highlightedDataSet && _highlightedDataSet.
-					timeseriesKeys.contains(series)) || 
+				if ((null != _selectedDataSet && null != _selectedDataSet.
+					timeseriesKeys.getTimeseriesKey(series.seriesKey)) ||
+					(null != _highlightedDataSet && null != _highlightedDataSet.
+					timeseriesKeys.getTimeseriesKey(series.seriesKey)) || 
 					((null == _selectedDataSet || (null != _selectedDataSet && 
 					0 == _selectedDataSet.timeseriesKeys.length)) && 
 					null != _highlightedDataSet && 
