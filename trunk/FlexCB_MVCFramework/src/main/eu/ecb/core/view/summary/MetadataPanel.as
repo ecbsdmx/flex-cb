@@ -36,9 +36,12 @@ package eu.ecb.core.view.summary
 	import org.sdmx.model.v2.reporting.dataset.AttributeValue;
 	import org.sdmx.model.v2.reporting.dataset.AttributeValuesCollection;
 	import org.sdmx.model.v2.reporting.dataset.CodedAttributeValue;
+	import org.sdmx.model.v2.reporting.dataset.DataSet;
 	import org.sdmx.model.v2.reporting.dataset.GroupKey;
 	import org.sdmx.model.v2.reporting.dataset.KeyValue;
 	import org.sdmx.model.v2.reporting.dataset.UncodedAttributeValue;
+	import org.sdmx.model.v2.reporting.dataset.XSDataSet;
+	import org.sdmx.model.v2.reporting.dataset.XSGroup;
 
 	/**
 	 * This component displays a panel with metadata such as the data set,
@@ -46,6 +49,9 @@ package eu.ecb.core.view.summary
 	 * series passed to the component.
 	 * 
 	 * @author Xavier Sosnovsky
+	 * 
+	 * @todo
+	 * 		- Display attributes of XS artefacts
 	 */
 	public class MetadataPanel extends BaseSDMXView
 	{
@@ -109,10 +115,12 @@ package eu.ecb.core.view.summary
 		
 		private function displayGroupMetadata():void
 		{
-			for each (var group:GroupKey in 
-				_dataSet.groupKeys.getGroupsForTimeseries(_referenceSeries)) {
-				if (group.attributeValues != null) {
-					displayAttributes(group.attributeValues);	
+			if (_dataSet is DataSet) {
+				for each (var group:GroupKey in (_dataSet as DataSet).groupKeys.
+					getGroupsForTimeseries(_referenceSeries)) {
+					if (group.attributeValues != null) {
+						displayAttributes(group.attributeValues);	
+					}
 				}
 			}
 		}

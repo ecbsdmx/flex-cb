@@ -29,6 +29,10 @@ package eu.ecb.core.view
 	import mx.containers.Box;
 	
 	import org.sdmx.model.v2.reporting.dataset.DataSet;
+	import org.sdmx.model.v2.reporting.dataset.IDataSet;
+	import org.sdmx.model.v2.reporting.dataset.Section;
+	import org.sdmx.model.v2.reporting.dataset.XSDataSet;
+	import org.sdmx.model.v2.reporting.dataset.XSGroup;
 	import org.sdmx.model.v2.structure.category.CategorieSchemesCollection;
 	import org.sdmx.model.v2.structure.keyfamily.DataflowsCollection;
 	import org.sdmx.model.v2.structure.keyfamily.KeyFamilies;
@@ -75,7 +79,7 @@ package eu.ecb.core.view
 		/**
 		 * @private
 		 */ 	
-		protected var _dataSet:DataSet;
+		protected var _dataSet:IDataSet;
 		
 		/**
 		 * @private
@@ -131,10 +135,22 @@ package eu.ecb.core.view
 		/**
 		 * @inheritDoc
 		 */ 
-		public function set dataSet(dataSet:DataSet):void
+		public function set dataSet(dataSet:IDataSet):void
 		{
-			if (null != dataSet &&  null != dataSet.timeseriesKeys && 
-				dataSet.timeseriesKeys.length > 0) {
+			if (null != dataSet &&  ((dataSet is DataSet && 
+				null != (dataSet as DataSet).timeseriesKeys && 
+				(dataSet as DataSet).timeseriesKeys.length > 0) || 
+				(dataSet is XSDataSet && null != (dataSet as XSDataSet).groups 
+				&& (dataSet as XSDataSet).groups.length > 0 && 
+				null != (dataSet as XSDataSet).groups.getItemAt(0) &&
+				null != ((dataSet as XSDataSet).groups.getItemAt(0) as XSGroup).
+				sections && ((dataSet as XSDataSet).groups.getItemAt(0) as 
+				XSGroup).sections.length > 0 && ((dataSet as XSDataSet).groups.
+				getItemAt(0) as XSGroup).sections.getItemAt(0) != null && 
+				(((dataSet as XSDataSet).groups.getItemAt(0) as XSGroup).
+				sections.getItemAt(0) as Section).observations != null && (((
+				dataSet as XSDataSet).groups.getItemAt(0) as XSGroup).sections.
+				getItemAt(0) as Section).observations.length > 0))) {
 				_dataSet = dataSet;
 				_dataSetChanged = true;		
 				invalidateProperties();
