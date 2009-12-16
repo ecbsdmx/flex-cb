@@ -26,7 +26,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view
 {
-	import org.sdmx.model.v2.reporting.dataset.DataSet;
+	import org.sdmx.model.v2.reporting.dataset.IDataSet;
 	import org.sdmx.model.v2.structure.category.CategorieSchemesCollection;
 	import org.sdmx.model.v2.structure.keyfamily.DataflowsCollection;
 	import org.sdmx.model.v2.structure.keyfamily.KeyFamilies;
@@ -68,6 +68,6 @@ package eu.ecb.core.view
 		 * The SDMX data set containing the desired subset of data to be 
 		 * displayed by the view. 
 		 */ 
-		function set dataSet(ds:DataSet):void;
+		function set dataSet(ds:IDataSet):void;
 	}
 }
