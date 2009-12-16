@@ -28,6 +28,8 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view.chart
 {
+	import eu.ecb.core.util.formatter.series.AttributesSeriesTitleFormatter;
+	import eu.ecb.core.util.formatter.series.ISeriesTitleFormatter;
 	import eu.ecb.core.util.helper.SeriesColors;
 	import eu.ecb.core.view.BaseSDMXView;
 	
@@ -35,16 +37,13 @@ package eu.ecb.core.view.chart
 	import flash.events.MouseEvent;
 	
 	import mx.collections.ArrayCollection;
-	import mx.controls.Label;
+	import mx.controls.Text;
 	import mx.core.UIComponent;
 	
-	import org.sdmx.model.v2.reporting.dataset.AttributeValue;
-	import org.sdmx.model.v2.reporting.dataset.CodedAttributeValue;
+	import org.sdmx.model.v2.base.type.AttachmentLevel;
+	import org.sdmx.model.v2.reporting.dataset.DataSet;
 	import org.sdmx.model.v2.reporting.dataset.GroupKey;
-	import org.sdmx.model.v2.reporting.dataset.KeyValue;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
-	import org.sdmx.model.v2.reporting.dataset.UncodedAttributeValue;
-	import org.sdmx.model.v2.structure.keyfamily.Dimension;
 
 	/**
 	 * Event triggered when one of the items in the legend has been selected or
@@ -71,57 +70,34 @@ package eu.ecb.core.view.chart
 		
 		private var _attributeTitle:String;
 		
-		private var _alwaysDisplay:Boolean;
-		
 		private var _highlightedSeries:ArrayCollection;
 		
 		private var _mouseOverEnabled:Boolean;
+		
+		private var _autoHide:Boolean;
+		
+		private var _forceHide:Boolean;
+		
+		private var _maxLabelWidth:Number;
+		
+		private var _formatter:ISeriesTitleFormatter;
 		
 		/*===========================Constructor==============================*/
 		
 		public function ECBLegend(direction:String = "vertical")
 		{
 			super();
+			_autoHide = true;
+			_maxLabelWidth = 0;
+			_formatter = new AttributesSeriesTitleFormatter();
+			_attributeTitle = "TITLE_COMPL";
+			(_formatter as AttributesSeriesTitleFormatter).attribute = 
+				_attributeTitle;
+			(_formatter as AttributesSeriesTitleFormatter).attachmentLevel = 
+				AttachmentLevel.GROUP;
 		}
 		
 		/*============================Accessors===============================*/
-		
-		/**
-		 * @private
-		 */
-		public function set attributeTitle(attributeTitle:String):void
-		{
-			_attributeTitle = attributeTitle;
-		}
-		
-		/**
-		 * The id of the attribute to be used for the series title. 
-		 */ 
-		public function get attributeTitle():String
-		{
-			if (null == _attributeTitle) {
-				_attributeTitle = "TITLE_COMPL";
-			}
-			return _attributeTitle;
-		}
-		
-		/**
-		 * @private
-		 */
-		public function set alwaysDisplay(alwaysDisplay:Boolean):void
-		{
-			_alwaysDisplay = alwaysDisplay;
-		}
-		
-		/**
-		 * Whether or not the legend should always be displayed. By default,
-		 * it will only be displayed if there is more than one series in the
-		 * dataset.
-		 */ 
-		public function get alwaysDisplay():Boolean
-		{
-			return _alwaysDisplay;
-		}
 		
 		/**
 		 * Whether or not highlight and select functionality of legend items
@@ -134,6 +110,42 @@ package eu.ecb.core.view.chart
 			_mouseOverEnabled = flag;
 		}
 		
+		/**
+		 * Whether or not the component should auothide itself, when the dataset
+		 * only contains one series
+		 */ 
+		public function set autoHide(flag:Boolean):void
+		{
+			_autoHide = flag;
+		}
+		
+		/**
+		 * Whether or not the component should be hidden, even if its dataset
+		 * contains more than one series. 
+		 */
+		public function set forceHide(flag:Boolean):void
+		{
+			_forceHide = flag;
+		}
+		
+		/**
+		 * @private
+		 */ 
+		public function set titleFormatter(formatter:ISeriesTitleFormatter):void
+		{
+			if (null != formatter) {
+				_formatter = formatter;
+			}
+		}
+		
+		/**
+		 * The formatter to be used for the series title 
+		 */
+		public function get titleFormatter():ISeriesTitleFormatter
+		{
+			return _formatter;
+		}
+		
 		/*========================Protected methods===========================*/
 		
 		/**
@@ -141,96 +153,29 @@ package eu.ecb.core.view.chart
 		 */ 
 		override protected function commitProperties():void
 	 	{
-	 		if (_dataSetChanged) {
+	 		if (_dataSetChanged && _dataSet is DataSet) {
 	 			_dataSetChanged = false;
+	 			_maxLabelWidth = 0;
 		 		removeAllChildren();
-				if (alwaysDisplay || _dataSet.timeseriesKeys.length > 1) {
-					for (var i:uint = 0; i < _dataSet.timeseriesKeys.length; 
-						i++) {
-						var series:TimeseriesKey = _dataSet.timeseriesKeys.
-							getItemAt(i) as TimeseriesKey;
-						var titlePos:uint;
-						var titleType:uint;
-						var titleFound:Boolean;
-						var titleGroup:GroupKey;
-						if (!(isNaN(titleType)) && titleType ==2) {
-							titleFound = false;
+				if (!_autoHide || (_dataSet as DataSet).timeseriesKeys.
+					length > 1) {
+					for (var i:uint = 0; i < (_dataSet as DataSet).
+						timeseriesKeys.length; i++) {
+						var series:TimeseriesKey = (_dataSet as DataSet).
+							timeseriesKeys.getItemAt(i) as TimeseriesKey;
+						if (_formatter is AttributesSeriesTitleFormatter && 
+							(_formatter as AttributesSeriesTitleFormatter).
+								attachmentLevel == AttachmentLevel.GROUP) {
+							(_formatter as AttributesSeriesTitleFormatter).
+								titleSupplier = (_dataSet as DataSet).groupKeys.
+								getGroupsForTimeseries(series).getItemAt(0)
+								as GroupKey;		
 						}
-						if (i == 0) {
-							for each (var dimension:Dimension in 
-								series.valueFor) {
-								if (dimension.conceptIdentity.id 
-									== attributeTitle) {
-									titleType = 0;
-									titleFound = true;
-									titlePos = 
-										series.valueFor.getItemIndex(dimension);
-									break;
-								}
-							}
-							if (!titleFound) {
-								for each (var attribute:AttributeValue in 
-									series.attributeValues){
-									if (attribute is CodedAttributeValue && 
-										(attribute as CodedAttributeValue).
-										valueFor.conceptIdentity.id == 
-										attributeTitle) {
-										titleType = 1;
-										titleFound = true;
-										titlePos = 
-											series.attributeValues.getItemIndex(
-												attribute);
-										break;
-									} else if (attribute is 
-										UncodedAttributeValue && (attribute as 
-										UncodedAttributeValue).valueFor.
-										conceptIdentity.id == attributeTitle) {
-										titleType = 1;
-										titleFound = true;
-										titlePos = series.attributeValues.
-											getItemIndex(attribute);
-										break;
-									}	
-								}
-							}
-						}
-						if (!titleFound) {
-							for each (var groupKey:GroupKey in _dataSet.
-							 groupKeys.getGroupsForTimeseries(series)) {
-								for each (var groupAttribute:AttributeValue in 
-									groupKey.attributeValues){
-									if (groupAttribute is CodedAttributeValue && 
-										(groupAttribute as CodedAttributeValue).
-										valueFor.conceptIdentity.id == 
-											attributeTitle) {
-										titleType = 2;		
-										titleFound = true;
-										titleGroup = groupKey;	
-										titlePos = 
-											groupKey.attributeValues.
-												getItemIndex(groupAttribute);
-										break;
-									} else if (groupAttribute is 
-										UncodedAttributeValue && (groupAttribute 
-										as UncodedAttributeValue).valueFor.
-										conceptIdentity.id == attributeTitle) {
-										titleType = 2;	
-										titleFound = true;
-										titleGroup = groupKey;										
-										titlePos = groupKey.attributeValues.
-											getItemIndex(groupAttribute);
-										break;
-									}	
-								}
-								if (titleFound) {
-									break;
-								}
-							}
-						}
-						if (!titleFound) {
+						var seriesTitle:String = 
+							_formatter.getSeriesTitle(series);
+						if (null == seriesTitle) {
 							throw new ArgumentError("Could not find the " + 
-								"dimension or attribute to use as title for " +
-								"the legend item.");	
+								"series title.");	
 						}
 						var uicomponent:UIComponent = new UIComponent();
 						if (i < SeriesColors.getColors().length) {
@@ -242,7 +187,10 @@ package eu.ecb.core.view.chart
 						}		
 						uicomponent.graphics.drawCircle(5, 11, 5);
 						addChild(uicomponent);
-						var legendItem:Label = new Label();
+						var legendItem:Text = new Text();
+						if (maxWidth > 0) {
+							legendItem.maxWidth = maxWidth;
+						} 
 						if (_mouseOverEnabled) {
 							legendItem.addEventListener(MouseEvent.CLICK, 
 								handleLegendClicked);
@@ -253,40 +201,42 @@ package eu.ecb.core.view.chart
 						}
 						legendItem.id = series.seriesKey;						
 						legendItem.setStyle("paddingLeft", 12);
-						switch(titleType) {
-							case 0:
-								legendItem.text = (series.keyValues.getItemAt(
-									titlePos) as KeyValue).value.description.
-									localisedStrings.
-									getDescriptionByLocale("en");
-								break;
-							case 1:
-								legendItem.text = ((series.attributeValues.
-									getItemAt(titlePos) is CodedAttributeValue)? 
-									(series.attributeValues.getItemAt(titlePos) 
-									as CodedAttributeValue).value.description.
-									localisedStrings.
-									getDescriptionByLocale("en") : (series.
-									attributeValues.getItemAt(titlePos) as 
-									UncodedAttributeValue).value);
-								break;
-							case 2:
-								legendItem.text = ((titleGroup.attributeValues.
-									getItemAt(titlePos) is CodedAttributeValue)? 
-									(titleGroup.attributeValues.
-									getItemAt(titlePos) 
-									as CodedAttributeValue).value.description.
-									localisedStrings.
-									getDescriptionByLocale("en") : 
-									(titleGroup.attributeValues.getItemAt(
-									titlePos) as UncodedAttributeValue).value);
-								break;		
+						legendItem.text = seriesTitle; 
+							
+						var legendItemWidth:Number = 
+							measureText(legendItem.text).width + 5;
+						if (legendItemWidth > _maxLabelWidth) {
+							_maxLabelWidth = legendItemWidth;
 						}
+								
 						addChild(legendItem);
 					}
+					invalidateDisplayList();
 				}
 	 		}
 	 	}
+	 	
+	 	override protected function updateDisplayList(unscaledWidth:Number, 
+	 		unscaledHeight:Number):void
+ 		{
+ 			super.updateDisplayList(unscaledWidth, unscaledHeight);
+ 			
+ 			if (_dataSet is DataSet) {
+	 			if (_forceHide || (_autoHide && null != _dataSet && 
+	 				null != (_dataSet as DataSet).timeseriesKeys	&& 
+	 				1 >= (_dataSet as DataSet).timeseriesKeys.length)) {
+					this.width   = 0;
+					this.visible = false;
+				} else if (null != _dataSet && null != (_dataSet as DataSet).
+					timeseriesKeys && 1 < (_dataSet as DataSet).timeseriesKeys.
+					length) {
+					this.width = (!(isNaN(maxWidth)) && 0 < maxWidth && 
+						maxWidth < _maxLabelWidth + 12) ? 
+						maxWidth : _maxLabelWidth + 12;
+					this.visible = true;
+				}		
+			}
+ 		}
 	 	
 	 	private function handleLegendClicked(event:MouseEvent):void
 	 	{
@@ -297,10 +247,10 @@ package eu.ecb.core.view.chart
 	 		if (_highlightedSeries.contains(key)) {
 	 			_highlightedSeries.removeItemAt(
 	 				_highlightedSeries.getItemIndex(key));
-	 			event.currentTarget.setStyle("color", "#707070");	
+	 			event.currentTarget.styleName = "";	
 	 		} else {
 	 			_highlightedSeries.addItem(key);
-	 			event.currentTarget.setStyle("color", "#000000");
+	 			event.currentTarget.styleName = "legendItemSelected";
 	 		}
 	 		dispatchEvent(new DataEvent("legendSelected", false, false, key)); 
 	 	}
@@ -310,7 +260,7 @@ package eu.ecb.core.view.chart
 	 		var key:String = event.currentTarget.id; 
 	 		if (null == _highlightedSeries || (null != _highlightedSeries && 
 	 			!(_highlightedSeries.contains(key)))) {
-	 			event.currentTarget.setStyle("color", "#000000");
+	 			event.currentTarget.styleName = "legendItemSelected";
 	 			dispatchEvent(new DataEvent("legendHighlighted", false, false, 
 	 				key));
 	 		}
@@ -322,7 +272,7 @@ package eu.ecb.core.view.chart
 	 		var key:String = event.currentTarget.id; 
 	 		if (null == _highlightedSeries || (null != _highlightedSeries &&
 	 			!(_highlightedSeries.contains(key)))) {
-	 			event.currentTarget.setStyle("color", "#707070");
+	 			event.currentTarget.styleName = "";
 	 			dispatchEvent(new DataEvent("legendHighlighted", false, false, 
 	 				key));
 	 		}
