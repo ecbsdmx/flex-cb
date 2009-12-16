@@ -33,6 +33,7 @@ package eu.ecb.exr.view
 	import eu.ecb.core.controller.ISDMXViewController;
 	import eu.ecb.core.model.ISDMXViewModel;
 	import eu.ecb.core.util.formatter.observation.EXRObservationFormatter;
+	import eu.ecb.core.util.formatter.series.AttributesSeriesTitleFormatter;
 	import eu.ecb.core.view.filter.FiltersPanel;
 	import eu.ecb.core.view.panel.BasicDataPanel;
 	import eu.ecb.core.view.summary.EXRSeriesSummaryBox;
@@ -97,7 +98,8 @@ package eu.ecb.exr.view
 			}
 			
 			if (null != _legend) {
-				_legend.attributeTitle = "CURRENCY";
+				(_legend.titleFormatter as AttributesSeriesTitleFormatter).
+					attribute = "CURRENCY";
 			}
 			
 			if (null != _chart) {
