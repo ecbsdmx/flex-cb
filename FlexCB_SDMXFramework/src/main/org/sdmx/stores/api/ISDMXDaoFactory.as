@@ -88,6 +88,15 @@ package org.sdmx.stores.api
 		function getOrganisationSchemeDAO():IMaintainableArtefactProvider;
 		
 		/**
+		 * Returns a specialized data provider that retrieves hierarchical code 
+		 * schemes from an SDMX data source.
+		 *  
+		 * @return A specialized data provider that retrieves hierarchical code 
+		 * schemes.
+		 */
+		function getHierarchicalCodeSchemeDAO():IMaintainableArtefactProvider;
+		
+		/**
 		 * Returns a specialized data provider that retrieves key families from 
 		 * an SDMX data source.
 		 *  

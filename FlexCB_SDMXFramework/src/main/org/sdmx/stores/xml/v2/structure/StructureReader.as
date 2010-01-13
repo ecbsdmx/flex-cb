@@ -35,6 +35,7 @@ package org.sdmx.stores.xml.v2.structure
 	import org.sdmx.model.v2.structure.category.CategorieSchemesCollection;
 	import org.sdmx.model.v2.structure.code.CodeLists;
 	import org.sdmx.model.v2.structure.concept.Concepts;
+	import org.sdmx.model.v2.structure.hierarchy.HierarchicalCodeSchemesCollection;
 	import org.sdmx.model.v2.structure.keyfamily.DataflowsCollection;
 	import org.sdmx.model.v2.structure.keyfamily.KeyFamilies;
 	import org.sdmx.model.v2.structure.organisation.OrganisationSchemes;
@@ -43,6 +44,7 @@ package org.sdmx.stores.xml.v2.structure
 	import org.sdmx.stores.xml.v2.structure.collection.ConceptExtractor;
 	import org.sdmx.stores.xml.v2.structure.collection.ConceptSchemeExtractor;
 	import org.sdmx.stores.xml.v2.structure.collection.OrganisationSchemeExtractor;
+	import org.sdmx.stores.xml.v2.structure.hierarchy.HierarchicalCodeSchemeExtractor;
 	import org.sdmx.stores.xml.v2.structure.keyfamily.DataflowExtractor;
 	import org.sdmx.stores.xml.v2.structure.keyfamily.KeyFamilyExtractor;
 		
@@ -96,6 +98,15 @@ package org.sdmx.stores.xml.v2.structure
 	 */
 	[Event(name="organisationSchemesEvent", 
 		type="org.sdmx.event.SDMXDataEvent")]
+		
+	/**
+	 * Event triggered when hierarchical code schemes have been extracted from 
+	 * the Structure file.
+	 * 
+	 * @eventType org.sdmx.stores.xml.v2.structure.StructureReader.HIERARCHICAL_CODE_SCHEMES_EVENT
+	 */
+	[Event(name="hierarchicalCodeSchemesEvent", 
+		type="org.sdmx.event.SDMXDataEvent")]	
 	
 	/**
 	 * Reads an SDMX-ML Structure file and returns the corresponding SDMX
@@ -162,6 +173,16 @@ package org.sdmx.stores.xml.v2.structure
 		 */
 		public static const ORGANISATION_SCHEMES_EVENT:String = 
 			"organisationSchemesEvent";
+			
+		/**
+		 * The StructureReader.HIERARCHICAL_CODE_SCHEMES_EVENT constant defines 
+		 * the value of the <code>type</code> property of the event object for a 
+		 * <code>hierarchicalCodeSchemesEvent</code> event.
+		 * 
+		 * @eventType hierarchicalCodeSchemesEvent
+		 */
+		public static const HIERARCHICAL_CODE_SCHEMES_EVENT:String = 
+			"hierarchicalCodeSchemesEvent";	
 		
 		/*==============================Fields================================*/
 		
@@ -177,6 +198,8 @@ package org.sdmx.stores.xml.v2.structure
 		
 		private var _dispatchKeyFamilies:Boolean;
 		
+		private var _dispatchHierarchicalCodeSchemes:Boolean;
+		
 		private var _data:XML;
 		
 		private var _codeLists:CodeLists;
@@ -186,6 +209,8 @@ package org.sdmx.stores.xml.v2.structure
 		private var _keyFamilies:KeyFamilies;
 		
 		private var _dataflows:DataflowsCollection;
+		
+		private var _hierarchies:HierarchicalCodeSchemesCollection;
 		
 		/*============================Namespaces==============================*/
 		
@@ -255,6 +280,15 @@ package org.sdmx.stores.xml.v2.structure
 			_dispatchKeyFamilies = flag
 		}
 		
+		/**
+		 * Whether hierarchical code schemes should be extracted from the 
+		 * structure file 
+		 */	
+		public function set dispatchHierarchicalCodeSchemes(flag:Boolean):void
+		{
+			_dispatchHierarchicalCodeSchemes = flag;
+		}
+		
 		/*==========================Public methods============================*/
 		
 		/**
@@ -286,6 +320,15 @@ package org.sdmx.stores.xml.v2.structure
 			}
 			if (_dispatchCategorySchemes) {
 				extractCategories();
+			}
+			
+			var extractCL:Boolean = 
+				(_dispatchCodeLists || _dispatchKeyFamilies) ? false : true;
+			if (_dispatchHierarchicalCodeSchemes) {
+				if (extractCL) {
+					extractCodeLists();
+				}
+				extractHierarchicalCodeSchemes();
 			}
 		}
 		
@@ -375,6 +418,21 @@ package org.sdmx.stores.xml.v2.structure
 			if (categories.length > 0) {
 				dispatchEvent(new SDMXDataEvent(categories, 
 					CATEGORY_SCHEMES_EVENT));
+			}
+		}
+		
+		private function extractHierarchicalCodeSchemes():void
+		{
+			_hierarchies = new HierarchicalCodeSchemesCollection();
+			var hcsExtractor:HierarchicalCodeSchemeExtractor = 
+				new HierarchicalCodeSchemeExtractor(_codeLists);
+			for each (var hcs:XML in 
+				_data.HierarchicalCodelists.HierarchicalCodelist) {
+				_hierarchies.addItem(hcsExtractor.extract(hcs));
+			}	
+			if (_hierarchies.length > 0) {
+				dispatchEvent(new SDMXDataEvent(_hierarchies, 
+					HIERARCHICAL_CODE_SCHEMES_EVENT));
 			}
 		}
 	}
