@@ -36,6 +36,9 @@ package org.sdmx.stores.xml.v2.structure
 	import org.sdmx.model.v2.structure.code.CodeLists;
 	import org.sdmx.model.v2.structure.concept.Concept;
 	import org.sdmx.model.v2.structure.concept.Concepts;
+	import org.sdmx.model.v2.structure.hierarchy.HierarchicalCodeScheme;
+	import org.sdmx.model.v2.structure.hierarchy.HierarchicalCodeSchemesCollection;
+	import org.sdmx.model.v2.structure.hierarchy.Hierarchy;
 	import org.sdmx.model.v2.structure.keyfamily.DataflowDefinition;
 	import org.sdmx.model.v2.structure.keyfamily.DataflowsCollection;
 	import org.sdmx.model.v2.structure.keyfamily.KeyFamilies;
@@ -546,6 +549,57 @@ package org.sdmx.stores.xml.v2.structure
     </message:Dataflows>
 </message:Structure>
 
+		private var _testHCS:XML =
+<message:Structure xsi:schemaLocation="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message http://ollie:8080/scorpio-external/vocabulary/sdmx/2.0/SDMXMessage.xsd http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure http://ollie:8080/scorpio-external/vocabulary/sdmx/2.0/SDMXStructure.xsd" xmlns:generic="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/generic" xmlns:message="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message" xmlns:structure="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:compact="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/compact" xmlns:metadatareport="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/metadatareport" xmlns:utility="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/utility" xmlns:common="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/common" xmlns:query="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/query" xmlns:genericmetadata="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/genericmetadata" xmlns:registry="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cross="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/cross">
+    <message:Header>
+        <message:ID>43c6984c-ca56-49d2-96ee-1ca226497526</message:ID>
+        <message:Test>false</message:Test>
+        <message:Prepared>2009-06-09T14:48:36+02:00</message:Prepared>
+        <message:Sender id="ECB">
+            <message:Name>European Central Bank</message:Name>
+            <message:Contact>
+                <message:Email>statistics@ecb.europa.eu</message:Email>
+            </message:Contact>
+        </message:Sender>
+    </message:Header>
+    <message:CodeLists>
+    	<structure:CodeList isFinal="true" version="1.0" agencyID="ECB" id="CL_ICP_ITEM">
+            <structure:Name>Indices of Consumer Prices classification code list</structure:Name>
+            <structure:Code value="000000">
+                <structure:Description>HICP - Overall index</structure:Description>
+            </structure:Code>
+            <structure:Code value="010000">
+                <structure:Description>HICP - FOOD AND NON-ALCOHOLIC BEVERAGES</structure:Description>
+            </structure:Code>
+            <structure:Code value="011000">
+                <structure:Description>HICP - Food</structure:Description>
+            </structure:Code>
+		</structure:CodeList>      
+	</message:CodeLists>	      
+	<message:HierarchicalCodelists>
+    	<structure:HierarchicalCodelist version="1.0" agencyID="ECB" 
+    		id="ICP_HIERARCHIES">
+    		<structure:Name>Hierarchies used for the HICP visualisation tools</structure:Name>
+    		<structure:CodelistRef>
+    			<structure:AgencyID>ECB</structure:AgencyID>
+				<structure:CodelistID>CL_ICP_ITEM</structure:CodelistID>
+				<structure:Version>1.0</structure:Version>
+				<structure:Alias>ICP_ITEM</structure:Alias>
+    		</structure:CodelistRef>
+    		<structure:Hierarchy id="H_ICP_ITEM_1">
+    			<structure:Name>Breakdown by purpose of consumption</structure:Name>
+    			<structure:CodeRef>
+    				<structure:CodelistAliasRef>ICP_ITEM</structure:CodelistAliasRef>
+    				<structure:CodeID>000000</structure:CodeID>
+    				<structure:CodeRef>
+	    				<structure:CodelistAliasRef>ICP_ITEM</structure:CodelistAliasRef>
+	    				<structure:CodeID>010000</structure:CodeID>
+	    			</structure:CodeRef>
+	    		</structure:CodeRef>
+	    	</structure:Hierarchy>
+	    </structure:HierarchicalCodelist>
+	 </message:HierarchicalCodelists>   				
+</message:Structure>
 		
 		public function StructureReaderTest(methodName:String=null)
 		{
@@ -600,6 +654,16 @@ package org.sdmx.stores.xml.v2.structure
 			reader.addEventListener(StructureReader.ORGANISATION_SCHEMES_EVENT,
 				addAsync(handleOS, 3000));
 			reader.read(_testOS);
+		}
+		
+		public function testExtractHierachicalCodeScheme():void
+		{
+			var reader:StructureReader = new StructureReader();
+			reader.dispatchHierarchicalCodeSchemes = true;
+			reader.addEventListener(
+				StructureReader.HIERARCHICAL_CODE_SCHEMES_EVENT,
+				addAsync(handleHCS, 3000));
+			reader.read(_testHCS);
 		}
 		
 		public function testCategoryScheme():void
@@ -690,6 +754,28 @@ package org.sdmx.stores.xml.v2.structure
 				flows.getItemAt(0) as DataflowDefinition;
 			assertEquals("The 1st df should be 2034468", 
 				"2034468", df.id);
+		}
+		
+		private function handleHCS(event:SDMXDataEvent):void
+		{
+			assertTrue("There should a list of hierarchical code schemes" + 
+				" in the event", 
+				event.data is HierarchicalCodeSchemesCollection);
+			var schemes:HierarchicalCodeSchemesCollection = 
+				event.data as HierarchicalCodeSchemesCollection;
+			assertEquals("There must be 1 code scheme", 1, schemes.length);
+			var scheme:HierarchicalCodeScheme = 
+				schemes.getItemAt(0) as HierarchicalCodeScheme;
+			assertEquals("The scheme should be", "ICP_HIERARCHIES", 
+				scheme.id);
+			assertEquals("The maintenance agency should be", "ECB", 
+				scheme.maintainer.id);
+			assertEquals("There should be 1 hierarchy", 1, 
+				scheme.hierarchies.length);	
+			var hierarchy:Hierarchy = 
+				scheme.hierarchies.getItemAt(0) as Hierarchy;
+			assertEquals("There should be 1 child", 1, hierarchy.children.length);	
+					
 		}
 	}
 }

@@ -29,12 +29,13 @@
 package org.sdmx.model.v2.structure
 {
 	import flexunit.framework.TestSuite;
+	
+	import org.sdmx.model.v2.structure.category.CategoryPackageTests;
 	import org.sdmx.model.v2.structure.code.CodePackageTests;
-	import org.sdmx.model.v2.structure.concept.ConceptSchemeTest;
 	import org.sdmx.model.v2.structure.concept.ConceptPackageTests;
-	import org.sdmx.model.v2.structure.organisation.OrganisationPackageTests;
+	import org.sdmx.model.v2.structure.hierarchy.HierarchyPackageTests;
 	import org.sdmx.model.v2.structure.keyfamily.KeyFamilyPackageTests;
-	import org.sdmx.model.v2.structure.category.CategoryPackageTests;	
+	import org.sdmx.model.v2.structure.organisation.OrganisationPackageTests;	
 	
 	/**
 	 * @private 
@@ -46,6 +47,7 @@ package org.sdmx.model.v2.structure
 			suite.addTest(CategoryPackageTests.suite());
  			suite.addTest(CodePackageTests.suite());
  			suite.addTest(ConceptPackageTests.suite()); 
+ 			suite.addTest(HierarchyPackageTests.suite());
  			suite.addTest(KeyFamilyPackageTests.suite());	
  			suite.addTest(OrganisationPackageTests.suite());			
  			return suite;

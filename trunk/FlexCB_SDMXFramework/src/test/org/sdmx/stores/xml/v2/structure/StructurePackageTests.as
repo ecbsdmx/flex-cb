@@ -30,6 +30,7 @@ package org.sdmx.stores.xml.v2.structure
 	
 	import org.sdmx.stores.xml.v2.structure.base.BasePackageTests;
 	import org.sdmx.stores.xml.v2.structure.collection.CollectionPackageTests;
+	import org.sdmx.stores.xml.v2.structure.hierarchy.HierarchyPackageTests;
 	import org.sdmx.stores.xml.v2.structure.keyfamily.KeyFamilyPackageTests;
 	
 	/**
@@ -44,6 +45,7 @@ package org.sdmx.stores.xml.v2.structure
 			suite.addTest(XSKeyFamilyTest.suite());
 			suite.addTest(BasePackageTests.suite());
 			suite.addTest(CollectionPackageTests.suite());
+			suite.addTest(HierarchyPackageTests.suite());
 			suite.addTest(KeyFamilyPackageTests.suite());
  			return suite;
 		}
