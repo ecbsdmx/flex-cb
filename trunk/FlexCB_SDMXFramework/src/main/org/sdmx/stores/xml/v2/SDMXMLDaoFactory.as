@@ -36,6 +36,7 @@ package org.sdmx.stores.xml.v2
 	import org.sdmx.stores.api.IDataProvider;
 	import org.sdmx.stores.api.IMaintainableArtefactProvider;
 	import org.sdmx.stores.xml.v2.structure.SDMXMLKeyFamilyDao;
+	import org.sdmx.stores.xml.v2.structure.hierarchy.SDMXMLHierarchicalCodeSchemeDao;
 	import org.sdmx.util.net.LoaderAdapter;
 	import org.sdmx.util.net.XMLLoader;
 
@@ -94,6 +95,23 @@ package org.sdmx.stores.xml.v2
 			}
 			return dao;
 		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function getHierarchicalCodeSchemeDAO():
+			IMaintainableArtefactProvider
+		{
+			var dao:SDMXMLHierarchicalCodeSchemeDao = 
+				new SDMXMLHierarchicalCodeSchemeDao();
+			try {
+				dao.structureFile = _sourceFile;
+			} catch (error:ArgumentError){
+				dispatchEvent(new ErrorEvent(BaseSDMXDaoFactory.DAO_ERROR_EVENT,
+					false, false, error.message));
+			}
+			return dao;
+		}	
 		
 		/**
 		 * @inheritDoc

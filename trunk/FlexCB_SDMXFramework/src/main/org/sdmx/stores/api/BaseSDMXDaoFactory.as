@@ -39,6 +39,14 @@ package org.sdmx.stores.api
 	[Event(name="categorySchemesEvent", type="org.sdmx.event.SDMXDataEvent")]
 	
 	/**
+ 	 * Event triggered when hierarchical code schemes have been retrieved from 
+ 	 * the data source.
+ 	 * 
+ 	 * @eventType org.sdmx.stores.api.BaseSDMXDaoFactory.HIERARCHICAL_CODE_SCHEMES_EVENT
+ 	 */
+	[Event(name="hierarchicalCodeSchemesEvent", type="org.sdmx.event.SDMXDataEvent")]
+	
+	/**
  	 * Event triggered when dataflows have been retrieved from the data source.
  	 * 
  	 * @eventType org.sdmx.stores.api.BaseSDMXDaoFactory.DATAFLOWS_EVENT
@@ -128,6 +136,16 @@ package org.sdmx.stores.api
 		 */
 		public static const DATAFLOWS_EVENT:String = 
 			"dataflowsEvent";
+			
+		/**
+		 * The BaseSDMXDaoFactory.HIERARCHICAL_CODE_SCHEMES_EVENT constant 
+		 * defines the value of the <code>type</code> property of the event 
+		 * object for a <code>hierarchicalCodeSchemeEvent</code> event.
+		 * 
+		 * @eventType hierarchicalCodeSchemeEvent
+		 */
+		public static const HIERARCHICAL_CODE_SCHEMES_EVENT:String = 
+			"hierarchicalCodeSchemesEvent";	
 			
 		/**
 		 * The BaseSDMXDaoFactory.CONCEPT_SCHEMES_EVENT constant defines the 
@@ -273,6 +291,15 @@ package org.sdmx.stores.api
 		{
 			return null;
 		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function getHierarchicalCodeSchemeDAO():
+			IMaintainableArtefactProvider
+		{
+			return null;
+		}	
 		
 		/**
 		 * @inheritDoc
