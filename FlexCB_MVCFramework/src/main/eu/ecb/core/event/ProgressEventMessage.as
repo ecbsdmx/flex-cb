@@ -44,7 +44,7 @@ package eu.ecb.core.event
         /** The description of the progress event */ 
 		private var _message:String;
 		
-		/*=============================Constants==============================*/
+		/*============================Constructor=============================*/
 		
 		public function ProgressEventMessage(type:String, 
 			bubbles:Boolean = false, cancelable:Boolean = false, 
