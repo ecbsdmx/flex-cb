@@ -34,6 +34,7 @@ package eu.ecb.core.view
 	import org.sdmx.model.v2.reporting.dataset.XSDataSet;
 	import org.sdmx.model.v2.reporting.dataset.XSGroup;
 	import org.sdmx.model.v2.structure.category.CategorieSchemesCollection;
+	import org.sdmx.model.v2.structure.hierarchy.HierarchicalCodeSchemesCollection;
 	import org.sdmx.model.v2.structure.keyfamily.DataflowsCollection;
 	import org.sdmx.model.v2.structure.keyfamily.KeyFamilies;
 	
@@ -65,6 +66,16 @@ package eu.ecb.core.view
 		 * @private
 		 */
 		protected var _dataflowsChanged:Boolean;
+		
+		/**
+		 * @private
+		 */
+		protected var _hierarchicalCS:HierarchicalCodeSchemesCollection;
+		
+		/**
+		 * @private
+		 */
+		protected var _hierarchicalCSChanged:Boolean;
 		
 		/**
 		 * @private
@@ -128,6 +139,19 @@ package eu.ecb.core.view
 			if (null != kf) {
 				_keyFamilies = kf;
 				_keyFamiliesChanged = true;
+				invalidateProperties();
+			}
+		}
+		
+		/**
+		 * @inheritDoc
+		 */ 
+		public function set hierarchicalCodeSchemes(
+			hcs:HierarchicalCodeSchemesCollection):void
+		{
+			if (null != hcs) {
+				_hierarchicalCS = hcs;
+				_hierarchicalCSChanged = true;
 				invalidateProperties();
 			}
 		}

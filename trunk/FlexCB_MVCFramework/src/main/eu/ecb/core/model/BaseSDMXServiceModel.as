@@ -40,6 +40,8 @@ package eu.ecb.core.model
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKeysCollection;
 	import org.sdmx.model.v2.structure.category.CategorieSchemesCollection;
 	import org.sdmx.model.v2.structure.category.CategoryScheme;
+	import org.sdmx.model.v2.structure.hierarchy.HierarchicalCodeScheme;
+	import org.sdmx.model.v2.structure.hierarchy.HierarchicalCodeSchemesCollection;
 	import org.sdmx.model.v2.structure.keyfamily.DataflowDefinition;
 	import org.sdmx.model.v2.structure.keyfamily.DataflowsCollection;
 	import org.sdmx.model.v2.structure.keyfamily.KeyFamilies;
@@ -58,6 +60,14 @@ package eu.ecb.core.model
 	 * @eventType eu.ecb.core.model.BaseSDMXServiceModel.DATAFLOWS_UPDATED
 	 */
 	[Event(name="dataflowsUpdated", type="flash.events.Event")]
+	
+	/**
+	 * Event dispatched when hierarchical code schemes have been added to the 
+	 * 	model.
+	 * 
+	 * @eventType eu.ecb.core.model.BaseSDMXServiceModel.HIERARCHICAL_CODE_SCHEMES_UPDATED
+	 */
+	[Event(name="hierarchicalCodeSchemesUpdated", type="flash.events.Event")]
 	
 	/**
 	 * Event dispatched when key families have been added to the model.
@@ -110,6 +120,16 @@ package eu.ecb.core.model
 		public static const DATAFLOWS_UPDATED:String = "dataflowsUpdated";	
 		
 		/**
+		 * The BaseSDMXServiceModel.HIERARCHICAL_CODE_SCHEMES_UPDATED constant 
+		 * defines the value of the <code>type</code> property of the event 
+		 * object for a <code>hierarchicalCodeSchemesUpdated</code> event.
+		 * 
+		 * @eventType hierarchicalCodeSchemesUpdated
+		 */
+		public static const HIERARCHICAL_CODE_SCHEMES_UPDATED:String = 
+			"hierarchicalCodeSchemesUpdated";	
+		
+		/**
 		 * The BaseSDMXServiceModel.KEY_FAMILIES_UPDATED constant defines 
 		 * the value of the <code>type</code> property of the event object for a 
 		 * <code>keyFamiliesUpdated</code> event.
@@ -157,6 +177,18 @@ package eu.ecb.core.model
 		 * All dataflow definitions available in the model 
 		 */
 		protected var _allDataflowDefinitions:DataflowsCollection;
+		
+		/**
+		 * The last hierarchical code schemes that have been added to the model 
+		 */
+		protected var 
+			_hierarchicalCodeSchemes:HierarchicalCodeSchemesCollection;
+		
+		/**
+		 * All hierarchical code schemes available in the model
+		 */ 
+		protected var 
+			_allHierarchicalCodeSchemes:HierarchicalCodeSchemesCollection;
 		
 		/**
 		 * The last key families that have been added to the model 
@@ -267,6 +299,48 @@ package eu.ecb.core.model
 		{
 			return _allDataflowDefinitions;
 		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		[Bindable("hierarchicalCodeSchemesUpdated")]
+		public function get hierarchicalCodeSchemes():
+			HierarchicalCodeSchemesCollection
+		{
+			return _hierarchicalCodeSchemes;
+		}	 
+		
+		/**
+		 * @inheritDoc
+		 */ 
+		public function set hierarchicalCodeSchemes(
+			hcs:HierarchicalCodeSchemesCollection):void
+		{
+			_hierarchicalCodeSchemes = hcs;
+			
+			if (null == _allHierarchicalCodeSchemes) {
+				_allHierarchicalCodeSchemes = hcs;
+			} else {
+				for each (var currentHCS:HierarchicalCodeScheme in 
+					_hierarchicalCodeSchemes) {
+					if (null == _allHierarchicalCodeSchemes.getSchemeByID(
+						currentHCS.id, currentHCS.maintainer.id, 
+						currentHCS.version)) {	
+						_allHierarchicalCodeSchemes.addItem(currentHCS);
+					}
+				}
+			}
+			dispatchEvent(new Event(HIERARCHICAL_CODE_SCHEMES_UPDATED));
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function get allHierarchicalCodeSchemes():
+			HierarchicalCodeSchemesCollection
+		{
+			return _allHierarchicalCodeSchemes;
+		}	
 		
 		/**
 		 * @inheritDoc
@@ -382,7 +456,9 @@ package eu.ecb.core.model
 			}
 			
 			for each (var series:TimeseriesKey in ds.timeseriesKeys){
-				if (!(_allDataSets.timeseriesKeys.contains(series))) {
+				var s:TimeseriesKey = _allDataSets.timeseriesKeys.
+					getTimeseriesKey(series.seriesKey);
+				if (null == s) {
 					sortSeries(series);
 					_allDataSets.timeseriesKeys.addItem(series);
 				}

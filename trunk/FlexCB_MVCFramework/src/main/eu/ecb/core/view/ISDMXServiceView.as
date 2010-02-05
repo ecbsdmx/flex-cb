@@ -28,6 +28,7 @@ package eu.ecb.core.view
 {
 	import org.sdmx.model.v2.reporting.dataset.IDataSet;
 	import org.sdmx.model.v2.structure.category.CategorieSchemesCollection;
+	import org.sdmx.model.v2.structure.hierarchy.HierarchicalCodeSchemesCollection;
 	import org.sdmx.model.v2.structure.keyfamily.DataflowsCollection;
 	import org.sdmx.model.v2.structure.keyfamily.KeyFamilies;
 	
@@ -58,6 +59,12 @@ package eu.ecb.core.view
 		 * The dataflow definition to be displayed by the view 
 		 */
 		function set dataflowDefinitions(dd:DataflowsCollection):void;
+		
+		/**
+		 * The hierarchical code schemes to be displayed by the view 
+		 */
+		function set hierarchicalCodeSchemes(
+			hcs:HierarchicalCodeSchemesCollection):void;
 		
 		/**
 		 * The key families to be displayed by the view. 

@@ -42,6 +42,7 @@ package eu.ecb.core.controller
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKeysCollection;
 	import org.sdmx.model.v2.structure.category.CategorieSchemesCollection;
+	import org.sdmx.model.v2.structure.hierarchy.HierarchicalCodeSchemesCollection;
 	import org.sdmx.model.v2.structure.keyfamily.DataflowDefinition;
 	import org.sdmx.model.v2.structure.keyfamily.DataflowsCollection;
 	import org.sdmx.model.v2.structure.keyfamily.KeyFamilies;
@@ -91,6 +92,12 @@ package eu.ecb.core.controller
          */
         protected var _dataflowProvider:IMaintainableArtefactProvider;
         
+         /**
+         * The specialized metadata provider that will retrieve hierarchical 
+         * code schemes 
+         */
+        protected var _hierarchicalCodeSchemeProvider:IMaintainableArtefactProvider;
+        
         /**
          * The specialized metadata provider that will retrieve key families
          */
@@ -139,11 +146,6 @@ package eu.ecb.core.controller
 		 * The object containing the parameters for dataflows queries. 
 		 */
 		protected var _dataflowsParams:Object;
-		
-		/**
-		 * Whether or not the current query to be peformed is a dataflow query. 
-		 */
-		protected var _isDataflowQuery:Boolean;
         
 		//Handling of category schemes		
 		/**
@@ -151,11 +153,12 @@ package eu.ecb.core.controller
 		 */
 		protected var _categorySchemeParams:Object;
 		
+		//Handling of hierarchical code schemes		
 		/**
-		 * Whether or not the current query to be peformed is a category scheme
-		 * query. 
+		 * The object containing the parameters for hierarchical code schemes 
+		 * queries. 
 		 */
-		protected var _isCategorySchemeQuery:Boolean;
+		protected var _hierarchicalCodeSchemeParams:Object;
 		
 		//Handling of key families
 		/**
@@ -163,21 +166,11 @@ package eu.ecb.core.controller
 		 */
 		protected var _keyFamilyParams:Object;
 		
-		/**
-		 * Whether or not the current query to be peformed is a dataflow query. 
-		 */
-		protected var _isKeyFamilyQuery:Boolean;
-		
 		//Handling of data
 		/**
 		 * The object containing the parameters for dataflows queries. 
 		 */
 		protected var _dataParams:SDMXQueryParameters;
-		
-		/**
-		 * Whether or not the current query to be peformed is a dataflow query. 
-		 */
-		protected var _isDataQuery:Boolean;
 		
 		/**
 		 * The format of the supplied SDMX-ML data file. 
@@ -204,6 +197,11 @@ package eu.ecb.core.controller
 		 */
 		protected var _tmpDataSet:DataSet;
 		
+		/**
+		 * @private 
+		 */
+		protected var _pendingRequests:ArrayCollection; 
+		
 		/*===========================Constructor==============================*/
 		
 		/**
@@ -226,6 +224,7 @@ package eu.ecb.core.controller
 			dataProvidersFactory = dataFactory;
 			structureProvidersFactory = structureFactory;	
 			_nrOfFilesToFetch = 0;
+			_pendingRequests = new ArrayCollection();
 		}
 		
 		/*============================Accessors===============================*/
@@ -328,11 +327,17 @@ package eu.ecb.core.controller
 		{
 			_categorySchemeParams = 
 				{id: categorySchemeID, agency: agencyID, version: version};
-			_isCategorySchemeQuery = true;	
+			var request:Object = new Object();
+			request["type"] = "categorySchemeQuery";
 			if (_structureToFetch) {
-				prepareStructureProvider();
+				request["method"] = prepareStructureProvider;
 			} else {
-				performCategorySchemeRequest();
+				request["method"] = performCategorySchemeRequest;
+			}
+			_pendingRequests.addItem(request);
+			if (_pendingRequests.length == 1) {
+				(_pendingRequests.getItemAt(0)["method"] 
+					as Function).call(this);
 			}
 		}
 		
@@ -344,10 +349,11 @@ package eu.ecb.core.controller
 		{
 			_dataflowsParams = 
 				{id: dataflowID, agency: agencyID, version: version};
-			_isDataflowQuery = true;
 			
+			var request:Object = new Object();
+			request["type"] = "dataflowQuery";
 			if (_structureToFetch) {
-				prepareStructureProvider();
+				request["method"] = prepareStructureProvider;
 			} else if (null != dataflowID && null != (_model as 
 				ISDMXServiceModel).allDataflowDefinitions && null != (_model as 
 				ISDMXServiceModel).allDataflowDefinitions.getDataflowById(
@@ -361,7 +367,34 @@ package eu.ecb.core.controller
 					dataflowID, agencyID, version));
 				(_model as ISDMXServiceModel).dataflowDefinitions = collection;
 			} else {
-				performDataflowRequest();
+				request["method"] = performDataflowRequest;
+			}
+			_pendingRequests.addItem(request);
+			if (_pendingRequests.length == 1) {
+				(_pendingRequests.getItemAt(0)["method"] 
+					as Function).call(this);
+			}
+		}
+		
+		/**
+		 * @inheritDoc
+		 */ 
+		public function fetchHierarchicalCodeScheme(schemeID:String = null, 
+			agencyID:String = null, version:String = null):void
+		{
+			_hierarchicalCodeSchemeParams = 
+				{id: schemeID, agency: agencyID, version: version};
+			var request:Object = new Object();
+			request["type"] = "hierarchicalCodeSchemeQuery";
+			if (_structureToFetch) {
+				request["method"] = prepareStructureProvider;
+			} else {
+				request["method"] = performHierarchicalCodeSchemeRequest;
+			}
+			_pendingRequests.addItem(request);
+			if (_pendingRequests.length == 1) {
+				(_pendingRequests.getItemAt(0)["method"] 
+					as Function).call(this);
 			}
 		}	 
 		
@@ -373,11 +406,17 @@ package eu.ecb.core.controller
 		{
 			_keyFamilyParams = 
 				{id: keyFamilyID, agency: agencyID, version: version};
-			_isKeyFamilyQuery = true;	
+			var request:Object = new Object();
+			request["type"] = "keyFamilyQuery";
 			if (_structureToFetch) {
-				prepareStructureProvider();
+				request["method"] = prepareStructureProvider;
 			} else {
-				performKeyFamilyRequest();
+				request["method"] = performKeyFamilyRequest;
+			}
+			_pendingRequests.addItem(request);
+			if (_pendingRequests.length == 1) {
+				(_pendingRequests.getItemAt(0)["method"] 
+					as Function).call(this);
 			}
 		}
 		
@@ -388,14 +427,21 @@ package eu.ecb.core.controller
 			format:String = null):void
 		{
 			_dataParams = criteria;
-			_isDataQuery = true;
 			_dataFormat = format;
+			
+			var request:Object = new Object();
+			request["type"] = "dataQuery";
+			var dataRequest:Object;
 			if (_structureToFetch == true) {
 				_keyFamilyParams = {id: null, agency: null, version: null};
-				_isKeyFamilyQuery = true;
-				prepareStructureProvider();
+				request["type"] = "keyFamilyQuery";
+				request["method"] = prepareStructureProvider;
+				
+				dataRequest = new Object();
+				dataRequest["type"] = "dataQuery";
+				dataRequest["method"] = prepareDataProvider;
 			} else if (_dataToFetch) {
-				prepareDataProvider();
+				request["method"] = prepareDataProvider;
 			} else {
 				if (null != _tmpDataSet && (null == _filesToFetch || 
 					_filesToFetch.length == 0)) {
@@ -403,7 +449,15 @@ package eu.ecb.core.controller
 					_tmpDataSet.groupKeys = null;
 					_tmpDataSet.attributeValues = null;
 				}
-				performDataRequest();
+				request["method"] = performDataRequest;
+			}
+			_pendingRequests.addItem(request);
+			if (null != dataRequest) {
+				_pendingRequests.addItem(dataRequest);
+			}
+			if (_pendingRequests.length > 0) {
+				(_pendingRequests.getItemAt(0)["method"] 
+					as Function).call(this);
 			}
 		}
 		
@@ -453,9 +507,13 @@ package eu.ecb.core.controller
 		{
 			(_model as BaseSDMXServiceModel).categorySchemes = 
 				event.data as CategorieSchemesCollection;
+			_pendingRequests.removeItemAt(0);
+			if (_pendingRequests.length > 0) {
+				(_pendingRequests.getItemAt(0)["method"] 
+					as Function).call(this);
+			}	
 			event.stopImmediatePropagation();
 			event = null;
-			_isCategorySchemeQuery = false;
 		}
 		
 		/**
@@ -485,7 +543,11 @@ package eu.ecb.core.controller
 				(_model as BaseSDMXServiceModel).dataflowDefinitions = 
 					dataflowsWithKF;
 			}
-			_isDataflowQuery = false;
+			_pendingRequests.removeItemAt(0);
+			if (_pendingRequests.length > 0) {
+				(_pendingRequests.getItemAt(0)["method"] 
+					as Function).call(this);
+			}	
 			
 			//If there as some dataflows with only reference to a key family, we
 			//need to fetch the full key family definition.
@@ -494,6 +556,27 @@ package eu.ecb.core.controller
 				fetchKeyFamily(refDataflow.structure.id, refDataflow.structure.
 					maintainer.id, refDataflow.structure.version);	
 			}
+		}
+		
+		/**
+		 * Handles the reception of the hierarchical code schemes returned by 
+		 * the data provider, following a request to fetch a hierarchical code 
+		 * scheme.
+		 *  
+		 * @param event The event containing the hierarchical code scheme
+		 */
+		protected function handleHierarchicalCodeScheme(
+			event:SDMXDataEvent):void 
+		{
+			(_model as BaseSDMXServiceModel).hierarchicalCodeSchemes = 
+				event.data as HierarchicalCodeSchemesCollection;
+			_pendingRequests.removeItemAt(0);
+			if (_pendingRequests.length > 0) {
+				(_pendingRequests.getItemAt(0)["method"] 
+					as Function).call(this);
+			}		
+			event.stopImmediatePropagation();
+			event = null;
 		}
 		
 		/**
@@ -507,7 +590,6 @@ package eu.ecb.core.controller
 			event.stopImmediatePropagation();
 			(_model as BaseSDMXServiceModel).keyFamilies = 
 				event.data as KeyFamilies;
-			_isKeyFamilyQuery = false;
 			
 			var foundDataflows:DataflowsCollection = new DataflowsCollection();
 			if (null != _dataflowsWithNoKeyFamily) {
@@ -533,13 +615,11 @@ package eu.ecb.core.controller
 			//It might be that the call to fetch key families was triggered
 			//by the fetchData method. In which case, we now need to execute 
 			//that method.  
-			if (_isDataQuery) {
-				if (_dataToFetch) {
-					prepareDataProvider();
-				} else {
-					performDataRequest();
-				}
-			}
+			_pendingRequests.removeItemAt(0);
+			if (_pendingRequests.length > 0) {
+				(_pendingRequests.getItemAt(0)["method"] 
+					as Function).call(this);
+			}	
 		}
 		
 		/**
@@ -585,7 +665,11 @@ package eu.ecb.core.controller
 			}
 			event.stopImmediatePropagation();
 			event = null;
-			_isDataQuery = false;
+			_pendingRequests.removeItemAt(0);
+			if (_pendingRequests.length > 0) {
+				(_pendingRequests.getItemAt(0)["method"] 
+					as Function).call(this);
+			}	
 		}
 		
 		/**
@@ -601,20 +685,36 @@ package eu.ecb.core.controller
 			_structureProvidersFactory.removeEventListener(
 				BaseSDMXDaoFactory.INIT_READY, handleStructureFactoryReady);
 			_structureToFetch = false;	
-			if (_isCategorySchemeQuery) {	
-				_categorySchemeProvider = createStructureProvider(
-					"CategoryScheme", BaseSDMXDaoFactory.CATEGORY_SCHEMES_EVENT, 
-					handleCategoryScheme); 
-				performCategorySchemeRequest();
-			} else if (_isDataflowQuery) {
-				_dataflowProvider = createStructureProvider("Dataflow", 
-					BaseSDMXDaoFactory.DATAFLOWS_EVENT,	
-					handleDataflowDefinition);
-				performDataflowRequest();
-			} else if (_isKeyFamilyQuery) {
-				_keyFamilyProvider = createStructureProvider("KeyFamily", 
-					BaseSDMXDaoFactory.KEY_FAMILIES_EVENT, handleKeyFamily);
-				performKeyFamilyRequest();
+			if (_pendingRequests.length > 0) { 
+				var type:String = _pendingRequests.getItemAt(0)["type"];
+				switch (type) {
+					case "categorySchemeQuery":
+						_categorySchemeProvider = createStructureProvider(
+							"CategoryScheme", 
+							BaseSDMXDaoFactory.CATEGORY_SCHEMES_EVENT, 
+							handleCategoryScheme); 
+						performCategorySchemeRequest();
+						break;
+					case "dataflowQuery":
+						_dataflowProvider = createStructureProvider("Dataflow", 
+							BaseSDMXDaoFactory.DATAFLOWS_EVENT,	
+							handleDataflowDefinition);
+						performDataflowRequest();
+						break;
+					case "keyFamilyQuery":
+						_keyFamilyProvider = createStructureProvider(
+							"KeyFamily", BaseSDMXDaoFactory.KEY_FAMILIES_EVENT, 
+							handleKeyFamily);
+						performKeyFamilyRequest();
+						break;		
+					case "hierarchicalCodeSchemeQuery":
+						_hierarchicalCodeSchemeProvider = 
+							createStructureProvider("HierarchicalCodeScheme", 
+							BaseSDMXDaoFactory.HIERARCHICAL_CODE_SCHEMES_EVENT, 
+							handleHierarchicalCodeScheme);
+						performHierarchicalCodeSchemeRequest();
+						break;
+				}
 			}
 		}
 		
@@ -657,6 +757,23 @@ package eu.ecb.core.controller
 			_dataflowProvider.getMaintainableArtefact(
 				_dataflowsParams["id"], _dataflowsParams["agency"], 
 				_dataflowsParams["version"]);	
+		}
+		
+		/**
+		 * Instructs the SDMX provider for structural metadata to retrieve 
+		 * hierarchical code schemes from the SDMX source. 
+		 */
+		protected function performHierarchicalCodeSchemeRequest():void {
+			if (null == _hierarchicalCodeSchemeProvider) {
+				_hierarchicalCodeSchemeProvider = 
+					createStructureProvider("HierarchicalCodeScheme", 
+						BaseSDMXDaoFactory.HIERARCHICAL_CODE_SCHEMES_EVENT,	
+						handleHierarchicalCodeScheme);
+			}
+			_hierarchicalCodeSchemeProvider.getMaintainableArtefact(
+				_hierarchicalCodeSchemeParams["id"], 
+				_hierarchicalCodeSchemeParams["agency"], 
+				_hierarchicalCodeSchemeParams["version"]);	
 		}
 		
 		/**
@@ -739,7 +856,10 @@ package eu.ecb.core.controller
 				provider = _structureProvidersFactory.getDataflowDAO();
 			} else if ("CategoryScheme" == type) {
 				provider = _structureProvidersFactory.getCategorySchemeDAO();
-			}	
+			} else if ("HierarchicalCodeScheme" == type) {
+				provider = 
+					_structureProvidersFactory.getHierarchicalCodeSchemeDAO();
+			}
 			if (null == provider) {
 				throw new Error("Not implemented");
 			}
