@@ -28,6 +28,7 @@ package org.sdmx.model.v2.structure.hierarchy
 {
 	import org.sdmx.model.v2.base.SDMXArtefact;
 	import org.sdmx.model.v2.structure.code.Code;
+	import org.sdmx.model.v2.structure.code.CodeList;
 
 	/**
 	 * Provides for a reference to a code that is referenced within the 
@@ -50,16 +51,19 @@ package org.sdmx.model.v2.structure.hierarchy
 		
 		private var _code:Code;
 		
+		private var _codeList:CodeList;
+		
 		private var _id:String;
 		
 		private var _children:CodeAssociationsCollection;
 		
 		/*===========================Constructor==============================*/
 		
-		public function CodeAssociation(code:Code)
+		public function CodeAssociation(code:Code, codeList:CodeList)
 		{
 			super();
 			_code = code;
+			_codeList = codeList;
 		}
 		
 		/*============================Accessors===============================*/
@@ -70,6 +74,14 @@ package org.sdmx.model.v2.structure.hierarchy
 		public function get code():Code
 		{
 			return _code;
+		}
+		
+		/**
+		 * The code list the referenced code lives in
+		 */ 
+		public function get codeList():CodeList
+		{
+			return _codeList;
 		}
 
 		/**

@@ -91,7 +91,8 @@ package org.sdmx.stores.xml.v2.structure.hierarchy
 					codeID + " in list with alias: " + codelistAliasRef);
 			}
 			
-			var codeAssociation:CodeAssociation = new CodeAssociation(code);
+			var codeAssociation:CodeAssociation = 
+				new CodeAssociation(code, codeList);
 			if (items.child(new QName(
 				"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure", 
 				"NodeAliasID")).length() > 0) {
