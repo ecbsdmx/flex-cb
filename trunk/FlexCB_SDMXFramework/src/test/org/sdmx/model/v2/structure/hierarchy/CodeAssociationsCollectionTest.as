@@ -3,7 +3,10 @@ package org.sdmx.model.v2.structure.hierarchy
 	import flexunit.framework.TestCase;
 	import flexunit.framework.TestSuite;
 	
+	import org.sdmx.model.v2.base.InternationalString;
 	import org.sdmx.model.v2.structure.code.Code;
+	import org.sdmx.model.v2.structure.code.CodeList;
+	import org.sdmx.model.v2.structure.organisation.MaintenanceAgency;
 
 	public class CodeAssociationsCollectionTest extends TestCase
 	{
@@ -37,8 +40,12 @@ package org.sdmx.model.v2.structure.hierarchy
 		public function testSetItemAt():void {
 			var collection:CodeAssociationsCollection = 
 				new CodeAssociationsCollection();
-			var assoc1:CodeAssociation = new CodeAssociation(new Code("A"))
-			var assoc2:CodeAssociation = new CodeAssociation(new Code("B"));
+			var list:CodeList = new CodeList("TEST", new InternationalString(), 
+				new MaintenanceAgency("ECB"));	
+			var assoc1:CodeAssociation = 
+				new CodeAssociation(new Code("A"), list);
+			var assoc2:CodeAssociation = 
+				new CodeAssociation(new Code("B"), list);
 			collection.addItem(assoc1);
 			collection.setItemAt(assoc2, 0);
 			assertEquals("There should be 1 assoc in the code list", 1, 
