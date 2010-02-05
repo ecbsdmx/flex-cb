@@ -121,6 +121,7 @@ package org.sdmx.model.v2.structure.code
             	var codeList:CodeList = cursor.current as CodeList;
             	if (codeList.id == codeListId && 
             		(codeListVersion == null || codeListVersion.length == 0 || 
+            		 codeList.version == null ||
             		 codeList.version == codeListVersion) &&
             		(codeListAgencyId == null || codeListAgencyId.length == 0 || 
             		 codeList.maintainer.id == codeListAgencyId)) {
