@@ -92,8 +92,6 @@ package eu.ecb.core.view
 		 */ 
 		override protected function commitProperties():void
 		{
-			super.commitProperties();
-			
 			if (_dataSetChanged) {
 				_dataSetChanged = false;
 				commitDataSet()
@@ -138,6 +136,13 @@ package eu.ecb.core.view
 				_selectedDateChanged = false;
 				commitSelectedDate();
 			}
+			
+			if (_selectedDataSetChanged) {
+				_selectedDataSetChanged = false;
+				commitSelectedDataSet();
+			}
+			
+			super.commitProperties();
 		}
 		
 		/**
@@ -246,6 +251,18 @@ package eu.ecb.core.view
 			for each (var view:DisplayObject in getChildren()) {
 				if (view is ISDMXView) {
 					(view as ISDMXView).selectedDate = _selectedDate;
+				}
+			}
+		}
+		
+		/**
+		 * @private
+		 */
+		protected function commitSelectedDataSet():void
+		{
+			for each (var view:DisplayObject in getChildren()) {
+				if (view is ISDMXView) {
+					(view as ISDMXView).selectedDataSet = _selectedDataSet;
 				}
 			}
 		}
