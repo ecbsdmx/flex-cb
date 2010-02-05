@@ -142,7 +142,24 @@ package eu.ecb.core.controller
 		 * @param version The version of the dataflow
 		 */
 		function fetchDataflowDefinition(dataflowID:String = null, 
-			agencyID:String = null, version:String = null):void; 
+			agencyID:String = null, version:String = null):void;
+			
+		/**
+		 * Retrieves the hierarchical code scheme identified by the supplied 
+		 * parameters.  
+		 *  
+		 * <p>If no parameters are supplied, all hierarchical code schemes 
+		 * available in the SDMX data source will be returned by the data 
+		 * provider.</p>
+		 *  
+		 * @param schemeID The unique identifier for the hierarchical code 
+		 * 	scheme
+		 * @param agencyID The id of the maintenance agency responsible for the 
+		 * hierarchical code scheme
+		 * @param version The version of the hierarchical code scheme
+		 */
+		function fetchHierarchicalCodeScheme(schemeID:String = null, 
+			agencyID:String = null, version:String = null):void;	 
 		
 		/**
 		 * Retrieves the key family identified by the supplied parameters.  

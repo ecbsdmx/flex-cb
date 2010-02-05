@@ -30,6 +30,7 @@ package eu.ecb.core.model
 	
 	import org.sdmx.model.v2.reporting.dataset.DataSet;
 	import org.sdmx.model.v2.structure.category.CategorieSchemesCollection;
+	import org.sdmx.model.v2.structure.hierarchy.HierarchicalCodeSchemesCollection;
 	import org.sdmx.model.v2.structure.keyfamily.DataflowsCollection;
 	import org.sdmx.model.v2.structure.keyfamily.KeyFamilies;
 
@@ -77,6 +78,29 @@ package eu.ecb.core.model
 		 * @return All the dataflow definitions stored by the model.
 		 */
 		function get allDataflowDefinitions():DataflowsCollection;
+		
+		/**
+		 * The last list of hierarchical code schemes that has been stored by 
+		 * the model.
+		 * 
+		 * @return The last list of hierarchical code schemes that has been 
+		 * stored by the model.
+		 */
+		function get hierarchicalCodeSchemes():
+			HierarchicalCodeSchemesCollection; 
+		
+		/**
+		 * @private
+		 */ 
+		function set hierarchicalCodeSchemes(
+			cs:HierarchicalCodeSchemesCollection):void; 
+		
+		/**
+		 * The list of all the hierarchical code schemes stored by the model.
+		 * @return 
+		 */
+		function get allHierarchicalCodeSchemes():
+			HierarchicalCodeSchemesCollection;
 		
 		/**
 		 * The last list of key families stored by the model.
