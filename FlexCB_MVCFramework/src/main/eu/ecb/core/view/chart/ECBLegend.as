@@ -34,11 +34,17 @@ package eu.ecb.core.view.chart
 	import eu.ecb.core.view.BaseSDMXView;
 	
 	import flash.events.DataEvent;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
+	import flexlib.containers.FlowBox;
+	
+	import mx.charts.LegendItem;
+	import mx.charts.renderers.CircleItemRenderer;
 	import mx.collections.ArrayCollection;
-	import mx.controls.Text;
-	import mx.core.UIComponent;
+	import mx.core.ClassFactory;
+	import mx.core.Container;
+	import mx.core.IFactory;
 	
 	import org.sdmx.model.v2.base.type.AttachmentLevel;
 	import org.sdmx.model.v2.reporting.dataset.DataSet;
@@ -67,7 +73,7 @@ package eu.ecb.core.view.chart
 	{
 		
 		/*==============================Fields================================*/
-		
+				
 		private var _attributeTitle:String;
 		
 		private var _highlightedSeries:ArrayCollection;
@@ -78,9 +84,15 @@ package eu.ecb.core.view.chart
 		
 		private var _forceHide:Boolean;
 		
-		private var _maxLabelWidth:Number;
-		
+		private var _tmpForceHide:Boolean;
+				
 		private var _formatter:ISeriesTitleFormatter;
+		
+		private var _disableContentCheck:Boolean;
+		
+		private var _legendContainer:Container;
+				
+		private var _legendMarkerFactory:IFactory;
 		
 		/*===========================Constructor==============================*/
 		
@@ -88,13 +100,16 @@ package eu.ecb.core.view.chart
 		{
 			super();
 			_autoHide = true;
-			_maxLabelWidth = 0;
 			_formatter = new AttributesSeriesTitleFormatter();
 			_attributeTitle = "TITLE_COMPL";
 			(_formatter as AttributesSeriesTitleFormatter).attribute = 
 				_attributeTitle;
 			(_formatter as AttributesSeriesTitleFormatter).attachmentLevel = 
 				AttachmentLevel.GROUP;
+			_legendMarkerFactory = new ClassFactory(CircleItemRenderer);
+	 		_legendContainer = new FlowBox();
+			_legendContainer.styleName = "ecbLegendContainer";	 		
+	 		addChild(_legendContainer);			
 		}
 		
 		/*============================Accessors===============================*/
@@ -146,6 +161,47 @@ package eu.ecb.core.view.chart
 			return _formatter;
 		}
 		
+		public function set disableContentCheck(flag:Boolean):void
+		{
+			_disableContentCheck = flag;
+		}
+
+		/**
+		 * The container that holds the legend items
+		 */
+		public function get legendContainer():Container
+		{
+			return _legendContainer;
+		}
+		
+		public function set legendContainer(container:Container):void
+		{
+			_legendContainer = container;
+		}
+				
+		/**
+		 * The item renderer factory for legend markers 
+		 */
+		public function get legendMarkerFactory():IFactory
+		{
+			return _legendMarkerFactory;
+		}
+		
+		public function set legendMarkerFactory(markerFactory:IFactory):void
+		{
+			_legendMarkerFactory = markerFactory;
+		}
+				
+		/*==========================Public methods============================*/
+		
+		public function handleForceHide(event:Event):void
+		{
+			event.stopImmediatePropagation();
+			event = null;
+			_tmpForceHide = true;
+			invalidateDisplayList();
+		}
+		
 		/*========================Protected methods===========================*/
 		
 		/**
@@ -155,8 +211,8 @@ package eu.ecb.core.view.chart
 	 	{
 	 		if (_dataSetChanged && _dataSet is DataSet) {
 	 			_dataSetChanged = false;
-	 			_maxLabelWidth = 0;
-		 		removeAllChildren();
+		 		_legendContainer.removeAllChildren();
+		 		var labels:ArrayCollection = new ArrayCollection(); 
 				if (!_autoHide || (_dataSet as DataSet).timeseriesKeys.
 					length > 1) {
 					for (var i:uint = 0; i < (_dataSet as DataSet).
@@ -176,21 +232,15 @@ package eu.ecb.core.view.chart
 						if (null == seriesTitle) {
 							throw new ArgumentError("Could not find the " + 
 								"series title.");	
-						}
-						var uicomponent:UIComponent = new UIComponent();
+						}						
+						var legendItem:LegendItem = new LegendItem();
 						if (i < SeriesColors.getColors().length) {
-							uicomponent.graphics.beginFill(uint(SeriesColors.
-								getColors().getItemAt(i)));
+							legendItem.setStyle("fill",
+								uint(SeriesColors.getColors().getItemAt(i)));
 						} else {
-							uicomponent.graphics.beginFill(
-								Math.random()*0xFFFFFF, Math.random());
+							legendItem.setStyle("fill",
+								Math.random()*0xFFFFFF);
 						}		
-						uicomponent.graphics.drawCircle(5, 11, 5);
-						addChild(uicomponent);
-						var legendItem:Text = new Text();
-						if (maxWidth > 0) {
-							legendItem.maxWidth = maxWidth;
-						} 
 						if (_mouseOverEnabled) {
 							legendItem.addEventListener(MouseEvent.CLICK, 
 								handleLegendClicked);
@@ -200,16 +250,21 @@ package eu.ecb.core.view.chart
 								handleMouseOut);	
 						}
 						legendItem.id = series.seriesKey;						
-						legendItem.setStyle("paddingLeft", 12);
-						legendItem.text = seriesTitle; 
-							
-						var legendItemWidth:Number = 
-							measureText(legendItem.text).width + 5;
-						if (legendItemWidth > _maxLabelWidth) {
-							_maxLabelWidth = legendItemWidth;
+						if (!(labels.contains(seriesTitle))) {
+							labels.addItem(seriesTitle);
 						}
-								
-						addChild(legendItem);
+						legendItem.label = seriesTitle;																	
+						legendItem.setStyle("legendMarkerRenderer", _legendMarkerFactory);
+						legendItem.markerAspectRatio = 1; 						
+						legendItem.styleName = "ecbLegendItem";	
+						_legendContainer.addChild(legendItem);
+					}
+					if (!_disableContentCheck) {
+						if (labels.length == 1) {
+							_forceHide = true;
+						} else {
+							_forceHide = false;
+						}
 					}
 					invalidateDisplayList();
 				}
@@ -222,20 +277,19 @@ package eu.ecb.core.view.chart
  			super.updateDisplayList(unscaledWidth, unscaledHeight);
  			
  			if (_dataSet is DataSet) {
-	 			if (_forceHide || (_autoHide && null != _dataSet && 
-	 				null != (_dataSet as DataSet).timeseriesKeys	&& 
+	 			if (_tmpForceHide || _forceHide || (_autoHide && null != 
+	 				_dataSet && null != (_dataSet as DataSet).timeseriesKeys && 
 	 				1 >= (_dataSet as DataSet).timeseriesKeys.length)) {
 					this.width   = 0;
 					this.visible = false;
+					_tmpForceHide = false;
 				} else if (null != _dataSet && null != (_dataSet as DataSet).
-					timeseriesKeys && 1 < (_dataSet as DataSet).timeseriesKeys.
-					length) {
-					this.width = (!(isNaN(maxWidth)) && 0 < maxWidth && 
-						maxWidth < _maxLabelWidth + 12) ? 
-						maxWidth : _maxLabelWidth + 12;
+					timeseriesKeys && (1 < (_dataSet as DataSet).timeseriesKeys.
+					length || !_autoHide)) {
 					this.visible = true;
 				}		
 			}
+			
  		}
 	 	
 	 	private function handleLegendClicked(event:MouseEvent):void
@@ -264,7 +318,6 @@ package eu.ecb.core.view.chart
 	 			dispatchEvent(new DataEvent("legendHighlighted", false, false, 
 	 				key));
 	 		}
-	 		 
 	 	}
 	 	
 	 	private function handleMouseOut(event:MouseEvent):void
