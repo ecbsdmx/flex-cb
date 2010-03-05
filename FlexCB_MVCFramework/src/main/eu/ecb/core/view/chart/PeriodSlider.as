@@ -126,7 +126,41 @@ package eu.ecb.core.view.chart
 			_previousRemainder = 0;
 			ChangeWatcher.watch(this, "width", handleChangedWidth);
 		}
+	
+		/*============================Accessors===============================*/
 		
+		public function get periodChart():AreaChart {
+			return _periodChart;
+		}
+		
+		public function get spacer():Spacer {
+			return _spacer;
+		}
+		
+		public function get sliderBox():HBox {
+			return _sliderBox;
+		}
+
+		public function get slider():HSlider {
+			return _slider;
+		}
+		
+		public function get overlayCanvas():HDividedBox {
+			return _overlayCanvas;
+		}
+		
+		public function get leftCanvasBox():Canvas {
+			return _leftCanvasBox;
+		}
+		
+		public function get middleCanvasBox():Canvas {
+			return _middleCanvasBox;
+		}
+		
+		public function get rightCanvasBox():Canvas {
+			return _rightCanvasBox;
+		}						
+				
 		/*========================Protected methods===========================*/
 		
 		/**
@@ -142,7 +176,7 @@ package eu.ecb.core.view.chart
 				_periodChart.height = 60;
 				_periodChart.showDataTips = false;
 				_periodChart.seriesFilters = new Array();
-				_periodChart.percentWidth = 100	
+				_periodChart.percentWidth = 100;	
 
 				var verticalAxis:LinearAxis = new LinearAxis();
 				verticalAxis.baseAtZero = false;

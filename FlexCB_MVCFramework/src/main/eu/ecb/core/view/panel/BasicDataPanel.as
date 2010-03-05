@@ -29,8 +29,8 @@ package eu.ecb.core.view.panel
 	import eu.ecb.core.controller.ISDMXViewController;
 	import eu.ecb.core.model.BaseSDMXViewModel;
 	import eu.ecb.core.model.ISDMXViewModel;
-	import eu.ecb.core.view.BaseSDMXViewComposite;
 	import eu.ecb.core.view.BaseSDMXMediator;
+	import eu.ecb.core.view.BaseSDMXViewComposite;
 	import eu.ecb.core.view.chart.ECBChartEvents;
 	import eu.ecb.core.view.chart.ECBLegend;
 	import eu.ecb.core.view.chart.ECBLineChart;
@@ -47,6 +47,7 @@ package eu.ecb.core.view.panel
 	
 	import mx.binding.utils.BindingUtils;
 	import mx.binding.utils.ChangeWatcher;
+	import mx.charts.chartClasses.NumericAxis;
 	import mx.collections.ArrayCollection;
 
 	/**
@@ -133,43 +134,23 @@ package eu.ecb.core.view.panel
 		/**
 		 * @private
 		 */
-		protected var _metadataPanel:MetadataPanel;
-
-		/**
-		 * @private
-		 */
-		protected var _showSeriesSummaryBox:Boolean;
-
-		/**
-		 * @private
-		 */
-		protected var _showChartSummaryBox:Boolean;
+		protected var _metadataPanel:MetadataPanel;		
 		
 		/**
 		 * @private
 		 */
-		protected var _showTableView:Boolean;
-		
-		/**
-		 * @private
-		 */
-		protected var _showMetadataView:Boolean;
+		protected var _dataPanelProperties:BasicDataPanelProperties;
 						
 		/*===========================Constructor==============================*/
 		
 		public function BasicDataPanel(model:ISDMXViewModel, 
-			controller:ISDMXViewController, showChange:Boolean = false,
-			showSeriesSummaryBox:Boolean = true,
-			showChartSummaryBox:Boolean = true, showTableView:Boolean = true,
-			showMetadataView:Boolean = true)
+			controller:ISDMXViewController, dataPanelProperties:BasicDataPanelProperties = null)
 		{
 			super(model, controller);
 			styleName = "dataPanel";
-			_showChange = showChange;
-			_showSeriesSummaryBox = showSeriesSummaryBox;
-			_showChartSummaryBox = showChartSummaryBox;
-			_showTableView = showTableView;
-			_showMetadataView = showMetadataView;
+			_dataPanelProperties = dataPanelProperties;
+			if (_dataPanelProperties == null)
+				_dataPanelProperties = BasicDataPanelProperties.getDefault();
 			BindingUtils.bindProperty(this, "referenceSeriesFrequency", _model, 
 				"referenceSeriesFrequency");
 			BindingUtils.bindProperty(this, "referenceSeries", _model, 
@@ -198,6 +179,10 @@ package eu.ecb.core.view.panel
 			return _chart;
 		}		
 				
+		public function get periodSlider():PeriodSlider {
+			return _periodSlider;
+		}
+		
 		/*========================Protected methods===========================*/
 		
 		/**
@@ -216,7 +201,7 @@ package eu.ecb.core.view.panel
 		{
 			super.createChildren();
 						
-			if (null == _seriesSummaryBox && _showSeriesSummaryBox) {
+			if (null == _seriesSummaryBox && _dataPanelProperties.showSeriesSummaryBox) {
 				createSeriesSummaryBox();
 			}
 			
@@ -228,7 +213,7 @@ package eu.ecb.core.view.panel
 				createZoomBox();
 			}
 			
-			if (null == _viewSelectorBox) {
+			if (null == _viewSelectorBox && _dataPanelProperties.showViewSelector) {
 				createViewSelectorBox();
 			}
 			
@@ -236,7 +221,7 @@ package eu.ecb.core.view.panel
 				createChartBox();
 			}
 			
-			if (null == _chartSummaryBox && _showChartSummaryBox) {
+			if (null == _chartSummaryBox && _dataPanelProperties.showChartSummaryBox) {
 				createChartSummaryBox();
 			}
 			
@@ -252,15 +237,15 @@ package eu.ecb.core.view.panel
 				createChart();
 			}
 			
-			if (null == _table && _showTableView) {
+			if (null == _table && _dataPanelProperties.showTableView) {
 				createTable();
 			}
 			
-			if (null == _metadataPanel && _showMetadataView) {
+			if (null == _metadataPanel && _dataPanelProperties.showMetadataView) {
 				createMetadataPanel();
 			}
 			
-			if (null == _periodSlider) {
+			if (null == _periodSlider && _dataPanelProperties.showSlider) {
 				createPeriodSlider();
 			}
 			
@@ -312,8 +297,9 @@ package eu.ecb.core.view.panel
 		{
 			event.stopImmediatePropagation();
 			_viewStack.displayPanel(uint(event.data));
-			_periodSlider.visible = 
-				(uint(event.data) == 0);			
+			if (_dataPanelProperties.showSlider)
+				_periodSlider.visible = 
+					(uint(event.data) == 0);			
 			if (_table != null)
 				_table.isHidden = (1 == uint(event.data)) ? false : true; 			
 		}
@@ -329,6 +315,7 @@ package eu.ecb.core.view.panel
 			}
 			_chartBox.visible = true;
 			_filterBox.visible = true;
+			(_chart.chart.verticalAxis as NumericAxis).title = _dataPanelProperties.chartTitle;
 		}
 		
 		/**
@@ -353,7 +340,7 @@ package eu.ecb.core.view.panel
 		protected function createSeriesSummaryBox():void
 		{
 			_seriesSummaryBox = new SeriesSummaryBox();
-			_seriesSummaryBox.showChange = _showChange;
+			_seriesSummaryBox.showChange = _dataPanelProperties.showChange;
 			addView(_seriesSummaryBox);
 		}
 		
@@ -375,7 +362,7 @@ package eu.ecb.core.view.panel
 		 */
 		protected function createZoomBox():void
 		{
-			_periodZoomBox = new PeriodZoomBox();
+			_periodZoomBox = new PeriodZoomBox('horizontal', _dataPanelProperties.dateFilterList);
 			_periodZoomBox.percentWidth = 100;
 			_periodZoomBox.addEventListener("selectedPeriodChanged",
 				handlePeriodChanged);
@@ -390,11 +377,11 @@ package eu.ecb.core.view.panel
 			_filterBox.addView(_viewSelectorBox);
 			_viewSelectorBox.views = new ArrayCollection([
 				resourceManager.getString("flex_cb_mvc_lang", "chart_view")]);					
-			if (_showTableView) {
+			if (_dataPanelProperties.showTableView) {
 				_viewSelectorBox.views.addItem(
 				resourceManager.getString("flex_cb_mvc_lang", "table_view"));
 			}
-			if (_showMetadataView) {
+			if (_dataPanelProperties.showMetadataView) {
 				_viewSelectorBox.views.addItem(					 
 				resourceManager.getString("flex_cb_mvc_lang", "md_view"));
 			}
@@ -420,7 +407,7 @@ package eu.ecb.core.view.panel
 		{
 			_chartSummaryBox = new ChartSummaryBox();
 			_chartSummaryBox.percentWidth = 100;
-			_chartSummaryBox.showChange = _showChange;
+			_chartSummaryBox.showChange = _dataPanelProperties.showChange;
 			_chartBox.addView(_chartSummaryBox);
 		}
 		
@@ -431,7 +418,7 @@ package eu.ecb.core.view.panel
 		{
 			_chart = new ECBLineChart();
 			_chart.percentWidth = 100;
-			_chart.showChange = _showChange;
+			_chart.showChange = _dataPanelProperties.showChange;
 			_chart.addEventListener(ECBChartEvents.CHART_DRAGGED, 
 				handleDataChartDragged, false, 0, true);		
 			_chartAndSliderPanel.addView(_chart);
@@ -491,7 +478,7 @@ package eu.ecb.core.view.panel
 		 */
 		protected function createTable():void
 		{
-			_table = new Table();
+			_table = new Table('horizontal', _dataPanelProperties.showChangePercentage);
 			_table.percentWidth = 100;
 			_table.createChangeColumn = true;
 			_table.isHidden = true;

@@ -89,10 +89,13 @@ package eu.ecb.core.view.filter
 		
 		private var _changesHistory:Array;
 		
+		private var _dateFilterList:String;
+		
 		/*===========================Constructor==============================*/
 
-		public function PeriodZoomBox(direction:String = "horizontal") {
+		public function PeriodZoomBox(direction:String = "horizontal", dateFilterList:String = null) {
 			super(direction);
+			_dateFilterList = dateFilterList;
 			styleName = "textBox";
 			HistoryManager.register(this);
 		}
@@ -175,12 +178,19 @@ package eu.ecb.core.view.filter
 		/**
 		 * inheritDoc
 		 */
+		 
 		override protected function commitProperties():void
 		{
 			super.commitProperties();
 			
 			if (_periodsChanged) {
 				_periodsChanged = false;
+				
+				if (_periods.length >= 2) {
+					_periods.filterFunction = filterZoomFields;
+					_periods.refresh();
+				}	
+			
 				for each (var period:Object in _periods) {
 					if (period.hasOwnProperty("selected") && 
 						period["selected"] == true) {
@@ -238,6 +248,11 @@ package eu.ecb.core.view.filter
 	    	_previousIndex = event.index;	
 			event = null;	
 	    }
+	    	    
+	    private function filterZoomFields(item:Object):Boolean {
+			return _dateFilterList == null || _dateFilterList.indexOf(item.label) != -1;
+		}
+
 	    
 	    internal function creationForTests():void {
 			createChildren();
