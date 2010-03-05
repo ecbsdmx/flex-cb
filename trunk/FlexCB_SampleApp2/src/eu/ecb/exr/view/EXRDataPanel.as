@@ -36,6 +36,7 @@ package eu.ecb.exr.view
 	import eu.ecb.core.util.formatter.series.AttributesSeriesTitleFormatter;
 	import eu.ecb.core.view.filter.FiltersPanel;
 	import eu.ecb.core.view.panel.BasicDataPanel;
+	import eu.ecb.core.view.panel.BasicDataPanelProperties;
 	import eu.ecb.core.view.summary.EXRSeriesSummaryBox;
 	import eu.ecb.exr.controller.EXRController;
 	
@@ -59,7 +60,9 @@ package eu.ecb.exr.view
 		public function EXRDataPanel(model:ISDMXViewModel, 
 			controller:ISDMXViewController, showChange:Boolean = false)
 		{
-			super(model, controller, showChange);
+			var dataPanelProperties:BasicDataPanelProperties = 
+					new BasicDataPanelProperties(showChange, true, true, true, true, true, true, true, "", null);					
+			super(model, controller, dataPanelProperties);
 		}
 		
 		/*========================Protected methods===========================*/

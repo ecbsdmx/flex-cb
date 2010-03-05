@@ -122,9 +122,11 @@ package eu.ecb.core.view.table
 		
 		private var _isHidden:Boolean;
 		
+		private var _showChangePercentage:Boolean;
+		
 		/*===========================Constructor==============================*/
 		
-		public function Table(direction:String = "horizontal")
+		public function Table(direction:String = "horizontal", showChangePercentage:Boolean = true)
 		{
 			super();
 			_dateFormatter = new SDMXDateFormatter();
@@ -140,6 +142,7 @@ package eu.ecb.core.view.table
 			DateBase.monthNamesShort = resourceManager.getStringArray(
 				"flex_cb_mvc_lang", "monthNamesShort");	
 			_dateConverter = new SDMXDate();
+			_showChangeChanged = showChangePercentage;
 			
 		}
 		
@@ -481,13 +484,13 @@ package eu.ecb.core.view.table
              	object[key + "_change"] = _changeNumberFormatter.format(Number(
              		nextObs.observationValue) - Number(currentObs.
              		observationValue));
-             	if (!_isPercentage) {
+             	if (!_isPercentage && _showChangePercentage) {
              		object[key + "_change"] = object[key + "_change"] + " (" + 
              		((Number(currentObs.observationValue) != 0) ? (
              		_percentFormatter.format(MathHelper.calculatePercentOfChange
              		(Number(currentObs.observationValue), Number(nextObs.
              		observationValue)))) + "%)" : "-)");
-             	}	
+             	}
 		}
 		
 		private function sortChanges(obj1:Object, obj2:Object):int 

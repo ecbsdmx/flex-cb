@@ -55,7 +55,7 @@
 				controller.dataSource = new URLRequest(dataFile);
 				controller.structureSource = new URLRequest(dsdFile);
 				var view:ISDMXMediator = new BasicDataPanel(model, 
-					controller, true);
+					controller);
 				view.percentWidth  = 100;
 				view.percentHeight = 100;				
 				addChild(view as DisplayObject);
