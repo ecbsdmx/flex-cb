@@ -67,6 +67,24 @@ package eu.ecb.core.view.filter
 	 * desired series.
 	 * 
 	 * @author Xavier Sosnovsky
+	 *
+	 * Changes by Huzaifa Zoomkawala (Apr 22, 2010)
+	 * 1. Optional visibility of Submit Button: now the caller can hide the 
+	 * "Submit" button by setting the "submitButtonShow" property (underlying 
+	 * field is _submitButtonShow) to false. If so, each change in the
+	 * comboboxes will trigger the "submitChanges" method which in turn 
+	 * dispatches the Flex data event "seriesKeyChanged" mentioned above.
+	 * Default is as before, i.e. submitButtonShow = true
+	 *
+	 * 2. Caller can set the width of the combo box setting the "filterBoxWidth"
+	 * property.
+	 * Default is as before, i.e. filterBoxWidth = 460
+	 *
+	 * 3. Caller can set the maximum number of rows to be displayed by setting
+	 * the "filterRowCount" property
+	 * Default is as before, i.e. filterRowCount = 10
+	 *
+	 * Changes below have been tagged with "HZ-Apr 22, 2010" comments
 	 */ 
 	[ResourceBundle("flex_cb_mvc_lang")]
 	public class FiltersPanel extends BaseSDMXView 
@@ -112,10 +130,35 @@ package eu.ecb.core.view.filter
 		
 		private var _submitButton:Button;
 		
+		/* HZ-Apr 22, 2010 */
+		private var _filterBoxWidth: Number = 460;
+		
+		/* HZ-Apr 22, 2010 */
+		private var _filterRowCount: int = 10;
+		
+		/* HZ-Apr 22, 2010 */
+	    private var _submitButtonShow: Boolean = true;
+		
 		/*===========================Constructor==============================*/
 
 		public function FiltersPanel(direction:String = "horizontal") {
 			super(direction);
+		}
+		
+		/*======================== Accessors================================= */
+		/* HZ-Apr 22, 2010 */
+		public function set filterBoxWidth(filterBoxWidth: Number){
+			_filterBoxWidth = filterBoxWidth;
+		}
+
+		/* HZ-Apr 22, 2010 */
+		public function set filterRowCount(filterRowCount: int){
+			_filterRowCount = filterRowCount;
+		}
+
+		/* HZ-Apr 22, 2010 */
+		public function set submitButtonShow(submitButtonShow: Boolean){
+			_submitButtonShow = submitButtonShow;
 		}
 		
 		/*========================Protected methods===========================*/
@@ -239,11 +282,15 @@ package eu.ecb.core.view.filter
 				dimensionNumber++;
 			}
 
-			//We add a submit button to the last form item			
-			var lastFormItem:FormItem = 
-				form.getChildAt(form.getChildren().length - 1) as FormItem;
-			lastFormItem.direction = FormItemDirection.HORIZONTAL;	
-			lastFormItem.addChild(createSubmitButton());
+			//We add a submit button to the last form item
+            if (_submitButtonShow){	/* HZ-Apr 22, 2010 */		
+            	var lastFormItem:FormItem = 
+					form.getChildAt(form.getChildren().length - 1) as FormItem;
+					lastFormItem.direction = FormItemDirection.HORIZONTAL;	
+					lastFormItem.addChild(createSubmitButton());
+			} // if _submitButtonShow is false, submitChange() is called
+			  // whenever the selection on the combo boxes (set up below) change
+				
 
 			//We add the form to the panel and we store it in memory
 			_form = form;
@@ -275,9 +322,9 @@ package eu.ecb.core.view.filter
 			}
 			var filterBox:ComboBox = new ComboBox();
 			filterBox.id = keyValue.valueFor.conceptIdentity.id as String;
-			filterBox.rowCount = 10;
+			filterBox.rowCount = _filterRowCount; /* HZ-Apr 22, 2010 */
 			filterBox.dataProvider = dataProvider;
-			filterBox.width = 460;
+			filterBox.width = _filterBoxWidth; /* HZ-Apr 22, 2010 */
 			filterBox.selectedIndex = selectedCodeIndex;
 			filterBox.addEventListener("change", filterChanged);
 			formItem.addChild(filterBox);
@@ -386,6 +433,11 @@ package eu.ecb.core.view.filter
 						formItemCount++;
 					}	
 				}
+			}
+			
+			/* HZ-Apr 22, 2010 */
+			if (!_submitButtonShow) {
+			   submitChanges(null);
 			}
 		}
 		
