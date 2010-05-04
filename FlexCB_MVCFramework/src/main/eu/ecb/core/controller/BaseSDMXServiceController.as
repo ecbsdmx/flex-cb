@@ -634,7 +634,7 @@ package eu.ecb.core.controller
 			}
 			if (null == _tmpDataSet) {
 				_tmpDataSet = event.data as DataSet;
-			} else {
+			} else if (null != event.data) {
 				if (null == _tmpDataSet.timeseriesKeys) {
 					_tmpDataSet.timeseriesKeys = new TimeseriesKeysCollection();
 				}
