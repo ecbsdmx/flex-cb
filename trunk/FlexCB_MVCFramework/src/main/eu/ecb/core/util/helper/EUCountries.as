@@ -63,13 +63,13 @@ package eu.ecb.core.util.helper
 				LU: "LUX", MT: "MLT", NL: "NLD", PT: "PRT", SI: "SVN",
 				LT: "LTU", GB: "GBR", DK: "DNK", PL: "POL", EE: "EST",
 				LV: "LVA", CZ: "CZE", SK: "SVK", BG: "BGR", SE: "SWE",
-				RO: "ROU", HU: "HUN"};
+				RO: "ROM", HU: "HUN"};
 			_3To2Codes = {AUT: "AT", BEL: "BE", CYP: "CY", DEU: "DE", ESP: "ES", 
 				FIN: "FI", FRA: "FR", GRC: "GR", IRL: "IE", ITA: "IT", 
 				LUX: "LU", MLT: "MT", NLD: "NL", PRT: "PT", SVN: "SI", 
 				LTU: "LT", GBR: "GB", DNK: "DK", POL: "PL", EST: "EE",
 				LVA: "LV", CZE: "CZ", SVK: "SK", BGR: "BG", SWE: "SE",
-				ROU: "RO", HUN: "HU"};
+				ROM: "RO", HUN: "HU"};
 			_euroArea = new ArrayCollection(["AT", "BE", "CY", "DE", "ES", 
 				"FI", "FR", "GR", "IE", "IT", "LU", "MT", "NL", "PT", "SI", 
 				"SK"]);
