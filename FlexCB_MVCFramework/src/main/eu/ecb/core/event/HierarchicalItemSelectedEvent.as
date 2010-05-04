@@ -1,6 +1,4 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
-// Copyright (C) 2008 European Central Bank. All rights reserved.
+// Copyright (C) 2010 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
 // with or without modification, are permitted
@@ -28,18 +26,47 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.event
 {
-	import flexunit.framework.TestSuite;
+	import flash.events.Event;
 	
+	import org.sdmx.model.v2.structure.hierarchy.CodeAssociation;
+
 	/**
-	 *	@private 
+	 * This event is dispatched when a node item (code association) has been 
+	 * selected in an hierarchical code list.
+	 *  
+	 * @author Xavier Sosnovsky
 	 */
-	public class EventTests
+	public class HierarchicalItemSelectedEvent extends Event
 	{
-		public static function suite():TestSuite {
-			var suite:TestSuite = new TestSuite();
- 			suite.addTest(ProgressEventMessageTest.suite());
- 			suite.addTest(HierarchicalItemSelectedEventTest.suite());
- 			return suite;
+		/*==============================Fields================================*/
+        
+		private var _codeAssociation:CodeAssociation;
+		
+		/*============================Constructor=============================*/
+		
+		public function HierarchicalItemSelectedEvent(type:String, 
+			item:CodeAssociation, bubbles:Boolean=false, 
+			cancelable:Boolean=false)
+		{
+			super(type, bubbles, cancelable);
+			_codeAssociation = item;
 		}
+		
+		 /*==========================Public methods============================*/
+        
+        /**
+		 * @inheritDoc
+		 */ 
+        override public function clone():Event {
+            return new HierarchicalItemSelectedEvent(type, _codeAssociation, 
+            	bubbles, cancelable);
+        }
+        
+        /**
+         * The code association selected in the hierarchy 
+         */ 
+        public function get codeAssocation():CodeAssociation {
+            return _codeAssociation;
+        }
 	}
 }

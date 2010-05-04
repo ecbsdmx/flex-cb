@@ -28,18 +28,52 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.event
 {
+	import flexunit.framework.TestCase;
 	import flexunit.framework.TestSuite;
 	
+	import org.sdmx.model.v2.base.InternationalString;
+	import org.sdmx.model.v2.structure.code.Code;
+	import org.sdmx.model.v2.structure.code.CodeList;
+	import org.sdmx.model.v2.structure.hierarchy.CodeAssociation;
+	import org.sdmx.model.v2.structure.organisation.MaintenanceAgency;
+
 	/**
 	 *	@private 
 	 */
-	public class EventTests
+	public class HierarchicalItemSelectedEventTest extends TestCase
 	{
+		public function HierarchicalItemSelectedEventTest(methodName:String=null)
+		{
+			super(methodName);
+		}
+		
 		public static function suite():TestSuite {
-			var suite:TestSuite = new TestSuite();
- 			suite.addTest(ProgressEventMessageTest.suite());
- 			suite.addTest(HierarchicalItemSelectedEventTest.suite());
- 			return suite;
+			return new TestSuite(HierarchicalItemSelectedEventTest);
+		}
+		
+		public function testCreateEvent():void {
+			var node:CodeAssociation = new CodeAssociation(new Code("M"), 
+				new CodeList("CL_FREQ", new InternationalString(), 
+				new MaintenanceAgency("ECB")));
+			var event:HierarchicalItemSelectedEvent = 
+				new HierarchicalItemSelectedEvent("test", node);
+			assertEquals("The nodes should be equal", node,
+				event.codeAssocation);		
+		}	
+		
+		public function testCloneEvent():void
+		{
+			var node:CodeAssociation = new CodeAssociation(new Code("M"), 
+				new CodeList("CL_FREQ", new InternationalString(), 
+				new MaintenanceAgency("ECB")));
+			var event:HierarchicalItemSelectedEvent = 
+				new HierarchicalItemSelectedEvent("test", node);
+			var clone:HierarchicalItemSelectedEvent = 
+				event.clone() as HierarchicalItemSelectedEvent;
+			assertNotNull("Clone cannot be null", clone);
+			assertFalse("The 2 objects should be different", event == clone);
+			assertEquals("The nodes should be equal", node,	
+				event.codeAssocation);		
 		}
 	}
 }
