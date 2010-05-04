@@ -87,10 +87,17 @@ package org.sdmx.stores.xml.v2
 						" the supplied data"));
 				}
 				var format:String = GuessDataType.guessFormat(_dataXML);
+				var element:XML = _dataXML.children()[1];
 				if (format == null) {
-					dispatchEvent(new ErrorEvent(
-						BaseSDMXDaoFactory.DAO_ERROR_EVENT, false, false, 
-						format + " is currently not supported"));
+					if ((_dataXML.children()[1] as XML).elements()
+						.length() > 0) {	
+						dispatchEvent(new ErrorEvent(
+							BaseSDMXDaoFactory.DAO_ERROR_EVENT, false, false, 
+							format + " is currently not supported"));
+					} else {
+						dispatchEvent(new SDMXDataEvent(null, 
+							BaseSDMXDaoFactory.DATA_EVENT));
+					}
 				} else {
 					if (format == SDMXDataFormats.SDMX_ML_COMPACT) {
 						_reader = new CompactReader(kf);
@@ -98,8 +105,6 @@ package org.sdmx.stores.xml.v2
 						_reader = new UtilityReader(kf);
 					} else if (format == SDMXDataFormats.SDMX_ML_GENERIC) {
 						_reader = new GenericReader(kf);
-					} else {
-						
 					}
 					_reader.addEventListener(DataReaderAdapter.INIT_READY, 
 						handleInitReady);
