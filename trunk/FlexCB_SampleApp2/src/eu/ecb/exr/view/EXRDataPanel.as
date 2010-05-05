@@ -61,7 +61,7 @@ package eu.ecb.exr.view
 			controller:ISDMXViewController, showChange:Boolean = false)
 		{
 			var dataPanelProperties:BasicDataPanelProperties = 
-					new BasicDataPanelProperties(showChange, true, true, true, true, true, true, true, "", null);					
+					new BasicDataPanelProperties(showChange, true, true, true, true, true, true, true, true, "", null);					
 			super(model, controller, dataPanelProperties);
 		}
 		
