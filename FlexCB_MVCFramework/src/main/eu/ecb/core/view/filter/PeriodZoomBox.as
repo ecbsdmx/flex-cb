@@ -93,7 +93,8 @@ package eu.ecb.core.view.filter
 		
 		/*===========================Constructor==============================*/
 
-		public function PeriodZoomBox(direction:String = "horizontal", dateFilterList:String = null) {
+		public function PeriodZoomBox(direction:String = "horizontal", 
+			dateFilterList:String = null) {
 			super(direction);
 			_dateFilterList = dateFilterList;
 			styleName = "textBox";
@@ -172,7 +173,8 @@ package eu.ecb.core.view.filter
 		
 		override protected function resourcesChanged():void {
 			if (!initialized) return;
-			_zoomLabelField.text = resourceManager.getString("flex_cb_mvc_lang", "select_date_range");
+			_zoomLabelField.text = resourceManager.getString("flex_cb_mvc_lang", 
+				"select_date_range");
 		}
 		
 		/**
@@ -184,8 +186,8 @@ package eu.ecb.core.view.filter
 			super.commitProperties();
 			
 			if (_periodsChanged) {
-				_periodsChanged = false;
-				
+ 			    _periodsChanged = false;
+
 				if (_periods.length >= 2) {
 					_periods.filterFunction = filterZoomFields;
 					_periods.refresh();
@@ -203,7 +205,8 @@ package eu.ecb.core.view.filter
 					}
 				}
 				if (_periods.length >= 2) {
-					_zoomLabelField.text = resourceManager.getString("flex_cb_mvc_lang", "select_date_range");
+					_zoomLabelField.text = resourceManager.getString(
+						"flex_cb_mvc_lang", "select_date_range");
 					_periodsZoomField.dataProvider = _periods;
 				}	
 			}
@@ -248,11 +251,11 @@ package eu.ecb.core.view.filter
 	    	_previousIndex = event.index;	
 			event = null;	
 	    }
-	    	    
+	    
 	    private function filterZoomFields(item:Object):Boolean {
-			return _dateFilterList == null || _dateFilterList.indexOf(item.label) != -1;
+			return _dateFilterList == null || 
+				_dateFilterList.indexOf(item.label) != -1;
 		}
-
 	    
 	    internal function creationForTests():void {
 			createChildren();
