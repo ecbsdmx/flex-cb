@@ -205,15 +205,15 @@ package eu.ecb.core.view.panel
 				createSeriesSummaryBox();
 			}
 			
-			if (null == _filterBox) {
+			if (null == _filterBox && _dataPanelProperties.showFilterBox) {
 				createFilterBox();	
 			}
 			
-			if (null == _periodZoomBox) {
+			if (null == _periodZoomBox && _dataPanelProperties.showFilterBox) {
 				createZoomBox();
 			}
 			
-			if (null == _viewSelectorBox && _dataPanelProperties.showViewSelector) {
+			if (null == _viewSelectorBox && _dataPanelProperties.showViewSelector && _dataPanelProperties.showFilterBox) {
 				createViewSelectorBox();
 			}
 			
@@ -314,7 +314,9 @@ package eu.ecb.core.view.panel
 				_legend.height = 0;
 			}
 			_chartBox.visible = true;
-			_filterBox.visible = true;
+			if ( _dataPanelProperties.showFilterBox ) {
+				_filterBox.visible = true;				
+			}
 			(_chart.chart.verticalAxis as NumericAxis).title = _dataPanelProperties.chartTitle;
 		}
 		
@@ -498,7 +500,7 @@ package eu.ecb.core.view.panel
 		
 		protected function handleChangedWidth(event:Event):void
 		{
-			if (null != _periodSlider) {
+			if (null != _periodSlider && null != _filterBox ) {
 				var w:int = width - 25;			
 				_chart.width = _filterBox.width = _periodSlider.width = w;
 				if (_table != null) {

@@ -46,6 +46,8 @@ package eu.ecb.core.view.panel
 		
 		private var _showMetadataView:Boolean;
 		
+		private var _showFilterBox:Boolean;
+		
 		private var _chartTitle:String;
 		
 		private var _dateFilterList:String;
@@ -63,6 +65,7 @@ package eu.ecb.core.view.panel
 		 * @param showSlider Wether to show the entire date filter slider area.
 		 * @param showViewSelector Wether to show the entire view selector (chart, table, explanation).
 		 * @param showMetadataView Wether to show the 'Explanation' option of FilterBox.
+		 * @param showFilterBox Whether to show the entire FilterBox component (useful set to 'off' for very small layouts)
 		 * @param chartTitle The Y-Axis label for the chart.
 		 * @param dateFilterList The list of values for the date filter list in the filterBox.
 		 * 			Choose from (1m,3m,6m,1y,2y,5y,10y,All).
@@ -76,6 +79,7 @@ package eu.ecb.core.view.panel
 									showSlider:Boolean,
 									showViewSelector:Boolean,
 									showMetadataView:Boolean,
+									showFilterBox:Boolean,
 									chartTitle:String = "",
 									dateFilterList:String = null)  {
 			_showChange = showChange;
@@ -86,6 +90,7 @@ package eu.ecb.core.view.panel
 			_showSlider = showSlider;
 			_showViewSelector = showViewSelector;
 			_showMetadataView = showMetadataView;
+			_showFilterBox = showFilterBox;
 			_chartTitle = chartTitle;
 			_dateFilterList = dateFilterList;
 		}
@@ -121,6 +126,10 @@ package eu.ecb.core.view.panel
 		public function get showMetadataView():Boolean {
 			return this._showMetadataView;
 		}
+		
+		public function get showFilterBox():Boolean {
+			return this._showFilterBox;
+		}
 
 		public function get chartTitle():String {
 			return this._chartTitle;
@@ -131,7 +140,7 @@ package eu.ecb.core.view.panel
 		}
 		
 		public static function getDefault():BasicDataPanelProperties {
-			return new BasicDataPanelProperties(true, true, true, true, true, true, true, true);
+			return new BasicDataPanelProperties(true, true, true, true, true, true, true, true, true);
 		}
 	}
 }
