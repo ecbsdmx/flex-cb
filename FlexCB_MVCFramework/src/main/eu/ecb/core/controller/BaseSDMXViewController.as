@@ -26,6 +26,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.controller
 {
+	import eu.ecb.core.event.XSMeasureSelectionEvent;
 	import eu.ecb.core.model.ISDMXViewModel;
 	
 	import flash.events.DataEvent;
@@ -113,6 +114,16 @@ package eu.ecb.core.controller
 		
 		/**
 		 * @inheritDoc
+		 */
+		public function handleLegendMeasureSelected(
+			event:XSMeasureSelectionEvent):void
+		{
+			event.stopImmediatePropagation();
+			(model as ISDMXViewModel).handleLegendMeasureSelected(event);
+		}
+		
+		/**
+		 * @inheritDoc
 		 */ 
 		public function handleLegendItemHighlighted(event:DataEvent):void
 		{
@@ -122,11 +133,53 @@ package eu.ecb.core.controller
 		
 		/**
 		 * @inheritDoc
+		 */
+		public function handleLegendMeasureHighlighted(
+			event:XSMeasureSelectionEvent):void
+		{
+			event.stopImmediatePropagation();
+			(model as ISDMXViewModel).handleLegendMeasureHighlighted(event);
+		}
+		
+		/**
+		 * @inheritDoc
 		 */ 
 		public function handleSelectedDateChanged(event:DataEvent):void
 		{
 			event.stopImmediatePropagation();
 			(model as ISDMXViewModel).handleSelectedDateChanged(event);
+		}
+		
+		/**
+		 * @inheritDoc
+		 */ 
+		public function changeStartDate(date:Date):void
+		{
+			(model as ISDMXViewModel).startDate = date;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */ 
+		public function changeEndDate(date:Date):void
+		{
+			(model as ISDMXViewModel).endDate = date;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function startMovie():void
+		{
+			(_model as ISDMXViewModel).startMovie();
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function stopMovie():void
+		{
+			(_model as ISDMXViewModel).stopMovie();
 		}
 	}
 }
