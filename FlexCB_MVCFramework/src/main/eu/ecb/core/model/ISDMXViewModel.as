@@ -26,6 +26,8 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.model
 {
+	import eu.ecb.core.event.XSMeasureSelectionEvent;
+	
 	import flash.events.DataEvent;
 	
 	import mx.collections.ArrayCollection;
@@ -196,9 +198,16 @@ package eu.ecb.core.model
 		/**
 		 * Sets the desired start date, for the filtering method. This should
 		 * be used to bypass the default settings for creating the filtered
-		 * data set.
+		 * data set, for instance, when a range slider is used.
 		 */ 
-		function set startDate(date:Date):void
+		function set startDate(date:Date):void;
+		
+		/**
+		 * Sets the desired end date, for the filtering method. This should
+		 * be used to bypass the default settings for creating the filtered
+		 * data set, for instance, when a range slider is used.
+		 */
+		function set endDate(date:Date):void;
 		
 		/**
 		 * Updates the model when the currently selected period is changed by a
@@ -242,6 +251,18 @@ package eu.ecb.core.model
 		function handleLegendItemSelected(event:DataEvent):void;
 		
 		/**
+		 * Updates the model when a legend item has been selected (after a 
+		 * mouse click). At the difference with handleLegendItemSelected, this
+		 * method receives a XSMeasure as input. If the series is already 
+		 * selected, it will be removed from the selection. Else, it will be 
+		 * added to the list of selected series.
+		 * 
+		 * @param event The event that contains the selected measure
+		 */
+		function handleLegendMeasureSelected(
+			event:XSMeasureSelectionEvent):void;
+		
+		/**
 		 * Updates the model when a legend item has been highlighted (after a 
 		 * mouse over).
 		 * 
@@ -249,6 +270,15 @@ package eu.ecb.core.model
 		 * highlighted legend item
 		 */
 		function handleLegendItemHighlighted(event:DataEvent):void;	
+		
+		/**
+		 * Updates the model when a legend measure has been highlighted (after a 
+		 * mouse over).
+		 * 
+		 * @param event The event that contains the highlighted measure
+		 */
+		function handleLegendMeasureHighlighted(
+			event:XSMeasureSelectionEvent):void;	
 		
 		/**
 		 * Updates the model when the currently selected date has been changed.
@@ -265,10 +295,57 @@ package eu.ecb.core.model
 		 * supplied series keys, after filtering has been applied.
 		 * 
 		 * @param seriesKeys The keys of the series to be returned
+		 * 
 		 * @return The dataset containing the series corresponding to the
 		 * supplied series keys, after filtering has been applied.
 		 */
 		function getFilteredDataSetWithSeries(
 			seriesKeys:ArrayCollection):DataSet;	
+			
+		/**
+		 * Returns the dataset containing the series selected in the legend.
+		 * 
+		 * @param seriesKeys The keys of the series to be returned
+		 * 
+		 * @return The dataset containing the series selected in the legend.
+		 */
+		function getSelectedDataSetWithSeries(
+			seriesKeys:ArrayCollection):DataSet;	
+			
+		/**
+		 * Returns the dataset containing the series highlighted in the legend.
+		 * 
+		 * @param seriesKeys The keys of the series to be returned
+		 * 
+		 * @return The dataset containing the series highlighted in the legend.
+		 */
+		function getHighlightedDataSetWithSeries(
+			seriesKeys:ArrayCollection):DataSet;	
+			
+		/**
+		 * Returns the minimum and maximum values available in the supplied set
+		 * of series.
+		 * 
+		 * @param seriesKeys The keys of the series
+		 * 
+		 * @return An object containing the minimum and maximum values available
+		 * in the supplied set of series.
+		 */
+		function getMinAndMaxValues(seriesKeys:ArrayCollection):Object;	
+			
+		/**
+		 * Instructs the model that the movie functionality has started.
+		 */ 	
+		function startMovie():void;		
+		
+		/**
+		 * Instructs the model that the movie functionality has stopped.
+		 */ 	
+		function stopMovie():void;
+		
+		/**
+		 * Whether or not a movie is currently being played.
+		 */ 
+		function isPlayingMovie():Boolean
 	}
 }
