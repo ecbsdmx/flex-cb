@@ -297,9 +297,9 @@ package eu.ecb.core.view.panel
 		{
 			event.stopImmediatePropagation();
 			_viewStack.displayPanel(uint(event.data));
-			if (_dataPanelProperties.showSlider)
-				_periodSlider.visible = 
-					(uint(event.data) == 0);			
+			if (_dataPanelProperties.showSlider) {
+				_periodSlider.visible = (uint(event.data) == 0);			
+			}
 			if (_table != null)
 				_table.isHidden = (1 == uint(event.data)) ? false : true; 			
 		}
