@@ -26,11 +26,15 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.model
 {
+	import eu.ecb.core.event.XSMeasureSelectionEvent;
+	
 	import flash.events.DataEvent;
 	import flash.events.Event;
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.IViewCursor;
+	import mx.collections.Sort;
+	import mx.collections.SortField;
 	import mx.formatters.DateFormatter;
 	import mx.resources.IResourceManager;
 	import mx.resources.ResourceManager;
@@ -46,6 +50,7 @@ package eu.ecb.core.model
 	import org.sdmx.model.v2.reporting.dataset.TimePeriodsCollection;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKeysCollection;
+	import org.sdmx.model.v2.structure.keyfamily.XSMeasure;
 	
 	/**
 	 * Event dispatched when the filtered data set has been processed
@@ -335,9 +340,35 @@ package eu.ecb.core.model
 		 */ 
 		private var _startDateSet:Boolean;
 		
+		/**
+		 * @private
+		 */ 
 		private var _selectedDate:String;
 		
+		/**
+		 * @private
+		 */ 
 		private var _referenceSeriesKey:String;
+		
+		/**
+		 * @private
+		 */ 
+		private var _selectedMeasures:Object;
+		
+		/**
+		 * @private
+		 */ 
+		private var _highlightedMeasure:XSMeasure;
+		
+		/**
+		 * @private
+		 */ 
+		private var _deselectedMeasure:XSMeasure;
+		
+		/**
+		 * @private
+		 */ 
+		protected var _moviePlayed:Boolean;
 		
 		/*===========================Constructor==============================*/
 		
@@ -369,10 +400,11 @@ package eu.ecb.core.model
 				throw new ArgumentError("The dataset cannot be null or empty");	
 			}
 			_dataSet = ds;
-			createReferenceSeries();
+			_referenceSeries = createReferenceSeries();
 			createSelectedPeriods();
 			createFilteredDataSet();
 			super.dataSet = ds;
+			referenceSeries = _referenceSeries;
 			if (null == _selectedDate && null != _referenceSeries && null !=
 				_referenceSeries.timePeriods && 
 				0 < _referenceSeries.timePeriods.length) {
@@ -464,7 +496,7 @@ package eu.ecb.core.model
 		{
 			_referenceSeries = referenceSeries;
 			var tmpIndex:int = 
-				_dataSet.timeseriesKeys.getItemIndex(referenceSeries);
+				_dataSet.timeseriesKeys.getItemIndex(_referenceSeries);
 			_referenceSeriesIndex = (tmpIndex > -1) ? tmpIndex : 0;
 			dispatchEvent(new Event(REFERENCE_SERIES_UPDATED));
 		}
@@ -588,6 +620,9 @@ package eu.ecb.core.model
 		 	if (date != _selectedDate) {
 		 		_selectedDate = date;
 		 		dispatchEvent(new Event(SELECTED_DATE_UPDATED));
+		 		if (_moviePlayed) {
+		 			dispatchEvent(new Event(FILTERED_DATASET_UPDATED));
+		 		}
 		 	}
 		 }
 		
@@ -598,6 +633,22 @@ package eu.ecb.core.model
 		{
 			_startDate = date;
 			_startDateSet = true;
+			if (null != _filteredDataSet && null != _filteredDataSet.
+				timeseriesKeys && _filteredDataSet.timeseriesKeys.length > 0) {
+				triggerDataFiltering();
+			}
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function set endDate(date:Date):void
+		{
+			_endDate = date;
+			if (null != _filteredDataSet && null != _filteredDataSet.
+				timeseriesKeys && _filteredDataSet.timeseriesKeys.length > 0) {
+				triggerDataFiltering();
+			}
 		}
 		
 		/*==========================Public methods============================*/
@@ -715,6 +766,25 @@ package eu.ecb.core.model
 		/**
 		 * @inheritDoc
 		 */ 
+		public function handleLegendMeasureSelected(
+			event:XSMeasureSelectionEvent):void 
+		{
+			if (null == _selectedMeasures) {
+				_selectedMeasures = new Object();
+			}
+			if (!(_selectedMeasures.hasOwnProperty(event.measure.code.id)) || 
+				_selectedMeasures[event.measure.code.id] == null) {
+				_selectedMeasures[event.measure.code.id] = event.measure;
+			} else {
+				_selectedMeasures[event.measure.code.id] = null;
+				_deselectedMeasure = event.measure;
+			}
+			dispatchEvent(new Event(SELECTED_DATASET_UPDATED));
+		}	
+		
+		/**
+		 * @inheritDoc
+		 */ 
 		public function handleLegendItemHighlighted(event:DataEvent):void
 		{
 			if (null == _highlightedDataSet) {
@@ -735,6 +805,40 @@ package eu.ecb.core.model
 			}
 			dispatchEvent(new Event(HIGHLIGHTED_DATASET_UPDATED));
 		}	
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function handleLegendMeasureHighlighted(
+			event:XSMeasureSelectionEvent):void
+		{
+			var hasSelectedData:Boolean = false;
+			for each (var measure:XSMeasure in _selectedMeasures) {	
+				if (null != measure) {
+					hasSelectedData = true;
+					break;		
+				}
+			}	
+			if (null == _deselectedMeasure || hasSelectedData ||
+				(null != _deselectedMeasure && _deselectedMeasure.
+				measureDimension == event.measure.measureDimension && 
+				_deselectedMeasure.code.id != event.measure.code.id && 
+				!hasSelectedData)) {
+				if (null == _highlightedMeasure || 
+					_highlightedMeasure.code.id != event.measure.code.id) {
+					_highlightedMeasure = event.measure;
+				} else {
+					_highlightedMeasure = null;
+				}		
+				dispatchEvent(new Event(HIGHLIGHTED_DATASET_UPDATED));
+			}
+			if (null != _deselectedMeasure && _deselectedMeasure.
+				measureDimension == event.measure.measureDimension && 
+				_deselectedMeasure.code.id == event.measure.code.id && 
+				!hasSelectedData) {
+				_deselectedMeasure = null;	
+			}
+		}
 		
 		/**
 		 * @inheritDoc
@@ -764,6 +868,10 @@ package eu.ecb.core.model
 						getTimeseriesKey(seriesKey);
 				if (null != s) {	
 					matchingSeries.addItem(s);
+					if (_moviePlayed) {
+						s.timePeriods.filterFunction = filterDataForMovie;
+						s.timePeriods.refresh();
+					}
 					var groups:GroupKeysCollection = 
 						_allFilteredDataSets.groupKeys.
 						getGroupsForTimeseries(s);
@@ -779,18 +887,193 @@ package eu.ecb.core.model
 			return matchingDataSet;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */ 
+		public function getSelectedDataSetWithSeries(
+			seriesKeys:ArrayCollection):DataSet
+		{
+			var matchingDataSet:DataSet = new DataSet();
+			matchingDataSet.attributeValues = 
+				_allFilteredDataSets.attributeValues;
+			matchingDataSet.describedBy = _allFilteredDataSets.describedBy;
+			var matchingSeries:TimeseriesKeysCollection = 
+				new TimeseriesKeysCollection();
+			var matchingGroup:GroupKeysCollection = new GroupKeysCollection();
+			if (_allFilteredDataSets.timeseriesKeys.length > 0) {
+				var refSeries:TimeseriesKey = _allFilteredDataSets.
+					timeseriesKeys.getItemAt(0) as TimeseriesKey; 
+				var hasSelectedMeasure:Boolean = false;	
+				for each (var measure:XSMeasure in _selectedMeasures) {	
+					if (null != measure) {
+						hasSelectedMeasure = true;
+						var pos:int = refSeries.valueFor.getItemIndex(
+							refSeries.valueFor.getDimension(
+							measure.measureDimension.conceptIdentity.id));
+						for each (var seriesKey:String in seriesKeys) {
+							var s:TimeseriesKey = _allFilteredDataSets.
+								timeseriesKeys.getTimeseriesKey(seriesKey) as 
+								TimeseriesKey;
+							if (null != s && (s.keyValues.getItemAt(pos) as 
+								KeyValue).value.id == measure.code.id) {	
+								matchingSeries.addItem(s);
+								var groups:GroupKeysCollection = 
+									_allFilteredDataSets.groupKeys.
+									getGroupsForTimeseries(s);
+								if (null != groups) {
+									for each (var group:GroupKey in groups) { 
+										matchingGroup.addItem(group);
+									}
+								}	
+							}
+						}
+					}
+				}
+				if (!hasSelectedMeasure) {
+					for each (var seriesKey1:String in seriesKeys) {
+						var s1:TimeseriesKey = _allFilteredDataSets.
+							timeseriesKeys.getTimeseriesKey(seriesKey1) as 
+							TimeseriesKey;
+						matchingSeries.addItem(s1);
+						var groups1:GroupKeysCollection = 
+							_allFilteredDataSets.groupKeys.
+							getGroupsForTimeseries(s1);
+						if (null != groups1) {
+							for each (var group1:GroupKey in groups1) { 
+								matchingGroup.addItem(group1);
+							}
+						}	
+					}
+				}
+			}
+			matchingDataSet.timeseriesKeys = matchingSeries;
+			matchingDataSet.groupKeys = matchingGroup;
+			return matchingDataSet;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */ 
+		public function getHighlightedDataSetWithSeries(
+			seriesKeys:ArrayCollection):DataSet
+		{
+			var matchingDataSet:DataSet = new DataSet();
+			matchingDataSet.attributeValues = 
+				_allFilteredDataSets.attributeValues;
+			matchingDataSet.describedBy = _allFilteredDataSets.describedBy;
+			var matchingSeries:TimeseriesKeysCollection = 
+				new TimeseriesKeysCollection();
+			var matchingGroup:GroupKeysCollection = new GroupKeysCollection();
+			if (_allFilteredDataSets.timeseriesKeys.length > 0) {
+				var refSeries:TimeseriesKey = _allFilteredDataSets.
+					timeseriesKeys.getItemAt(0) as TimeseriesKey; 	
+				if (null != _highlightedMeasure) {
+					var pos:int = refSeries.valueFor.getItemIndex(
+						refSeries.valueFor.getDimension(_highlightedMeasure.
+						measureDimension.conceptIdentity.id));
+					for each (var seriesKey:String in seriesKeys) {
+						var s:TimeseriesKey = _allFilteredDataSets.
+							timeseriesKeys.getTimeseriesKey(seriesKey) as 
+							TimeseriesKey;
+						if (null != s && (s.keyValues.getItemAt(pos) as 
+							KeyValue).value.id == _highlightedMeasure.code.id) {	
+							matchingSeries.addItem(s);
+							var groups:GroupKeysCollection = 
+								_allFilteredDataSets.groupKeys.
+								getGroupsForTimeseries(s);
+							if (null != groups) {
+								for each (var group:GroupKey in groups) { 
+									matchingGroup.addItem(group);
+								}
+							}	
+						}
+					}
+				}
+			}
+			matchingDataSet.timeseriesKeys = matchingSeries;
+			matchingDataSet.groupKeys = matchingGroup;
+			return matchingDataSet;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function getMinAndMaxValues(seriesKeys:ArrayCollection):Object 
+		{
+			var tmpSort:Sort = new Sort();
+			tmpSort.fields = 
+				[new SortField("observationValue", false, false, true)];
+			var values:Object = {"minValue": NaN, "maxValue": NaN};	
+			for each(var seriesKey:String in seriesKeys) {
+				var series:TimeseriesKey = 
+					_allFilteredDataSets.timeseriesKeys.
+						getTimeseriesKey(seriesKey);
+				if (null != series) {	
+					series.timePeriods.filterFunction = filterData;
+					series.timePeriods.sort = tmpSort;
+					series.timePeriods.refresh();	
+					var firstObs:TimePeriod =  
+						series.timePeriods.getItemAt(0) as TimePeriod;
+					var lastObs:TimePeriod = series.timePeriods.getItemAt(
+						series.timePeriods.length - 1) as TimePeriod;	
+					if (isNaN(values["minValue"]) || 
+						values["minValue"] > Number(firstObs.observationValue)){
+						values["minValue"] = Number(firstObs.observationValue);
+					}
+					if (isNaN(values["maxValue"]) || 
+						values["maxValue"] < Number(lastObs.observationValue)) {
+						values["maxValue"] = Number(lastObs.observationValue);
+					}
+					series.timePeriods.sort = _sort;
+					series.timePeriods.refresh();
+				}
+			}
+			values["minValue"] = Math.floor(values["minValue"]);
+			values["maxValue"] = Math.ceil(values["maxValue"]);
+			return values;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */	
+		public function startMovie():void
+		{
+			_moviePlayed = true;
+		}		
+		
+		/**
+		 * @inheritDoc
+		 */ 	
+		public function stopMovie():void
+		{
+			_moviePlayed = false;
+			for each (var series:TimeseriesKey in 
+				_allFilteredDataSets.timeseriesKeys) {
+				series.timePeriods.filterFunction = filterData;
+				series.timePeriods.refresh();
+			}
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function isPlayingMovie():Boolean
+		{
+			return _moviePlayed;
+		}
+		
 		/*=========================Protected methods==========================*/
 		
 		// "Creational" methods
 		/**
 		 * @private
 		 */
-		protected function createReferenceSeries():void
+		protected function createReferenceSeries():TimeseriesKey
 	    {
 	    	var tmpSeries:TimeseriesKey;
 	    	var targetDataSet:DataSet = 
 	    		(null != _allDataSets) ? _allDataSets : _dataSet;
-	    	if (null != _referenceSeriesKey && null != _allDataSets) {
+	    	if (null != _referenceSeriesKey) {
 	    		tmpSeries = targetDataSet.timeseriesKeys.
 	    			getTimeseriesKey(_referenceSeriesKey);
 	    	}
@@ -832,7 +1115,7 @@ package eu.ecb.core.model
 				throw new ArgumentError("Frequency could not be found");
 			}
 			sortSeries(tmpSeries);
-			referenceSeries = tmpSeries;
+			return tmpSeries;
 	    }
 	    
 	    /**
@@ -863,12 +1146,12 @@ package eu.ecb.core.model
 			if (_startDateSet) {
 				triggerDataFiltering();
 			} else if (_rightIndex == 0 && 
-				referenceSeries.timePeriods.length > 0) {	
+				_referenceSeries.timePeriods.length > 0) {	
 				updatedFilteredCollection(getPreviousDate(
-           			(referenceSeries.timePeriods.getItemAt(
-           				referenceSeries.timePeriods.length - 1) 
-           				as TimePeriod).timeValue, referenceSeries));	
-			} else if (referenceSeries.timePeriods.length > 0) {
+           			(_referenceSeries.timePeriods.getItemAt(
+           				_referenceSeries.timePeriods.length - 1) 
+           				as TimePeriod).timeValue, _referenceSeries));	
+			} else if (_referenceSeries.timePeriods.length > 0) {
 				triggerDataFiltering();
 			}
 	    }
@@ -925,13 +1208,13 @@ package eu.ecb.core.model
 								, identifier: "All"});	
 			}
 
-			sortSeries(referenceSeries);
-			if (referenceSeries.timePeriods.length >0) {
+			sortSeries(_referenceSeries);
+			if (_referenceSeries.timePeriods.length >0) {
 				var firstObsDate:Date = 
-					(referenceSeries.timePeriods.getItemAt(0) as 
+					(_referenceSeries.timePeriods.getItemAt(0) as 
 						TimePeriod).timeValue;
 				var lastObsDate:Date = 	
-					(referenceSeries.timePeriods.getItemAt(referenceSeries.
+					(_referenceSeries.timePeriods.getItemAt(_referenceSeries.
 						timePeriods.length - 1) as TimePeriod).timeValue;
 				var difference:Number = lastObsDate.getTime() - 
 					firstObsDate.getTime();
@@ -1059,7 +1342,7 @@ package eu.ecb.core.model
 						_selectedPeriod.label);        			
 	    	}
 	    	var obs:TimePeriod = findExistingObservation(tmpDate, series);
-	    	_leftIndex = referenceSeries.timePeriods.getItemIndex(obs);
+	    	_leftIndex = _referenceSeries.timePeriods.getItemIndex(obs);
 	    	return obs;
 	    }        
     
@@ -1124,9 +1407,9 @@ package eu.ecb.core.model
 	     * @private
 	     * Triggers the data filtering
 	     */ 
-	    protected function triggerDataFiltering():void {
+	    protected function triggerDataFiltering():void{
 	    	for each (var series:TimeseriesKey in 
-	    		filteredDataSet.timeseriesKeys) {
+	    		_allFilteredDataSets.timeseriesKeys) {
 		    	if (null != series.timePeriods) {
 			        series.timePeriods.refresh();
 		    	}
@@ -1161,5 +1444,19 @@ package eu.ecb.core.model
 			}
 			dispatchEvent(new Event("allFilteredDataSetsUpdated"));
 		}
+		
+		/**
+		 * Filters a time series by observation dates
+		 */ 
+		protected function filterDataByDate(item:Object):Boolean 
+		{
+            return item.periodComparator == selectedDate;
+        }
+        
+        private function filterDataForMovie(item:Object):Boolean
+        {
+        	return item.timeValue >= _startDate && 
+        		item.periodComparator <= selectedDate;
+        }
 	}
 }
