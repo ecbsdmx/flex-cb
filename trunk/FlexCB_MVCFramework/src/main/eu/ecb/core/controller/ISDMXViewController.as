@@ -26,6 +26,8 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.controller
 {
+	import eu.ecb.core.event.XSMeasureSelectionEvent;
+	
 	import flash.events.DataEvent;
 	
 	/**
@@ -99,6 +101,14 @@ package eu.ecb.core.controller
 		function handleLegendItemSelected(event:DataEvent):void;
 		
 		/**
+		 * Call this function when a legend measure has been selected (after a 
+		 * mouse click).
+		 * 
+		 * @param event The event that contains the selected measure
+		 */
+		function handleLegendMeasureSelected(event:XSMeasureSelectionEvent):void
+		
+		/**
 		 * Call this function when a legend item has been highlighted (after a 
 		 * mouse over).
 		 * 
@@ -106,6 +116,15 @@ package eu.ecb.core.controller
 		 * highlighted legend item
 		 */
 		function handleLegendItemHighlighted(event:DataEvent):void;
+		
+		/**
+		 * Call this function when a legend measure has been highlighted (after 
+		 * a mouse over).
+		 * 
+		 * @param event The vent that contains the highlighted measure
+		 */
+		function handleLegendMeasureHighlighted(
+			event:XSMeasureSelectionEvent):void;
 		
 		/**
 		 * Call this function when the currently selected date has been changed.
@@ -117,5 +136,24 @@ package eu.ecb.core.controller
 		 */
 		function handleSelectedDateChanged(event:DataEvent):void;
 		
+		/**
+		 * Changes the start date currently set in the model.
+		 */ 
+		function changeStartDate(date:Date):void;		
+		
+		/**
+		 * Changes the end date currently set in the model.
+		 */ 
+		function changeEndDate(date:Date):void;
+		
+		/**
+		 * Instructs the controller that a movie functionality has started
+		 */ 
+		function startMovie():void;
+		
+		/**
+		 * Instructs the controller that a movie functionality has stopped
+		 */ 
+		function stopMovie():void;
 	}
 }
