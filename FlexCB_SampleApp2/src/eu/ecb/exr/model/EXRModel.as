@@ -103,7 +103,7 @@ package eu.ecb.exr.model
 				
 				// If this is an update of a dataset, we need to recreate
 				// various information holders.
-				createReferenceSeries();
+				referenceSeries = createReferenceSeries();
 				createSelectedPeriods();
 				createFilteredDataSet();
 				
