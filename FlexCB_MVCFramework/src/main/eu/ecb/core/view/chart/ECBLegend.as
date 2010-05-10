@@ -84,8 +84,6 @@ package eu.ecb.core.view.chart
 		
 		private var _forceHide:Boolean;
 		
-		private var _tmpForceHide:Boolean;
-				
 		private var _formatter:ISeriesTitleFormatter;
 		
 		private var _disableContentCheck:Boolean;
@@ -178,7 +176,7 @@ package eu.ecb.core.view.chart
 		{
 			_legendContainer = container;
 		}
-				
+		
 		/**
 		 * The item renderer factory for legend markers 
 		 */
@@ -194,11 +192,15 @@ package eu.ecb.core.view.chart
 				
 		/*==========================Public methods============================*/
 		
-		public function handleForceHide(event:Event):void
+		public function enableForceHide(event:Event):void
 		{
-			event.stopImmediatePropagation();
-			event = null;
-			_tmpForceHide = true;
+			_forceHide = true;
+			invalidateDisplayList();
+		}
+		
+		public function disableForceHide(event:Event):void
+		{
+			_forceHide = false;
 			invalidateDisplayList();
 		}
 		
@@ -266,7 +268,6 @@ package eu.ecb.core.view.chart
 							_forceHide = false;
 						}
 					}
-					invalidateDisplayList();
 				}
 	 		}
 	 	}
@@ -277,16 +278,16 @@ package eu.ecb.core.view.chart
  			super.updateDisplayList(unscaledWidth, unscaledHeight);
  			
  			if (_dataSet is DataSet) {
-	 			if (_tmpForceHide || _forceHide || (_autoHide && null != 
-	 				_dataSet && null != (_dataSet as DataSet).timeseriesKeys && 
+	 			if (_forceHide || (_autoHide && null != _dataSet && 
+	 				null != (_dataSet as DataSet).timeseriesKeys && 
 	 				1 >= (_dataSet as DataSet).timeseriesKeys.length)) {
 					this.width   = 0;
 					this.visible = false;
-					_tmpForceHide = false;
 				} else if (null != _dataSet && null != (_dataSet as DataSet).
 					timeseriesKeys && (1 < (_dataSet as DataSet).timeseriesKeys.
 					length || !_autoHide)) {
 					this.visible = true;
+					this.width = _legendContainer.width;
 				}		
 			}
 			
@@ -301,7 +302,7 @@ package eu.ecb.core.view.chart
 	 		if (_highlightedSeries.contains(key)) {
 	 			_highlightedSeries.removeItemAt(
 	 				_highlightedSeries.getItemIndex(key));
-	 			event.currentTarget.styleName = "";	
+	 			event.currentTarget.styleName = "ecbLegendItem";	
 	 		} else {
 	 			_highlightedSeries.addItem(key);
 	 			event.currentTarget.styleName = "legendItemSelected";
@@ -325,7 +326,7 @@ package eu.ecb.core.view.chart
 	 		var key:String = event.currentTarget.id; 
 	 		if (null == _highlightedSeries || (null != _highlightedSeries &&
 	 			!(_highlightedSeries.contains(key)))) {
-	 			event.currentTarget.styleName = "";
+	 			event.currentTarget.styleName = "ecbLegendItem";
 	 			dispatchEvent(new DataEvent("legendHighlighted", false, false, 
 	 				key));
 	 		}
