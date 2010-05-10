@@ -52,6 +52,14 @@ package eu.ecb.core.view.chart
 		 */ 
 		protected var _showEffect:Boolean;
 		
+		protected var _minValue:Number;
+		
+		protected var _minValueChanged:Boolean;
+		
+		protected var _maxValue:Number;
+		
+		protected var _maxValueChanged:Boolean;
+		
 		/*===========================Constructor==============================*/
 		
 		public function ECBChart(direction:String = "vertical")
@@ -71,6 +79,20 @@ package eu.ecb.core.view.chart
 		public function set showEffect(flag:Boolean):void
 		{
 			_showEffect = flag;
+		}
+		
+		public function set maxValue(value:Number):void
+		{
+			_maxValue = value;
+			_maxValueChanged = true;	
+			invalidateProperties();
+		}
+		
+		public function set minValue(value:Number):void
+		{
+			_minValue = value;
+			_minValueChanged = true;
+			invalidateProperties();	
 		}
 	}
 }

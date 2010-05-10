@@ -43,6 +43,7 @@ package eu.ecb.core.view.chart
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.text.TextField;
+	import flash.utils.getTimer;
 	
 	import mx.charts.AxisRenderer;
 	import mx.charts.DateTimeAxis;
@@ -161,6 +162,8 @@ package eu.ecb.core.view.chart
 		
 		private var _formatter:ISeriesTitleFormatter;
 		
+		private var _lineSeriesData:Object;
+		
 		/*===========================Constructor==============================*/
 
 		/**
@@ -202,6 +205,7 @@ package eu.ecb.core.view.chart
 				"TITLE_COMPL";
 			(_formatter as AttributesSeriesTitleFormatter).attachmentLevel = 
 				AttachmentLevel.GROUP;
+			_lineSeriesData = new Object(); 	
 		}
 		
 		/*========================Protected methods===========================*/
@@ -210,7 +214,7 @@ package eu.ecb.core.view.chart
 			if (!initialized) return;
 			super.resourcesChanged();
 			_filteredDataSetChanged = true;//force update
-			this.commitProperties();
+			invalidateProperties();	
 		}		
 		
 		/*============================Accessors===============================*/
@@ -290,6 +294,14 @@ package eu.ecb.core.view.chart
 			if (null != formatter) {
 				_formatter = formatter;
 			}
+		}
+		
+		/*==========================Public methods============================*/
+		
+		public function handleMovieStarted(event:Event):void
+		{
+			_maxValueChanged = true;
+			invalidateProperties();	
 		}
 		
 		/*========================Protected methods===========================*/
@@ -422,6 +434,8 @@ package eu.ecb.core.view.chart
 					
 					if (allLineSeries[i].dataProvider != periods) {
 						allLineSeries[i].dataProvider = periods;
+						_lineSeriesData[(allLineSeries[i] as LineSeries).id] = 
+							curSeries;
 						isChanged = true;
 						isSeriesChanged = true;
 					} 
@@ -440,8 +454,8 @@ package eu.ecb.core.view.chart
 								SeriesColors.getColors().getItemAt(i) as uint : 
 								Math.round( Math.random()*0xFFFFFF );
 						}
-						if (null != _selectedDataSet && 
-							_selectedDataSet.timeseriesKeys.contains(curSeries)) 
+						if (null != _selectedDataSet &&	(_selectedDataSet as
+							DataSet).timeseriesKeys.contains(curSeries)) 
 						{
 							axisStroke.weight = 2;	
 						} else { 
@@ -472,12 +486,12 @@ package eu.ecb.core.view.chart
 
 			if (_selectedDataSetChanged) {
 				_selectedDataSetChanged = false;
-				drawLineSeries(_selectedDataSet);
+				drawLineSeries(_selectedDataSet as DataSet);
 			}
 			
 			if (_highlightedDataSetChanged) {
 				_highlightedDataSetChanged = false;
-				drawLineSeries(_highlightedDataSet);
+				drawLineSeries(_highlightedDataSet as DataSet);
 			}
 			
 			if (_referenceSeriesFrequencyChanged) {
@@ -505,6 +519,15 @@ package eu.ecb.core.view.chart
 					(_chart.verticalAxis as LinearAxis).baseAtZero = false;
 				}
 			}	
+			
+			if (_maxValueChanged) {
+				_maxValueChanged = false;
+				(_chart.horizontalAxis as DateTimeAxis).maximum =
+					new Date((_chart.horizontalAxis as DateTimeAxis).
+						computedMaximum);
+				(_chart.verticalAxis as LinearAxis).maximum = 
+					(_chart.verticalAxis as LinearAxis).computedMaximum;	 
+			}
 		}
 		
 		/**
@@ -524,14 +547,13 @@ package eu.ecb.core.view.chart
 					_dateFormatter.format(obs.timeValue) + ":</b> " + 
 					"<font color='#000000'>";
 			if (null != observationValueFormatter) {
-				observationValueFormatter.series = 
-					(data.element as LineSeries).dataProvider as TimeseriesKey;
-				if ((_filteredDataSet.groupKeys.getGroupsForTimeseries(
-					(data.element as LineSeries).dataProvider as TimeseriesKey)
+				var ts:TimeseriesKey = _lineSeriesData[(data.element as 
+					LineSeries).id] as TimeseriesKey;
+				observationValueFormatter.series = ts;
+				if ((_filteredDataSet.groupKeys.getGroupsForTimeseries(ts)
 					as GroupKeysCollection).length > 0) {
 					observationValueFormatter.group = 
-						(_filteredDataSet.groupKeys.getGroupsForTimeseries(
-						(data.element as LineSeries).dataProvider as TimeseriesKey)
+						(_filteredDataSet.groupKeys.getGroupsForTimeseries(ts)
 						as GroupKeysCollection).getItemAt(0) as GroupKey;
 				}
 				dataTip = dataTip + observationValueFormatter.format(
@@ -920,6 +942,7 @@ package eu.ecb.core.view.chart
 			}
 			for (var i:int = availableLineSeries; i < 0; i++) {
 				var lineSeries:LineSeries = new LineSeries();
+				lineSeries.id = String(getTimer());
 				lineSeries.yField = "observationValue";
 				lineSeries.xField = "timeValue";
 				lineSeries.filterData = true;
@@ -971,14 +994,15 @@ package eu.ecb.core.view.chart
 				i++) {
 				var series:TimeseriesKey = _filteredDataSet.timeseriesKeys.
 					getItemAt(i) as	TimeseriesKey; 
-				if ((null != _selectedDataSet && null != _selectedDataSet.
-					timeseriesKeys.getTimeseriesKey(series.seriesKey)) ||
-					(null != _highlightedDataSet && null != _highlightedDataSet.
-					timeseriesKeys.getTimeseriesKey(series.seriesKey)) || 
-					((null == _selectedDataSet || (null != _selectedDataSet && 
-					0 == _selectedDataSet.timeseriesKeys.length)) && 
-					null != _highlightedDataSet && 
-					0 == _highlightedDataSet.timeseriesKeys.length)) {
+				if ((null != _selectedDataSet && null != (_selectedDataSet as 
+					DataSet).timeseriesKeys.getTimeseriesKey(series.seriesKey))
+					||(null != _highlightedDataSet && null != 
+					(_highlightedDataSet as DataSet).timeseriesKeys.
+					getTimeseriesKey(series.seriesKey)) || ((null == 
+					_selectedDataSet || (null != _selectedDataSet && 0 == 
+					(_selectedDataSet as DataSet).timeseriesKeys.length)) && 
+					null != _highlightedDataSet && 0 == (_highlightedDataSet as
+					DataSet).timeseriesKeys.length)) {
 					if (_minimized.hasOwnProperty(series.seriesKey) && 
 						_minimized[series.seriesKey] == true) {	
 						playEffect(allLineSeries[i] as LineSeries, true);

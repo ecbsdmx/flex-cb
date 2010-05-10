@@ -29,6 +29,7 @@ package eu.ecb.core.view
 	import mx.collections.ArrayCollection;
 	
 	import org.sdmx.model.v2.reporting.dataset.DataSet;
+	import org.sdmx.model.v2.reporting.dataset.IDataSet;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
 	
 	/**
@@ -57,13 +58,13 @@ package eu.ecb.core.view
 		 * The SDMX data set containing the series which have been selected,
 		 * using, for example, the Legend control.
 		 */ 
-		function set selectedDataSet(dataSet:DataSet):void;
+		function set selectedDataSet(dataSet:IDataSet):void;
 		
 		/**
 		 * The SDMX data set containing the series which have been highlighted,
 		 * using, for example, the Legend control.
 		 */ 
-		function set highlightedDataSet(dataSet:DataSet):void;
+		function set highlightedDataSet(dataSet:IDataSet):void;
 		
 		/**
 		 * The reference series. 
