@@ -30,6 +30,7 @@ package eu.ecb.core.view
 	import mx.formatters.DateBase;
 	
 	import org.sdmx.model.v2.reporting.dataset.DataSet;
+	import org.sdmx.model.v2.reporting.dataset.IDataSet;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey; 
 	
 	/**
@@ -86,7 +87,7 @@ package eu.ecb.core.view
 		/**
 		 * @private
 		 */
-		protected var _selectedDataSet:DataSet;
+		protected var _selectedDataSet:IDataSet;
 		
 		/**
 		 * @private
@@ -96,7 +97,7 @@ package eu.ecb.core.view
 		/**
 		 * @private
 		 */
-		protected var _highlightedDataSet:DataSet;
+		protected var _highlightedDataSet:IDataSet;
 		
 		/**
 		 * @private
@@ -211,25 +212,21 @@ package eu.ecb.core.view
 		/**
 		 * @inheritDoc
 		 */
-		public function set selectedDataSet(dataSet:DataSet):void
+		public function set selectedDataSet(dataSet:IDataSet):void
 		{
-			if (null != dataSet) {
-				_selectedDataSet = dataSet;
-				_selectedDataSetChanged = true;
-				invalidateProperties(); 
-			}
+			_selectedDataSet = dataSet;
+			_selectedDataSetChanged = true;
+			invalidateProperties(); 
 		}
 		
 		/**
 		 * @inheritDoc
 		 */
-		public function set highlightedDataSet(dataSet:DataSet):void
+		public function set highlightedDataSet(dataSet:IDataSet):void
 		{
-			if (null != dataSet) {
-				_highlightedDataSet = dataSet;
-				_highlightedDataSetChanged = true;
-				invalidateProperties(); 
-			}
+			_highlightedDataSet = dataSet;
+			_highlightedDataSetChanged = true;
+			invalidateProperties(); 
 		}
 		
 		/**

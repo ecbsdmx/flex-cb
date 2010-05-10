@@ -26,8 +26,10 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view.table
 {
+	import eu.ecb.core.event.XSMeasureSelectionEvent;
 	import eu.ecb.core.util.formatter.ExtendedNumberFormatter;
 	import eu.ecb.core.util.formatter.SDMXDateFormatter;
+	import eu.ecb.core.util.formatter.series.ISeriesTitleFormatter;
 	import eu.ecb.core.util.math.MathHelper;
 	import eu.ecb.core.view.BaseSDMXView;
 	
@@ -114,19 +116,22 @@ package eu.ecb.core.view.table
 		
 		protected var _obsDisplaySort:Sort;
 		
-		private var _sortCol:Sort;
-		
-		private var _sortObs:Sort;
-		
 		private var _dateConverter:SDMXDate;
 		
 		private var _isHidden:Boolean;
+		
+		private var _formatter:ISeriesTitleFormatter;
+		
+		private var _descending:Boolean;
+		
+		private var _rowDimensionSort:Sort;
 		
 		private var _showChangePercentage:Boolean;
 		
 		/*===========================Constructor==============================*/
 		
-		public function Table(direction:String = "horizontal", showChangePercentage:Boolean = true)
+		public function Table(direction:String = "horizontal", 
+			showChangePercentage:Boolean = true)
 		{
 			super();
 			_dateFormatter = new SDMXDateFormatter();
@@ -152,7 +157,9 @@ package eu.ecb.core.view.table
 		 * The code for the dimension to be used for data columns (not the
 		 * reference column). For example, REF_AREA. If no dimension is passed,
 		 * and there is only one series in the dataset, the class will use the 
-		 * measure for the 2nd column.
+		 * measure for the 2nd column. If no dimension is passed, and there are
+		 * more than one series in the dataset, the class will try to figure out
+		 * which dimension to use for distinguishing columns.
 		 * 
 		 * @param dimensionCode
 		 * 
@@ -191,6 +198,19 @@ package eu.ecb.core.view.table
 		{
 			_isHidden = flag;
 			invalidateProperties();
+		}
+		
+		public function handleMeasureSelected(
+			event:XSMeasureSelectionEvent):void 
+		{
+			dimensionCode = event.measure.conceptIdentity.id;	
+		}
+		
+		public function set titleFormatter(formatter:ISeriesTitleFormatter):void
+		{
+			if (null != formatter) {
+				_formatter = formatter;
+			}
 		}
 		
 		/*========================Protected methods===========================*/
@@ -248,8 +268,8 @@ package eu.ecb.core.view.table
 				//dimension as well, if reference column is set).
 				var keyValues:KeyValuesCollection = (_filteredDataSet.
 					timeseriesKeys.getItemAt(0) as TimeseriesKey).keyValues;
-				var colDimensionPosition:uint;	
-				var rowDimensionPosition:uint;
+				var colDimensionPosition:Number = -1;	
+				var rowDimensionPosition:Number = -1;
 				for each (var key:KeyValue in keyValues) {
 					if (key.valueFor.conceptIdentity.id == _dimensionCode) {
 						colDimensionPosition = keyValues.getItemIndex(key);
@@ -259,21 +279,63 @@ package eu.ecb.core.view.table
 					}
 				}
 				
+				if (null != _referenceColumn && rowDimensionPosition == -1) {
+					throw new ArgumentError("Could not find the dimension to " + 
+						" be used as row dimension");
+				}
+				
+				if (null != _dimensionCode && colDimensionPosition == -1) {
+					throw new ArgumentError("Could not find the dimension to " + 
+						"be used as column dimension");
+				} else if (null == _dimensionCode && colDimensionPosition == -1
+					&& _filteredDataSet.timeseriesKeys.length == 1) {
+					colDimensionPosition = 0;	
+				} else if (null == _dimensionCode && colDimensionPosition == -1
+					&& _filteredDataSet.timeseriesKeys.length > 1) {
+					var dimensions:ArrayCollection = new ArrayCollection();
+					for each (var s:TimeseriesKey in 
+						_filteredDataSet.timeseriesKeys) {
+						for (var l:int = 0; l < s.keyValues.length; l++) {
+							var tKey:KeyValue = 
+								s.keyValues.getItemAt(l) as KeyValue;
+							var dimCodes:ArrayCollection;
+							if (l > dimensions.length -1) {
+								dimCodes = new ArrayCollection();
+								dimensions.addItem(dimCodes);
+							} else {
+								dimCodes = dimensions.getItemAt(l) as
+									ArrayCollection;
+							}
+							if (!(dimCodes.contains(tKey.value.id))) {
+								dimCodes.addItem(tKey.value.id);
+							}
+						}	
+					}
+					
+					for (var m:int = 0; m < dimensions.length; m++) {
+						if ((dimensions.getItemAt(m) as ArrayCollection).length
+							> 1) {
+							colDimensionPosition = m;
+							break;	
+						}
+					}
+				} 
+				
 				// Set the sort fields
-				_sortCol = new Sort();
-				_sortCol.fields = [new SortField("key")];	
-				_sortObs = new Sort();
-				_sortObs.fields = [new SortField("rowDimension")];	
+				var sortCol:Sort = new Sort();
+				sortCol.fields = [new SortField("key")];	
+				var sortObs:Sort = new Sort();
+				sortObs.fields = [new SortField("rowDimension")];	
 				
 				// This variable holds the observations
 				var observations:ArrayCollection = new ArrayCollection();
-				observations.sort = _sortObs;
+				observations.sort = sortObs;
 				observations.refresh();
 				var obsCursor:IViewCursor = observations.createCursor();
 				
 				// This variable holds the dimensions used for the columns.
 				var colDimensions:ArrayCollection = new ArrayCollection();
-				colDimensions.sort = _sortCol;
+				colDimensions.sort = sortCol;
 				colDimensions.refresh();
 				var colCursor:IViewCursor = colDimensions.createCursor();
 				
@@ -286,9 +348,11 @@ package eu.ecb.core.view.table
 						(series.keyValues.getItemAt(
 						colDimensionPosition) as KeyValue).value.id;
 					var colKeyDesc:String = (quickMode) ? "Value" :
+						(null == _formatter) ? 
 						(series.keyValues.getItemAt(
 						colDimensionPosition) as KeyValue).value.description.
-						localisedStrings.getDescriptionByLocale("en");	
+						localisedStrings.getDescriptionByLocale("en") :
+						_formatter.getSeriesTitle(series);	
 					if (!(colCursor.findAny({key: colKeyCode}))) {
 						colDimensions.addItem({key: colKeyCode, 
 						desc: colKeyDesc});
@@ -358,11 +422,15 @@ package eu.ecb.core.view.table
 					deleteColumns(diff, allColumns);
 				}
 				
+				var foundSortDimension:Boolean = false;
 				for (var i:uint = 0; i < colDimensions.length; i++) {
 					(allColumns[i + 1] as DataGridColumn).dataField = 
 						colDimensions.getItemAt(i).key;
 					(allColumns[i + 1] as DataGridColumn).headerText = 
-						colDimensions.getItemAt(i).desc;	
+						colDimensions.getItemAt(i).desc;
+					if (_sortDimension == colDimensions.getItemAt(i).key) {
+						foundSortDimension = true;
+					}		
 					if (_createChangeColumn) {
 						(allColumns[i + 2] as DataGridColumn).dataField = 
 							colDimensions.getItemAt(i).key + "_change";
@@ -379,20 +447,17 @@ package eu.ecb.core.view.table
 				}
 				_dataGrid.columns = allColumns;
 				
-				if (null == _referenceColumn) {
-					var sortByDate:Sort = new Sort();
-					sortByDate.fields = 
-						[new SortField("rowDimension", false, true, false)];
-					observations.sort = sortByDate;
-					observations.refresh();
-				} else {
-					if (null == _obsDisplaySort) {
-						_obsDisplaySort = _sortObs;
-					}
-					observations.sort = _obsDisplaySort;
-					observations.refresh();
-				}	
+				if (!foundSortDimension) {
+					_sortDimension = null;
+				}
+				_obsDisplaySort = new Sort();
+				_descending = (_descending) ? false : true;
+				_obsDisplaySort.fields = (null == _sortDimension) ?
+					[new SortField("rowDimension", false, _descending, false)] :
+					[new SortField(_sortDimension, false, _descending, true)];
 				_dataGrid.dataProvider = observations;
+				_dataGrid.dataProvider.sort = _obsDisplaySort;
+				_dataGrid.dataProvider.refresh();
 			}
 		}
 		
@@ -410,7 +475,14 @@ package eu.ecb.core.view.table
 		 */ 
 		protected function handleColumnHeaderReleased(event:DataGridEvent):void
 		{
-			_sortDimension = event.dataField;
+			event.preventDefault();
+			_descending = (_descending) ? false : true;
+			var isNumber:Boolean = 
+				(event.dataField == "rowDimension") ? false : true; 
+			_sortDimension = event.dataField;			
+			_dataGrid.dataProvider.sort.fields = 
+				[new SortField(_sortDimension, true, _descending, isNumber)];
+			_dataGrid.dataProvider.refresh();
 		}
 		
 		protected function sortValues(obj1:Object, obj2:Object):int {
@@ -490,7 +562,7 @@ package eu.ecb.core.view.table
              		_percentFormatter.format(MathHelper.calculatePercentOfChange
              		(Number(currentObs.observationValue), Number(nextObs.
              		observationValue)))) + "%)" : "-)");
-             	}
+             	}	
 		}
 		
 		private function sortChanges(obj1:Object, obj2:Object):int 
