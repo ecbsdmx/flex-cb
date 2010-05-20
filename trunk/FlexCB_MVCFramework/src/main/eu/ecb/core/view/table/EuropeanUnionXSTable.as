@@ -43,14 +43,8 @@ package eu.ecb.core.view.table
 	public class EuropeanUnionXSTable extends XSTable
 	{
 		/*==============================Fields================================*/
-		/**
-		 * @private
-		 */
-		private var _euCountries:EUCountries;
 		
-		/**
-		 * @private
-		 */
+		private var _euCountries:EUCountries;
 		private var _statusBar:Label;
 		
 		/*===========================Constructor==============================*/
