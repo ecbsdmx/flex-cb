@@ -146,12 +146,18 @@ LinkBar, LinkButton {
 	gutterRight: 0;
 	paddingBottom: 0;
 	columnWidthRatio: .5;
+	itemSelectionColor: #9ECAE1;
+	itemRollOverColor: #9ECAE1;
 }
 
 .ecbLineChartHorizontalAxis {
 	minorTickPlacement: outside;
 	minorTickLength: 3;
 	tickLength: 7;
+}
+
+.columnChartHorizontalAxis {
+    fontSize: 8;
 }
 
 .ecbLineChartGridLines {
@@ -329,6 +335,149 @@ DataGrid {
    fontWeight: bold;
    fontStyle: normal;
    textDecoration: none;
+}
+
+ECBLegend {
+	verticalGap: 3;
+	color: #707070;
+}
+
+Legend {
+	color: #707070;
+	/*verticalGap: 3;
+	color: #707070;
+	markerHeight: 7;
+	markerWidth: 7;
+	paddingLeft: 0;
+	paddingRight: 0;*/
+}
+
+.ecbLegendItem
+{
+	paddingLeft: 5;
+	horizontalGap: 5; 
+	fontWeight: normal;
+	markerHeight: 7;
+	markerWidth: 7;														
+}
+
+LegendItem {
+	horizontalGap: 2;
+	fontWeight: normal;
+	markerHeight: 7;
+	markerWidth: 7;	
+	color: #707070;		
+}
+
+.legendItemSelected {
+	paddingLeft: 5;
+	horizontalGap: 5; 
+	color: #000000;
+}
+
+.ecbMap {
+	backgroundColor: #FFFFFF;
+    backgroundFill: #FFFFFF;
+    fill: #FFFFFF;
+    highlightFill: #EBEEEF;
+    highlightStroke: #808080;
+    stroke: #EBEEEF;
+}
+
+.disabledCountries {
+    backgroundFill: #FFFFFF;
+    fill: #FFFFFF;
+    highlightFill: #FFFFFF;
+    highlightStroke: #EBEEEF;
+    stroke: #EBEEEF;
+}
+
+.c9 {
+    fill: #034267;
+    highlightFill: #9ECAE1;
+    highlightStroke: #FFFFFF;
+    stroke: #FFFFFF;
+}
+
+.c8 {
+    fill: #0579be;
+    highlightFill: #9ECAE1;
+    highlightStroke: #FFFFFF;
+    stroke: #FFFFFF;
+}
+
+.c7 {
+    fill: #74a9cf;
+    highlightFill: #9ECAE1;
+    highlightStroke: #FFFFFF;
+    stroke: #FFFFFF;
+}
+
+.c6 {
+    fill: #a6bddb;
+    highlightFill: #9ECAE1;
+    highlightStroke: #FFFFFF;
+    stroke: #FFFFFF;
+}
+
+.c5 {
+    fill: #d0d1e6;
+    highlightFill: #9ECAE1;
+    highlightStroke: #FFFFFF;
+    stroke: #FFFFFF;
+}
+
+.c4 {
+    fill: #f1eef6;
+    highlightFill: #9ECAE1;
+    highlightStroke: #FFFFFF;
+    stroke: #FFFFFF;
+}
+
+.c3 {
+    fill: #D9D9D9;
+    highlightFill: #9ECAE1;
+    highlightStroke: #FFFFFF;
+    stroke: #FFFFFF;
+}
+
+.c2 {
+    fill: #969696;
+    highlightFill: #9ECAE1;
+    highlightStroke: #FFFFFF;
+    stroke: #FFFFFF;
+}
+
+.c1 {
+    fill: #636363;
+    highlightFill: #9ECAE1;
+    highlightStroke: #FFFFFF;
+    stroke: #FFFFFF;
+}
+
+.mapLegendHeader {
+	verticalAlign: middle;
+	fontSize: 9;
+	fontWeight: bold;
+	color: #707070;
+}
+
+.mapLegendCell {
+	verticalAlign: middle;
+	color: #707070;
+	fontSize: 9;	
+}
+
+.mapLegend {
+	color: #707070;
+	verticalGap: -4;
+	paddingBottom: -5;
+}
+
+ColumnChart {
+    fontFamily: labelFont;
+    maxColumnWidth: 15;
+/*    dataTipRenderer: "ECBDataTip";*/
 }
 
 .ecbLegendContainer {
