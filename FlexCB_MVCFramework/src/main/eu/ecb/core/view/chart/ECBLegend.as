@@ -287,7 +287,8 @@ package eu.ecb.core.view.chart
 					timeseriesKeys && (1 < (_dataSet as DataSet).timeseriesKeys.
 					length || !_autoHide)) {
 					this.visible = true;
-					this.width = _legendContainer.width;
+					this.width  = _legendContainer.width;
+					this.height = _legendContainer.height;
 				}		
 			}
 			
