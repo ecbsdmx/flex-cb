@@ -89,14 +89,16 @@ package eu.ecb.core.view.summary
 		
 		private function displayDataSetMetadata():void 
 		{
-			if (null != _dataSet.dataExtractionDate) {
-				printBox("Last updated: ", 
-					_dataSet.dataExtractionDate.toString());
+			if (null != _dataSet) {
+				if (null != _dataSet.dataExtractionDate) {
+					printBox("Last updated: ", 
+						_dataSet.dataExtractionDate.toString());
+				}
+					
+				if (_dataSet.attributeValues != null) {
+					displayAttributes(_dataSet.attributeValues);	
+				}	
 			}
-				
-			if (_dataSet.attributeValues != null) {
-				displayAttributes(_dataSet.attributeValues);	
-			}	
 		}
 		
 		private function displaySeriesMetadata():void
