@@ -28,6 +28,8 @@ package eu.ecb.core.view.filter
 {
 	import eu.ecb.core.view.BaseSDMXView;
 	
+	import flash.display.DisplayObject; /* HZ-InclDim */
+    import flash.events.Event; /* HZ-InclDim */
 	import flash.events.DataEvent;
 	import flash.events.MouseEvent;
 	
@@ -35,11 +37,17 @@ package eu.ecb.core.view.filter
 	import mx.containers.Form;
 	import mx.containers.FormItem;
 	import mx.containers.FormItemDirection;
-	import mx.containers.Panel;
+	import mx.containers.Panel;	
+	import mx.containers.HBox; /* HZ-InclDim */
+	import mx.containers.TitleWindow; /* HZ-InclDim */	
+	import mx.containers.VBox; /* HZ-InclDim */
 	import mx.controls.Button;
 	import mx.controls.ComboBox;
+	import mx.controls.CheckBox; /* HZ-InclDim */
+	import mx.controls.List; /* HZ-InclDim */	
 	import mx.events.ListEvent;
-	
+	import mx.managers.PopUpManager; /* HZ-InclDim */
+		
 	import org.sdmx.model.v2.reporting.dataset.KeyValue;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKeysCollection;
@@ -68,7 +76,8 @@ package eu.ecb.core.view.filter
 	 * 
 	 * @author Xavier Sosnovsky
 	 *
-	 * Changes by Huzaifa Zoomkawala (Apr 22, 2010)
+	 * Changes by Huzaifa Zoomkawala 
+	 * === Apr 22, 2010 ===
 	 * 1. Optional visibility of Submit Button: now the caller can hide the 
 	 * "Submit" button by setting the "submitButtonShow" property (underlying 
 	 * field is _submitButtonShow) to false. If so, each change in the
@@ -85,6 +94,21 @@ package eu.ecb.core.view.filter
 	 * Default is as before, i.e. filterRowCount = 10
 	 *
 	 * Changes below have been tagged with "HZ-Apr 22, 2010" comments
+	 *
+	 * === May 31, 2010 ===
+     * Inclusive Dimension
+     * Two new parameters determine the inclusive behavior:
+     *    - inclusiveDimension: a string which is null by default. A non-null
+     *    string indicates the id of the optional dimension. Default uses a
+     *    combo-box for the dimension. 
+     *    - inclusiveUseWindow: a boolean which is false by default. A true
+     *    value indicates that a pop-up window to choose options via list boxes
+     *    is to be used. Otherwise check-boxes are used.
+     * The default option for displaying the inlusive dimension, i.e., using 
+     * check-boxes is handled in the same class, whereas the popup behavior has
+     * been coded in the the InclusiveOptionsWindow class in the same package.
+     *	 
+     * Changes have been tagged with "HZ-InclDim" comments
 	 */ 
 	[ResourceBundle("flex_cb_mvc_lang")]
 	public class FiltersPanel extends BaseSDMXView 
@@ -138,26 +162,39 @@ package eu.ecb.core.view.filter
 		
 		/* HZ-Apr 22, 2010 */
 	    private var _submitButtonShow: Boolean = true;
-		
+	    
+	    /* Begin-HZ-InclDim */
+	    private var _inclusiveDimension: String = null;	    
+	    private var _inclusiveFormItem: FormItem = null;
+	    private var _inclusiveUseWindow: Boolean = false;
+	    private var _inclusiveOptionsWindow: InclusiveOptionsWindow;
+	    /* End-HZ-InclDim */
+	    
 		/*===========================Constructor==============================*/
 
-		public function FiltersPanel(direction:String = "horizontal") {
+		public function FiltersPanel(direction:String = "horizontal",		    
+		    inclusiveDimension:String = null, /* HZ-InclDim */ 
+		    inclusiveUseWindow:Boolean = false){ /* HZ-InclDim */ 
 			super(direction);
+			/* Begin-HZ-InclDim */
+			_inclusiveDimension = inclusiveDimension; 
+			_inclusiveUseWindow = inclusiveUseWindow;
+			/* End-HZ-InclDim */
 		}
 		
 		/*======================== Accessors================================= */
 		/* HZ-Apr 22, 2010 */
-		public function set filterBoxWidth(filterBoxWidth: Number){
+		public function set filterBoxWidth(filterBoxWidth: Number): void{
 			_filterBoxWidth = filterBoxWidth;
 		}
 
 		/* HZ-Apr 22, 2010 */
-		public function set filterRowCount(filterRowCount: int){
+		public function set filterRowCount(filterRowCount: int): void{
 			_filterRowCount = filterRowCount;
 		}
 
 		/* HZ-Apr 22, 2010 */
-		public function set submitButtonShow(submitButtonShow: Boolean){
+		public function set submitButtonShow(submitButtonShow: Boolean): void{
 			_submitButtonShow = submitButtonShow;
 		}
 		
@@ -277,7 +314,17 @@ package eu.ecb.core.view.filter
 			for each (var keyValue:KeyValue in _referenceSeries.keyValues) {
 				if ((_cubeRegions[keyValue.valueFor.conceptIdentity.id] as 
 					ArrayCollection).length > 1) {
-					form.addChild(createFormItem(keyValue, dimensionNumber));
+					/* Begin-HZ-InclDim */
+					var formItem:FormItem;
+					if (keyValue.valueFor.conceptIdentity.id == 
+					    _inclusiveDimension)
+					    formItem = createInclusiveFormItem(keyValue, 
+					    	dimensionNumber);
+					else
+						formItem = createComboBoxFormItem(keyValue, 
+						   	dimensionNumber);
+					form.addChild(formItem);
+					/* End-HZ-InclDim */
 				}
 				dimensionNumber++;
 			}
@@ -296,9 +343,11 @@ package eu.ecb.core.view.filter
 			_form = form;
 			removeAllChildren();
 			addChild(createPanel(_form));
+						
 		}
-		
-		private function createFormItem(keyValue:KeyValue, 
+				
+		/* HZ-InclDim - Rename 'createFormItem' */
+		private function createComboBoxFormItem(keyValue:KeyValue, 
 			dimensionNumber:uint):FormItem 
 		{
 			var formItem:FormItem = new FormItem();
@@ -329,6 +378,64 @@ package eu.ecb.core.view.filter
 			filterBox.addEventListener("change", filterChanged);
 			formItem.addChild(filterBox);
 			return formItem;
+		}
+		
+		/* HZ-InclDim - New method to handle inclusive dimension */
+		private function createInclusiveFormItem(keyValue:KeyValue, 
+			dimensionNumber:uint):FormItem 
+		{
+			var formItem:FormItem = new FormItem();
+			var dimensionDescription:String = keyValue.valueFor.conceptIdentity
+			    .name.localisedStrings.getDescriptionByLocale("en");
+			formItem.label =  dimensionDescription + ":";
+		    formItem.id = keyValue.valueFor.conceptIdentity.id as String;
+		    formItem.direction = "horizontal";
+		    
+			if (_inclusiveUseWindow){
+				var inclusiveOptionsButton:Button = new Button();
+				inclusiveOptionsButton.width = _filterBoxWidth;
+				inclusiveOptionsButton.label = "Choose "+dimensionDescription;
+								
+				_inclusiveOptionsWindow = new InclusiveOptionsWindow(this, 
+					_cubeRegions, _referenceSeries, keyValue, dimensionNumber);
+				 
+				inclusiveOptionsButton.addEventListener(MouseEvent.CLICK, 
+			   		showInclusiveOptionsWindow)				   
+			   	formItem.addChild(inclusiveOptionsButton);
+				
+			}else{
+				for each(var code:Code in _cubeRegions[keyValue.valueFor.
+					conceptIdentity.id] as ArrayCollection) {
+					var checkBox:CheckBox = new CheckBox();
+					
+					checkBox.label = code.description.localisedStrings.
+						getDescriptionByLocale("en");
+					checkBox.id = code.id;
+					if ((_referenceSeries.keyValues.getItemAt(dimensionNumber) 
+					   as KeyValue).value.id == code.id) {
+						checkBox.selected = true;
+					}
+					checkBox.addEventListener("click", filterChanged);					
+					formItem.addChild(checkBox);		
+				}				
+			}
+			
+			_inclusiveFormItem = formItem;
+			return formItem;			
+		}
+
+		/* HZ-InclDim - New method to handle inclusive dimension */		
+ 	    private function showInclusiveOptionsWindow(event: Event):void {
+		    // saveWindowState is used to save the state of the list boxes and
+		    // button in _inclusiveOptionsWindow before displaying the window. 
+		    // It should ideally be called on an 'activate' or 'show' events 
+		    // within the window class, but these events could not be caught 
+		    // (perhaps due to PopUpManager's delegation.)
+			_inclusiveOptionsWindow.saveWindowState();
+			
+			// Use the PopUpManager to display the TitleWindow container.
+			PopUpManager.addPopUp(_inclusiveOptionsWindow, this, true);
+			PopUpManager.centerPopUp(_inclusiveOptionsWindow);			
 		}
 		
 		private function createSubmitButton():Button 
@@ -365,19 +472,31 @@ package eu.ecb.core.view.filter
 			var query:String = "";
 			var formItemNumber:uint = 0;
 			for each (var keyValue:KeyValue in _referenceSeries.keyValues) {
-				if ((formItemNumber < _form.getChildren().length) && 
-					(((_form.getChildAt(formItemNumber) as FormItem).
-						getChildAt(0) as ComboBox).id == keyValue.valueFor.
-						conceptIdentity.id)) {
-					query = query + "." + 
-						((_form.getChildAt(formItemNumber) as FormItem).
-						getChildAt(0) as ComboBox).selectedItem.id;
-					formItemNumber++;
-				} else {
+				/* Begin-HZ-InclDim Changes to handle inclusive dimension */
+				var isVisibleOnForm: Boolean = false;
+				
+				if (formItemNumber < _form.getChildren().length){
+				    var formItem:FormItem =
+				    _form.getChildAt(formItemNumber) as FormItem;				    
+			       
+				    if (keyValueMappedToFormItem(keyValue, formItem)){
+						if (isInclusiveFormItem(formItem))
+							query = query + "." + getInclusiveIds().join("-");
+						else
+							query = query + "." + 
+								((_form.getChildAt(formItemNumber) as FormItem).
+								getChildAt(0) as ComboBox).selectedItem.id;
+						
+						formItemNumber++;
+						isVisibleOnForm = true;
+					}
+				}
+				
+				if (!isVisibleOnForm)
 					query = query + "." + ((_cubeRegions[keyValue.valueFor.
 						conceptIdentity.id] as ArrayCollection).getItemAt(0) as 
 						Code).id;
-				}
+				/* End-HZ-InclDim Changes to handle inclusive dimension */
 			}
 			query = query.substr(1, query.length);
 			dispatchEvent(new DataEvent(SERIES_KEY_CHANGED, false, false, 
@@ -389,13 +508,26 @@ package eu.ecb.core.view.filter
 		 * combo boxes. It rebuilds the list of filters based on the new 
 		 * choices so that combinations of code leading to no data cannot be
 		 * made.
-		 */ 
-		private function filterChanged(event:ListEvent):void 
+		 */
+		/* HZ-InclDim; 1. Made it public from private since it can also be 
+		 * called from _inclusiveOptionsWindow and 2. generalized event to be of 
+		 * type 'Event'. Previously it was 'ListEvent'
+		 */
+		public function filterChanged(event:Event):void  
 		{
 			//We add the filter selected by the user to the list of selected 
 			//filters
-			_selectedFilters[event.target.id] = event.target.selectedItem;
-
+			/* Begin-HZ-InclDim */		
+			if ((event == null) || !(event.target is ComboBox))
+				_selectedFilters[_inclusiveDimension] = getInclusiveIds();
+			else
+			 //Note now each filter is an array of the 'id' attributes. Earlier 
+			 //it was simply 'event.target.selectedItem'
+			   _selectedFilters[event.target.id] = [(event as ListEvent).target.
+			      selectedItem.id];			
+			   
+            /* End-HZ-InclDim */
+			
 			//We need to get the list of matching series, based on the updated
 			//filters and then update the cube regions. We first reset the 
 			//values in cube regions to the list of all possible values.
@@ -406,34 +538,26 @@ package eu.ecb.core.view.filter
 			findMatchingSeries();
 			
 			var formItemCount:uint = 0;
+			/* Begin-HZ-InclDim Changes to handle inclusive dimension */
 			for each (var keyValue:KeyValue in _referenceSeries.keyValues) {
 				if (formItemCount < _form.getChildren().length) {
-					var formItem:ComboBox = (_form.getChildAt(formItemCount) as 
-						FormItem).getChildAt(0) as ComboBox;
-					if (formItem.id == keyValue.valueFor.conceptIdentity.id) {
-						var dataProvider:ArrayCollection = 
-							new ArrayCollection();
-						var codeNumber:uint = 0;
-						var selectedCodeIndex:uint = 0;
-						for each(var code:Code in _cubeRegions[keyValue.
-							valueFor.conceptIdentity.id] as ArrayCollection) {
-							var item:Object = new Object();
-							item["label"] = code.description.localisedStrings.
-								getDescriptionByLocale("en");
-							item["id"] = code.id;
-							if (formItem.selectedItem.id == code.id) {
-								selectedCodeIndex = codeNumber;
-							} 
-							dataProvider.addItem(item);		
-							codeNumber++;
-						}
-						formItem.dataProvider = dataProvider;
-						formItem.selectedIndex = selectedCodeIndex;
-						formItem.enabled = dataProvider.length > 1;
-						formItemCount++;
-					}	
+				    var formItem:FormItem = 
+				    _form.getChildAt(formItemCount) as FormItem;
+				    
+					if (isInclusiveFormItem(formItem))
+					    resetInclusiveDimension(formItem);
+					else
+					    /* handling of the combo box code moved to the function
+					     * resetComboBoxDataProvider
+					     */
+					     resetComboBoxDataProvider(formItem.
+					         getChildAt(0) as ComboBox, keyValue);					    
+					  
+					if (keyValueMappedToFormItem(keyValue, formItem))
+				       formItemCount++;
 				}
 			}
+			/* End-HZ-InclDim Changes to handle inclusive dimension */
 			
 			/* HZ-Apr 22, 2010 */
 			if (!_submitButtonShow) {
@@ -448,27 +572,35 @@ package eu.ecb.core.view.filter
 		 * series PER filter selected, instead of ONE collection of series 
 		 * matching the combination of filters).
 		 */
+		 
+		 /* HZ-InclDim; handles inclusive options by calling matchingSeries once
+		  * for each id in the _selectedFilters[<inclusive_dimension>] array
+		  */
 		private function findMatchingSeries():void {
-			for (var filter:String in _selectedFilters) {	
+			for (var filter:String in _selectedFilters) {
 				if (null != _selectedFilters[filter]) {
-					var matchingSeries:TimeseriesKeysCollection = 
-						new TimeseriesKeysCollection();
-					for each (var series:TimeseriesKey in 
-						_fullDataSet.timeseriesKeys) {
-						var added:Boolean = true;
-						for each (var keyValue:KeyValue in series.keyValues) {
-							if (filter == keyValue.valueFor.
-								conceptIdentity.id	&& keyValue.value.id != 
-								_selectedFilters[filter].id) {
-								added = false;
-								break;
+					/* Begin-HZ-InclDim; search over array of filter ids */					
+					for each (var id: String in _selectedFilters[filter]){
+						var matchingSeries:TimeseriesKeysCollection = 
+							new TimeseriesKeysCollection();
+						for each (var series:TimeseriesKey in 
+							_fullDataSet.timeseriesKeys) {				
+							var added:Boolean = true;
+							for each (var keyValue:KeyValue in series.keyValues)
+							{								
+								if (filter == keyValue.valueFor.conceptIdentity.
+								   id && (keyValue.value.id != id)) {  
+									added = false;
+									break;
+								}
 							}
+							if (added) {
+								matchingSeries.addItem(series);
+							}							
 						}
-						if (added) {
-							matchingSeries.addItem(series);			
-						}
+						applyFilter(matchingSeries, filter);
 					}
-					applyFilter(matchingSeries, filter);
+					/* End-HZ-InclDim; search over array of filter ids */
 				}
 			}	
 		}
@@ -519,5 +651,115 @@ package eu.ecb.core.view.filter
 				}
 			}
 		}
+		
+		/* HZ-InclDim; New method */
+		/**
+		 * Used for both inclusive modes, check box and pop-up list-box, to 
+		 * return the list of options chosen as an array. 
+		 */				
+		private function getInclusiveIds(): Array
+		{
+			var ids: Array = [];
+			if (!_inclusiveUseWindow){
+				for each (var child:DisplayObject in _inclusiveFormItem.getChildren()){
+					if ((child as CheckBox).selected)
+						ids.push((child as CheckBox).id);
+				}
+			}else{
+				for each (var item:Object in _inclusiveOptionsWindow.
+				    toList.dataProvider){
+					ids.push(item.id);
+				}
+			}
+			return ids;	
+		}
+		
+		/* HZ-InclDim; New method */ 
+		/**
+		 * The code fragment in this method has simply been moved from the 
+		 * filterChanged method for better readability as new code new has been
+		 * added to filterChanged.
+		 */		
+		private function resetComboBoxDataProvider(comboBox: ComboBox, keyValue:
+		    KeyValue): void
+		{
+			if (comboBox.id == keyValue.valueFor.conceptIdentity.id) {
+				var dataProvider:ArrayCollection = 
+					new ArrayCollection();
+				var codeNumber:uint = 0;
+				var selectedCodeIndex:uint = 0;
+				for each(var code:Code in _cubeRegions[keyValue.
+					valueFor.conceptIdentity.id] as ArrayCollection) {
+					var item:Object = new Object();
+					item["label"] = code.description.localisedStrings.
+						getDescriptionByLocale("en");
+					item["id"] = code.id;
+					if (comboBox.selectedItem.id == code.id) {
+						selectedCodeIndex = codeNumber;
+					} 
+					dataProvider.addItem(item);		
+					codeNumber++;
+				}
+				comboBox.dataProvider = dataProvider;
+				comboBox.selectedIndex = selectedCodeIndex;
+				comboBox.enabled = dataProvider.length > 1;
+				
+			}
+		}
+
+		/* HZ-InclDim; New method*/		
+		/**
+		 * Based on the current values in _cubeRegions for the corresponding
+		 * dimension, disable the checkbox. Only applicable if 'inclusve' mode
+		 * is used. Note that no such disabling is done for the window 'listbox'
+		 * mode.
+		 */		
+		private function resetInclusiveDimension(formItem: FormItem): void
+		{
+			if (!_inclusiveUseWindow){
+				var inclusive: Array = [];
+				for each(var code:Code in _cubeRegions[formItem.id] as 
+				    ArrayCollection) inclusive.push(code.id);
+						
+				for each (var child: DisplayObject in _inclusiveFormItem.getChildren()){
+					var checkBox:CheckBox = child as CheckBox;
+					checkBox.enabled = inclusive.indexOf(checkBox.id) != -1;
+				}
+			}
+		}
+		
+		/* HZ-InclDim; New method */
+		/**
+		 * The id attribute of form items is mapped to the id attribute 
+		 * reachable via keyValue, but the mapping depends on whether the 
+		 * formItem is a combo box (first child has the id) or otherwise 
+		 * (form item itself has the id attribute (this is true in both 
+		 * 'inclusive' cases: for check-boxes and the popup window list boxes.
+		 */				
+		private function keyValueMappedToFormItem(keyValue: KeyValue, 
+		   formItem: FormItem): Boolean
+		{
+			if (isInclusiveFormItem(formItem))
+			    return formItem.id == keyValue.valueFor.conceptIdentity.id;
+			else
+			    return (formItem.getChildAt(0) as ComboBox).id == keyValue.
+			        valueFor.conceptIdentity.id;			
+		}
+		
+		/* HZ-InclDim; New method */
+		/**
+		 * Returns whether the formItem is using inclusive mode. And for that it
+		 * suffices to check if the first child is not a combo box (the other 
+	     * two cases which hold true for inclusion are i) the first child is a 
+	     * check box or ii) the first child is a button (in case of an options
+	     * window)
+		 */				
+		private function isInclusiveFormItem(formItem: FormItem): Boolean
+		{
+			return !(formItem.getChildAt(0) is ComboBox);
+		}			
 	}
-}
+	
+} // package
+
+
