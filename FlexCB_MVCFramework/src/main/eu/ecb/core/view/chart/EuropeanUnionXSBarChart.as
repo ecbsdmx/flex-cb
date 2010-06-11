@@ -61,6 +61,7 @@ package eu.ecb.core.view.chart
 		private var _euroAreaLegend:LegendItem;
 		private var _eUnionLegend:LegendItem;
 		private var _sectionId:String;
+		private var _euroAreaCode:String;
 		
 		/*===========================Constructor==============================*/
 		
@@ -68,8 +69,21 @@ package eu.ecb.core.view.chart
 			chartLayout:String="vertical")
 		{
 			super(direction, chartLayout);
-			_euCountries = EUCountries.getInstance();	
+			_euCountries = EUCountries.getInstance();
+			_euroAreaCode = "U2";	
 			_sortDescending = true;
+		}
+		
+		/*============================Accessors===============================*/
+		
+		/**
+		 * The code used for the euro area (U2, I5, etc).
+		 * 
+		 * @param code 
+		 */
+		public function set euroAreaCode(code:String):void
+		{
+			_euroAreaCode = code;
 		}
 		
 		/*========================Protected methods===========================*/
@@ -117,7 +131,7 @@ package eu.ecb.core.view.chart
 				_euroAreaLegend.setStyle("fill", color1);
 				_euroAreaLegend.setStyle("fontWeight", "normal");
 				_euroAreaLegend.visible = false;
-				_euroAreaLegend.label = "blah";
+				_euroAreaLegend.label = "euro area";
 				box.addChild(_euroAreaLegend);
 				
 				_eUnionLegend = new LegendItem();
@@ -157,7 +171,7 @@ package eu.ecb.core.view.chart
 			
 			if (addAverageLines && null != section) {
 				var u2Obs:UncodedXSObservation = section.observations.
-					getObsByCode("U2") as UncodedXSObservation;
+					getObsByCode(_euroAreaCode) as UncodedXSObservation;
 				if (null != u2Obs) {	 
 					addAverageLine(u2Obs.value,	0x034267);
 					_euroAreaLegend.label = "Euro area (" + u2Obs.value + 
@@ -171,6 +185,9 @@ package eu.ecb.core.view.chart
 					addAverageLine(d0Obs.value, 0xa6bddb);
 					_eUnionLegend.label = "European Union (" + d0Obs.value + 
 						(_isPercentage ? "%" : "") + ")";
+					_eUnionLegend.visible = true;
+				} else {
+					_eUnionLegend.label = "European Union";
 					_eUnionLegend.visible = true;
 				}
 			}
