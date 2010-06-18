@@ -69,6 +69,7 @@ package eu.ecb.core.view.map
 		private var _minEuroAreaObs:XSObservation;
 		private var _maxEuroAreaObs:XSObservation;
 		private var _euroAreaCode:String;
+		private var _referenceValue;
 		
 		/*===========================Constructor==============================*/
 		
@@ -122,6 +123,16 @@ package eu.ecb.core.view.map
 		public function set euroAreaCode(code:String):void
 		{
 			_euroAreaCode = code;
+		}
+		
+		/**
+		 * The reference value to be added in the legend.
+		 * 
+		 * @param value 
+		 */
+		public function set referenceValue(value:String):void
+		{
+			_referenceValue = value;
 		}
 		
 		/*=========================Protected methods==========================*/
@@ -216,6 +227,11 @@ package eu.ecb.core.view.map
 				addChild(_grid);
 				createHeaderCell("Legend", "Countries");
 				createDataCells();
+				
+				if (null != _referenceValue) {
+					_grid.addChild(createLegendRow("Reference value: " + 
+							_referenceValue + (_isPercentage ? "%" : "")));
+				}
 				
 				if (_displayEuroAreaData) {
 					if (null != _euroAreaObs) {
