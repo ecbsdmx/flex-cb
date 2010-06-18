@@ -257,6 +257,7 @@ package eu.ecb.core.view.map
 					throw new ArgumentError("Should be a cross-sectional" + 
 						" dataset");					
 				}
+				_highlightedDataSet = null;
 				drawMap();
 			}
 			
@@ -458,7 +459,13 @@ package eu.ecb.core.view.map
 			// selected and highlighted datasets
 			var selCountries:ArrayCollection = new ArrayCollection();
 			getSelectedCountries(_selectedDataSet as XSDataSet, selCountries);
-			getSelectedCountries(_highlightedDataSet as	XSDataSet, selCountries)
+			getSelectedCountries(_highlightedDataSet as	XSDataSet, selCountries) 
+			
+			//If the list contains the code for the euro area, we remove it
+			if (selCountries.contains(_euroAreaCode)) {
+				selCountries.removeItemAt(
+					selCountries.getItemIndex(_euroAreaCode));
+			}
 			
 			// Then we need to loop over all observations and decide whether the
 			// country should be highlighted or not
@@ -557,7 +564,7 @@ package eu.ecb.core.view.map
 						throw new ArgumentError("Reference area code not" + 
 							" found");
 					}
-					if (cc != "U2") {
+					if (cc != "U2" || cc != "I5") {
 						countries.addItem(cc);
 					}
 				}
