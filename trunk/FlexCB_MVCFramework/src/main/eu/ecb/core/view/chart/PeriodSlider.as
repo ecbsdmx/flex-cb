@@ -29,10 +29,8 @@ package eu.ecb.core.view.chart
 	import eu.ecb.core.view.BaseSDMXView;
 	
 	import flash.events.DataEvent;
-	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
-	import mx.binding.utils.ChangeWatcher;
 	import mx.charts.AreaChart;
 	import mx.charts.AxisRenderer;
 	import mx.charts.DateTimeAxis;
@@ -40,14 +38,14 @@ package eu.ecb.core.view.chart
 	import mx.charts.series.AreaSeries;
 	import mx.containers.Canvas;
 	import mx.containers.HBox;
-	import mx.containers.HDividedBox;
 	import mx.controls.HSlider;
 	import mx.controls.Spacer;
-	import mx.events.DividerEvent;
 	import mx.events.SliderEvent;
 	import mx.graphics.SolidColor;
 	import mx.graphics.Stroke;
 	import mx.managers.CursorManager;
+	
+	import org.sdmx.model.v2.reporting.dataset.TimePeriod;
 	
 	/**
 	 * Event triggered when the chart is dragged in the left or right direction
@@ -77,6 +75,7 @@ package eu.ecb.core.view.chart
 	 * Yahoo Finance. 
 	 * 
 	 * @author Xavier Sosnovsky
+	 * @author Rok Povse
 	 */
 	public class PeriodSlider extends BaseSDMXView
 	{
@@ -90,26 +89,18 @@ package eu.ecb.core.view.chart
 		private var _sliderBox:HBox;
 		
 		private var _slider:HSlider;
-		
-		private var _overlayCanvas:HDividedBox;
-		
-		private var _leftCanvasBox:Canvas;
-		
-		private var _middleCanvasBox:Canvas;
-		
-		private var _rightCanvasBox:Canvas;
-		
-		private var _rightIndex:uint;
-		
-		private var _leftIndex:uint;
+				
+		private var _overlay:Canvas;
 		
 		private var _isDragging:Boolean;
 		      	
       	private var _mouseXRef:Number;
+      	
+      	private var _sliderOldValue:Number;
 
 		private var _cursorId:Number;
 		
-		private var _previousRemainder:Number;
+		private var _downLeftWidth:Number;
 		
 		[Embed(source="../../../assets/images/fleur.png")] 
 		private var _dragCursor:Class;
@@ -123,43 +114,7 @@ package eu.ecb.core.view.chart
 		{
 			super(direction);
 			styleName = "ecbPeriodChartBox";
-			_previousRemainder = 0;
-			ChangeWatcher.watch(this, "width", handleChangedWidth);
 		}
-	
-		/*============================Accessors===============================*/
-		
-		public function get periodChart():AreaChart {
-			return _periodChart;
-		}
-		
-		public function get spacer():Spacer {
-			return _spacer;
-		}
-		
-		public function get sliderBox():HBox {
-			return _sliderBox;
-		}
-
-		public function get slider():HSlider {
-			return _slider;
-		}
-		
-		public function get overlayCanvas():HDividedBox {
-			return _overlayCanvas;
-		}
-		
-		public function get leftCanvasBox():Canvas {
-			return _leftCanvasBox;
-		}
-		
-		public function get middleCanvasBox():Canvas {
-			return _middleCanvasBox;
-		}
-		
-		public function get rightCanvasBox():Canvas {
-			return _rightCanvasBox;
-		}						
 				
 		/*========================Protected methods===========================*/
 		
@@ -209,38 +164,21 @@ package eu.ecb.core.view.chart
 				
 				_periodChart.backgroundElements = [];
 				
-				_overlayCanvas = new HDividedBox();
-				_overlayCanvas.height = _periodChart.height - 2;
-				_overlayCanvas.styleName = "ecbPeriodCanvas";
-				_overlayCanvas.horizontalScrollPolicy = "off";
-				_overlayCanvas.liveDragging = true;
-				_overlayCanvas.setStyle("dividerSkin", _blankDividerClass);
-				_overlayCanvas.addEventListener(DividerEvent.DIVIDER_DRAG, 
-					handleDividerDrag, false, 0, true);
-				_overlayCanvas.addEventListener(DividerEvent.DIVIDER_RELEASE,
-					handleDividerRelease, false, 0, true);	
+				_overlay = new Canvas();
+				_overlay.percentWidth=100;
+				_overlay.styleName = "ecbPeriodCanvas";
+				_overlay.height = _periodChart.height - 2;
 				
-				_leftCanvasBox = new Canvas();
-				_leftCanvasBox.height = _periodChart.height - 2;
-				_overlayCanvas.addChild(_leftCanvasBox);
-				
-				_middleCanvasBox = new Canvas();
-				_middleCanvasBox.height = _periodChart.height - 2;
-				_middleCanvasBox.addEventListener(MouseEvent.MOUSE_DOWN, 
+				_overlay.addEventListener(MouseEvent.MOUSE_DOWN, 
 					handleMouseDown, false, 0, true);
-				_overlayCanvas.addEventListener(MouseEvent.MOUSE_UP,
+				_overlay.addEventListener(MouseEvent.MOUSE_UP,
 					handleMouseUp, false, 0, true);
-				_overlayCanvas.addEventListener(MouseEvent.ROLL_OUT,
+				_overlay.addEventListener(MouseEvent.ROLL_OUT,
 					handleMouseUp, false, 0, true);
-				_overlayCanvas.addEventListener(MouseEvent.MOUSE_MOVE, 
+				_overlay.addEventListener(MouseEvent.MOUSE_MOVE, 
 					handleMiddleCanvasMoved, false, 0, true);				
-				_overlayCanvas.addChild(_middleCanvasBox);
 				
-				_rightCanvasBox = new Canvas();
-				_rightCanvasBox.height = _periodChart.height - 2;
-				_overlayCanvas.addChild(_rightCanvasBox);
-				
-				_periodChart.annotationElements = [_overlayCanvas];
+				_periodChart.annotationElements = [_overlay]; 
 				addChild(_periodChart);
 			}
 			
@@ -259,6 +197,11 @@ package eu.ecb.core.view.chart
 			}
 			
 			if (null == _slider) {
+				var sp:Spacer = new Spacer();
+				sp.percentHeight=100;
+				sp.width=25;
+				_sliderBox.addChild(sp);
+				
 				_slider = new HSlider();
 				_slider.height = 20;
 				_slider.percentWidth = 100;
@@ -267,9 +210,9 @@ package eu.ecb.core.view.chart
 				_slider.liveDragging = true;
 				_slider.showDataTip = false;
 				_slider.thumbCount = 2;
-				_slider.snapInterval = 1;
+				_slider.snapInterval = 0.01;
 				_slider.minimum = 0;
-				_slider.addEventListener("change", updateBoundariesFromSlider);
+				_slider.addEventListener(SliderEvent.CHANGE, updateBoundariesFromSlider);
 				_slider.setStyle("showTrackHighlight", true);
 				_slider.setStyle("trackSkin", PeriodSliderTrackSkin);
 				_slider.setStyle("trackHighlightSkin", 
@@ -321,11 +264,7 @@ package eu.ecb.core.view.chart
 					allSeries[0].dataProvider = _referenceSeries.timePeriods;
 				}	
 				_periodChart.series = allSeries;	
-				_slider.maximum = _referenceSeries.timePeriods.length - 1;	
-				_periodChart.width = Math.round(width);
-				_overlayCanvas.width = Math.ceil( _periodChart.width + 
-						_periodChart.computedGutters.width - 22);
-				_slider.width = _overlayCanvas.width + 13;				
+				_slider.maximum = 100;							
 			}
 			
 			if (_filteredReferenceSeriesChanged) {
@@ -335,23 +274,11 @@ package eu.ecb.core.view.chart
 					_periodChart.series[1].dataProvider = 
 						_filteredReferenceSeries.timePeriods;
 				}
-				_leftIndex = _referenceSeries.timePeriods.getItemIndex(
-					_filteredReferenceSeries.timePeriods.getItemAt(0));
-				_rightIndex = _referenceSeries.timePeriods.getItemIndex(
-					_filteredReferenceSeries.timePeriods.getItemAt(
-					_filteredReferenceSeries.timePeriods.length - 1)); 
-				var ratio:Number = (_referenceSeries.timePeriods.length / 
-					_overlayCanvas.width);
-				_leftCanvasBox.width = Math.round(_leftIndex / ratio);
-				_rightCanvasBox.width = Math.round((_referenceSeries.timePeriods
-					.length - 1 - _rightIndex)/ratio);
-				_middleCanvasBox.width = Math.round(_overlayCanvas.width - 
-					_leftCanvasBox.width - _rightCanvasBox.width) - (2 * 
-					Number(_overlayCanvas.getStyle("dividerThickness")));
-				_slider.values = [_leftIndex, _rightIndex];				
+				
+				repositionSlider();
 			}
 		}
-		
+						
 		/*=========================Private methods============================*/		
 		
 		private function handleMouseDown(event:MouseEvent):void
@@ -361,6 +288,7 @@ package eu.ecb.core.view.chart
 			_cursorId = CursorManager.setCursor(_dragCursor);
 			_mouseXRef = this.mouseX;
 			_isDragging = true;
+			_sliderOldValue = _slider.values[1];
 		}
 		
 		private function handleMouseUp(event:MouseEvent):void 
@@ -377,53 +305,15 @@ package eu.ecb.core.view.chart
 		{
 			event.stopImmediatePropagation();
 			event = null;
+			
 			if (_isDragging) {
-				var physicalDelta:Number = this.mouseX - _mouseXRef;
-				var physicalSpacing:Number = _overlayCanvas.width /
-						_referenceSeries.timePeriods.length;
-				var logicalDelta:Number = 
-					Math.round(physicalDelta / physicalSpacing);
-				if (_rightIndex < _referenceSeries.timePeriods.length - 1 &&
-					logicalDelta + _rightIndex > 
-						_referenceSeries.timePeriods.length - 1) {
-					logicalDelta = _referenceSeries.timePeriods.length - 1 - 
-						_rightIndex;		
-				}		
-				if (Math.abs(logicalDelta) >= 1 && 
-					logicalDelta + _leftIndex >= 0 &&
-					logicalDelta + _rightIndex <= 
-						_referenceSeries.timePeriods.length - 1) {
-					_mouseXRef += logicalDelta * physicalSpacing;			
-					dispatchEvent(new DataEvent(ECBChartEvents.CHART_DRAGGED, 
-						false, false, String(logicalDelta)));
-				} else if (_leftIndex > 0 && logicalDelta + _leftIndex < 0) {
-					_mouseXRef += 1 * physicalSpacing;			
-					dispatchEvent(new DataEvent(ECBChartEvents.CHART_DRAGGED, 
-						false, false, String(logicalDelta)));
-				}	
+				var delta:Number = this.mouseX - _mouseXRef;
+				
+				dispatchEvent(new DataEvent(ECBChartEvents.CHART_DRAGGED, 
+						false, false, String(_sliderOldValue+(delta/_overlay.width)*100)));	
 			}
 		}        
-		
-        private function handleDividerDrag(event:DividerEvent):void
-        {
-        	var remainder:Number = Math.round(event.delta / 
-				(_overlayCanvas.width / _referenceSeries.timePeriods.length));
-			event.stopImmediatePropagation();	
-			dispatchEvent(new DataEvent((0 == event.dividerIndex) ? 	
-				ECBChartEvents.LEFT_DIVIDER_DRAGGED : 
-				ECBChartEvents.RIGHT_DIVIDER_DRAGGED, false, false, 
-				String(remainder - _previousRemainder)));
-			event = null;
-			_previousRemainder = remainder;
-        }
-        
-        private function handleDividerRelease(event:DividerEvent):void 
-        {
-        	event.stopImmediatePropagation();
-			event = null;
-        	_previousRemainder = 0;
-        }
-        
+			
         private function formatHorizontalAxisLabels(labelValue:Object, 
             previousLabelValue:Object, axis:DateTimeAxis):String 
         {
@@ -432,35 +322,39 @@ package eu.ecb.core.view.chart
         
         private function updateBoundariesFromSlider(event:SliderEvent):void
         {
-        	var returned:int = (0 == event.thumbIndex) ? 
-        		event.value - _leftIndex : event.value - _rightIndex;
         	if (0 == event.thumbIndex) {
-        		dispatchEvent(new DataEvent(ECBChartEvents.LEFT_DIVIDER_DRAGGED,
-        			false, false, String(event.value - _leftIndex)));
-        		_leftIndex = event.value;	
+        		dispatchEvent(new DataEvent(ECBChartEvents.LEFT_DIVIDER_DRAGGED,false, false, String(event.value)));
         	} else {
-        		dispatchEvent(new DataEvent(ECBChartEvents.RIGHT_DIVIDER_DRAGGED,
-        			false, false, String(event.value - _rightIndex)));
-        		_rightIndex = event.value;	
+        		dispatchEvent(new DataEvent(ECBChartEvents.RIGHT_DIVIDER_DRAGGED,false, false, String(event.value)));	
         	}
+        	
+        	repositionSlider();
         }
         
-        private function handleChangedWidth(event:Event):void
-		{
-			if (null != _slider && null != _referenceSeries) {
-				_periodChart.width = Math.round(width);
-				_overlayCanvas.width = Math.ceil( _periodChart.width + 
-					_periodChart.computedGutters.width - 22);
-				_slider.width = _overlayCanvas.width + 13;
-				var ratio:Number = (_referenceSeries.timePeriods.length / 
-					_overlayCanvas.width);
-				_leftCanvasBox.width = Math.round(_leftIndex / ratio);
-				_rightCanvasBox.width = Math.round((_referenceSeries.timePeriods
-					.length - 1 - _rightIndex)/ratio);
-				_middleCanvasBox.width = Math.round(_overlayCanvas.width - 
-					_leftCanvasBox.width - _rightCanvasBox.width) - (2 * 
-					Number(_overlayCanvas.getStyle("dividerThickness")));
-			} 
-		}
+         private function repositionSlider():void {
+        	var diffFull:Number = (_referenceSeries.timePeriods.getItemAt(_referenceSeries.timePeriods.length-1)as TimePeriod).timeValue.time -
+			(_referenceSeries.timePeriods.getItemAt(0)as TimePeriod).timeValue.time;
+			
+			var diffFilteredLeft:Number = (_filteredReferenceSeries.timePeriods.getItemAt(0) as TimePeriod).timeValue.time -
+			(_referenceSeries.timePeriods.getItemAt(0)as TimePeriod).timeValue.time;
+			
+			var percentageLeft:Number=diffFilteredLeft/diffFull;
+			var tempPositionLeft:Number = _slider.maximum*percentageLeft;
+			
+			
+			var diffFilteredRight:Number = (_filteredReferenceSeries.timePeriods.getItemAt(_filteredReferenceSeries.timePeriods.length-1) as TimePeriod).timeValue.time -
+			(_referenceSeries.timePeriods.getItemAt(0)as TimePeriod).timeValue.time;
+			
+			var percentageRight:Number=diffFilteredRight/diffFull;
+			var tempPositionRight:Number = _slider.maximum*percentageRight;
+			
+			// round to 2 decimals
+			tempPositionLeft=int(tempPositionLeft*100)/100;
+			tempPositionRight=int(tempPositionRight*100)/100;
+			
+			if (_slider.values[0]!=tempPositionLeft || _slider.values[1]!=tempPositionRight) {
+				_slider.values = [tempPositionLeft, tempPositionRight];			
+			}
+        }
 	}
 }

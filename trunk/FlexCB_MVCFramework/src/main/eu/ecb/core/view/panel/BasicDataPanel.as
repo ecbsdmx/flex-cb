@@ -290,7 +290,8 @@ package eu.ecb.core.view.panel
 		protected function handlePeriodChanged(event:DataEvent):void 
 		{
 			event.stopImmediatePropagation();
-			(_controller as ISDMXViewController).handlePeriodChange(event);
+			(_controller as ISDMXViewController).
+				handleSelectedPeriodChanged(event);
 		}
 		
 		protected function handleViewChanged(event:DataEvent):void

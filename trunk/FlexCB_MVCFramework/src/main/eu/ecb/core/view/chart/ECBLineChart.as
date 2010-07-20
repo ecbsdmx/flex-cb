@@ -132,6 +132,10 @@ package eu.ecb.core.view.chart
       	
       	private var _mouseXRef:Number;
       	
+      	private var _dragFilteredStartDate:Date;
+      	
+      	private var _dragFilteredEndDate:Date;
+      	
       	/**
 		 * The id of the cursor used when dragging the chart
 		 */
@@ -486,6 +490,7 @@ package eu.ecb.core.view.chart
 
 			if (_selectedDataSetChanged) {
 				_selectedDataSetChanged = false;
+				_highlightedDataSet = null;
 				drawLineSeries(_selectedDataSet as DataSet);
 			}
 			
@@ -584,6 +589,11 @@ package eu.ecb.core.view.chart
 			_cursorId = CursorManager.setCursor(_dragCursor);
 			_mouseXRef = this.mouseX;
 			_isDragging = true;
+			_dragFilteredStartDate = new Date((_filteredReferenceSeries.
+				timePeriods.getItemAt(0) as TimePeriod).timeValue);
+			_dragFilteredEndDate = new Date((_filteredReferenceSeries.
+				timePeriods.getItemAt(_filteredReferenceSeries.timePeriods.
+				length-1) as TimePeriod).timeValue);
 			if (_showECBToolTip) {
 				cleanDataTips();
 			}
@@ -719,8 +729,8 @@ package eu.ecb.core.view.chart
 							selectedSeries) as GroupKeysCollection).length > 0 ) {
 								observationValueFormatter.group = 
 									(_filteredDataSet.groupKeys.getGroupsForTimeseries(
-										selectedSeries) as GroupKeysCollection).getItemAt(0) 
-											as GroupKey;
+										selectedSeries) as GroupKeysCollection).
+										getItemAt(0) as GroupKey;
 						}
 						_boxText = _boxText + observationValueFormatter.format(
 							lastObs.observationValue);		
@@ -896,21 +906,23 @@ package eu.ecb.core.view.chart
         private function moveOverChart(event:MouseEvent):void 
         {
 			if (_isDragging) {
-				var physicalDelta:Number = this.mouseX - _mouseXRef;
-				var physicalSpacing:Number = (_chart.width / 
-					(_filteredDataSet.timeseriesKeys.getItemAt(0) 
-						as TimeseriesKey).timePeriods.length);
-				var logicalDelta:Number = Math.round(physicalDelta / physicalSpacing);
-				if (Math.abs(logicalDelta) >= 1) {	
-					dispatchEvent(new DataEvent(ECBChartEvents.CHART_DRAGGED, 
-						false, false, String(-logicalDelta)));
-					_mouseXRef += logicalDelta * physicalSpacing;		
-				}				
+					
+				 var delta:Number = (this.mouseX - _mouseXRef)/_chart.width;
+				
+				 var fullFirstMillis:Number=(_referenceSeries.timePeriods.getItemAt(0) as TimePeriod).timeValue.time;
+				 var fullLastMillis:Number=(_referenceSeries.timePeriods.getItemAt(_referenceSeries.timePeriods.length-1) as TimePeriod).timeValue.time;
+				 var fullPeriodMillis:Number = fullLastMillis - fullFirstMillis;
+			 
+			 	 var filteredPeriodMillis:Number = _dragFilteredEndDate.time - _dragFilteredStartDate.time;
+			 
+				 var currentPercentage:Number = filteredPeriodMillis/fullPeriodMillis;
+				 var finalPercentage:Number=-delta*currentPercentage+((_dragFilteredEndDate.time-fullFirstMillis)/fullPeriodMillis) ;
+				 dispatchEvent(new DataEvent(ECBChartEvents.CHART_DRAGGED,false, false, String(finalPercentage*100)));
 			} else if (event.currentTarget == _chart && _showECBToolTip) {
 				displayObsData(event);
 			}
-			/*event.stopImmediatePropagation();
-			event = null;*/
+			event.stopImmediatePropagation();
+			event = null;
 		}
 		
 		/**
@@ -994,15 +1006,25 @@ package eu.ecb.core.view.chart
 				i++) {
 				var series:TimeseriesKey = _filteredDataSet.timeseriesKeys.
 					getItemAt(i) as	TimeseriesKey; 
-				if ((null != _selectedDataSet && null != (_selectedDataSet as 
+				if (
+					//Series belong to the list of selected series
+					(null != _selectedDataSet && null != (_selectedDataSet as 
 					DataSet).timeseriesKeys.getTimeseriesKey(series.seriesKey))
-					||(null != _highlightedDataSet && null != 
+					||
+					//Series belong to the list of highlighted series
+					(null != _highlightedDataSet && null != 
 					(_highlightedDataSet as DataSet).timeseriesKeys.
-					getTimeseriesKey(series.seriesKey)) || ((null == 
+					getTimeseriesKey(series.seriesKey)) 
+					|| 
+					//There are no series being selected or highlighted
+					((null == 
 					_selectedDataSet || (null != _selectedDataSet && 0 == 
-					(_selectedDataSet as DataSet).timeseriesKeys.length)) && 
-					null != _highlightedDataSet && 0 == (_highlightedDataSet as
-					DataSet).timeseriesKeys.length)) {
+					(_selectedDataSet as DataSet).timeseriesKeys.length)) &&
+					(null == _highlightedDataSet || (null != _highlightedDataSet 
+					&& 0 == (_highlightedDataSet as DataSet).timeseriesKeys.
+					length)))) {
+					//If the conditions above hold true and the series is 
+					//currently dimmed, put the right color back	
 					if (_minimized.hasOwnProperty(series.seriesKey) && 
 						_minimized[series.seriesKey] == true) {	
 						playEffect(allLineSeries[i] as LineSeries, true);

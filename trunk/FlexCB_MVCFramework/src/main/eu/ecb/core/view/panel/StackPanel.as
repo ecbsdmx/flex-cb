@@ -34,7 +34,7 @@ package eu.ecb.core.view.panel
 	import flash.events.DataEvent;
 	
 	import mx.containers.ViewStack;
-	import mx.events.MenuEvent;
+	import mx.core.UIComponent;
 
 	/**
 	 * This panel wraps a AS3 ViewStack in a BaseSDMXViewComposite.
@@ -101,7 +101,14 @@ package eu.ecb.core.view.panel
 		public function handleStackItemSelected(event:DataEvent):void
 		{
 			if (Number(event.data) < _stack.getChildren().length) {
-				_stack.selectedIndex = Number(event.data);
+				var stackIndex:uint = uint(event.data);
+				_stack.selectedIndex = stackIndex; 
+				for (var i:int = 0; i < _stack.getChildren().length; i++) {
+					var child:UIComponent = _stack.getChildren()[i];
+					if (child.hasOwnProperty("isHidden")) {
+						child["isHidden"] = !(i == stackIndex); 
+					}
+				}
 			}
 		}
 		
