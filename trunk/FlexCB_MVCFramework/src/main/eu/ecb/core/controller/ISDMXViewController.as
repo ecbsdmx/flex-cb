@@ -50,7 +50,7 @@ package eu.ecb.core.controller
 		 * @see eu.ecb.core.model.SDMXDataModel#filteredDataSet
 		 * @see eu.ecb.core.view.filter.PeriodZoomBox
 		 */
-		function handlePeriodChange(event:DataEvent):void; 
+		function handleSelectedPeriodChanged(event:DataEvent):void; 
 		
 		/**
 		 * Call this function when a chart is being dragged.

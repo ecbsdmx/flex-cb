@@ -491,3 +491,10 @@ ColumnChart {
    markerHeight: 7;
    markerWidth: 7;														
 }
+
+GenericPanel {
+	paddingLeft: 10;
+	paddingRight: 10;
+	paddingTop: 10;
+	paddingBottom: 10;
+}
