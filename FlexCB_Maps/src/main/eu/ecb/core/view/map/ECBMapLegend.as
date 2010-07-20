@@ -69,7 +69,8 @@ package eu.ecb.core.view.map
 		private var _minEuroAreaObs:XSObservation;
 		private var _maxEuroAreaObs:XSObservation;
 		private var _euroAreaCode:String;
-		private var _referenceValue;
+		private var _referenceValue:String;
+		private var _useAbsoluteValue:Boolean;
 		
 		/*===========================Constructor==============================*/
 		
@@ -135,6 +136,15 @@ package eu.ecb.core.view.map
 			_referenceValue = value;
 		}
 		
+		/**
+		 * Whether or not the absolute value of the observation should be used
+		 * when finding minimum and maximum values.
+		 */ 
+		public function set useAbsoluteValue(flag:Boolean):void
+		{
+			_useAbsoluteValue = flag;
+		}
+		
 		/*=========================Protected methods==========================*/
 		
 		/**
@@ -194,8 +204,11 @@ package eu.ecb.core.view.map
 						_usObs = obs;
 					}
 					if (_euCountries.belongsToEuropeanUnion(countryCode)) {
-						var value:Number = Number(getObsValue(obs));
-						var category:MapCategory = _helper.getCategory(value);
+						var realValue:Number = Number(getObsValue(obs));
+						var cmpValue:Number = _useAbsoluteValue ?  
+							Math.abs(realValue) : realValue;  
+						var category:MapCategory = 
+							_helper.getCategory(realValue);
 						if (!(_obsPerCategory.hasOwnProperty(
 							category.styleName))){
 							_obsPerCategory[category.styleName] = new Object();
@@ -208,14 +221,14 @@ package eu.ecb.core.view.map
 							ArrayCollection).addItem(getCountryName(obs));	
 						if (_displayEuroAreaData && _euCountries.
 							belongsToEuroArea(countryCode, _selectedDate) && 
-							(isNaN(minValue) || minValue > value)) {
-							minValue = value;	
+							(isNaN(minValue) || minValue > cmpValue)) {
+							minValue = cmpValue;	
 							_minEuroAreaObs = obs;	
 						}
 						if (_displayEuroAreaData && _euCountries.
 							belongsToEuroArea(countryCode, _selectedDate) && 
-							(isNaN(maxValue) || maxValue < value)) {
-							maxValue = value;	
+							(isNaN(maxValue) || maxValue < cmpValue)) {
+							maxValue = cmpValue;	
 							_maxEuroAreaObs = obs;	
 						}				
 					}	
