@@ -74,6 +74,7 @@ package eu.ecb.core.view.summary
 		private var _showAverage:Boolean;
 		
 		private var _autoHide:Boolean;
+		private var _useAbsoluteValue:Boolean;
 		
 		/*===========================Constructor==============================*/
 		
@@ -133,7 +134,7 @@ package eu.ecb.core.view.summary
 		}
 		
 		/**
-		 * Whether or not the average should be displayed.
+		 * Whether the average should be displayed.
 		 *  
 		 * @param showChange
 		 */
@@ -142,9 +143,24 @@ package eu.ecb.core.view.summary
 			_showAverage = flag;
 		}
 		
+		/**
+		 * Whether the component should automatically hide itself when the 
+		 * dataset contains more than one series.
+		 * 
+		 * @param flag 
+		 */
 		public function set autoHide(flag:Boolean):void
 		{
 			_autoHide = flag;
+		}
+		
+		/**
+		 * Whether or not the absolute value of the observation should be used
+		 * when finding minimum and maximum values.
+		 */ 
+		public function set useAbsoluteValue(flag:Boolean):void
+		{
+			_useAbsoluteValue = flag;
 		}
 		
 		/*========================Protected methods===========================*/
@@ -252,14 +268,15 @@ package eu.ecb.core.view.summary
 		    	var total:Number = 0;
 		    	for each (var currentObs:TimePeriod in 
 		    		_filteredReferenceSeries.timePeriods) {
-		    		if (Number(currentObs.observationValue) <= 
-		    			Number(minObs.observationValue)) {
+		    		var realValue:Number = Number(currentObs.observationValue);
+					var cmpValue:Number = _useAbsoluteValue ?  
+						Math.abs(realValue) : realValue;    	
+		    		if (cmpValue <= Number(minObs.observationValue)) {
 		    			minObs = currentObs;
-		    		} else if (Number(currentObs.observationValue) >= 
-		    			Number(maxObs.observationValue)) {
+		    		} else if (cmpValue >= Number(maxObs.observationValue)) {
 		    			maxObs = currentObs;
 		    		}
-		    		total = total + Number(currentObs.observationValue);
+		    		total = total + Number(realValue);
 		    	}
 		    	_numberFormatter.forceSigned = false;
 		    	_minMaxText.htmlText = resourceManager.getString(

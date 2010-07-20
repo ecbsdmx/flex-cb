@@ -554,7 +554,7 @@ package eu.ecb.core.view.chart
 				}						
 				_chart.series = series;
 				
-				if (null != _sort) {
+				if (null != _sort || _sortDescending == true) {
 					triggerSort();
 				}
 				

@@ -411,7 +411,7 @@ package eu.ecb.core.view.filter
       	
       	private function handleMouseDown(event:MouseEvent):void
       	{
-      		_slider.handleMouseDown(event);
+      		//_slider.handleMouseDown(event);
       	}
       	
       	private function handleSpeedChanged(event:MouseEvent):void
