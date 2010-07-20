@@ -183,7 +183,7 @@ package eu.ecb.core.controller
 				length - 1)	as TimePeriod).periodComparator);
 			_model.addEventListener(BaseSDMXViewModel.
 				FILTERED_REFERENCE_SERIES_UPDATED, handleChange4);	
-			(_controller as ISDMXViewController).handlePeriodChange(
+			(_controller as ISDMXViewController).handleSelectedPeriodChanged(
 				new DataEvent("test", false, false, "All"));			
 		}
 		

@@ -44,7 +44,7 @@ package eu.ecb.core.view.filter
 	 * 
 	 * @eventType eu.ecb.core.view.filter.ViewSelector.SELECTED_VIEW_CHANGED
 	 */
-	[Event(name="selectedViewChanged", type="org.sdmx.event.DataEvent")]
+	[Event(name="stackItemSelected", type="org.sdmx.event.DataEvent")]
 
 	/**
 	 * This component displays a link bar with all possible views of the data
@@ -70,7 +70,7 @@ package eu.ecb.core.view.filter
 		 * @eventType selectedViewChanged
 		 */  
 		public static const SELECTED_VIEW_CHANGED:String = 
-			"selectedViewChanged";
+			"stackItemSelected";
 			
 		/*==============================Fields================================*/
 		
