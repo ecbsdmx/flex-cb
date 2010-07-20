@@ -309,10 +309,13 @@ package eu.ecb.core.view.chart
 		 * supplied.
 		 */ 
 		public function addAverageLine(value:String, color:uint):void {
-			_dataCanvas.lineStyle(1, color);
-	        _dataCanvas.moveTo(_observations.getItemAt(0)["measure"], value);
-	        _dataCanvas.lineTo(_observations.getItemAt(_observations.length - 1)
-	        	["measure"], value);
+			if (_observations.length > 0) {
+				_dataCanvas.lineStyle(1, color);
+	        	_dataCanvas.moveTo(_observations.getItemAt(0)["measure"], 
+	        		value);
+	        	_dataCanvas.lineTo(_observations.getItemAt(
+	        		_observations.length - 1)["measure"], value);
+	  		}
 		}
 		
 		/**
