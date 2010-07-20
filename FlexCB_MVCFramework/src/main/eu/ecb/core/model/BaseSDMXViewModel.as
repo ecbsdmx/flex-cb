@@ -131,6 +131,7 @@ package eu.ecb.core.model
 	 * 
 	 * @author Xavier Sosnovsky
 	 * @author Karine Feraboli
+	 * @author Rok Povse
 	 */
 	[ResourceBundle("flex_cb_mvc_lang")]
 	public class BaseSDMXViewModel extends BaseSDMXServiceModel 
@@ -370,6 +371,8 @@ package eu.ecb.core.model
 		 */ 
 		protected var _moviePlayed:Boolean;
 		
+		private var _refSeriesLen:uint;
+		
 		/*===========================Constructor==============================*/
 		
 		public function BaseSDMXViewModel()
@@ -378,14 +381,6 @@ package eu.ecb.core.model
 			_dateFormatter = new DateFormatter();
 			_hasDefaultPeriod = true;
 			_resourceManager = ResourceManager.getInstance();
-		}
-		
-		/*=========================Public methods==========================*/		
-	
-		public function updateLanguage():void {
-			_allPeriods = null;
-			createSelectedPeriods();
-			dispatchEvent(new Event(PERIODS_UPDATED));
 		}
 		
 		/*============================Accessors===============================*/
@@ -498,6 +493,7 @@ package eu.ecb.core.model
 			var tmpIndex:int = 
 				_dataSet.timeseriesKeys.getItemIndex(_referenceSeries);
 			_referenceSeriesIndex = (tmpIndex > -1) ? tmpIndex : 0;
+			_refSeriesLen = _referenceSeries.timePeriods.length;
 			dispatchEvent(new Event(REFERENCE_SERIES_UPDATED));
 		}
 		
@@ -654,6 +650,15 @@ package eu.ecb.core.model
 		/*==========================Public methods============================*/
 		
 		/**
+		 * Updates the language used by the application views. 
+		 */
+		public function updateLanguage():void {
+			_allPeriods = null;
+			createSelectedPeriods();
+			dispatchEvent(new Event(PERIODS_UPDATED));
+		}
+		
+		/**
 		 * @inheritDoc
 		 */ 
 		public function handlePeriodChange(event:DataEvent):void 
@@ -689,20 +694,93 @@ package eu.ecb.core.model
 		public function handleChartDragged(event:DataEvent):void
 		{
 			event.stopImmediatePropagation();
-			_startDateSet = false;
-			_leftIndex = (_leftIndex + Number(event.data) > 0) ? 
-				_leftIndex + Number(event.data) : 0;
-			_rightIndex = (_rightIndex + Number(event.data) < 
-				_referenceSeries.timePeriods.length - 1) ? 
-				_rightIndex + Number(event.data) : 
-				_referenceSeries.timePeriods.length - 1;
-			event = null;	
-			_endDate = 
-				(referenceSeries.timePeriods.getItemAt(_rightIndex) as
-				TimePeriod).timeValue;
-			updatedFilteredCollection(
-				_referenceSeries.timePeriods.getItemAt(_leftIndex) as
-					TimePeriod);
+			_startDateSet = false;		
+
+			var percentage:Number = (Number(event.data)/100.0);
+			var periodSize:uint = _rightIndex-_leftIndex;
+			var tempEndDate:Date,tempStartDate:Date;
+			
+			tempEndDate=new Date((_referenceSeries.timePeriods.getItemAt(0) as
+				 TimePeriod).timeValue);
+			tempEndDate.time+=convertPercentageToDate(percentage);
+			
+			_rightIndex = findFirstTimePeriodByDate(tempEndDate);
+			
+			//hit right wall
+			if (_rightIndex>=_refSeriesLen) {
+				tempEndDate = new Date((_referenceSeries.timePeriods.getItemAt(
+					_refSeriesLen-1) as TimePeriod).timeValue);
+				_rightIndex = _refSeriesLen-1;
+			}
+			
+			if (_hasDefaultPeriod) { 
+				tempStartDate = getPreviousDate((_referenceSeries.timePeriods.
+					getItemAt(_rightIndex) as TimePeriod).timeValue,
+				_referenceSeries).timeValue;
+			} else {
+				 _leftIndex=_rightIndex-periodSize;
+				_leftIndex=Math.max(0,_leftIndex);
+				tempStartDate = new Date((_referenceSeries.timePeriods.
+					getItemAt(_leftIndex) as TimePeriod).timeValue); 
+			}
+			
+			//hit left wall
+			if (_leftIndex<=0) {
+				_leftIndex=0;
+				tempStartDate = new Date((_referenceSeries.timePeriods.
+					getItemAt(0) as TimePeriod).timeValue);
+				tempEndDate = new Date(tempStartDate);
+				
+				if (_hasDefaultPeriod) {
+					switch(_selectedPeriod.identifier) {
+			    		case "All":
+			    			tempEndDate = (_referenceSeries.timePeriods.
+			    			getItemAt(_refSeriesLen-1) as TimePeriod).timeValue;
+			    			break;
+			    		case "10y":
+			    			tempEndDate.fullYear = tempEndDate.fullYear + 10;
+			    			break;
+			    		case "5y":
+			    			tempEndDate.fullYear = tempEndDate.fullYear + 5;
+			    			break;
+			    		case "2y":
+			        		tempEndDate.fullYear = tempEndDate.fullYear + 2;
+			    			break;
+			    		case "1y":
+			        		tempEndDate.fullYear = tempEndDate.fullYear + 1;
+			    			break;
+			    		case "6m":
+			        		tempEndDate.month = tempEndDate.month + 6;
+			    			break;
+			    		case "3m":
+			        		tempEndDate.month = tempEndDate.month + 3;
+			    			break;
+			    		case "1m":
+			        		tempEndDate.month = tempEndDate.month + 1;
+			    			break;        			        			        			        			        			
+						default:
+							throw new ArgumentError("Unknown period: " + 
+								_selectedPeriod.label);        			
+	    			}
+	    			_rightIndex = findFirstTimePeriodByDate(tempEndDate);
+				} else {
+					_rightIndex = _leftIndex + periodSize;
+					tempEndDate = (_referenceSeries.timePeriods.getItemAt(
+						_rightIndex) as TimePeriod).timeValue; 
+				}
+			}
+			_leftIndex=findFirstTimePeriodByDate(tempStartDate);
+			
+			if (_rightIndex>=_refSeriesLen) {
+				tempEndDate = new Date((_referenceSeries.timePeriods.getItemAt(
+					_refSeriesLen-1) as TimePeriod).timeValue);
+				_rightIndex=_refSeriesLen-1;
+			}
+			
+			_startDate = tempStartDate;
+			_endDate = tempEndDate;
+			
+			triggerDataFiltering();
 		}
 		
 		/**
@@ -711,32 +789,54 @@ package eu.ecb.core.model
 		public function handleDividerDragged(event:DataEvent, 
 			dividerPosition:String):void
 		{
+			
+			var percentage:Number = (Number(event.data)/100.0);
+			
+			var tempStartDate:Date = new Date((_referenceSeries.timePeriods.
+				getItemAt(0)as TimePeriod).timeValue);
+			//how many days from the beginning we need to add */
+			tempStartDate.time += convertPercentageToDate(percentage); 
+			
+			var tmpIndex:uint = findFirstTimePeriodByDate(tempStartDate);
+			
+				
 			event.stopImmediatePropagation();
 			_startDateSet = false;
 			_hasDefaultPeriod = false;
 			if ("left" == dividerPosition) {
-				_leftIndex = (_leftIndex + int(event.data) > 0) ? 
-					_leftIndex + int(event.data) : 0;
-				if (!(_leftIndex < _rightIndex) && _rightIndex > 1) {
-					_leftIndex = _rightIndex - 2;	
-				}	
-				_startDate = 
-					(_referenceSeries.timePeriods.getItemAt(_leftIndex) 
-						as TimePeriod).timeValue;		
-			} else if ("right" == dividerPosition) {
-				_rightIndex = (_rightIndex + int(event.data) < 
-					_referenceSeries.timePeriods.length - 1) ? 
-						_rightIndex + int(event.data) : 
-						_referenceSeries.timePeriods.length - 1;
-				if (!(_rightIndex > _leftIndex)) {
-					_rightIndex = _leftIndex + 2;
+				  	 
+				_leftIndex = tmpIndex; 
+				
+				if ((_rightIndex - _leftIndex) < 2 ) {
+					_leftIndex = _rightIndex-2;
 				}
-				_endDate = 
-					(referenceSeries.timePeriods.getItemAt(_rightIndex) as
-					TimePeriod).timeValue;
+				
+			} else if ("right" == dividerPosition) {
+				
+				_rightIndex = tmpIndex; 
+				
+				if ((_rightIndex - _leftIndex) < 2 ) {
+					_rightIndex = _leftIndex+2;
+				}
+				
+				if (_rightIndex>=_refSeriesLen) { 
+					_rightIndex=_refSeriesLen-1;
+				}
+			}
+			
+			_startDate = (_referenceSeries.timePeriods.getItemAt(_leftIndex) as 
+				TimePeriod).timeValue;
+			_endDate = (_referenceSeries.timePeriods.getItemAt(_rightIndex) as 
+				TimePeriod).timeValue;			
+			
+			if ((_filteredReferenceSeries.timePeriods.getItemAt(0) as 
+				TimePeriod).timeValue.time!=_startDate.time ||
+			_endDate.time != (_filteredReferenceSeries.timePeriods.getItemAt(
+				_filteredReferenceSeries.timePeriods.length-1) as TimePeriod).
+				timeValue.time) {
+				triggerDataFiltering();
 			}
 			event = null;
-			triggerDataFiltering();
 		}
 		
 		/**
@@ -779,6 +879,7 @@ package eu.ecb.core.model
 				_selectedMeasures[event.measure.code.id] = null;
 				_deselectedMeasure = event.measure;
 			}
+			_highlightedMeasure = null;
 			dispatchEvent(new Event(SELECTED_DATASET_UPDATED));
 		}	
 		
@@ -813,7 +914,8 @@ package eu.ecb.core.model
 			event:XSMeasureSelectionEvent):void
 		{
 			var hasSelectedData:Boolean = false;
-			for each (var measure:XSMeasure in _selectedMeasures) {	
+			for each (var measure:XSMeasure in _selectedMeasures) {
+				//We check that there is a measure stored in the object property	
 				if (null != measure) {
 					hasSelectedData = true;
 					break;		
@@ -927,22 +1029,6 @@ package eu.ecb.core.model
 								}	
 							}
 						}
-					}
-				}
-				if (!hasSelectedMeasure) {
-					for each (var seriesKey1:String in seriesKeys) {
-						var s1:TimeseriesKey = _allFilteredDataSets.
-							timeseriesKeys.getTimeseriesKey(seriesKey1) as 
-							TimeseriesKey;
-						matchingSeries.addItem(s1);
-						var groups1:GroupKeysCollection = 
-							_allFilteredDataSets.groupKeys.
-							getGroupsForTimeseries(s1);
-						if (null != groups1) {
-							for each (var group1:GroupKey in groups1) { 
-								matchingGroup.addItem(group1);
-							}
-						}	
 					}
 				}
 			}
@@ -1114,6 +1200,7 @@ package eu.ecb.core.model
 			if (null == referenceSeriesFrequency) {
 				throw new ArgumentError("Frequency could not be found");
 			}
+			_refSeriesLen = tmpSeries.timePeriods.length;
 			sortSeries(tmpSeries);
 			return tmpSeries;
 	    }
@@ -1146,12 +1233,12 @@ package eu.ecb.core.model
 			if (_startDateSet) {
 				triggerDataFiltering();
 			} else if (_rightIndex == 0 && 
-				_referenceSeries.timePeriods.length > 0) {	
+				_refSeriesLen > 0) {	
 				updatedFilteredCollection(getPreviousDate(
            			(_referenceSeries.timePeriods.getItemAt(
-           				_referenceSeries.timePeriods.length - 1) 
+           				_refSeriesLen - 1) 
            				as TimePeriod).timeValue, _referenceSeries));	
-			} else if (_referenceSeries.timePeriods.length > 0) {
+			} else if (_refSeriesLen > 0) {
 				triggerDataFiltering();
 			}
 	    }
@@ -1209,7 +1296,7 @@ package eu.ecb.core.model
 			}
 
 			sortSeries(_referenceSeries);
-			if (_referenceSeries.timePeriods.length >0) {
+			if (_refSeriesLen >0) {
 				var firstObsDate:Date = 
 					(_referenceSeries.timePeriods.getItemAt(0) as 
 						TimePeriod).timeValue;
@@ -1392,7 +1479,7 @@ package eu.ecb.core.model
 	    */ 
 	    protected function updatedFilteredCollection(date:TimePeriod):void {
 	    	_startDate = date.timeValue;
-	    	if (null == _endDate && _referenceSeries.timePeriods.length > 1) {	
+	    	if (null == _endDate && _refSeriesLen > 1) {	
 				_endDate = (referenceSeries.timePeriods.getItemAt(
 					referenceSeries.timePeriods.length - 1) 
 					as TimePeriod).timeValue;
@@ -1451,6 +1538,36 @@ package eu.ecb.core.model
 		protected function filterDataByDate(item:Object):Boolean 
 		{
             return item.periodComparator == selectedDate;
+        }
+        
+        /**
+        * Returns the index of first starting TimePeriod in series by date
+        */ 
+        protected function findFirstTimePeriodByDate(date:Date):uint {
+        	
+			var tmpIndex:uint;
+			var observations:TimePeriodsCollection = 
+				_referenceSeries.timePeriods; 
+        	for (tmpIndex = 0; tmpIndex < _refSeriesLen; tmpIndex++) {
+				if ((observations.getItemAt(tmpIndex) as TimePeriod).timeValue.
+					time>date.time) {
+					tmpIndex-=(tmpIndex>0)?1:0;
+					break;
+				} else if ((observations.getItemAt(tmpIndex) as TimePeriod).
+					timeValue.time == date.time) {
+					break;
+				}
+			}
+			return tmpIndex;
+        }
+        /**
+        * Calculates number of days from percentage
+        */ 
+        protected function convertPercentageToDate(percentage:Number):Number {
+        	var numOfMilis:Number = (_referenceSeries.timePeriods.getItemAt(
+        		_refSeriesLen-1)as TimePeriod).timeValue.time -
+				(_referenceSeries.timePeriods.getItemAt(0)as TimePeriod).timeValue.time;
+			return percentage*numOfMilis; 
         }
         
         private function filterDataForMovie(item:Object):Boolean
