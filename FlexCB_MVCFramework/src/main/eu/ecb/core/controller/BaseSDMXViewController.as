@@ -70,7 +70,7 @@ package eu.ecb.core.controller
 		/**
 		 * @inheritDoc
 		 */ 
-		public function handlePeriodChange(event:DataEvent):void 
+		public function handleSelectedPeriodChanged(event:DataEvent):void 
 		{
 			event.stopImmediatePropagation();
 			(model as ISDMXViewModel).handlePeriodChange(event);
