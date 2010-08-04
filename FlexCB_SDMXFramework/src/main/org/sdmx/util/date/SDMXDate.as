@@ -42,14 +42,16 @@ package org.sdmx.util.date
 	{
 		/*==============================Fields================================*/
 		
-		private var _validator:SDMXDateValidator;
+		private static var _validator:SDMXDateValidator = 
+			new SDMXDateValidator();
+		private var _dates:Array;
 		
 		/*===========================Constructor==============================*/
 		
 		public function SDMXDate()
 		{
 			super();
-			_validator = new SDMXDateValidator();	
+			_dates = new Array();	
 		}
 		
 		/*==========================Public methods============================*/
@@ -61,43 +63,55 @@ package org.sdmx.util.date
 		 * 	object
 		 */ 
 		public function getDate(date:String):Date {
-			if (null == date || date.length == 0) {
-				throw new ArgumentError(date + " is not a valid SDMX date.");
-			} else if (_validator.isGYearMonthDay(date) && date.length == 10) {
-				return new Date(Number(date.substr(0, 4)), Number(date.substr(5, 
-					2)) - 1, Number(date.substr(8, 2)));				
-			} else if (_validator.isGYearMonth(date) && date.length == 7) {
-				return new Date(Number(date.substr(0, 4)), Number(date.substr(5, 
-					2)) - 1, 1);
-			} else if (_validator.isGYear(date) && date.length == 4) {		
-				return new Date(Number(date.substr(0, 4)), 0, 1);			
-			} else if (_validator.isGYearMonthDayTime(date) && 
-				date.length >= 19) {
-				return new Date(Number(date.substr(0, 4)), Number(date.substr(5, 
-					2)) - 1, Number(date.substr(8, 2)), Number(date.substr(11, 
-					2)), Number(date.substr(14, 2)), Number(date.substr(17, 2)),
-					0);
-			} else if (_validator.isSDMXPeriodType(date)) {
-				var target:String = date.charAt(5);
-				if ("Q" == target) {
-					switch (date.charAt(6)) {
-						case "1":
-							return new Date(Number(date.substr(0, 4)), 0, 1);
-							break;
-						case "2":
-							return new Date(Number(date.substr(0, 4)), 3, 1);
-							break;
-						case "3":
-							return new Date(Number(date.substr(0, 4)), 6, 1);
-							break;
-						case "4":
-							return new Date(Number(date.substr(0, 4)), 9, 1);
-							break;			
-					}
-				}
-				throw new Error("Not yet implemented");
+			if (null != _dates[date]) {
+				return _dates[date]; 
 			} else {
-				throw new ArgumentError(date + " is not a valid SDMX date.");
+				if (date.length == 10) {
+					_dates[date] = new Date(Number(date.substr(0, 4)), 
+						Number(date.substr(5, 2)) - 1, 
+						Number(date.substr(8, 2)));				
+				} else if (date.length == 7 && 
+					!(_validator.isSDMXPeriodType(date))) {
+					_dates[date] = new Date(Number(date.substr(0, 4)), 
+						Number(date.substr(5, 2)) - 1, 1);
+				} else if (date.length == 4) {		
+					_dates[date] = new Date(Number(date.substr(0, 4)), 0, 1);			
+				} else if (_validator.isGYearMonthDayTime(date) && 
+					date.length >= 19) {
+					_dates[date] = new Date(Number(date.substr(0, 4)), 
+						Number(date.substr(5, 2)) - 1, Number(date.substr(8, 
+						2)), Number(date.substr(11,	2)), Number(date.substr(14, 
+						2)), Number(date.substr(17, 2)), 0);
+				} else if (_validator.isSDMXPeriodType(date)) {
+					var target:String = date.charAt(5);
+					if ("Q" == target) {
+						switch (date.charAt(6)) {
+							case "1":
+								_dates[date] = 
+									new Date(Number(date.substr(0, 4)), 0, 1);
+								break;
+							case "2":
+								_dates[date] = 
+									new Date(Number(date.substr(0, 4)), 3, 1);
+								break;
+							case "3":
+								_dates[date] = 
+									new Date(Number(date.substr(0, 4)), 6, 1);
+								break;
+							case "4":
+								_dates[date] = 
+									new Date(Number(date.substr(0, 4)), 9, 1);
+								break;
+							default:
+								throw new Error("Not yet implemented");				
+						}
+					}
+					
+				} else {
+					throw new ArgumentError(date + 
+						" is not a valid SDMX date.");
+				}
+				return _dates[date];
 			}
 		}
 	}
