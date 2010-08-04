@@ -38,21 +38,43 @@ package org.sdmx.stores.xml.v2
 	public interface IDataReader extends IEventDispatcher
 	{
 		/**
-		 * @private
+		 * Sets whether extraction of observation-level attributes should be 
+		 * disabled. By default, observation attributes will be extracted but
+		 * this can be turned off for performance purposes.
 		 */
 		function set disableObservationAttribute(flag:Boolean):void;
-		
+				
 		/**
-		 * Whether reading of observation-level attributes has been disabled. 
-		 * Reading observation-level attributes can be disabled for performance
-		 * purposes.
-		 */ 
-		function get disableObservationAttribute():Boolean
-		
-		/**
-		 * @private
+		 * Sets whether extraction of attributes at any level should be 
+		 * disabled. By default, dataset, group, series and observation-level 
+		 * attributes will be extracted but this can be turned off for 
+		 * performance purposes.
 		 */
-		function set dataFile(dataFile:XML):void;
+		function set disableAllAttributes(flag:Boolean):void;
+		
+		/**
+		 * Whether groups should be extracted. By default, groups will be 
+		 * extracted but this can be turned off for performance purposes. 
+		 * In case the extraction of attributes has been disabled, it will most 
+		 * likely make sense to also turn off the extraction of groups, as the
+		 * main purpose of groups is to attach attributes.
+		 */
+		function set disableGroups(flag:Boolean):void;
+		
+		/**
+		 * The SDMX information model specify that time series contain a 
+		 * collection of time periods. Each time period is made of a time value
+		 * and an observation. Each observation contains a value, a reference
+		 * to the measure and the attributes attached to the observation. In 
+		 * concrete terms, this means that for each data point to be displayed, 
+		 * there are 2 objects, the observation and the time period containing 
+		 * the observation. As there are already getters for the observation 
+		 * value in the time period, it is not strictly speaking necessary to 
+		 * embed the observation object in the time period, except if 
+		 * observation level attributes are important. Disabling the creation
+		 * of observations will improve performance.   
+		 */
+		function set disableObservationsCreation(flag:Boolean):void;
 		
 		/**
 		 * The SDMX-ML data file to be parsed by the reader. The SDMX-ML data
@@ -66,17 +88,12 @@ package org.sdmx.stores.xml.v2
 		 * 
 		 * @throws Error <code>Error</code> If no matching data could be found
 		 */
-		function get dataFile():XML;
+		function set dataFile(dataFile:XML):void;
 		
 		/**
-		 * @private
+		 * The key family structuring the data to be extracted.
 		 */
 		function set keyFamily(kf:KeyFamily):void;
-		
-		/**
-		 * The key family needed to interpret the data in the data file. 
-		 */ 
-		function get keyFamily():KeyFamily;
 		
 		/**
 		 * The desired optimisation algorithm.

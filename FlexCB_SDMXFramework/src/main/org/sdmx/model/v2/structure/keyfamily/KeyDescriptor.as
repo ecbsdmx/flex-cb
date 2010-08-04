@@ -45,13 +45,13 @@ package org.sdmx.model.v2.structure.keyfamily
 		private static const ERROR_MSG:String = "Only dimensions are " + 
 				"allowed in a KeyDescriptor. Got: ";
 				
-		private var _dimensions:Object;			
+		private var _dimensions:Array;			
 		
 		/*===========================Constructor==============================*/
 			
 		public function KeyDescriptor(id:String = "Dimensions") {
 			super(id);
-			_dimensions = new Object();
+			_dimensions = new Array();
 		}
 		
 		/*==========================Public methods============================*/
@@ -77,7 +77,7 @@ package org.sdmx.model.v2.structure.keyfamily
 		}
 		
 		public function getDimension(conceptId:String):Dimension {
-      		return (_dimensions.hasOwnProperty(conceptId)) ? 
+      		return (null != _dimensions[conceptId]) ? 
       			_dimensions[conceptId] : null;
 		}
 	}

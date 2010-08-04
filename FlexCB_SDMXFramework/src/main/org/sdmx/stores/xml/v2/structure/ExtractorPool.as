@@ -32,6 +32,7 @@ package org.sdmx.stores.xml.v2.structure
 	import org.sdmx.stores.xml.v2.structure.base.InternationalStringExtractor;
 	import org.sdmx.stores.xml.v2.structure.base.MaintainableArtefactExtractor;
 	import org.sdmx.stores.xml.v2.structure.base.VersionableArtefactExtractor;
+	import org.sdmx.stores.xml.v2.structure.collection.CodeExtractor;
 	
 	/**
 	 * This class acts as a factory for extractors, creating them when needed
@@ -53,6 +54,8 @@ package org.sdmx.stores.xml.v2.structure
        	private var _maintainableExtractor:MaintainableArtefactExtractor;
        	
        	private var _internationalStringExtractor:InternationalStringExtractor;
+       	
+       	private var _codeExtractor:CodeExtractor;
 		
 		/*===========================Constructor==============================*/
 			
@@ -132,6 +135,21 @@ package org.sdmx.stores.xml.v2.structure
 					new InternationalStringExtractor();
 			}
 			return _internationalStringExtractor;
+		}
+		
+		/**
+		 * Gets an extractor of codes
+		 *  
+		 * @return An extractor of codes
+		 */
+		public function get codeExtractor():
+			CodeExtractor
+		{
+			if (null == _codeExtractor) {
+				_codeExtractor = 
+					new CodeExtractor();
+			}
+			return _codeExtractor;
 		}
 	}
 }

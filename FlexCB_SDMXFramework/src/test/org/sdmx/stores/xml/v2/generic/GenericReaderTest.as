@@ -32,6 +32,7 @@ package org.sdmx.stores.xml.v2.generic
 	import flexunit.framework.TestSuite;
 	
 	import org.sdmx.event.SDMXDataEvent;
+	import org.sdmx.model.v2.base.type.ConceptRole;
 	import org.sdmx.model.v2.reporting.dataset.CodedAttributeValue;
 	import org.sdmx.model.v2.reporting.dataset.DataSet;
 	import org.sdmx.model.v2.reporting.dataset.GroupKey;
@@ -113,11 +114,18 @@ package org.sdmx.stores.xml.v2.generic
 			assertEquals("The series should have 2 attributes", 2, 
 				series.attributeValues.length);
 			var attribute2:CodedAttributeValue = 
-				series.attributeValues.getItemAt(0) as CodedAttributeValue;
-			assertEquals("The attribute id should match", "COLLECTION", 
-				attribute2.valueFor.conceptIdentity.id);
-			assertEquals("The attribute value should match", "B", 
-				attribute2.value.id);	
+				series.attributeValues.getItemAt(0) as CodedAttributeValue;	
+			if (attribute2.valueFor.conceptRole == ConceptRole.TIME_FORMAT) {
+				assertEquals("The attribute id should match", "TIME_FORMAT", 
+					attribute2.valueFor.conceptIdentity.id);
+				assertEquals("The attribute value should match", "P1M", 
+					attribute2.value.id);
+			} else {
+				assertEquals("The attribute id should match", "COLLECTION", 
+					attribute2.valueFor.conceptIdentity.id);
+				assertEquals("The attribute value should match", "B", 
+					attribute2.value.id);	
+			}
 			assertEquals("The series should contain 12 observations", 12, 
 				series.timePeriods.length);
 			var obs:TimePeriod = series.timePeriods.getItemAt(11) as TimePeriod;	

@@ -31,8 +31,9 @@ package org.sdmx.stores.xml.v2.structure.collection
 	import org.sdmx.model.v2.base.SDMXArtefact;
 	import org.sdmx.model.v2.base.VersionableArtefact;
 	import org.sdmx.model.v2.structure.code.Code;
-	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
 	import org.sdmx.stores.xml.v2.structure.ExtractorPool;
+	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
+	import org.sdmx.stores.xml.v2.structure.base.VersionableArtefactExtractor;
 
 	/**
 	 * Extracts Codes out of SDMX-ML structure files.
@@ -49,11 +50,15 @@ package org.sdmx.stores.xml.v2.structure.collection
 		private namespace structure = 
 			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure";		
 		use namespace structure;
+		private var _versionableExtactor:VersionableArtefactExtractor;
+		private var _item:VersionableArtefact
 		
 		/*===========================Constructor==============================*/
 		
 		public function CodeExtractor() {
 			super();
+			_versionableExtactor = ExtractorPool.getInstance().
+				versionableArtefactExtractor;
 		}
 		
 		/*==========================Public methods============================*/
@@ -62,17 +67,15 @@ package org.sdmx.stores.xml.v2.structure.collection
 		 * @inheritDoc
 		 */
 		public function extract(xml:XML):SDMXArtefact {
-			var item:VersionableArtefact = (ExtractorPool.getInstance().
-				versionableArtefactExtractor).extract(xml) as 
-				VersionableArtefact;
-			if (null == item.description) {
+			_item = _versionableExtactor.extract(xml) as VersionableArtefact;
+			if (null == _item.description) {
 				throw new SyntaxError("The description element is mandatory " + 
 						"for codes!");
 			}		
-			var code:Code = new Code(item.id);
-			code.urn = item.urn;
-			code.annotations = item.annotations;
-			code.description = item.description;
+			var code:Code = new Code(_item.id);
+			code.urn = _item.urn;
+			code.annotations = _item.annotations;
+			code.description = _item.description;
 			return code;
 		}
 	}

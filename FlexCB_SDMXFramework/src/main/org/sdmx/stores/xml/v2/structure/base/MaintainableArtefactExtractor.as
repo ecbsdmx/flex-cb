@@ -33,8 +33,8 @@ package org.sdmx.stores.xml.v2.structure.base
 	import org.sdmx.model.v2.base.SDMXArtefact;
 	import org.sdmx.model.v2.base.VersionableArtefact;
 	import org.sdmx.model.v2.structure.organisation.MaintenanceAgency;
-	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
 	import org.sdmx.stores.xml.v2.structure.ExtractorPool;
+	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
 
 	/**
 	 * Extracts Maintainable artefacts out of SDMX-ML structure files.
@@ -45,17 +45,20 @@ package org.sdmx.stores.xml.v2.structure.base
 		
 		/*==============================Fields================================*/
 		
-		private var _isExtractor:InternationalStringExtractor;
-		
 		private namespace structure = 
 			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure";		
 		use namespace structure;
+		
+		private var _vaExtractor:VersionableArtefactExtractor;
+		
+		private var _versionableArtefact:VersionableArtefact;
 		
 		/*===========================Constructor==============================*/
 		
 		public function MaintainableArtefactExtractor() {
 			super();
-			_isExtractor = new InternationalStringExtractor();	
+			_vaExtractor = 
+				ExtractorPool.getInstance().versionableArtefactExtractor;
 		}
 		
 		/*==========================Public methods============================*/
@@ -66,22 +69,20 @@ package org.sdmx.stores.xml.v2.structure.base
 		public function extract(items:XML):SDMXArtefact {
 			if (items.attribute("agencyID").length() == 0) {
 				throw new SyntaxError("Could not find the agency id");
-			}
-			var vaExtractor:VersionableArtefactExtractor = 
-				ExtractorPool.getInstance().versionableArtefactExtractor;
-			var versionableArtefact:VersionableArtefact = 
-				vaExtractor.extract(items) as VersionableArtefact;		
+			}				
+			_versionableArtefact = 
+				_vaExtractor.extract(items) as VersionableArtefact;		
 			var maintainableArtefact:MaintainableArtefact = 
-				new MaintainableArtefactAdapter(versionableArtefact.id,
-					versionableArtefact.name, 
+				new MaintainableArtefactAdapter(_versionableArtefact.id,
+					_versionableArtefact.name, 
 					new MaintenanceAgency(items.@agencyID));
-			maintainableArtefact.annotations = versionableArtefact.annotations;
-			maintainableArtefact.description = versionableArtefact.description;
-			maintainableArtefact.uri = versionableArtefact.uri;
-			maintainableArtefact.urn = versionableArtefact.urn;
-			maintainableArtefact.validFrom = versionableArtefact.validFrom;
-			maintainableArtefact.validTo = versionableArtefact.validTo;
-			maintainableArtefact.version = versionableArtefact.version;
+			maintainableArtefact.annotations = _versionableArtefact.annotations;
+			maintainableArtefact.description = _versionableArtefact.description;
+			maintainableArtefact.uri = _versionableArtefact.uri;
+			maintainableArtefact.urn = _versionableArtefact.urn;
+			maintainableArtefact.validFrom = _versionableArtefact.validFrom;
+			maintainableArtefact.validTo = _versionableArtefact.validTo;
+			maintainableArtefact.version = _versionableArtefact.version;
 			if (items.attribute("isFinal").length() > 0) {	
 				maintainableArtefact.isFinal = items.@isFinal;
 			}

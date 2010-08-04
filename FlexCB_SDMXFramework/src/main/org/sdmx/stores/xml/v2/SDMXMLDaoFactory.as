@@ -54,6 +54,8 @@ package org.sdmx.stores.xml.v2
 		
 		private var _sourceFile:XML;
 		
+		private var _dataDAO:SDMXMLDataDao;
+		
 		/*===========================Constructor==============================*/
 		
 		public function SDMXMLDaoFactory()
@@ -118,7 +120,7 @@ package org.sdmx.stores.xml.v2
 		 */ 
 		override public function getDataDAO():IDataProvider
 		{
-			return getDAO();
+			return getDAO(null);
 		}
 		
 		/**
@@ -126,7 +128,7 @@ package org.sdmx.stores.xml.v2
 		 */ 
 		override public function getCompactDataDAO():IDataProvider
 		{
-			return getDAO();
+			return getDAO(SDMXDataFormats.SDMX_ML_COMPACT);
 		}
 		
 		/**
@@ -134,7 +136,7 @@ package org.sdmx.stores.xml.v2
 		 */ 
 		override public function getGenericDataDAO():IDataProvider
 		{
-			return getDAO();
+			return getDAO(SDMXDataFormats.SDMX_ML_GENERIC);
 		}
 		
 		/**
@@ -142,7 +144,7 @@ package org.sdmx.stores.xml.v2
 		 */ 
 		override public function getUtilityDataDAO():IDataProvider
 		{
-			return getDAO();
+			return getDAO(SDMXDataFormats.SDMX_ML_UTILITY);
 		}
 		
 		/*==========================Private methods===========================*/
@@ -151,8 +153,8 @@ package org.sdmx.stores.xml.v2
 		{
 			event.stopImmediatePropagation();
 			_sourceFile = event.data as XML;
-			event = null;
 			dispatchEvent(new Event(BaseSDMXDaoFactory.INIT_READY));
+			event = null;
 		}
 		
 		private function handleError(event:IOErrorEvent):void 
@@ -163,13 +165,18 @@ package org.sdmx.stores.xml.v2
 			event = null;		
 		}
 		
-		private function getDAO():IDataProvider
+		private function getDAO(format:String):IDataProvider
 		{
-			var dao:SDMXMLDataDao = new SDMXMLDataDao();
-			dao.dataFile = _sourceFile;
-			dao.disableObservationAttribute = _disableObservationAttribute;
-			dao.optimisationLevel = _optimisationLevel;
-			return dao;
+			if (null == _dataDAO) {
+				_dataDAO = new SDMXMLDataDao(format);
+			}
+			_dataDAO.dataFile = _sourceFile;
+			_dataDAO.disableObservationAttribute = _disableObservationAttribute;
+			_dataDAO.disableAllAttributes = _disableAllAttributes;
+			_dataDAO.optimisationLevel = _optimisationLevel;
+			_dataDAO.disableGroups = _disableGroups;
+			_dataDAO.disableObservationsCreation = _disableObservationsCreation;
+			return _dataDAO;
 		}
 	}
 }

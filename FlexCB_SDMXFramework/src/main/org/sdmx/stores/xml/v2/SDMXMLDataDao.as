@@ -50,14 +50,16 @@ package org.sdmx.stores.xml.v2
 		/*==============================Fields================================*/
 		
 		private var _dataXML:XML;
-		
 		private var _dataChanged:Boolean;
+		private var _kf:KeyFamily;
+		private var _format:String;
 		
 		/*============================Constructor=============================*/
 		
-		public function SDMXMLDataDao()
+		public function SDMXMLDataDao(format:String = null)
 		{
 			super();
+			_format = format;
 		}
 		
 		/*============================Accessors===============================*/
@@ -86,35 +88,52 @@ package org.sdmx.stores.xml.v2
 						"Could not find any suitable key family to interpret" + 
 						" the supplied data"));
 				}
-				var format:String = GuessDataType.guessFormat(_dataXML);
-				var element:XML = _dataXML.children()[1];
-				if (format == null) {
-					if ((_dataXML.children()[1] as XML).elements()
-						.length() > 0) {	
-						dispatchEvent(new ErrorEvent(
-							BaseSDMXDaoFactory.DAO_ERROR_EVENT, false, false, 
-							format + " is currently not supported"));
-					} else {
-						dispatchEvent(new SDMXDataEvent(null, 
-							BaseSDMXDaoFactory.DATA_EVENT));
+				
+				if (_format == null) {
+					_format = GuessDataType.guessFormat(_dataXML);
+					if (_format == null) {
+						var element:XML = _dataXML.children()[1];
+						if ((_dataXML.children()[1] as XML).elements()
+							.length() > 0) {	
+							dispatchEvent(new ErrorEvent(
+								BaseSDMXDaoFactory.DAO_ERROR_EVENT, false, 
+								false, _format + " is currently not " + 
+										"supported"));
+						} else {
+							dispatchEvent(new SDMXDataEvent(null, 
+								BaseSDMXDaoFactory.DATA_EVENT));
+						}
 					}
-				} else {
-					if (format == SDMXDataFormats.SDMX_ML_COMPACT) {
-						_reader = new CompactReader(kf);
-					} else if (format == SDMXDataFormats.SDMX_ML_UTILITY) {
-						_reader = new UtilityReader(kf);
-					} else if (format == SDMXDataFormats.SDMX_ML_GENERIC) {
-						_reader = new GenericReader(kf);
-					}
-					_reader.addEventListener(DataReaderAdapter.INIT_READY, 
-						handleInitReady);
-					_reader.addEventListener(DataReaderAdapter.DATASET_EVENT, 
-						handleDataSet);	
-					_reader.disableObservationAttribute = 
-						_disableObservationAttribute;
-					_reader.optimisationLevel = _optimisationLevel;	
-					_reader.dataFile = _dataXML;
 				}
+				
+				if (_format == SDMXDataFormats.SDMX_ML_COMPACT) {
+					if (null == _reader || !(_reader is CompactReader) || 
+						 kf != _kf) {
+						_reader = new CompactReader(kf);
+						setListeners();
+					}
+				} else if (_format == SDMXDataFormats.SDMX_ML_UTILITY) {
+					if (null == _reader || !(_reader is UtilityReader) || 
+						 kf != _kf) {
+						_reader = new UtilityReader(kf);
+						setListeners();
+					}
+				} else if (_format == SDMXDataFormats.SDMX_ML_GENERIC) {
+					if (null == _reader || !(_reader is GenericReader) || 
+						 kf != _kf) {
+						_reader = new GenericReader(kf);
+						setListeners();
+					}
+				}
+				_kf = kf;
+				_reader.disableObservationAttribute = 
+					_disableObservationAttribute;
+				_reader.disableAllAttributes = _disableAllAttributes;
+				_reader.disableGroups = _extractGroups;
+				_reader.optimisationLevel = _optimisationLevel;	
+				_reader.disableObservationsCreation = 
+					_disableObservationsCreation;
+				_reader.dataFile = _dataXML;
 			} else {
 				dispatchResults();
 			}
@@ -125,8 +144,8 @@ package org.sdmx.stores.xml.v2
 		private function handleInitReady(event:Event):void 
 		{
 			event.stopImmediatePropagation();
-			event = null;
 			_reader.query(null);
+			event = null;
 		}
 		
 		private function handleDataSet(event:SDMXDataEvent):void
@@ -146,6 +165,14 @@ package org.sdmx.stores.xml.v2
 				dispatchEvent(new SDMXDataEvent(_dataSet, 
 					BaseSDMXDaoFactory.DATA_EVENT));
 			}
+		}
+		
+		private function setListeners():void
+		{
+			_reader.addEventListener(DataReaderAdapter.INIT_READY, 
+				handleInitReady);
+			_reader.addEventListener(DataReaderAdapter.DATASET_EVENT, 
+				handleDataSet);	
 		}
 	}
 }

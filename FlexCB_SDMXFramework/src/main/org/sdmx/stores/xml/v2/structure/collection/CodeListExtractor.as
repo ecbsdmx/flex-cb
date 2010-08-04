@@ -51,11 +51,18 @@ package org.sdmx.stores.xml.v2.structure.collection
 		private namespace structure = 
 			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure";		
 		use namespace structure;
+		private var _isExtractor:MaintainableArtefactExtractor;
+		private var _itemScheme:MaintainableArtefact; 
+		private var _codeExtractor:CodeExtractor;
 		
 		/*===========================Constructor==============================*/
 		
 		public function CodeListExtractor() {
 			super();
+			_isExtractor = 
+				ExtractorPool.getInstance().maintainableArtefactExtractor;
+			_codeExtractor = ExtractorPool.getInstance().codeExtractor;
+				
 		}
 		
 		/*==========================Public methods============================*/
@@ -64,24 +71,20 @@ package org.sdmx.stores.xml.v2.structure.collection
 		 * @inheritDoc
 		 */
 		public function extract(items:XML):SDMXArtefact {
-			var isExtractor:MaintainableArtefactExtractor = 
-				ExtractorPool.getInstance().maintainableArtefactExtractor;
-			var itemScheme:MaintainableArtefact 
-				= isExtractor.extract(items) as MaintainableArtefact;
-			var codeList:CodeList = new CodeList(itemScheme.id, itemScheme.name, 
-				itemScheme.maintainer);
-			codeList.description = itemScheme.description;	
-			codeList.version = itemScheme.version;
-			codeList.uri = itemScheme.uri;
-			codeList.urn = itemScheme.urn;
-			codeList.isFinal = itemScheme.isFinal;
-			codeList.validFrom = itemScheme.validFrom;
-			codeList.validTo = itemScheme.validTo;
-			codeList.annotations = itemScheme.annotations;
-			var codeExtractor:CodeExtractor = new CodeExtractor();
+			_itemScheme = _isExtractor.extract(items) as MaintainableArtefact;
+			var codeList:CodeList = new CodeList(_itemScheme.id, 
+				_itemScheme.name, _itemScheme.maintainer);
+			codeList.description = _itemScheme.description;	
+			codeList.version = _itemScheme.version;
+			codeList.uri = _itemScheme.uri;
+			codeList.urn = _itemScheme.urn;
+			codeList.isFinal = _itemScheme.isFinal;
+			codeList.validFrom = _itemScheme.validFrom;
+			codeList.validTo = _itemScheme.validTo;
+			codeList.annotations = _itemScheme.annotations;
 			var codes:Array = new Array();
 			for each (var code:XML in items.Code) {
-				codes.push(codeExtractor.extract(code));
+				codes.push(_codeExtractor.extract(code));
 			}
 			codeList.codes = new CodesCollection(codes);
 			return codeList;

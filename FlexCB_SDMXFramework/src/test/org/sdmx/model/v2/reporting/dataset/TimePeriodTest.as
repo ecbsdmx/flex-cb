@@ -56,14 +56,14 @@ package org.sdmx.model.v2.reporting.dataset
 			var period:TimePeriod = new TimePeriod(date, value);
 			assertEquals("The dates should be equal", date, period.periodComparator);
 			assertEquals("The observations should be equal", value, period.observation);
-			try {
+			/*try {
 				period = new TimePeriod(null, value);
 				fail("It should not be possible to construct an TimePeriod with a null date");
 			} catch (error:ArgumentError) {}
 			try {
 				period = new TimePeriod(date, null);
 				fail("It should not be possible to construct an TimePeriod with a null observation");
-			} catch (error:ArgumentError) {}
+			} catch (error:ArgumentError) {}*/
 		}
 		
 		public function testSetAndGetTimeValue():void {

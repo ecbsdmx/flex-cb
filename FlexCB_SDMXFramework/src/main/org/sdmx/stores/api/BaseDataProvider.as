@@ -43,17 +43,50 @@ package org.sdmx.stores.api
 	{
 		/*==============================Fields================================*/
 		
+		/**
+		 * @private
+		 */
 		protected var _keyFamilies:KeyFamilies;
 		
+		/**
+		 * @private
+		 */
 		protected var _reader:IDataReader;
 		
+		/**
+		 * @private
+		 */
 		protected var _params:SDMXQueryParameters;
 		
+		/**
+		 * @private
+		 */
 		protected var _dataSet:DataSet;
 		
+		/**
+		 * @private
+		 */
 		protected var _disableObservationAttribute:Boolean;
 		
+		/**
+		 * @private
+		 */
+		protected var _disableAllAttributes:Boolean;
+		
+		/**
+		 * @private
+		 */
+		protected var _disableObservationsCreation:Boolean;
+		
+		/**
+		 * @private
+		 */
 		protected var _optimisationLevel:uint;
+		
+		/**
+		 * @private
+		 */
+		protected var _extractGroups:Boolean;
 		
 		/*============================Constructor=============================*/
 		
@@ -70,6 +103,30 @@ package org.sdmx.stores.api
 		public function set disableObservationAttribute(flag:Boolean):void
 		{
 			_disableObservationAttribute = flag;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function set disableAllAttributes(flag:Boolean):void
+		{
+			_disableAllAttributes = flag;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function set disableGroups(flag:Boolean):void
+		{
+			_extractGroups = flag;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function set disableObservationsCreation(flag:Boolean):void
+		{
+			_disableObservationsCreation = flag;	
 		}
 		
 		/**

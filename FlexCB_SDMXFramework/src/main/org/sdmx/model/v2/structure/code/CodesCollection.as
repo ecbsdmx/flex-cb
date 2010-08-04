@@ -57,12 +57,6 @@ package org.sdmx.model.v2.structure.code
 		
 		public function CodesCollection(source:Array = null) {
 			super(source);
-			_cursor = createCursor();
-			_firstItem = _cursor.bookmark;
-			var sortById:Sort = new Sort();
-            sortById.fields = [new SortField("id", true)];
-            sort = sortById;
-            refresh();
 		}
 		
 		/*============================Accessors===============================*/
@@ -78,6 +72,9 @@ package org.sdmx.model.v2.structure.code
 	     * @private
 	     */
 		public function set codeValueLength(codeValueLength:uint):void {
+			if (null == _cursor) {
+				createCodeCursor();
+			}
 			_cursor.seek(_firstItem);
 			while(!_cursor.afterLast) {
 				if (codeValueLength < (_cursor.current as Code).id.length) {
@@ -92,47 +89,7 @@ package org.sdmx.model.v2.structure.code
 		
 		
 		/*==========================Public methods============================*/
-		
-		/**
-	     * @private
-	     */
-		public override function addItemAt(item:Object, index:int):void {
-			if (!(item is Code)) {
-				throw new ArgumentError(ERROR_MSG + 
-						getQualifiedClassName(item) + ".");
-			} else if (0 != _codeValueLength && 
-				_codeValueLength < (item as Code).id.length) {
-				throw new ArgumentError("The code value cannot be longer" + 
-						" than the maximum code value length - " + 
-						_codeValueLength);
-			} else {
-				var current:Code = findById(item.id);
-				if (null != current) {
-					removeItemAt(getItemIndex(current));
-					if (index != 0 && index > length) {
-						index = length;
-					} 
-				}
-				super.addItemAt(item, index);
-			}
-		}
-		
-		/**
-	     * @private
-	     */
-		public override function setItemAt(item:Object, index:int):Object {
-			if (!(item is Code)) {
-				throw new ArgumentError(ERROR_MSG + 
-						getQualifiedClassName(item) + ".");
-			} else if (0 != _codeValueLength && 
-				_codeValueLength < (item as Code).id.length) {
-				throw new ArgumentError("The code value cannot be longer" + 
-						" than the maximum code value length - " + 
-						_codeValueLength);
-			}
-			return super.setItemAt(item, index);
-		}
-		
+				
 		/**
 		 * Returns the code identified by the supplied string.
 		 *  
@@ -140,6 +97,9 @@ package org.sdmx.model.v2.structure.code
 		 * @return The codeidentified by the supplied string, if any.
 		 */
 		public function getCode(id:String):Code {
+			if (null == _cursor) {
+				createCodeCursor();
+			}
 			return findById(id);
 		}
 		
@@ -147,6 +107,16 @@ package org.sdmx.model.v2.structure.code
 		
 		private function findById(id:String):Code {
 			return (_cursor.findAny({id:id})) ? _cursor.current as Code : null;
+		}
+		
+		private function createCodeCursor():void
+		{
+			_cursor = createCursor();
+			_firstItem = _cursor.bookmark;
+			var sortById:Sort = new Sort();
+            sortById.fields = [new SortField("id", true)];
+            sort = sortById;
+            refresh();
 		}
 	}
 }

@@ -31,8 +31,8 @@ package org.sdmx.stores.xml.v2.structure.base
 	import org.sdmx.model.v2.base.IdentifiableArtefactAdapter;
 	import org.sdmx.model.v2.base.InternationalString;
 	import org.sdmx.model.v2.base.SDMXArtefact;
-	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
 	import org.sdmx.stores.xml.v2.structure.ExtractorPool;
+	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
 
 	/**
 	 * Extracts Identifiable artefacts out of SDMX-ML structure files.
@@ -49,11 +49,23 @@ package org.sdmx.stores.xml.v2.structure.base
 		private namespace structure = 
 			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure";		
 		use namespace structure;
+		
+		private var _isExtractor:InternationalStringExtractor;
+		
+		private static var _nameQName:QName = new QName(
+				"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure", 
+				"Name");
+		
+		private static var _descQName:QName = new QName(
+				"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure", 
+				"Description");		
 			
 		/*===========================Constructor==============================*/
 		
 		public function IdentifiableArtefactExtractor() {
 			super();
+			_isExtractor = 
+				ExtractorPool.getInstance().internationalStringExtractor;
 		}
 		
 		/*==========================Public methods============================*/
@@ -83,19 +95,13 @@ package org.sdmx.stores.xml.v2.structure.base
 				item.urn = items.@urn;
 			}
 			
-			var isExtractor:InternationalStringExtractor 
-				= ExtractorPool.getInstance().internationalStringExtractor;
-			if (items.child(new QName(
-				"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure", 
-				"Name")).length() > 0) {
-				item.name = isExtractor.extract(items.Name) 
+			if (items.child(_nameQName).length() > 0) {
+				item.name = _isExtractor.extract(items.Name) 
 					as InternationalString;
 			}
 
-			if (items.child(new QName(
-				"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure", 
-				"Description")).length() > 0) {
-				item.description = isExtractor.extract(items.Description) 
+			if (items.child(_descQName).length() > 0) {
+				item.description = _isExtractor.extract(items.Description) 
 					as InternationalString;
 			}
 

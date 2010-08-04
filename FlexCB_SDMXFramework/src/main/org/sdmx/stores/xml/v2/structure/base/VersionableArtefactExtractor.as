@@ -31,8 +31,8 @@ package org.sdmx.stores.xml.v2.structure.base
 	import org.sdmx.model.v2.base.IdentifiableArtefact;
 	import org.sdmx.model.v2.base.SDMXArtefact;
 	import org.sdmx.model.v2.base.VersionableArtefactAdapter;
-	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
 	import org.sdmx.stores.xml.v2.structure.ExtractorPool;
+	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
 	import org.sdmx.util.date.SDMXDate;
 
 	/**
@@ -47,11 +47,16 @@ package org.sdmx.stores.xml.v2.structure.base
 		private namespace structure = 
 			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure";		
 		use namespace structure;
+		private var _iaExtractor:IdentifiableArtefactExtractor;
+		private var _sdmxDate:SDMXDate; 
+		private var _identifiableArtefact:IdentifiableArtefact;
 		
 		/*===========================Constructor==============================*/
 		
 		public function VersionableArtefactExtractor() {
 			super();
+			_iaExtractor = 
+				ExtractorPool.getInstance().identifiableArtefactExtractor;
 		}
 		
 		/*==========================Public methods============================*/
@@ -60,27 +65,30 @@ package org.sdmx.stores.xml.v2.structure.base
 		 * @inheritDoc
 		 */
 		public function extract(items:XML):SDMXArtefact {
-			var iaExtractor:IdentifiableArtefactExtractor = 
-				ExtractorPool.getInstance().identifiableArtefactExtractor;
-			var identifiableArtefact:IdentifiableArtefact = 
-				iaExtractor.extract(items) as IdentifiableArtefact;	
+			_identifiableArtefact = 
+				_iaExtractor.extract(items) as IdentifiableArtefact;	
 			var versionableArtefact:VersionableArtefactAdapter = 
-				new VersionableArtefactAdapter(identifiableArtefact.id);
-			versionableArtefact.annotations = identifiableArtefact.annotations;
-			versionableArtefact.description = identifiableArtefact.description;
-			versionableArtefact.name = identifiableArtefact.name;
-			versionableArtefact.uri = identifiableArtefact.uri;
-			versionableArtefact.urn = identifiableArtefact.urn;	
+				new VersionableArtefactAdapter(_identifiableArtefact.id);
+			versionableArtefact.annotations = _identifiableArtefact.annotations;
+			versionableArtefact.description = _identifiableArtefact.description;
+			versionableArtefact.name = _identifiableArtefact.name;
+			versionableArtefact.uri = _identifiableArtefact.uri;
+			versionableArtefact.urn = _identifiableArtefact.urn;	
 			if (items.attribute("version").length() > 0) {
 				versionableArtefact.version = items.@version;
 			}
-			var sdmxDate:SDMXDate = new SDMXDate();		
 			if (items.attribute("validFrom").length() > 0) {
+				if (null == _sdmxDate) {
+					_sdmxDate = new SDMXDate();
+				}
 				versionableArtefact.validFrom = 
-					sdmxDate.getDate(items.@validFrom);
+					_sdmxDate.getDate(items.@validFrom);
 			}
 			if (items.attribute("validTo").length() > 0) {
-				versionableArtefact.validTo = sdmxDate.getDate(items.@validTo);
+				if (null == _sdmxDate) {
+					_sdmxDate = new SDMXDate();
+				}
+				versionableArtefact.validTo = _sdmxDate.getDate(items.@validTo);
 			}
 			return versionableArtefact;
 		}

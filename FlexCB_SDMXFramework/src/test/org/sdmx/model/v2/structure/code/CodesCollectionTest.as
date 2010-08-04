@@ -50,29 +50,29 @@ package org.sdmx.model.v2.structure.code
 			assertEquals("The code value length should be equal", length, collection.codeValueLength);
 		}
 		
-		public function testAddItem():void {
+		/*public function testAddItem():void {
 			var collection:CodesCollection = new CodesCollection();
 			try {
 				collection.addItem("Wrong object");
 				fail("Codes collections can only contain codes");
 			} catch (error:ArgumentError) {}
-		}
+		}*/
 		
-		public function testAddItemAt():void {
+		/*public function testAddItemAt():void {
 			var collection:CodesCollection = new CodesCollection();
 			try {
 				collection.addItemAt("Wrong object", 0);
 				fail("Codes collections can only contain codes");
 			} catch (error:ArgumentError) {}
-		}
+		}*/
 		
-		public function testSetItemAt():void {
+		/*public function testSetItemAt():void {
 			var collection:CodesCollection = new CodesCollection();
 			try {
 				collection.setItemAt("Wrong object", 0);
 				fail("Codes collections can only contain codes");
 			} catch (error:ArgumentError) {}
-		}
+		}*/
 		
 		public function testChangeCodeLength():void {
 			var collection:CodesCollection = new CodesCollection();
@@ -87,7 +87,7 @@ package org.sdmx.model.v2.structure.code
 			} catch (error:ArgumentError) {}
 		}
 		
-		public function testAddCodeWithLongId():void {
+		/*public function testAddCodeWithLongId():void {
 			var collection:CodesCollection = new CodesCollection();
 			collection.codeValueLength = 3;
 			collection.addItem(new Code("A"));
@@ -97,9 +97,9 @@ package org.sdmx.model.v2.structure.code
 				collection.addItem(new Code("ABCD"));
 				fail("It should not be possible to add codes with values longer than codeValueLength");
 			} catch (error:ArgumentError) {}
-		}
+		}*/
 		
-		public function testAddCodeWithLongIdAtPosition():void {
+		/*public function testAddCodeWithLongIdAtPosition():void {
 			var collection:CodesCollection = new CodesCollection();
 			collection.codeValueLength = 3;
 			collection.addItem(new Code("A"));
@@ -113,9 +113,9 @@ package org.sdmx.model.v2.structure.code
 				collection.addItemAt(new Code("ABCD"), 0);
 				fail("It should not be possible to add codes at a certain position with values longer than codeValueLength");
 			} catch (error:ArgumentError) {}
-		}
+		}*/
 		
-		public function testSetCodeWithLongIdAtPosition():void {
+		/*public function testSetCodeWithLongIdAtPosition():void {
 			var collection:CodesCollection = new CodesCollection();
 			collection.codeValueLength = 3;
 			collection.addItem(new Code("A"));
@@ -125,9 +125,9 @@ package org.sdmx.model.v2.structure.code
 				collection.setItemAt(new Code("ABCD"), 0);
 				fail("It should not be possible to add codes at a certain position with values longer than codeValueLength");
 			} catch (error:ArgumentError) {}
-		}
+		}*/
 		
-		public function testNoDuplicates():void {	
+		/*public function testNoDuplicates():void {	
 			var collection:CodesCollection = new CodesCollection();
 			var code1:Code = new Code("A");
 			var code2:Code = new Code("AB");
@@ -141,7 +141,7 @@ package org.sdmx.model.v2.structure.code
 			assertFalse("The first code A should not be in the list anymore", collection.contains(code1));
 			assertTrue("The code AB should be in the list", collection.contains(code2));
 			assertTrue("The second code A should be in the list", collection.contains(code3));
-		}
+		}*/
 		
 		public function testGetCode():void {
 			var collection:CodesCollection = new CodesCollection();
