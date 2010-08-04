@@ -148,6 +148,9 @@ package eu.ecb.core.util.helper
 				} else {
 					return false;
 				}
+				if (date.length == 4) {
+					date = date + "-01";
+				}
 				return _euroArea.contains(targetCode) && 
 					date >= _euroAreaJoinDates[targetCode]; 
 			} else {
