@@ -30,6 +30,7 @@ package eu.ecb.core.view.table
 	import eu.ecb.core.event.XSMeasureSelectionEvent;
 	import eu.ecb.core.util.formatter.section.ISectionTitleFormatter;
 	import eu.ecb.core.util.formatter.xsobs.IXSObsTitleFormatter;
+	import eu.ecb.core.util.helper.XSSortOrder;
 	import eu.ecb.core.view.BaseSDMXView;
 	import eu.ecb.core.view.IHierarchicalView;
 	import eu.ecb.core.view.util.LinkUp;
@@ -163,11 +164,14 @@ package eu.ecb.core.view.table
 		}
 		
 		/**
-		 * Whether or not the sort should follow the descending order.
+		 * Sets the sort algorithm for sorting the observations
 		 */ 
-		public function set sortDescending(flag:Boolean):void
+		public function set sortOrder(order:String):void
 		{
-			_sortDescending = flag;
+			setSortOrder(order);
+			if (null == _sort) {
+				_sort = new Sort();
+			}
 		}
 		
 		/**
@@ -219,20 +223,7 @@ package eu.ecb.core.view.table
 		 * Handles the event triggering the sorting mechanism.
 		 */ 
 		public function handleSortUpdated(event:DataEvent):void {
-			switch (event.data) {
-				case "sort0":
-					_sortField = "dataSetOrder";
-					_sortDescending = false; 
-					break;
-				case "sort1":
-					_sortDescending = false;
-					break;
-				case "sort2": 
-					_sortDescending = true;		
-					break;
-				default:
-					break;	
-			}	
+			setSortOrder(event.data);
 			triggerSort();
 		}
 		
@@ -595,5 +586,24 @@ package eu.ecb.core.view.table
 			event.stopImmediatePropagation();
 			event = null;
 		}
+		
+		private function setSortOrder(order:String):void
+		{
+			switch (order) {
+				case XSSortOrder.SORT_SECTION_ORDER:
+					_sortField = "dataSetOrder";
+					_sortDescending = false; 
+					break;
+				case XSSortOrder.SORT_ASC_ORDER:
+					_sortDescending = false;
+					break;
+				case XSSortOrder.SORT_DESC_ORDER: 
+					_sortDescending = true;		
+					break;
+				default:
+					throw new ArgumentError("Unknown sort order: " + order);
+					break;	
+			}	
+		}	
 	}
 }
