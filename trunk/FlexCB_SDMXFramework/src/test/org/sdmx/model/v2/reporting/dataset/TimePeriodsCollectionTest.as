@@ -46,7 +46,7 @@ package org.sdmx.model.v2.reporting.dataset
 			return new TestSuite(TimePeriodsCollectionTest);
 		}
 		
-		public function testAddItem():void {
+		/*public function testAddItem():void {
 			var collection:TimePeriodsCollection = new TimePeriodsCollection();
 			try {
 				collection.addItem("Wrong object");
@@ -60,7 +60,7 @@ package org.sdmx.model.v2.reporting.dataset
 				collection.addItemAt("Wrong object", 0);
 				fail("Time periods collections can only contain time periods");
 			} catch (error:ArgumentError) {}
-		}
+		}*/
 		
 		public function testSetItemAt():void {
 			var collection:TimePeriodsCollection = new TimePeriodsCollection();

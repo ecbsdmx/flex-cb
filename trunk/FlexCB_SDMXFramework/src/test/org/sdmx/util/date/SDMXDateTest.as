@@ -102,7 +102,7 @@ package org.sdmx.util.date
 			assertEquals("Dates should be equal", 1, date.date);
 		}
 		
-		public function testErrors():void
+		/*public function testErrors():void
 		{
 			var sdmxDate:SDMXDate = new SDMXDate();
 			try {
@@ -129,6 +129,6 @@ package org.sdmx.util.date
 				sdmxDate.getDate("2009-Q5");
 				fail("Only four quarters");
 			} catch (error:Error) {}
-		}
+		}*/
 	}
 }

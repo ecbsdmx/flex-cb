@@ -42,7 +42,6 @@ package org.sdmx.stores.xml.v2.compact
 	import org.sdmx.model.v2.structure.keyfamily.UncodedMeasure;
 	import org.sdmx.stores.xml.v2.DataReaderAdapter;
 	
-		
 	/**
 	 * Reads an SDMX-ML Compact data file and returns a dataset containing the
 	 * matching series.
@@ -91,27 +90,11 @@ package org.sdmx.stores.xml.v2.compact
 		}
 				
 		/*=========================Protected methods==========================*/
-		
+				
 		/**
 		 * @inheritDoc
 		 */ 
-		override protected function findDimensions(xml:XML):XMLList 
-		{
-			return xml.attributes();
-		}
-		
-		/**
-		 * @inheritDoc
-		 */ 
-		override protected function findAttributes(xml:XML):XMLList 
-		{
-			return xml.attributes();
-		}
-		
-		/**
-		 * @inheritDoc
-		 */ 
-		override protected function findObservations(xml:XML):XMLList 
+		override protected function getObservations(xml:XML):XMLList 
 		{
 			return xml.dataSetNS::Obs;
 		}
@@ -119,48 +102,67 @@ package org.sdmx.stores.xml.v2.compact
 		/**
 		 * @inheritDoc
 		 */ 
-		override protected function findObservation(xml:XML):Object
+		override protected function getObservation(xml:XML):Object
 		{
-			var obs:Object = new Object();
-			obs["period"]  = xml.attribute(_timeDimensionCode);
-			obs["value"]   = xml.attribute(_primaryMeasureCode);
-			return obs;		
+			return {period: xml.attribute(_timeDimensionCode), 
+				value: xml.attribute(_primaryMeasureCode)}		
+		}
+		
+		/**
+		 *  @inheritDoc
+		 */
+		override protected function getDimensionValue(xml:XML, 
+			dimensionId:String):String
+		{
+			return String(xml.attribute(dimensionId));
+		}
+		
+		/**
+		 *  @inheritDoc
+		 */
+		override protected function getAttributeValue(xml:XML, 
+			attributeId:String):String
+		{
+			return String(xml.attribute(attributeId));
 		}
 		
 		/**
 		 * @inheritDoc
 		 */ 
-		override protected function findMatchingSeries(group:GroupKey, 
+		override protected function getMatchingSeries(group:GroupKey, 
 			position:uint):void
 		{
-			var groupKeyVal:String = "";
-			for each (var keyValue:KeyValue in group.keyValues) {
-				groupKeyVal = groupKeyVal + keyValue.value.id + ".";
-			}			
-			groupKeyVal = groupKeyVal.substr(0, groupKeyVal.length - 1);
-			
-			if (_optimisationLevel == 1) {
-				for each (var s1:TimeseriesKey in _dataSet.timeseriesKeys) {
-					if (s1.belongsToSiblingGroup(groupKeyVal)) {
-						group.timeseriesKeys.addItem(s1);
-						break;
-					}
-				}
-			} else if (_optimisationLevel == 2) {
-				var s2:TimeseriesKey = _dataSet.timeseriesKeys.
-					getTimeseriesKeyBySiblingGroup(groupKeyVal);
-				if (s2 != null) {
-					group.timeseriesKeys.addItem(s2);
-				}
-			} else if (_optimisationLevel == 3) {
+			if (_optimisationLevel == SERIES_POSITION_OPTIMISATION) {
 				if (position < _dataSet.timeseriesKeys.length) {
 					group.timeseriesKeys.addItem(
 						_dataSet.timeseriesKeys.getItemAt(position));
 				}
-			} else {
+			} else if (_optimisationLevel==NO_OPTIMISATION) {
 				for each (var s3:TimeseriesKey in _dataSet.timeseriesKeys) {
                 	if (s3.belongsToGroup(group.keyValues)) {
                     	group.timeseriesKeys.addItem(s3);
+					}
+				}
+			} else {
+				var groupKeyVal:String = "";
+				for each (var keyValue:KeyValue in group.keyValues) {
+					groupKeyVal = groupKeyVal + keyValue.value.id + ".";
+				}			
+				groupKeyVal = groupKeyVal.substr(0, groupKeyVal.length - 1);
+				
+				if (_optimisationLevel == SIBLING_GROUP_OPTIMISATION) {
+					for each (var s1:TimeseriesKey in _dataSet.timeseriesKeys) {
+						if (s1.belongsToSiblingGroup(groupKeyVal)) {
+							group.timeseriesKeys.addItem(s1);
+							break;
+						}
+					}
+				} else if (_optimisationLevel == 
+					SIBLING_GROUP_DEFINED_KEY_ORDER) {
+					var s2:TimeseriesKey = _dataSet.timeseriesKeys.
+						getTimeseriesKeyBySiblingGroup(groupKeyVal);
+					if (s2 != null) {
+						group.timeseriesKeys.addItem(s2);
 					}
 				}
 			}

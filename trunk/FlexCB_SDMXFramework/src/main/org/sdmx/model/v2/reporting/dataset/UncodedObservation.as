@@ -77,11 +77,7 @@ package org.sdmx.model.v2.reporting.dataset
 	 	 * @private
 	 	 */
 		public function set valueFor(measure:UncodedMeasure):void {
-			if (null == measure) {
-				throw new ArgumentError("An uncoded measure must be provided");
-			} else {
-				_valueFor = measure;
-			}
+			_valueFor = measure;
 		}
 		
 		/**

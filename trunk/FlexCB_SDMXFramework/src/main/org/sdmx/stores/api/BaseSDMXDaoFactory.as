@@ -230,7 +230,22 @@ package org.sdmx.stores.api
 		/**
 		 * @private
 		 */
+		protected var _disableAllAttributes:Boolean;
+		
+		/**
+		 * @private
+		 */
 		protected var _optimisationLevel:uint;
+		
+		/**
+		 * @private
+		 */ 
+		 protected var _disableGroups:Boolean;
+		 
+		 /**
+		 * @private
+		 */
+		 protected var _disableObservationsCreation:Boolean;
 		
 		/*===========================Constructor==============================*/
 		
@@ -352,9 +367,33 @@ package org.sdmx.stores.api
 		/**
 		 * @inheritDoc
 		 */ 
+		public function set disableAllAttributes(flag:Boolean):void
+		{
+			_disableAllAttributes = flag;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */ 
 		public function set optimisationLevel(level:uint):void
 		{
 			_optimisationLevel = level;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function set disableGroups(flag:Boolean):void 
+		{
+			_disableGroups = flag;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function set disableObservationsCreation(flag:Boolean):void
+		{
+			_disableObservationsCreation = flag;	
 		}
 	}
 }

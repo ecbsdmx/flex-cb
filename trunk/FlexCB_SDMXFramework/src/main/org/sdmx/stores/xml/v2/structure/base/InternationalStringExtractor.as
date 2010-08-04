@@ -28,9 +28,10 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.stores.xml.v2.structure.base
 {
+	import mx.resources.Locale;
+	
 	import org.sdmx.model.v2.base.InternationalString;
 	import org.sdmx.model.v2.base.LocalisedString;
-	import mx.resources.Locale;
 	import org.sdmx.model.v2.base.SDMXArtefact;
 	
 	/**
@@ -49,6 +50,11 @@ package org.sdmx.stores.xml.v2.structure.base
 		private namespace xml = "http://www.w3.org/XML/1998/namespace";
 		use namespace xml;
 		
+		private static var langAttr:QName = 
+				new QName("http://www.w3.org/XML/1998/namespace", "lang");
+				
+		private static var enLocale:Locale = new Locale("en");		
+		
 		/*===========================Constructor==============================*/
 		
 		public function InternationalStringExtractor() {
@@ -63,15 +69,14 @@ package org.sdmx.stores.xml.v2.structure.base
 		public function extract(items:XMLList):SDMXArtefact {
 			var internationalString:InternationalString = 
 				new InternationalString();
-			var langAttr:QName = 
-				new QName("http://www.w3.org/XML/1998/namespace", "lang");
 			for each (var item:XML in items) {
-				var locale:Locale = 
-					(item.attribute(langAttr).length() > 0) ? 
-						new Locale(item.@lang): 
-						new Locale("en");
-				internationalString.localisedStrings.addItem(
-					new LocalisedString(locale, item));
+				if (item.attribute(langAttr).length() == 0) {
+					internationalString.localisedStrings.addItem(
+						new LocalisedString(enLocale, item));
+				} else {
+					internationalString.localisedStrings.addItem(
+						new LocalisedString(new Locale(item.@lang), item));
+				}
 			}
 			return internationalString;
 		}

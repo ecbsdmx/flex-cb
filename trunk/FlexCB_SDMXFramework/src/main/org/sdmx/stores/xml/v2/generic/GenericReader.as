@@ -71,46 +71,27 @@ package org.sdmx.stores.xml.v2.generic
 		/**
 		 * @inheritDoc
 		 */ 
-		override protected function findDimensions(xml:XML):XMLList 
+		override protected function getDimensionValue(xml:XML, 
+			dimensionId:String):String
 		{
-			var extracted:XMLList;
-			if ("Group" == xml.localName()) {
-				extracted = 
-					((xml.genericNS::GroupKey as XMLList)[0] as XML).children(); 
-			} else {
-				extracted = ((xml.genericNS::SeriesKey as XMLList)[0] as 
-					XML).children();
-			}
-			
-			var returned:XMLListCollection = new XMLListCollection();
-			for each (var dim:XML in extracted) {
-				var xml:XML = new XML();
-				xml = <{dim.@concept}>{dim.@value}</{dim.@concept}>
-				returned.addItem(xml);
-			}
-			
-			return returned.source;
+			return String(
+				xml.*[0].genericNS::Value.(@concept==dimensionId).@value);
 		}
 		
 		/**
 		 * @inheritDoc
 		 */ 
-		override protected function findAttributes(xml:XML):XMLList 
+		override protected function getAttributeValue(xml:XML, 
+			attributeId:String):String
 		{
-			var returned:XMLListCollection = new XMLListCollection();
-			for each (var attr:XML in ((xml.genericNS::Attributes as XMLList)[0] 
-				as XML).children()) {
-				var xml:XML = new XML();
-				xml = <{attr.@concept}>{attr.@value}</{attr.@concept}>
-				returned.addItem(xml);
-			}
-			return returned.source;	
+			return String(xml.genericNS::Attributes.genericNS::Value.
+				(@concept==attributeId).@value);
 		}
 		
 		/**
 		 * @inheritDoc
 		 */ 
-		override protected function findObservations(xml:XML):XMLList 
+		override protected function getObservations(xml:XML):XMLList 
 		{
 			return xml.genericNS::Obs;
 		}
@@ -118,7 +99,7 @@ package org.sdmx.stores.xml.v2.generic
 		/**
 		 * @inheritDoc
 		 */ 
-		override protected function findMatchingSeries(group:GroupKey, 
+		override protected function getMatchingSeries(group:GroupKey, 
 			position:uint):void
 		{
 			for each (var series:TimeseriesKey in _dataSet.timeseriesKeys) {
@@ -131,7 +112,7 @@ package org.sdmx.stores.xml.v2.generic
 		/**
 		 * @inheritDoc
 		 */ 
-		override protected function findObservation(xml:XML):Object
+		override protected function getObservation(xml:XML):Object
 		{
 			var obs:Object = new Object();
 			obs["value"]   = xml.genericNS::ObsValue.attribute("value");

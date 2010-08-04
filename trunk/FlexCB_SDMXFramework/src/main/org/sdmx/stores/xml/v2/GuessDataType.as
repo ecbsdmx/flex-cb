@@ -47,13 +47,7 @@ package org.sdmx.stores.xml.v2
 		public static function guessFormat(file:XML):String
 		{
 			var format:String;
-			if ("CompactData" == file.localName()) {
-				format = SDMXDataFormats.SDMX_ML_COMPACT;
-			} else if ("GenericData" == file.localName()) {
-				format = SDMXDataFormats.SDMX_ML_GENERIC;
-			} else if ("UtilityData" == file.localName()) {
-				format = SDMXDataFormats.SDMX_ML_UTILITY;
-			} else if ("MessageGroup" == file.localName()) {
+			if ("MessageGroup" == file.localName()) {
 				if (file.children().length() < 3 && ((file.children() as 
 					XMLList))[1].children().length() > 0 && "KeyFamilyRef" == 
 					((((file.children())[1] as XML).children())[0] as 
@@ -66,6 +60,12 @@ package org.sdmx.stores.xml.v2
 					file..*::Series.length() > 0) {
 					format = SDMXDataFormats.SDMX_ML_COMPACT;
 				}
+			} else if ("CompactData" == file.localName()) {
+				format = SDMXDataFormats.SDMX_ML_COMPACT;
+			} else if ("GenericData" == file.localName()) {
+				format = SDMXDataFormats.SDMX_ML_GENERIC;
+			} else if ("UtilityData" == file.localName()) {
+				format = SDMXDataFormats.SDMX_ML_UTILITY;
 			}
 			return format; 
 		}

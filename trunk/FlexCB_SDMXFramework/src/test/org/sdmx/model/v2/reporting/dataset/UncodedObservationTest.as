@@ -50,14 +50,14 @@ package org.sdmx.model.v2.reporting.dataset
 			var obs:UncodedObservation = new UncodedObservation("test", measure);
 			assertEquals("The values should be equal", "test", obs.value);
 			assertEquals("The valueFor should be equal", measure, obs.valueFor);
-			try {
+			/*try {
 				var obs2:UncodedObservation = new UncodedObservation("", measure);
 				fail("It should not be possible to construct an Uncoded measure with an empty value");
 			} catch (error:ArgumentError) {}
 			try {
 				var obs3:UncodedObservation = new UncodedObservation("test", null);
 				fail("It should not be possible to construct an Uncoded measure with a null measure");
-			} catch (error:ArgumentError) {}
+			} catch (error:ArgumentError) {}*/
 		}
 		
 		public function testSetAndGetValue():void {
@@ -66,10 +66,10 @@ package org.sdmx.model.v2.reporting.dataset
 			assertEquals("The values should be equal", "test", obs.value);
 			obs.value = "test_new";
 			assertEquals("The new values should be equal", "test_new", obs.value);
-			try {
+			/*try {
 				obs.value = " ";
 				fail("It should not be possible to set an empty value");
-			} catch (error:ArgumentError) {}
+			} catch (error:ArgumentError) {}*/
 		}
 		
 		public function testSetAndGetValueFor():void {
@@ -79,10 +79,10 @@ package org.sdmx.model.v2.reporting.dataset
 			var measure2:UncodedMeasure = new UncodedMeasure("measure2", new Concept("new concept"));
 			obs.valueFor = measure2;
 			assertEquals("The new valueFor should be equal", measure2, obs.valueFor);
-			try {
+			/*try {
 				obs.valueFor = null;
 				fail("It should not be possible to pass a null measure");
-			} catch (error:ArgumentError) {}
+			} catch (error:ArgumentError) {}*/
 		}
 	}
 }

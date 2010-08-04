@@ -49,7 +49,7 @@ package org.sdmx.model.v2.reporting.dataset
 		
 		/*===========================Constructor==============================*/
 		
-		public function TimePeriod(period:String, obs:Observation, 
+		public function TimePeriod(period:String, value:*, 
 			sdmxDate:SDMXDate = null) {
 			super();
 			//For saving memory consumption, allow reuse of the sdmx date object
@@ -57,9 +57,6 @@ package org.sdmx.model.v2.reporting.dataset
 				_sdmxDate = sdmxDate;
 			} else {
 				_sdmxDate = new SDMXDate();
-			}
-			if (null == period || period.length == 0) {
-				throw new ArgumentError("The period cannot be null or empty");
 			}
 			if (period.indexOf("H") > -1 || period.indexOf("W") > -1) {
 				throw new ArgumentError("Not implemented!");
@@ -84,7 +81,11 @@ package org.sdmx.model.v2.reporting.dataset
 				_periodComparator = period;
 			}
 			_timeValue = _sdmxDate.getDate(_periodComparator);
-			setObservationValue(obs);
+			if (!(value is Observation)) {
+				_observationValue = value;
+			} else {
+				setObservationValue(value);
+			}
 		}
 		
 		/*============================Accessors===============================*/
@@ -123,14 +124,10 @@ package org.sdmx.model.v2.reporting.dataset
 		/*=========================Private methods============================*/
 		
 		private function setObservationValue(observation:Observation):void {
-			if (null == observation) {
-				throw new ArgumentError("The observation cannot be null");		
-			} else {
-				_observation = observation;
-				_observationValue = (_observation is UncodedObservation) ? 
-					(_observation as UncodedObservation).value : 
-					(_observation as CodedObservation).value.id;
-			}
+			_observation = observation;
+			_observationValue = (_observation is UncodedObservation) ? 
+				(_observation as UncodedObservation).value : 
+				(_observation as CodedObservation).value.id;
 		}
 	}
 }

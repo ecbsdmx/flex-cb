@@ -322,9 +322,9 @@ package org.sdmx.stores.xml.v2.structure
 				extractCategories();
 			}
 			
-			var extractCL:Boolean = 
-				(_dispatchCodeLists || _dispatchKeyFamilies) ? false : true;
 			if (_dispatchHierarchicalCodeSchemes) {
+				var extractCL:Boolean = 
+				(_dispatchCodeLists || _dispatchKeyFamilies) ? false : true;
 				if (extractCL) {
 					extractCodeLists();
 				}

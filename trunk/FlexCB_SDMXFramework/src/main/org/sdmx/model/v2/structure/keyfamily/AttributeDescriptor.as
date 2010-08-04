@@ -46,13 +46,13 @@ package org.sdmx.model.v2.structure.keyfamily
 		
 		private static const ERROR_MSG:String = "Only data attributes are " + 
 				"allowed in an AttributeDescriptor. Got: ";	
-		private var _attributes:Object;		
+		private var _attributes:Array;		
 		
 		/*===========================Constructor==============================*/
 		
 		public function AttributeDescriptor(id:String = "Attributes") {
 			super(id);
-			_attributes = new Object();
+			_attributes = new Array();
 		}
 		
 		/*==========================Public methods============================*/
@@ -91,7 +91,7 @@ package org.sdmx.model.v2.structure.keyfamily
 		 * @return The data attribute identified by the supplied id
 		 */
 		public function getAttribute(id:String):DataAttribute {
-      		return (_attributes.hasOwnProperty(id)) ? _attributes[id] : null;
+      		return (null != _attributes[id]) ? _attributes[id] : null;
 		}
 	}
 }

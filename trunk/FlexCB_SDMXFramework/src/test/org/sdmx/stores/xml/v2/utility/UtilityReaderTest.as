@@ -28,11 +28,12 @@
 package org.sdmx.stores.xml.v2.utility
 {
 	import flash.events.Event;
-		
+	
 	import flexunit.framework.TestCase;
 	import flexunit.framework.TestSuite;
 	
 	import org.sdmx.event.SDMXDataEvent;
+	import org.sdmx.model.v2.base.type.ConceptRole;
 	import org.sdmx.model.v2.reporting.dataset.CodedAttributeValue;
 	import org.sdmx.model.v2.reporting.dataset.DataSet;
 	import org.sdmx.model.v2.reporting.dataset.GroupKey;
@@ -186,9 +187,9 @@ package org.sdmx.stores.xml.v2.utility
 					as TimeseriesKey).timePeriods.length);
 			var obs:TimePeriod = (dataSet.timeseriesKeys.getItemAt(0) 
 				as TimeseriesKey).timePeriods.getItemAt(3) as TimePeriod;
-			assertEquals("The values should be equal", 0.53, 
+			assertEquals("The values should be equal", 0.62, 
 				obs.observationValue);
-			assertEquals("The periods should be equal", "2008-11-26", 
+			assertEquals("The periods should be equal", "2008-11-24", 
 				obs.periodComparator);	
 			assertFalse("There should be some attributes", 
 				null == obs.observation.attributeValues)	
@@ -314,10 +315,17 @@ package org.sdmx.stores.xml.v2.utility
 				series.attributeValues.length);
 			var attribute2:CodedAttributeValue = 
 				series.attributeValues.getItemAt(0) as CodedAttributeValue;
-			assertEquals("The attribute id should match", "COLLECTION", 
-				attribute2.valueFor.conceptIdentity.id);
-			assertEquals("The attribute value should match", "B", 
-				attribute2.value.id);	
+			if (attribute2.valueFor.conceptRole == ConceptRole.TIME_FORMAT) {
+				assertEquals("The attribute id should match", "TIME_FORMAT", 
+					attribute2.valueFor.conceptIdentity.id);
+				assertEquals("The attribute value should match", "P1M", 
+					attribute2.value.id);
+			} else {	
+				assertEquals("The attribute id should match", "COLLECTION", 
+					attribute2.valueFor.conceptIdentity.id);
+				assertEquals("The attribute value should match", "B", 
+					attribute2.value.id);	
+			}
 			assertEquals("The series should contain 12 observations", 12, 
 				series.timePeriods.length);
 			var obs:TimePeriod = series.timePeriods.getItemAt(11) as TimePeriod;	
@@ -330,9 +338,9 @@ package org.sdmx.stores.xml.v2.utility
 			var attribute3:CodedAttributeValue = 
 				obs.observation.attributeValues.getItemAt(0) 
 					as CodedAttributeValue;
-			assertEquals("The attribute id should match", "OBS_STATUS", 
+			assertEquals("The attribute id should match", "OBS_CONF", 
 				attribute3.valueFor.conceptIdentity.id);
-			assertEquals("The attribute value should match", "A", 
+			assertEquals("The attribute value should match", "F", 
 				attribute3.value.id);		
 		}
 

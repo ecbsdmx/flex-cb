@@ -29,18 +29,9 @@ package org.sdmx.stores.xml.v2.utility
 {
 	import flash.events.IEventDispatcher;
 	
-	import org.sdmx.model.v2.reporting.dataset.CodedObservation;
 	import org.sdmx.model.v2.reporting.dataset.GroupKey;
-	import org.sdmx.model.v2.reporting.dataset.Observation;
-	import org.sdmx.model.v2.reporting.dataset.TimePeriod;
-	import org.sdmx.model.v2.reporting.dataset.TimePeriodsCollection;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
-	import org.sdmx.model.v2.reporting.dataset.UncodedObservation;
-	import org.sdmx.model.v2.structure.code.Code;
-	import org.sdmx.model.v2.structure.code.CodeList;
-	import org.sdmx.model.v2.structure.keyfamily.CodedMeasure;
 	import org.sdmx.model.v2.structure.keyfamily.KeyFamily;
-	import org.sdmx.model.v2.structure.keyfamily.UncodedMeasure;
 	import org.sdmx.stores.xml.v2.DataReaderAdapter;
 
 	/**
@@ -75,23 +66,38 @@ package org.sdmx.stores.xml.v2.utility
 		/**
 		 * @inheritDoc
 		 */ 
-		override protected function findDimensions(xml:XML):XMLList 
+		override protected function getDimensionValue(xml:XML, 
+			dimensionId:String):String
 		{
-			return ((xml..*::Key as XMLList)[0] as XML).children();
+			var value:String;
+			var dimensions:XMLList;
+			if (xml.localName() == "Series") {
+				dimensions = xml.children()[0].children();
+			} else {
+				dimensions = xml.children()[0].children()[0].children();
+			}	
+			for each (var child:XML in dimensions) {
+				if(child.localName() == dimensionId) {
+					value = child.text();
+					break;
+				}
+			}
+			return value;
 		}
 		
 		/**
 		 * @inheritDoc
 		 */ 
-		override protected function findAttributes(xml:XML):XMLList 
+		override protected function getAttributeValue(xml:XML, 
+			attributeId:String):String
 		{
-			return xml.attributes();
+			return String(xml.attribute(attributeId));
 		}
 		
 		/**
 		 * @inheritDoc
 		 */ 
-		override protected function findObservations(xml:XML):XMLList 
+		override protected function getObservations(xml:XML):XMLList 
 		{
 			return xml..*::Obs;
 		}
@@ -99,7 +105,7 @@ package org.sdmx.stores.xml.v2.utility
 		/**
 		 * @inheritDoc
 		 */ 
-		override protected function findMatchingSeries(group:GroupKey, 
+		override protected function getMatchingSeries(group:GroupKey, 
 			position:uint):void
 		{
 			for each (var series:TimeseriesKey in _dataSet.timeseriesKeys) {
@@ -112,7 +118,7 @@ package org.sdmx.stores.xml.v2.utility
 		/**
 		 * @inheritDoc
 		 */ 
-		override protected function findObservation(xml:XML):Object
+		override protected function getObservation(xml:XML):Object
 		{
 			var obs:Object = new Object();
 		

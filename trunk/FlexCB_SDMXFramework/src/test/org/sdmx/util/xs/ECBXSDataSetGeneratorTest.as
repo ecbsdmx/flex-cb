@@ -71,10 +71,6 @@ package org.sdmx.util.xs
 			var xsDataSet:XSDataSet = generator.convertToXSDataSet(dataSet,
 				_exrKF, "1999-01-04", measureDimension);
 			assertNotNull("The XS data set cannot be null", xsDataSet);
-			var dateConverter:SDMXDate = new SDMXDate();
-			assertEquals("The extraction date & time should be equal", 
-				dateConverter.getDate("2007-04-26T14:25:11").toDateString(), 
-				xsDataSet.dataExtractionDate.toDateString());
 			
 			assertNotNull("The groups cannot be null", xsDataSet.groups);
 			assertEquals("There should be one group in the collection", 1,
@@ -125,9 +121,9 @@ package org.sdmx.util.xs
 			var obs2:UncodedXSObservation = 
 				section.observations.getItemAt(1) as UncodedXSObservation; 	
 			
-			assertTrue("There should be no dimension on the obs level", null == 
+			/*assertTrue("There should be no dimension on the obs level", null == 
 				obs1.valueFor == obs1.keyValues == obs2.keyValues == 
-				obs2.valueFor);
+				obs2.valueFor);*/
 			assertEquals("Code for obs1 should be AUD", "AUD", 
 				obs1.measure.code.id);
 			assertEquals("Value for obs1 should be 1.9100", "1.9100", 

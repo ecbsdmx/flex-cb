@@ -140,6 +140,39 @@ package org.sdmx.stores.api
 		function set disableObservationAttribute(flag:Boolean):void;
 		
 		/**
+		 * Configure the SDMX data provider so as to fetch (or not) 
+		 * the attributes. For example, this can be set to false 
+		 * for performance reasons.
+		 *  
+		 * @param flag
+		 */
+		function set disableAllAttributes(flag:Boolean):void;
+		
+		/**
+		 * Whether groups should be extracted. By default, groups will be 
+		 * extracted but this can be turned off for performance purposes. 
+		 * In case the extraction of attributes has been disabled, it will most 
+		 * likely make sense to also turn off the extraction of groups, as the
+		 * main purpose of groups is to attach attributes.
+		 */
+		function set disableGroups(flag:Boolean):void;
+		
+		/**
+		 * The SDMX information model specify that time series contain a 
+		 * collection of time periods. Each time period is made of a time value
+		 * and an observation. Each observation contains a value, a reference
+		 * to the measure and the attributes attached to the observation. In 
+		 * concrete terms, this means that for each data point to be displayed, 
+		 * there are 2 objects, the observation and the time period containing 
+		 * the observation. As there are already getters for the observation 
+		 * value in the time period, it is not strictly speaking necessary to 
+		 * embed the observation object in the time period, except if 
+		 * observation level attributes are important. Disabling the creation
+		 * of observations will improve performance.   
+		 */
+		function set disableObservationsCreation(flag:Boolean):void;
+		
+		/**
 		 * Configure the optimisation level of the SDMX data provider.
 		 * 
 		 * @param level

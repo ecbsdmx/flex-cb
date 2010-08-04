@@ -26,9 +26,10 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.sdmx.model.v2.structure.code
 {
-	import mx.collections.IViewCursor;
-	import mx.collections.ArrayCollection;
 	import flash.utils.getQualifiedClassName;
+	
+	import mx.collections.ArrayCollection;
+	
 	import org.sdmx.model.v2.base.SDMXArtefact;
 
 	/**
@@ -114,11 +115,8 @@ package org.sdmx.model.v2.structure.code
 			if (null == codeListId || 0 == codeListId.length) {
 				throw new ArgumentError("The code list id is mandatory");
 			}
-			refresh();	
-            var cursor:IViewCursor = createCursor();
             var returnedValue:CodeList = null;
-            while (!cursor.afterLast) {
-            	var codeList:CodeList = cursor.current as CodeList;
+            for each (var codeList:CodeList in source) {
             	if (codeList.id == codeListId && 
             		(codeListVersion == null || codeListVersion.length == 0 || 
             		 codeList.version == null ||
@@ -128,7 +126,6 @@ package org.sdmx.model.v2.structure.code
             		returnedValue = codeList;
             		break;		
 				}
-            	cursor.moveNext();
             }
 			return returnedValue;
 		}

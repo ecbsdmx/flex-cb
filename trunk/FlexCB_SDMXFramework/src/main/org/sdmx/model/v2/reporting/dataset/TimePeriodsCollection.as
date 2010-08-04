@@ -63,12 +63,12 @@ package org.sdmx.model.v2.reporting.dataset
 	 	 * @private
 	 	 */
 		public override function addItemAt(item:Object, index:int):void {
-			if (!(item is TimePeriod)) {
+			/*if (!(item is TimePeriod)) {
 				throw new ArgumentError(ERROR_MSG + 
 						getQualifiedClassName(item) + ".");
-			} else {
+			} else {*/
 				super.addItemAt(item, index);
-			}
+			//}
 		}
 		
 		/**
