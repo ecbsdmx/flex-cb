@@ -161,7 +161,7 @@ package eu.ecb.core.util.config
 			if (null == _loader) {
 				_loader = new XMLLoader();
 				_loader.addEventListener(LoaderAdapter.DATA_LOADED, 
-					handleSettingsLoaded, false, 0, true);
+					handleSettingsLoaded);
 			}
 			_loader.file = settings;
 			_loader.execute();
