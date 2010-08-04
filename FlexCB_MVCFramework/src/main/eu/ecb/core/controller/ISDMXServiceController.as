@@ -181,11 +181,9 @@ package eu.ecb.core.controller
 		 * be responsible for returning the appropriate one.
 		 *  
 		 * @param criteria The criteria for data selection
-		 * 
-		 * @param format The SDMX-ML data format to be returned
+		 *
 		 */
-		function fetchData(criteria:SDMXQueryParameters = null, 
-			format:String = null):void;
+		function fetchData(criteria:SDMXQueryParameters = null):void;
 
 		// Utility methods	
 				

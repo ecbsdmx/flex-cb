@@ -89,8 +89,7 @@ package eu.ecb.core.controller
 				new URLRequest("testData/aud_monthly.xml");	
 			_model.addEventListener(BaseSDMXServiceModel.
 				DATA_SET_UPDATED, addAsync(handleDS, 3000));
-			(_controller as BaseSDMXServiceController).fetchData(null, 
-				SDMXDataFormats.SDMX_ML_COMPACT);	
+			(_controller as BaseSDMXServiceController).fetchData(null);	
 		}
 	
 		

@@ -31,8 +31,7 @@ package eu.ecb.core.controller
 	import eu.ecb.core.model.ISDMXServiceModel;
 	
 	import flash.events.Event;
-	import flash.net.URLRequest;
-	
+	import flash.net.URLRequest;	
 	import mx.collections.ArrayCollection;
 	
 	import org.sdmx.event.SDMXDataEvent;
@@ -171,12 +170,7 @@ package eu.ecb.core.controller
 		 * The object containing the parameters for dataflows queries. 
 		 */
 		protected var _dataParams:SDMXQueryParameters;
-		
-		/**
-		 * The format of the supplied SDMX-ML data file. 
-		 */
-		protected var _dataFormat:String;
-		
+			
 		/**
 		 * @private 
 		 */
@@ -185,7 +179,7 @@ package eu.ecb.core.controller
 		/**
 		 * @private 
 		 */
-		protected var _filesToFetch:ArrayCollection;
+		protected var _filesToFetch:Array;
 		
 		/**
 		 * @private
@@ -403,8 +397,7 @@ package eu.ecb.core.controller
 		 */ 
 		public function fetchKeyFamily(keyFamilyID:String = null, 
 			agencyID:String = null, version:String = null):void
-		{
-			_keyFamilyParams = 
+		{			_keyFamilyParams = 
 				{id: keyFamilyID, agency: agencyID, version: version};
 			var request:Object = new Object();
 			request["type"] = "keyFamilyQuery";
@@ -423,11 +416,9 @@ package eu.ecb.core.controller
 		/**
 		 * @inheritDoc
 		 */ 
-		public function fetchData(criteria:SDMXQueryParameters = null, 
-			format:String = null):void
-		{
+		public function fetchData(criteria:SDMXQueryParameters = null):void
+		{			
 			_dataParams = criteria;
-			_dataFormat = format;
 			
 			var request:Object = new Object();
 			request["type"] = "dataQuery";
@@ -471,12 +462,19 @@ package eu.ecb.core.controller
 			if (null != _filesToFetch && _filesToFetch.length > 0) {
 				isFetching = true;
 				for each (var file:URLRequest in files) {
-					_filesToFetch.addItem(file);
+					if (null == _filesToFetch[file.url]) {
+						_filesToFetch[file.url] = 0;
+						_filesToFetch.push(file);
+					}
 				}
 				_nrOfFilesToFetch = _filesToFetch.length + 1;
 				_totalNrOfFiles = _filesToFetch.length + 1;
 			} else {
-				_filesToFetch = files;
+				_filesToFetch = new Array();
+				for each (var file:URLRequest in files) {
+					_filesToFetch[file.url] = 0;
+					_filesToFetch.push(file);
+				}
 				_nrOfFilesToFetch = _filesToFetch.length;
 				_totalNrOfFiles = _filesToFetch.length;
 			}
@@ -487,11 +485,11 @@ package eu.ecb.core.controller
 			}
 			
 			if (!isFetching) {
-				this.dataSource = _filesToFetch.removeItemAt(0) as URLRequest;
+				this.dataSource = _filesToFetch.shift() as URLRequest;
 				dispatchEvent(new ProgressEventMessage(TASK_PROGRESS, false, 
 					false, 0, 0, "Please wait: Loading data (" + 
 					Math.round( (1 /_totalNrOfFiles) * 100) + "%)"));
-				fetchData();
+				fetchData(null);
 			}	
 		}
 		
@@ -590,7 +588,6 @@ package eu.ecb.core.controller
 			event.stopImmediatePropagation();
 			(_model as BaseSDMXServiceModel).keyFamilies = 
 				event.data as KeyFamilies;
-			
 			var foundDataflows:DataflowsCollection = new DataflowsCollection();
 			if (null != _dataflowsWithNoKeyFamily) {
 				var tmpColl:ArrayCollection = new ArrayCollection(
@@ -660,8 +657,8 @@ package eu.ecb.core.controller
 					_totalNrOfFiles, "Please wait: Loading data (" + 
 					Math.round(((_totalNrOfFiles -	_filesToFetch.length + 1) /
 						_totalNrOfFiles) * 100) + "%)"));
-				this.dataSource = _filesToFetch.removeItemAt(0) as URLRequest;
-				fetchData();
+				this.dataSource = _filesToFetch.shift() as URLRequest;
+				fetchData(null);
 			}
 			event.stopImmediatePropagation();
 			event = null;
@@ -871,26 +868,7 @@ package eu.ecb.core.controller
 		
 		private function createDataProvider():IDataProvider
 		{
-			var provider:IDataProvider;
-			if (null != _dataFormat) {
-				switch (_dataFormat) {
-					case SDMXDataFormats.SDMX_ML_COMPACT: 
-						provider = _dataProvidersFactory.getCompactDataDAO();
-						break;
-					case SDMXDataFormats.SDMX_ML_GENERIC:
-						provider = _dataProvidersFactory.getGenericDataDAO()
-						break;
-					case SDMXDataFormats.SDMX_ML_UTILITY: 
-						provider = _dataProvidersFactory.getUtilityDataDAO();
-						break;
-					default: 
-						throw new Error("Unknown format: " + _dataFormat);
-						break;										
-				}
-			} else {
-				provider = _dataProvidersFactory.getDataDAO();
-			}
-			return provider;
+			return _dataProvidersFactory.getDataDAO();;
 		}
 	}
 }

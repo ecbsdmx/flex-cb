@@ -1201,7 +1201,6 @@ package eu.ecb.core.model
 				throw new ArgumentError("Frequency could not be found");
 			}
 			_refSeriesLen = tmpSeries.timePeriods.length;
-			sortSeries(tmpSeries);
 			return tmpSeries;
 	    }
 	    
@@ -1295,7 +1294,6 @@ package eu.ecb.core.model
 								, identifier: "All"});	
 			}
 
-			sortSeries(_referenceSeries);
 			if (_refSeriesLen >0) {
 				var firstObsDate:Date = 
 					(_referenceSeries.timePeriods.getItemAt(0) as 
@@ -1519,7 +1517,6 @@ package eu.ecb.core.model
 			
 			for each (var series:TimeseriesKey in ds.timeseriesKeys){
 				if (!(_allFilteredDataSets.timeseriesKeys.contains(series))) {
-					sortSeries(series);
 					_allFilteredDataSets.timeseriesKeys.addItem(series);
 				}
 			}

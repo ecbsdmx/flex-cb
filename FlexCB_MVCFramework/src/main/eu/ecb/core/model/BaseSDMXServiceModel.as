@@ -456,10 +456,8 @@ package eu.ecb.core.model
 			}
 			
 			for each (var series:TimeseriesKey in ds.timeseriesKeys){
-				var s:TimeseriesKey = _allDataSets.timeseriesKeys.
-					getTimeseriesKey(series.seriesKey);
-				if (null == s) {
-					sortSeries(series);
+				if (null == _allDataSets.timeseriesKeys.
+					getTimeseriesKey(series.seriesKey)) {
 					_allDataSets.timeseriesKeys.addItem(series);
 				}
 			}
