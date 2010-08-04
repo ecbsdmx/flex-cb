@@ -75,7 +75,6 @@ package org.sdmx.util.net
 		override public function handleData(event:Event):void 
 		{
 			event.stopImmediatePropagation();
-			event = null;
 			try {
 				var xmlData:XML;
 				if (_compressed) {
@@ -92,7 +91,8 @@ package org.sdmx.util.net
 				_secondAttempt = true;
 				compressed = false;
 				execute();
-			}			
+			}
+			event = null;			
         }
 		
 		/*=========================Protected methods==========================*/

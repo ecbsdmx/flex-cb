@@ -28,9 +28,6 @@ package org.sdmx.util.xs
 {
 	import org.sdmx.model.v2.base.type.ConceptRole;
 	import org.sdmx.model.v2.base.type.XSAttachmentLevel;
-	import org.sdmx.model.v2.reporting.dataset.AttributeValue;
-	import org.sdmx.model.v2.reporting.dataset.AttributeValuesCollection;
-	import org.sdmx.model.v2.reporting.dataset.CodedAttributeValue;
 	import org.sdmx.model.v2.reporting.dataset.DataSet;
 	import org.sdmx.model.v2.reporting.dataset.KeyValue;
 	import org.sdmx.model.v2.reporting.dataset.KeyValuesCollection;
@@ -38,15 +35,12 @@ package org.sdmx.util.xs
 	import org.sdmx.model.v2.reporting.dataset.SectionsCollection;
 	import org.sdmx.model.v2.reporting.dataset.TimePeriod;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
-	import org.sdmx.model.v2.reporting.dataset.UncodedAttributeValue;
 	import org.sdmx.model.v2.reporting.dataset.UncodedXSObservation;
 	import org.sdmx.model.v2.reporting.dataset.XSDataSet;
 	import org.sdmx.model.v2.reporting.dataset.XSGroup;
 	import org.sdmx.model.v2.reporting.dataset.XSGroupsCollection;
 	import org.sdmx.model.v2.reporting.dataset.XSObservationsCollection;
 	import org.sdmx.model.v2.structure.code.Code;
-	import org.sdmx.model.v2.structure.keyfamily.AttributeDescriptor;
-	import org.sdmx.model.v2.structure.keyfamily.DataAttribute;
 	import org.sdmx.model.v2.structure.keyfamily.Dimension;
 	import org.sdmx.model.v2.structure.keyfamily.KeyDescriptor;
 	import org.sdmx.model.v2.structure.keyfamily.KeyFamily;
@@ -74,6 +68,7 @@ package org.sdmx.util.xs
 	 *  
 	 * @author Xavier Sosnovsky
 	 * @author Karine Feraboli
+	 * @author Rok Povse
 	 */
 	public class ECBXSDataSetGenerator implements IXSDataSetGenerator
 	{
@@ -95,16 +90,8 @@ package org.sdmx.util.xs
 			//Process the key family information
 			var groupKey:KeyDescriptor = new KeyDescriptor("groupKey");
 			var sectionKey:KeyDescriptor = new KeyDescriptor("sectionKey");
-		
-			var dsAttrs:AttributeDescriptor = 
-				new AttributeDescriptor("dsAttrs");
-			var groupAttrs:AttributeDescriptor = 
-				new AttributeDescriptor("groupAttrs");
-			var sectionAttrs:AttributeDescriptor = 
-				new AttributeDescriptor("sectionAttrs");
-			var obsAttrs:AttributeDescriptor = 
-				new AttributeDescriptor("obsAttrs");	 		
-			
+				
+			//Perf: To be done only if DSD is different	
 			for each (var dim:Dimension in dsd.keyDescriptor) {
 				if (dim.xsAttachmentLevel == XSAttachmentLevel.GROUP) {
 					groupKey.addItem(dim);
@@ -112,33 +99,19 @@ package org.sdmx.util.xs
 					sectionKey.addItem(dim);
 				}
 			} 
-			
-			for each (var attr:DataAttribute in dsd.attributeDescriptor) {
-				if (attr.xsAttachmentLevel == XSAttachmentLevel.XSDATASET) {
-					dsAttrs.addItem(attr);
-				} else if (attr.xsAttachmentLevel == XSAttachmentLevel.GROUP) {
-					groupAttrs.addItem(attr);
-				} else if (attr.xsAttachmentLevel == XSAttachmentLevel.SECTION){
-					sectionAttrs.addItem(attr);
-				} else if (attr.xsAttachmentLevel == 
-					XSAttachmentLevel.XSOBSERVATION) {
-					obsAttrs.addItem(attr);
-				}
-			}
-			
+						
 			//Fetches the concept identity for the measure
-			measureDimension.conceptIdentity = dsd.keyDescriptor.getDimension(
-				measureDimension.conceptIdentity.id).conceptIdentity;
+			//Perf: To be done only if measure changes
+			var matchingDimension:Dimension = dsd.keyDescriptor.getDimension(
+				measureDimension.conceptIdentity.id) as Dimension;
+			measureDimension.conceptIdentity = 
+				matchingDimension.conceptIdentity;
 			measureDimension.localRepresentation = dsd.keyDescriptor.
-				getDimension(measureDimension.conceptIdentity.id).
+				getDimension(matchingDimension.conceptIdentity.id).
 				localRepresentation;
 						
 			// Create the basic dataset
 			var xsDataSet:XSDataSet = new XSDataSet();
-			xsDataSet.dataExtractionDate = dataSet.dataExtractionDate;
-			xsDataSet.describedBy = dataSet.describedBy;
-			xsDataSet.reportingBeginDate = dataSet.reportingBeginDate;
-			xsDataSet.reportingEndDate = dataSet.reportingEndDate;
 			
 			// Create the group
 			var group:XSGroup = new XSGroup();
@@ -146,14 +119,14 @@ package org.sdmx.util.xs
 			var series:TimeseriesKey = dataSet.timeseriesKeys.getItemAt(0) 
 				as TimeseriesKey;
 			
+			//Perf: Can be optimised for sibling groups. No need to search for position
 			for each (var groupDim:Dimension in groupKey) {
 				var value:KeyValue;
 				if (groupDim.conceptRole == ConceptRole.TIME) {
 					value = new KeyValue(new Code(date), groupDim);
 				} else {
 					value = series.keyValues.getItemAt(series.valueFor.
-						getItemIndex(series.valueFor.
-						getDimension(groupDim.conceptIdentity.id))) as KeyValue;	
+						getItemIndex(groupDim)) as KeyValue;	
 				}
 				groupValues.addItem(value);
 			}
@@ -164,102 +137,65 @@ package org.sdmx.util.xs
 			xsDataSet.groups = groups;
 			
 			// Create the sections
-			var sectionKeys:Object = new Object();
+			var sectionKeys:Array = new Array();
 			var sections:SectionsCollection = new SectionsCollection();
-			var seriesToSections:Object = new Object();
-			var sectionAttrsValue:AttributeValuesCollection =
-				new AttributeValuesCollection();
-			var obsAttrsValue:AttributeValuesCollection = 
-				new AttributeValuesCollection();
+			var key:String = "";
+			var sectionValues:KeyValuesCollection;
+			var measureDimensionCode:Code;	
+			var kvId:String;
+			var obs:TimePeriod;
+			var measure:UncodedXSMeasure;
+			var observations:XSObservationsCollection;
+			var observationsArray:Array = new Array();
+			var kv:KeyValue;
+			var tmpXSOBs:Array = new Array();
 			for each (var s:TimeseriesKey in dataSet.timeseriesKeys) {
-				var key:String = "";
-				var sectionValues:KeyValuesCollection = 
-					new KeyValuesCollection();
-				var measureDimensionCode:Code;	
-				for each (var kv:KeyValue in s.keyValues) {
-					if (null != sectionKey.getDimension(kv.valueFor.
-						conceptIdentity.id) && kv.valueFor.conceptIdentity.id !=
-						measureDimension.conceptIdentity.id) {
+				key = "";
+				sectionValues = new KeyValuesCollection();
+				for each (kv in s.keyValues) {
+					kvId = kv.valueFor.conceptIdentity.id;
+					if (null != sectionKey.getDimension(kvId) &&
+						kvId != measureDimension.conceptIdentity.id) {
 						key = key + kv.value.id + ".";
 						 sectionValues.addItem(kv); 	
-					}
-					if (null == measureDimensionCode && 
-						kv.valueFor.conceptIdentity.id == 
-							measureDimension.conceptIdentity.id) {
+					} else if (kvId == measureDimension.conceptIdentity.id && 
+						null == measureDimensionCode) {
 						measureDimensionCode = kv.value;	
 					}
 				}
 				
-				if (!(sectionKeys.hasOwnProperty(key))) {		
-					sectionAttrsValue = new AttributeValuesCollection();
-							
-					for each (var seriesAttr:AttributeValue in 
-						s.attributeValues) {
-						var id:String = (seriesAttr is CodedAttributeValue) ?
-							(seriesAttr as CodedAttributeValue).valueFor.
-								conceptIdentity.id :
-							(seriesAttr as UncodedAttributeValue).valueFor.
-								conceptIdentity.id ;	
-						if (null != sectionAttrs.getAttribute(id)) {
-							sectionAttrsValue.addItem(seriesAttr);	
-						} else if (null != obsAttrs.getAttribute(id)) {
-							obsAttrsValue.addItem(seriesAttr);
-						}
-					}
+				if (!(null != sectionKeys[key])) {		
 					var section:Section = new Section();
 					section.keyValues = sectionValues;
 					section.valueFor = sectionKey;
-					section.attributeValues = sectionAttrsValue;
 					sections.addItem(section);
 					sectionKeys[key] = section;
+					tmpXSOBs[key] = new Array();
 				} 
 				
 				//Create the observations
-				var obs:TimePeriod = s.timePeriods.getTimePeriod(date);
+				obs = (s.timePeriods.length==1 && (s.timePeriods.
+					getItemAt(0) as TimePeriod).periodComparator==date)?
+					s.timePeriods.getItemAt(0) as TimePeriod:
+					s.timePeriods.getTimePeriod(date);
 				if (null != obs) {
-					obsAttrsValue = new AttributeValuesCollection();
-					var measure:UncodedXSMeasure = new UncodedXSMeasure(
+					measure = new UncodedXSMeasure(
 						"xsMeasure", measureDimension.conceptIdentity, 
 						measureDimensionCode, measureDimension);
-					var xsObs:UncodedXSObservation = new UncodedXSObservation(
-						obs.observationValue, measure);
-					if (null == (sectionKeys[key] as Section).observations) {
-						(sectionKeys[key] as Section).observations = 
-							new XSObservationsCollection();
-					}	 
 					
-					for each (var obsAttr:AttributeValue in 
-						obs.observation.attributeValues) {
-						var id2:String = (obsAttr is CodedAttributeValue) ?
-							(obsAttr as CodedAttributeValue).valueFor.
-								conceptIdentity.id :
-							(obsAttr as UncodedAttributeValue).valueFor.
-								conceptIdentity.id ;	
-						if (null != sectionAttrs.getAttribute(id2)) {
-							sectionAttrsValue.addItem(obsAttr);	
-						} else if (null != obsAttrs.getAttribute(id2)) {
-							obsAttrsValue.addItem(obsAttr);
-						}
-					}
-					for each (var seriesAttr:AttributeValue in 
-						s.attributeValues) {
-						var id:String = (seriesAttr is CodedAttributeValue) ?
-							(seriesAttr as CodedAttributeValue).valueFor.
-								conceptIdentity.id :
-							(seriesAttr as UncodedAttributeValue).valueFor.
-								conceptIdentity.id ;	
-						if (null != obsAttrs.getAttribute(id)) {
-							obsAttrsValue.addItem(seriesAttr);
-						}
-					}
-					xsObs.attributeValues = obsAttrsValue;
+					(tmpXSOBs[key] as Array).push(new UncodedXSObservation(
+						obs.observationValue, measure));
 					
-					(sectionKeys[key] as Section).observations.addItem(xsObs);
 				}
 				measureDimensionCode = null;
 			}
+			
+			for (var key:String in tmpXSOBs) {
+				(sectionKeys[key] as Section).observations =
+				new XSObservationsCollection(tmpXSOBs[key]);
+			}
+			
 			group.sections = sections;
-
 			return xsDataSet;
 		}
 	}
