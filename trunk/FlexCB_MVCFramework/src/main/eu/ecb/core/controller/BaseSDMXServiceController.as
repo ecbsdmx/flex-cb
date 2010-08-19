@@ -51,7 +51,6 @@ package eu.ecb.core.controller
 	import org.sdmx.stores.api.IMaintainableArtefactProvider;
 	import org.sdmx.stores.api.ISDMXDaoFactory;
 	import org.sdmx.stores.api.SDMXQueryParameters;
-	import org.sdmx.stores.xml.v2.SDMXDataFormats;
 	import org.sdmx.stores.xml.v2.SDMXMLDaoFactory;
 
 	/**
