@@ -62,6 +62,7 @@ package eu.ecb.core.view.chart
 		private var _eUnionLegend:LegendItem;
 		private var _sectionId:String;
 		private var _euroAreaCode:String;
+		private var _euCode:String;
 		
 		/*===========================Constructor==============================*/
 		
@@ -71,6 +72,7 @@ package eu.ecb.core.view.chart
 			super(direction, chartLayout);
 			_euCountries = EUCountries.getInstance();
 			_euroAreaCode = "U2";	
+			_euCode = "D0";
 			_sortDescending = true;
 		}
 		
@@ -84,6 +86,16 @@ package eu.ecb.core.view.chart
 		public function set euroAreaCode(code:String):void
 		{
 			_euroAreaCode = code;
+		}
+		
+		/**
+		 * The code used for the European Union (D0, V1, etc).
+		 * 
+		 * @param code 
+		 */
+		public function set euCode(code:String):void
+		{
+			_euCode = code;
 		}
 		
 		/*========================Protected methods===========================*/
@@ -180,7 +192,7 @@ package eu.ecb.core.view.chart
 				}
 				
 				var d0Obs:UncodedXSObservation = section.observations.
-					getObsByCode("D0") as UncodedXSObservation;
+					getObsByCode(_euCode) as UncodedXSObservation;
 				if (null != d0Obs) {	 
 					addAverageLine(d0Obs.value, 0xa6bddb);
 					_eUnionLegend.label = "European Union (" + d0Obs.value + 
