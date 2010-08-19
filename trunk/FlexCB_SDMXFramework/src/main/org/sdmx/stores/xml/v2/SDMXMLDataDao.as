@@ -53,6 +53,8 @@ package org.sdmx.stores.xml.v2
 		private var _dataChanged:Boolean;
 		private var _kf:KeyFamily;
 		private var _format:String;
+		private var _reader:IDataReader;
+		private var _dataSet:DataSet;
 		
 		/*============================Constructor=============================*/
 		
