@@ -51,17 +51,7 @@ package org.sdmx.stores.api
 		/**
 		 * @private
 		 */
-		protected var _reader:IDataReader;
-		
-		/**
-		 * @private
-		 */
 		protected var _params:SDMXQueryParameters;
-		
-		/**
-		 * @private
-		 */
-		protected var _dataSet:DataSet;
 		
 		/**
 		 * @private
