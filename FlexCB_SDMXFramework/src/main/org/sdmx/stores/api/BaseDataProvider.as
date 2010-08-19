@@ -31,7 +31,6 @@ package org.sdmx.stores.api
 	
 	import org.sdmx.model.v2.reporting.dataset.DataSet;
 	import org.sdmx.model.v2.structure.keyfamily.KeyFamilies;
-	import org.sdmx.stores.xml.v2.IDataReader;
 
 	/**
 	 * Base implementation of the IDataProvider interface.
