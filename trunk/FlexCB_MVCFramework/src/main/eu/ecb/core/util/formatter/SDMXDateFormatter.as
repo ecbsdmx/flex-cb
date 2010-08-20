@@ -124,8 +124,8 @@ package eu.ecb.core.util.formatter
 					"objects.");
 			}
 			
+			var quarter:String;
 			if (frequency == "Q") {
-				var quarter:String;
 				if (value.month >= 0 && value.month < 3) {
 					quarter = "Q1";
 				} else if (value.month >= 3 && value.month < 6) {
@@ -135,9 +135,9 @@ package eu.ecb.core.util.formatter
 				} else if (value.month >= 9) {
 					quarter = "Q4";
 				}
-				formatString = "YYYY " + quarter;
+				formatString = "YYYY ";
 			}
-			return super.format(value);
+			return super.format(value) + (null != quarter ? quarter : "");
 		}
 	}
 }
