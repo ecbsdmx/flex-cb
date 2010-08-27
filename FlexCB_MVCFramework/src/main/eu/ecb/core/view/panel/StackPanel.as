@@ -40,6 +40,7 @@ package eu.ecb.core.view.panel
 	 * This panel wraps a AS3 ViewStack in a BaseSDMXViewComposite.
 	 *  
 	 * @author Xavier Sosnovsky
+	 * @author Rok Povse
 	 */
 	public class StackPanel extends BaseSDMXViewComposite
 	{
@@ -59,6 +60,15 @@ package eu.ecb.core.view.panel
 		}
 		
 		/*==========================Public methods============================*/
+		
+		/**
+		 * If true, the ViewStack container automatically resizes to the size of
+		 * its current child. 
+		 */
+		public function set resizeToContent(flag:Boolean):void
+		{
+			_stack.resizeToContent = flag;
+		}
 		
 		/**
 		 * @inheritDoc
