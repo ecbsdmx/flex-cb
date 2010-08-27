@@ -64,6 +64,7 @@ package eu.ecb.core.view.table
 	 * A table containing cross-sectional data.
 	 *  
 	 * @author Xavier Sosnovsky
+	 * @author Rok Povse
 	 */
 	public class XSTable extends BaseSDMXView implements IHierarchicalView
 	{
@@ -113,6 +114,11 @@ package eu.ecb.core.view.table
 		 * @private
 		 */
 		protected var _dataGrid:DataGrid;
+		
+		/**
+		 * @private
+		 */
+		protected var _isHidden:Boolean;
 		private var _sectionFormatter:ISectionTitleFormatter;
 		private var _obsFormatter:IXSObsTitleFormatter;
 		private var _referenceColumn:DataGridColumn;
@@ -217,6 +223,15 @@ package eu.ecb.core.view.table
 			return _selectedAssociation;
 		}
 		
+		/**
+		 * @inheritDoc
+	     */
+		public function set isHidden(value:Boolean):void
+		{
+			_isHidden=value;
+			invalidateProperties();
+		}
+		
 		/*=========================Public methods=============================*/
 		
 		/**
@@ -290,7 +305,6 @@ package eu.ecb.core.view.table
 				_dataGrid = new DataGrid();
 				_dataGrid.allowMultipleSelection = true;
 				_dataGrid.percentHeight = 100;
-				_dataGrid.percentWidth = 100;
 				_dataGrid.addEventListener(ListEvent.ITEM_CLICK, 
 					handleItemSelected);
 				_dataGrid.addEventListener(ListEvent.ITEM_DOUBLE_CLICK, 
@@ -310,10 +324,11 @@ package eu.ecb.core.view.table
 		/**
 		 * Handles the creation of a data column (not the indicator column).
 		 */ 
-		protected function createDataColumn(section:Section):DataGridColumn
+		protected function createDataColumn(section:Section, 
+			group:XSGroup):DataGridColumn
 		{
-			var sectionId:String = 
-				"value_" + section.keyValues.seriesKey.replace("\.", "_");
+			var sectionId:String =  group.keyValues.seriesKey.replace("\.", "_")
+				+ "_" + section.keyValues.seriesKey.replace("\.", "_");
 			if (null == _sortMeasure) {
 				_sortField = sectionId;
 				_sortMeasure = _sortField;
@@ -365,20 +380,12 @@ package eu.ecb.core.view.table
 		 */ 
 		override protected function commitProperties():void
 		{
-			if (_dataSetChanged) {
+			if (_dataSetChanged && !_isHidden) {
 				if (!(_dataSet is XSDataSet)) {
 					throw new ArgumentError("This cross-sectional view " + 
 						"only accepts a XSDataSet as input");
-				} else if ((_dataSet as XSDataSet).groups.length > 1) {
-					throw new ArgumentError("This cross-sectional view cannot" + 
-						" handle more than one period at a time");
 				} else if ((_dataSet as XSDataSet).groups.length == 0) {
 					throw new ArgumentError("No data to be displayed");
-				} else if (((_dataSet as XSDataSet).groups.getItemAt(0) as 
-					XSGroup).sections.length == 0 || (((_dataSet as XSDataSet).
-					groups.getItemAt(0) as XSGroup).sections.getItemAt(0) as 
-					Section).observations.length == 0) {
-					throw new ArgumentError("No data to be displayed");	
 				}
 				_dataSetChanged = false;
 				
@@ -394,9 +401,13 @@ package eu.ecb.core.view.table
 					(obs as CodedXSObservation).measure;
 				allColumns.push(createReferenceColumn(measure));
 				
-				for each (var section:Section in ((_dataSet as XSDataSet).groups.
-					getItemAt(0) as XSGroup).sections) {
-					allColumns.push(createDataColumn(section));
+				for each (var group:XSGroup in (_dataSet as XSDataSet).groups) {
+					for each (var section:Section in group.sections) {
+						var newColumn:DataGridColumn =createDataColumn(section,group);
+						if (newColumn!=null) {
+							allColumns.push(newColumn);
+						}
+					}
 				}
 				
 				if (null != _sort) {
@@ -406,6 +417,7 @@ package eu.ecb.core.view.table
 				_dataGrid.columns = allColumns;
 				_dataGrid.dataProvider = _observations;
 			}
+			super.commitProperties();
 		}
 		
 		/**
@@ -505,9 +517,7 @@ package eu.ecb.core.view.table
 			return contains; 
 		}	
 		
-		/*=========================Private methods============================*/
-		
-		private function createReferenceColumn(measure:XSMeasure):DataGridColumn
+		protected function createReferenceColumn(measure:XSMeasure):DataGridColumn
 		{
 			var col:DataGridColumn = new DataGridColumn();
 			col.width = 100;
@@ -517,6 +527,8 @@ package eu.ecb.core.view.table
 			col.labelFunction = formatIndicator;
 			return col;
 		}
+		
+		/*=========================Private methods============================*/
 		
 		private function handleRollOver(event:ListEvent):void
 		{
