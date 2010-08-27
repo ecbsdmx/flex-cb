@@ -149,9 +149,9 @@ package eu.ecb.core.view.map
 		{
 			_mapLegend = legend;
 			if (getChildren().length == 2) {
-				removeChildAt(1);
+				removeChildAt(0);
 			}
-			addChild(_mapLegend as DisplayObject);
+			addChildAt(_mapLegend as DisplayObject, 0);
 		}
 		
 		/**
