@@ -27,6 +27,7 @@
 package eu.ecb.core.view.table
 {
     import mx.controls.Label;
+    import mx.controls.dataGridClasses.DataGridListData;
     import mx.controls.listClasses.*;
 
 	/**
@@ -35,6 +36,7 @@ package eu.ecb.core.view.table
 	 * observation value is lower, the cell content will be red.
 	 *  
 	 * @author Xavier Sosnovsky
+	 * @author Rok Povse
 	 */
     public class ChangeRenderer extends Label {
     	
@@ -45,19 +47,24 @@ package eu.ecb.core.view.table
         
         /*========================Protected methods===========================*/
 
+		/**
+		 * @inheritDoc
+		 */ 
         override protected function updateDisplayList(unscaledWidth:Number, 
         	unscaledHeight:Number):void {
             super.updateDisplayList(unscaledWidth, unscaledHeight);
-			if (null != data && null != data.value_change) {
+            var listData:DataGridListData = listData as DataGridListData;
+			if (null != data && listData.dataField.length > 0 &&
+				data[listData.dataField] != null) {
 				var color:uint;
-				var value:String = String(data.value_change);
+				var value:String = String(data[listData.dataField]);
 				if (null != value && value.charAt(0) == "+") {
 					color = POSITIVE_COLOR;
 				} else if (null != value && value.charAt(0) == "-") {
 					color = NEGATIVE_COLOR;
 				}
 				setStyle("color", color);
-			}
+			}			
         }
     }
 }
