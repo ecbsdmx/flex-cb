@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -68,6 +66,7 @@ package eu.ecb.core.view.chart
 	 * The chart legend
 	 * 
 	 * @author Xavier Sosnovsky
+	 * @author Mike Eltsufin
 	 */
 	public class ECBLegend extends BaseSDMXView
 	{
@@ -75,21 +74,13 @@ package eu.ecb.core.view.chart
 		/*==============================Fields================================*/
 				
 		private var _attributeTitle:String;
-		
 		private var _highlightedSeries:ArrayCollection;
-		
 		private var _mouseOverEnabled:Boolean;
-		
 		private var _autoHide:Boolean;
-		
 		private var _forceHide:Boolean;
-		
 		private var _formatter:ISeriesTitleFormatter;
-		
 		private var _disableContentCheck:Boolean;
-		
 		private var _legendContainer:Container;
-				
 		private var _legendMarkerFactory:IFactory;
 		
 		/*===========================Constructor==============================*/
@@ -106,15 +97,19 @@ package eu.ecb.core.view.chart
 				AttachmentLevel.GROUP;
 			_legendMarkerFactory = new ClassFactory(CircleItemRenderer);
 	 		_legendContainer = new FlowBox();
-			_legendContainer.styleName = "ecbLegendContainer";	 		
-	 		addChild(_legendContainer);			
+			_legendContainer.styleName = "ecbLegendContainer";	 
+			if (direction == "horizontal") {
+				percentWidth = 100;
+				_legendContainer.percentWidth = 100;
+			}		
+	 		addChild(_legendContainer);		
 		}
 		
 		/*============================Accessors===============================*/
 		
 		/**
-		 * Whether or not highlight and select functionality of legend items
-		 * should be enabled.
+		 * Whether highlight and select functionality of legend items should be 
+		 * enabled. Defaults to false.
 		 *  
 		 * @param flag
 		 */
@@ -124,8 +119,8 @@ package eu.ecb.core.view.chart
 		}
 		
 		/**
-		 * Whether or not the component should auothide itself, when the dataset
-		 * only contains one series
+		 * Whether the component should auothide itself, when the dataset only 
+		 * contains one series. Defaults to true.
 		 */ 
 		public function set autoHide(flag:Boolean):void
 		{
@@ -133,8 +128,8 @@ package eu.ecb.core.view.chart
 		}
 		
 		/**
-		 * Whether or not the component should be hidden, even if its dataset
-		 * contains more than one series. 
+		 * Whether the component should be hidden, even if its dataset contains 
+		 * more than one series. Defaults to false.
 		 */
 		public function set forceHide(flag:Boolean):void
 		{
@@ -159,6 +154,12 @@ package eu.ecb.core.view.chart
 			return _formatter;
 		}
 		
+		/**
+		 * Whether checks should be performed that the legend contains no
+		 * duplicates. Default to false.
+		 * 
+		 * @param flag
+		 */
 		public function set disableContentCheck(flag:Boolean):void
 		{
 			_disableContentCheck = flag;
@@ -172,11 +173,6 @@ package eu.ecb.core.view.chart
 			return _legendContainer;
 		}
 		
-		public function set legendContainer(container:Container):void
-		{
-			_legendContainer = container;
-		}
-		
 		/**
 		 * The item renderer factory for legend markers 
 		 */
@@ -185,6 +181,9 @@ package eu.ecb.core.view.chart
 			return _legendMarkerFactory;
 		}
 		
+		/**
+		 * @private
+		 */ 
 		public function set legendMarkerFactory(markerFactory:IFactory):void
 		{
 			_legendMarkerFactory = markerFactory;
@@ -192,12 +191,22 @@ package eu.ecb.core.view.chart
 				
 		/*==========================Public methods============================*/
 		
+		/**
+		 * Handles the event that instructs the component to hide itself.
+		 * 
+		 * @param event 
+		 */
 		public function enableForceHide(event:Event):void
 		{
 			_forceHide = true;
 			invalidateDisplayList();
 		}
 		
+		/**
+		 * Handles the event that instructs the component to show itself.
+		 * 
+		 * @param event 
+		 */
 		public function disableForceHide(event:Event):void
 		{
 			_forceHide = false;
@@ -207,7 +216,7 @@ package eu.ecb.core.view.chart
 		/*========================Protected methods===========================*/
 		
 		/**
-		 * @private
+		 * @inheritDocs
 		 */ 
 		override protected function commitProperties():void
 	 	{
@@ -256,7 +265,8 @@ package eu.ecb.core.view.chart
 							labels.addItem(seriesTitle);
 						}
 						legendItem.label = seriesTitle;																	
-						legendItem.setStyle("legendMarkerRenderer", _legendMarkerFactory);
+						legendItem.setStyle("legendMarkerRenderer", 
+							_legendMarkerFactory);
 						legendItem.markerAspectRatio = 1; 						
 						legendItem.styleName = "ecbLegendItem";	
 						_legendContainer.addChild(legendItem);
@@ -272,6 +282,9 @@ package eu.ecb.core.view.chart
 	 		}
 	 	}
 	 	
+	 	/**
+		 * @inheritDocs
+		 */
 	 	override protected function updateDisplayList(unscaledWidth:Number, 
 	 		unscaledHeight:Number):void
  		{
@@ -293,6 +306,8 @@ package eu.ecb.core.view.chart
 			}
 			
  		}
+ 		
+ 		/*=========================Private methods============================*/
 	 	
 	 	private function handleLegendClicked(event:MouseEvent):void
 	 	{
