@@ -210,6 +210,14 @@ package eu.ecb.core.model
 		function set endDate(date:Date):void;
 		
 		/**
+		 * By default, the model will filter series, based on the frequency of 
+		 * the data (for example, for a series with daily data, containing 
+		 * observations for the last 5 years, it will display only observations
+		 * for the last year). Set this flag to true, to disable this behavior.
+		 */ 
+		function set disableDefaultPeriodFiltering(flag:Boolean):void;
+		
+		/**
 		 * Updates the model when the currently selected period is changed by a
 		 * view.
 		 * 

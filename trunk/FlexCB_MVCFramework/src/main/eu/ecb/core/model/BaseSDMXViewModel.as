@@ -243,11 +243,6 @@ package eu.ecb.core.model
 		
 		/**
 		 * @private
-		 */
-		private var _resourceManager:IResourceManager;
-		
-		/**
-		 * @private
 		 */ 
 		protected var _filteredDataSet:DataSet;
 		
@@ -299,21 +294,6 @@ package eu.ecb.core.model
 		/**
 		 * @private
 		 */
-		private var _referenceSeriesIndex:int;
-		
-		/**
-		 * @private
-		 */
-		private var _allPeriods:Array;
-		
-		/**
-		 * @private
-		 */
-		private var _selectedPeriod:Object;
-		
-		/**
-		 * @private
-		 */
 		protected var _startDate:Date;
 		
 		/**
@@ -323,55 +303,24 @@ package eu.ecb.core.model
 		
 		/**
 		 * @private
-		 */
-		private var _dateFormatter:DateFormatter;
-		
-		/**
-		 * @private
-		 */
-		private var _leftIndex:int;
-		
-		/**
-		 * @private
-		 */
-		private var _rightIndex:int;
-		
-		/**
-		 * @private
-		 */ 
-		private var _startDateSet:Boolean;
-		
-		/**
-		 * @private
-		 */ 
-		private var _selectedDate:String;
-		
-		/**
-		 * @private
-		 */ 
-		private var _referenceSeriesKey:String;
-		
-		/**
-		 * @private
-		 */ 
-		private var _selectedMeasures:Object;
-		
-		/**
-		 * @private
-		 */ 
-		private var _highlightedMeasure:XSMeasure;
-		
-		/**
-		 * @private
-		 */ 
-		private var _deselectedMeasure:XSMeasure;
-		
-		/**
-		 * @private
 		 */ 
 		protected var _moviePlayed:Boolean;
 		
+		private var _resourceManager:IResourceManager;
+		private var _referenceSeriesIndex:int;
+		private var _allPeriods:Array;
+		private var _selectedPeriod:Object;
+		private var _dateFormatter:DateFormatter;
+		private var _leftIndex:int;
+		private var _rightIndex:int;
+		private var _startDateSet:Boolean;
+		private var _selectedDate:String;
+		private var _referenceSeriesKey:String;
+		private var _highlightedMeasure:XSMeasure;
+		private var _selectedMeasures:Object;
+		private var _deselectedMeasure:XSMeasure;
 		private var _refSeriesLen:uint;
+		private var _disableDefaultPeriodFiltering:Boolean;
 		
 		/*===========================Constructor==============================*/
 		
@@ -645,6 +594,14 @@ package eu.ecb.core.model
 				timeseriesKeys && _filteredDataSet.timeseriesKeys.length > 0) {
 				triggerDataFiltering();
 			}
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function set disableDefaultPeriodFiltering(flag:Boolean):void
+		{
+			_disableDefaultPeriodFiltering = flag;	
 		}
 		
 		/*==========================Public methods============================*/
@@ -1231,8 +1188,8 @@ package eu.ecb.core.model
 				getItemAt(_referenceSeriesIndex) as TimeseriesKey;
 			if (_startDateSet) {
 				triggerDataFiltering();
-			} else if (_rightIndex == 0 && 
-				_refSeriesLen > 0) {	
+			} else if (_rightIndex == 0 && _refSeriesLen > 0 && 
+				!_disableDefaultPeriodFiltering) {	
 				updatedFilteredCollection(getPreviousDate(
            			(_referenceSeries.timePeriods.getItemAt(
            				_refSeriesLen - 1) 
