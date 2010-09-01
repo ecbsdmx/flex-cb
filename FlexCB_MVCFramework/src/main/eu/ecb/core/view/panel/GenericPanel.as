@@ -28,8 +28,10 @@ package eu.ecb.core.view.panel
 {
 	import eu.ecb.core.command.ICommand;
 	import eu.ecb.core.command.IInvoker;
+	import eu.ecb.core.controller.BaseController;
 	import eu.ecb.core.controller.ISDMXServiceController;
 	import eu.ecb.core.controller.ISDMXViewController;
+	import eu.ecb.core.event.ProgressEventMessage;
 	import eu.ecb.core.event.SDMXObjectEvent;
 	import eu.ecb.core.model.IModel;
 	import eu.ecb.core.model.ISDMXServiceModel;
@@ -37,12 +39,14 @@ package eu.ecb.core.view.panel
 	import eu.ecb.core.util.config.IConfigurationParser;
 	import eu.ecb.core.util.net.locator.ISeriesLocator;
 	import eu.ecb.core.view.BaseSDMXMediator;
+	import eu.ecb.core.view.util.ProgressBox;
 	
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
 	import flash.net.URLRequest;
 	
 	import mx.collections.ArrayCollection;
+	import mx.managers.PopUpManager;
 
 	/**
 	 * Generic Flex-CB panel, driven by an XML configuration file. 
@@ -53,10 +57,16 @@ package eu.ecb.core.view.panel
 	public class GenericPanel extends BaseSDMXMediator implements IInvoker
 	{
 		/*==============================Fields================================*/
+		
+		/**
+		 * @private
+		 */ 	
+		protected var _fileLocator:ISeriesLocator;
+		private var _pBar:ProgressBox;
 		private var _commands:Object;
-		private var _fileLocator:ISeriesLocator;
 		private var _views:Object;
 		private var _runOnceEvents:Object;
+		
 		
 		/*===========================Constructor==============================*/
 		
@@ -65,38 +75,8 @@ package eu.ecb.core.view.panel
 		{
 			super(model, controller, "vertical");
 			_views = new Object();
-			setUp(settings);
-		}
-		
-		/*==========================Public methods============================*/
-				
-		/**
-		 * Sets and parses the configuration file to be used by the application.
-		 * 
-		 * @param settings 
-		 */
-		public function setUp(settings:URLRequest):void
-		{
-			
-			var configurationParser:IConfigurationParser = new BasicConfigurationParser();
-			
-			configurationParser.addEventListener(
-				BasicConfigurationParser.DBOARD_SETTINGS_EXTRACTED,
-				 handleDBoardSettingsExtracted,false,0,true);
-			
-			configurationParser.addEventListener(
-				BasicConfigurationParser.DATA_INFO_EXTRACTED, 
-				handleDataInfoExtracted,false,0,true);
-				
-			configurationParser.addEventListener(
-				BasicConfigurationParser.EVENT_EXTRACTED,
-				 handleEventExtracted,false,0,true);
-
-			configurationParser.addEventListener(
-				BasicConfigurationParser.VIEW_EXTRACTED,
-				 handleViewExtracted,false,0,true);
-				
-			configurationParser.parse(settings);
+			setTaskProgressHandlers();
+			setConfigParserHandlers(settings);
 		}
 		
 		/*==========================Public methods============================*/
@@ -139,9 +119,15 @@ package eu.ecb.core.view.panel
 			}
 		}
 		
-		/*==========================Private methods===========================*/
+		/*==========================Protected methods=========================*/
 		
-		private function handleDBoardSettingsExtracted(
+		/**
+		 * Handles the extraction of settings applying to the mediator, such as
+		 * startDate, fileLocator, etc.
+		 *  
+		 * @param event
+		 */
+		protected function handleDBoardSettingsExtracted(
 			event:SDMXObjectEvent):void {
 			event.stopImmediatePropagation();
 			var sdmxObject:Object = event.sdmxObject;
@@ -166,7 +152,90 @@ package eu.ecb.core.view.panel
 			event = null;	
 		}
 		
-		private function handleDataInfoExtracted(event:SDMXObjectEvent):void {
+		/**
+		 * Handles the progress event dispatched by the controller, for example
+		 * when fetching a data file.
+		 *  
+		 * @param event
+		 */
+		protected function handleProgress(event:ProgressEventMessage):void
+		{
+			if (null != _pBar) {
+				_pBar.showWait(event);
+			}
+		}
+		
+		/**
+		 * Handles the start task event dispatched by the controller, for 
+		 * example when initiating a request for a data file.
+		 *  
+		 * @param event
+		 */
+		protected function handleTaskStarted(event:Event):void
+		{
+			if (null == _pBar) {
+				_pBar =
+					PopUpManager.createPopUp(this.parent, 
+						ProgressBox,true) as ProgressBox;
+				PopUpManager.centerPopUp(_pBar);
+			}
+		}
+		
+		/**
+		 * Handles the end task event dispatched by the controller, for 
+		 * example when closing a request for a data file.
+		 *  
+		 * @param event
+		 */
+		protected function handleTaskCompleted(event:Event):void
+		{
+			if (null != _pBar) {
+				PopUpManager.removePopUp(_pBar);
+				_pBar = null;
+			}
+		}	
+		
+		/**
+		 * Defines the handlers to be used to handle the task-related events
+		 * dispatched by the controller.  
+		 */
+		protected function setTaskProgressHandlers():void
+		{
+			controller.addEventListener(BaseController.TASK_STARTED, 
+				handleTaskStarted);
+			controller.addEventListener(BaseController.TASK_PROGRESS, 
+				handleProgress);		
+			controller.addEventListener(BaseController.TASK_COMPLETED, 
+				handleTaskCompleted);
+		}
+		
+		/**
+		 * Defines the handlers to be used to handle the events dispatched by 
+		 * the configuration parser.  
+		 */
+		protected function setConfigParserHandlers(settings:URLRequest):void
+		{
+			var configurationParser:IConfigurationParser = 
+				new BasicConfigurationParser();
+			configurationParser.addEventListener(
+				BasicConfigurationParser.DBOARD_SETTINGS_EXTRACTED,
+				 handleDBoardSettingsExtracted,false,0,true);
+			configurationParser.addEventListener(
+				BasicConfigurationParser.DATA_INFO_EXTRACTED, 
+				handleDataInfoExtracted,false,0,true);
+			configurationParser.addEventListener(
+				BasicConfigurationParser.EVENT_EXTRACTED,
+				 handleEventExtracted,false,0,true);
+			configurationParser.addEventListener(
+				BasicConfigurationParser.VIEW_EXTRACTED,
+				 handleViewExtracted,false,0,true);
+			configurationParser.parse(settings);
+		}
+		
+		/**
+		 * Handles the request to fetch data files.  
+		 */
+		protected function handleDataInfoExtracted(event:SDMXObjectEvent):void {
 			event.stopImmediatePropagation();
 			
 			var collection:ArrayCollection = new ArrayCollection();
@@ -184,6 +253,8 @@ package eu.ecb.core.view.panel
 			}
 			event = null;
 		}
+		
+		/*==========================Private methods===========================*/
 		
 		private function handleEventExtracted(event:SDMXObjectEvent):void {
 			event.stopImmediatePropagation();
