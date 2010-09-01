@@ -71,6 +71,7 @@ Application {
 	borderStyle: solid;
 	borderThickness: 2; 
 	cornerRadius: 5;
+	verticalGap: 0;
 }
 
 .ecbPeriodChartBox {
@@ -232,7 +233,6 @@ LinkBar, LinkButton {
 }
 
 .movieButton {
-	paddingLeft: 10;
 	fillColors: #EBEEEF, #EBEEEF, #EBEEEF, #EBEEEF;
 	borderColor: #CBD1D5;
 	horizontalGap: 0;
@@ -497,4 +497,14 @@ GenericPanel {
 	paddingRight: 10;
 	paddingTop: 10;
 	paddingBottom: 10;
+}
+.comboBox {    
+    backgroundColor: #FFFFFF;
+    borderThickness: 1;
+    borderStyle: "solid";
+    cornerRadius: 3;
+    paddingTop: 3;
+    paddingRight: 3;
+    paddingBottom: 3;
+    paddingLeft: 3;
 }
