@@ -617,7 +617,7 @@ package org.sdmx.stores.xml.v2
 			var value:String;
 			for each (var attribute:DataAttribute in descriptor) {
 				value = getAttributeValue(xml, attribute.id);
-				if ("" != value) {
+				if ("" != value && null != value) {
 					if (_attributeValues[attribute.id] != null &&
 						_attributeValues[attribute.id][value] != null) {
 						attributes.push(
@@ -627,10 +627,12 @@ package org.sdmx.stores.xml.v2
 							_attributeValues[attribute.id] = new Array();
 						}
 						if (attribute is CodedDataAttribute) {
-							attributeValue = new CodedAttributeValue(target, 
-								(attribute.localRepresentation as CodeList).codes.
-								getCode(value), 
-								attribute as CodedDataAttribute);
+							var code:Code = (attribute.localRepresentation as 
+								CodeList).codes.getCode(value);
+							if (null != code) {
+								attributeValue = new CodedAttributeValue(target, 
+									code, attribute as CodedDataAttribute);
+							}	 
 						} else if (attribute is UncodedDataAttribute) {
 							attributeValue = new UncodedAttributeValue(target, 
 								value, attribute as UncodedDataAttribute);
