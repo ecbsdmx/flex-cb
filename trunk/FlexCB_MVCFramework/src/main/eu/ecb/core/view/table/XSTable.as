@@ -128,6 +128,7 @@ package eu.ecb.core.view.table
 		[Embed(source="../../../assets/images/ZoomIn.png")]
 		private var _drillDownCursor:Class;
 		private var _headerPressed:Boolean;
+		private var _fullWidth:Boolean;
 		
 		/*===========================Constructor==============================*/
 		
@@ -232,6 +233,22 @@ package eu.ecb.core.view.table
 			invalidateProperties();
 		}
 		
+		/**
+		 * Whether the width of the datagrid should expand to the full width of
+		 * the parent.
+		 */ 
+		public function set fullWidth(flag:Boolean):void
+		{
+			_fullWidth = flag;
+			if (null != _dataGrid) {
+				if (flag) {
+					_dataGrid.percentWidth = 100;
+				} else {
+					_dataGrid.percentWidth = NaN;
+				}
+			}
+		}
+		
 		/*=========================Public methods=============================*/
 		
 		/**
@@ -299,12 +316,13 @@ package eu.ecb.core.view.table
 				addChild(_upLink);
 			}
 			
-			super.createChildren();
-			
 			if (null == _dataGrid) {
 				_dataGrid = new DataGrid();
 				_dataGrid.allowMultipleSelection = true;
 				_dataGrid.percentHeight = 100;
+				if (_fullWidth) {
+					_dataGrid.percentWidth = 100;
+				}
 				_dataGrid.addEventListener(ListEvent.ITEM_CLICK, 
 					handleItemSelected);
 				_dataGrid.addEventListener(ListEvent.ITEM_DOUBLE_CLICK, 
@@ -319,6 +337,8 @@ package eu.ecb.core.view.table
 					handleColumnHeaderReleased);
 				addChild(_dataGrid);
 			}
+			
+			super.createChildren();
 		}
 		
 		/**
@@ -329,8 +349,8 @@ package eu.ecb.core.view.table
 		{
 			var sectionId:String =  group.keyValues.seriesKey.replace("\.", "_")
 				+ "_" + section.keyValues.seriesKey.replace("\.", "_");
+			_sortField = sectionId;
 			if (null == _sortMeasure) {
-				_sortField = sectionId;
 				_sortMeasure = _sortField;
 			}	
 			for (var i:uint = 0; i < section.observations.length; i++) {
