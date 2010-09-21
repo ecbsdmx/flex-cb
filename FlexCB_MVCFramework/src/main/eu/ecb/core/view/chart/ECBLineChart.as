@@ -308,6 +308,13 @@ package eu.ecb.core.view.chart
 			invalidateProperties();	
 		}
 		
+		public function handleMovieStopped(event:Event):void
+		{
+			if (null != _chart) { 
+				(_chart.verticalAxis as LinearAxis).maximum = NaN; 	
+			}
+		}
+		
 		/*========================Protected methods===========================*/
 		
 		/**
