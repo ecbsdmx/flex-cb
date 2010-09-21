@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2010 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -44,24 +42,6 @@ package eu.ecb.core.view.filter
 			super();
 		}
 		
-		/*==========================Public methods============================*/
-		
-		/**
-		 * inheritDoc
-		 */ 
-		override public function get measuredWidth():Number
-		{
-			return 1;
-		}
-
-		/**
-		 * inheritDoc
-		 */
-		override public function get measuredHeight():Number
-		{
-			return 20;
-		}
-		
 		/*=========================Protected methods==========================*/
 	
 		/**
@@ -70,13 +50,9 @@ package eu.ecb.core.view.filter
 		override protected function updateDisplayList(w:Number, h:Number):void
 		{
 			super.updateDisplayList(w, h);
-	
-			var themeColor:int = getStyle("themeColor");
-			
 			graphics.clear();
-					
-			graphics.beginFill(themeColor);
-			graphics.drawRect(1, +8, w - 1, -h +1);
+			graphics.beginFill(0xA6BDDB, .5);
+			graphics.drawRoundRect(-27, -9, w + 54, 14, 8, 8);
 		}
 	}
 }

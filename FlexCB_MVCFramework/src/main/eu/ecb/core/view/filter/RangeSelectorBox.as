@@ -174,7 +174,7 @@ package eu.ecb.core.view.filter
 		
 		private var _timer:Timer;
 		
-		private var _wasPaused:Boolean;
+		private var _wasPaused:Boolean;		
 		
 		/*===========================Constructor==============================*/
 		
@@ -185,7 +185,6 @@ package eu.ecb.core.view.filter
 			setStyle("verticalAlign", "top");
 			_dateFormatter = new SDMXDateFormatter();
 			_dateFormatter.isShortFormat = true;
-			_dateFormatter.frequency = "M";
 		}
 		
 		/*========================Protected methods===========================*/
@@ -199,6 +198,7 @@ package eu.ecb.core.view.filter
 			
 			if (null == _row1) {
 				_row1 = new HBox();
+				_row1.visible = false;
 				_row1.percentWidth = 100;
 				_row1.setStyle("horizontalGap", 0);
 				_row1.setStyle("horizontalAlign", "center");
@@ -218,12 +218,15 @@ package eu.ecb.core.view.filter
 				_slider.thumbCount = 2;
 				_slider.snapInterval = 1;
 				_slider.minimum = 0;
+				_slider.height = 15;
+				_slider.width = 640;
 				_slider.liveDragging = true;
 				_slider.setStyle("trackSkin", ECBSliderTrackSkin);
-				_slider.setStyle("trackHighlightSkin", ECBSliderHighlightSkin);
+				_slider.setStyle("thumbSkin", ECBSliderThumbSkin);
+				_slider.setStyle("trackHighlightSkin", ECBSliderHighlightSkin); 
 				_slider.setStyle("dataTipStyleName", "dataTip");
 				_slider.setStyle("labelOffset", 0);
-				_slider.dataTipFormatFunction = formatDataTip;
+				_slider.showDataTip = false;
 				_slider.addEventListener(SliderEvent.CHANGE, 
 					handleSliderChanged);
 				_row1.addChild(_slider);
@@ -235,7 +238,6 @@ package eu.ecb.core.view.filter
 				_button.labelPlacement = "right";
 				_button.styleName = "movieButton";
 				_button.toolTip = "Play the animation";
-				_button.setStyle("paddingTop", 5);
 				_button.setStyle("icon", _playIcon);
 				_button.setStyle("rollOverColor", 0xFFFFFF);
 				_button.setStyle("selectionColor", 0xFFFFFF);
@@ -250,7 +252,6 @@ package eu.ecb.core.view.filter
 				_stopButton.toolTip = "Stop the animation";
 				_stopButton.labelPlacement = "right";
 				_stopButton.styleName = "movieButton";
-				_stopButton.setStyle("paddingTop", 5);
 				_stopButton.setStyle("rollOverColor", 0xFFFFFF);
 				_stopButton.setStyle("selectionColor", 0xFFFFFF);
 				_stopButton.setStyle("textRollOverColor", 0xFFFFFF);
@@ -286,8 +287,14 @@ package eu.ecb.core.view.filter
 		 */ 
 		override protected function commitProperties():void
 		{
+			if (_referenceSeriesFrequencyChanged) {
+				_referenceSeriesFrequencyChanged = false;
+				_dateFormatter.frequency = _referenceSeriesFrequency;
+			}
+			
 			if (_referenceSeriesChanged) {
 				_referenceSeriesChanged = false;
+				
 				_slider.maximum = _referenceSeries.timePeriods.length - 1;
 				var count:uint = 0;
 				var j:uint = 0;
@@ -302,16 +309,36 @@ package eu.ecb.core.view.filter
 					}
 					count++;
 				}
-				_slider.values  = [0, count];
-				ticks.push(count--);
+				
+				var labelsCount:uint = Math.floor(_slider.width/54.0);
+				var newYears:Array;
+				var newTicks:Array = 
+					new ArrayCollection(ticks).toArray().concat();
+				if (labelsCount < years.length) {
+					var koef:uint = Math.ceil(years.length/labelsCount);
+					newYears = new Array();
+					newTicks = new Array();
+					for (var i:int = 0;i < years.length;i += koef) {
+						newYears.push(years[i]);
+						newTicks.push(ticks[i]);
+					}
+				}
+				else {
+					newYears = years.toArray();
+				}
+				
+				_slider.values  = [0, count - 1];
+				newTicks.push(count--);
 				if ((_referenceSeries.timePeriods.getItemAt(_referenceSeries.
 					timePeriods.length - 1) as TimePeriod).timeValue.
 					month < 8) {
-					years.setItemAt("", years.length - 1);	
+					years[years.length - 1] = "";	
 				}
-				_slider.tickValues = ticks;
-				_slider.labels = years.toArray();
-				_slider.width = 4.5 * _referenceSeries.timePeriods.length;
+				_slider.tickValues = newTicks;
+				_slider.labels = newYears;
+				handleThumb(0);
+				handleThumb(1);
+				_row1.visible = true;
 			}
 			
 			super.commitProperties();
@@ -319,23 +346,19 @@ package eu.ecb.core.view.filter
 		
 		/*=========================Private methods============================*/
 		
-		private function formatDataTip(value:Number):String 
-		{ 
-        	return _dateFormatter.format((_referenceSeries.timePeriods.
-        		getItemAt(value) as TimePeriod).timeValue);
-      	}
-      	
-      	private function handleSliderChanged(event:SliderEvent):void
+		private function handleSliderChanged(event:SliderEvent):void
       	{
       		event.stopImmediatePropagation();
+      		var _timePeriod:TimePeriod = (_referenceSeries.timePeriods.
+      			getItemAt(event.value) as TimePeriod);
       		if (event.thumbIndex == 0) {
+      			handleThumb(0);
       			dispatchEvent(new DataEvent(START_DATE_CHANGED, false, false, 
-					(_referenceSeries.timePeriods.getItemAt(event.value) as 
-					TimePeriod).periodComparator));
+					_timePeriod.periodComparator));
       		} else if (event.thumbIndex == 1) {
+				handleThumb(1);
       			dispatchEvent(new DataEvent(END_DATE_CHANGED, false, false, 
-					(_referenceSeries.timePeriods.getItemAt(event.value) as 
-					TimePeriod).periodComparator));
+					_timePeriod.periodComparator));
       		}
       		event = null;
       	}
@@ -354,11 +377,14 @@ package eu.ecb.core.view.filter
 					_slider.setStyle("showTrackHighlight", false);
 					_initialStartValue = _slider.values[0];
 					_initialEndValue   = _slider.values[1];
-					_slider.values = [_initialStartValue, _initialEndValue];
 					_stopButton.visible = true;
 					_stopButton.enabled = true;
 					_speedSelector.visible = true;
+					_slider.validateNow();
 					dispatchEvent(new Event(MOVIE_STARTED));
+					//Don't delete the line below, although it makes no sense
+					_slider.values = [_initialStartValue, _initialEndValue];
+					handleThumb(0);
 				}
 			} else {
 				_timer.stop();
@@ -375,43 +401,51 @@ package eu.ecb.core.view.filter
 			_button.setStyle("icon", _playIcon);
 			_slider.setStyle("showTrackHighlight", true);
 			_slider.thumbCount = 2;
+			_slider.validateNow();
 			_slider.enabled = true;
 			_slider.values = [_initialStartValue, _initialEndValue];
 			_stopButton.visible = false;
 			_stopButton.enabled = false;
 			_speedSelector.visible = false;
 			_wasPaused = false;
-			dispatchEvent(new Event(MOVIE_STOPPED));				
+			dispatchEvent(new Event(MOVIE_STOPPED));
+			dispatchEvent(new DataEvent("selectedDateChanged", false, false, 
+				(_referenceSeries.timePeriods.getItemAt(
+      			_slider.values[1]) as TimePeriod).periodComparator));	
+			handleThumb(0);			
+			handleThumb(1);
       	}
       	
       	private function handleTimerTick(event:TimerEvent):void
       	{
+      		var obs:TimePeriod;
       		if (_slider.values[0] < _slider.values[1]) {
+      			obs = _referenceSeries.timePeriods.getItemAt(
+      				_slider.values[0] + 1) as TimePeriod;
       			dispatchEvent(new DataEvent("selectedDateChanged", false, false, 
-					(_referenceSeries.timePeriods.getItemAt(_slider.values[0]) 
-					as TimePeriod).periodComparator));
+					obs.periodComparator));
       			_slider.values = [_slider.values[0] + 1, _slider.values[1]];
+      			handleThumb(0);
       		} else if (_slider.values[0] == _slider.values[1]) {
+      			obs = _referenceSeries.timePeriods.getItemAt(
+      				_slider.values[0]) as TimePeriod;
       			dispatchEvent(new DataEvent("selectedDateChanged", false, false, 
-					(_referenceSeries.timePeriods.getItemAt(_slider.values[0]) 
-					as TimePeriod).periodComparator));
+					obs.periodComparator));
       			_timer.stop();
       			_button.toolTip = "Play the animation";
 				_button.setStyle("icon", _playIcon);
 				_slider.setStyle("showTrackHighlight", true);
 				_slider.thumbCount = 2;
+				_slider.validateNow();	
 				_slider.enabled = true;
 				_stopButton.visible = false;
 				_stopButton.enabled = false;
 				_speedSelector.visible = false;
 				_slider.values = [_initialStartValue, _initialEndValue];
+				handleThumb(0);
+				handleThumb(1);
 				dispatchEvent(new Event(MOVIE_STOPPED));
       		}
-      	}
-      	
-      	private function handleMouseDown(event:MouseEvent):void
-      	{
-      		//_slider.handleMouseDown(event);
       	}
       	
       	private function handleSpeedChanged(event:MouseEvent):void
@@ -423,5 +457,13 @@ package eu.ecb.core.view.filter
 				_timer.start();
       		}
       	}
+      	
+      	private function handleThumb(index:uint):void {
+      		_slider.getThumbAt(index).label = _dateFormatter.format(
+      			(_referenceSeries.timePeriods.getItemAt(_slider.values[index]) 
+      			as TimePeriod).timeValue);	
+			_slider.getThumbAt(index).width = 54;
+			_slider.getThumbAt(index).height = 20;
+      	}      	
 	}
 }
