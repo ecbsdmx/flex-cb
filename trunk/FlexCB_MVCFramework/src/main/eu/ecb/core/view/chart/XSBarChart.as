@@ -329,6 +329,12 @@ package eu.ecb.core.view.chart
 		{
 			setSortOrder(event.data);
 			triggerSort();
+			if (null != _dataCanvas) { 
+				_dataCanvas.clear();
+				for each (var line:Object in _averageLines) {
+					addAverageLine(line.value, line.color);
+				}
+			}
 		}
 		
 		/**
@@ -559,20 +565,21 @@ package eu.ecb.core.view.chart
 				}
 			}
 			
-			if (_selectedDataSetChanged) {
-				_selectedDataSetChanged = false;
-				if (null != _selectedDataSet && 
-					!(_selectedDataSet is XSDataSet)) {
+			if (_highlightedDataSetChanged) {
+				_highlightedDataSetChanged = false;
+				if (null != _highlightedDataSet && 
+					!(_highlightedDataSet is XSDataSet)) {
 					throw new ArgumentError("Should be a cross-sectional" + 
 						" dataset");					
 				}
 				drawColumns();
 			}
 			
-			if (_highlightedDataSetChanged) {
-				_highlightedDataSetChanged = false;
-				if (null != _highlightedDataSet && 
-					!(_highlightedDataSet is XSDataSet)) {
+			if (_selectedDataSetChanged) {
+				_selectedDataSetChanged = false;
+				_highlightedDataSet = null;
+				if (null != _selectedDataSet && 
+					!(_selectedDataSet is XSDataSet)) {
 					throw new ArgumentError("Should be a cross-sectional" + 
 						" dataset");					
 				}
@@ -988,9 +995,11 @@ package eu.ecb.core.view.chart
 					_sortDescending = false; 
 					break;
 				case XSSortOrder.SORT_ASC_ORDER:
+					_sortField = "value_";
 					_sortDescending = false;
 					break;
-				case XSSortOrder.SORT_DESC_ORDER: 
+				case XSSortOrder.SORT_DESC_ORDER:
+					_sortField = "value_"; 
 					_sortDescending = true;		
 					break;
 				default:
