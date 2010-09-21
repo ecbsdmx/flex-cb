@@ -508,3 +508,39 @@ GenericPanel {
     paddingBottom: 3;
     paddingLeft: 3;
 }
+
+HSlider {
+	/*labelOffset: 10;*/
+	borderColor: #CBD1D5;
+	trackColors: #FFFFFF, #FFD700;
+	tickColor: #CBD1D5;
+	themeColor: #EBEEEF;
+	tickLength: 0;
+	tickOffset: 0;
+	showTrackHighlight: true;
+	labelStyleName: "myhSliderLabelStyle";
+	dataTipOffset: 20;
+	paddingLeft: 0;
+	paddingBottom: 0;
+	paddingTop: 0;
+	paddingRight: 0;
+	fillColors: #A6C4D7, #2C70AA, #dddddd, #eeeeee;
+}
+
+SliderThumb {
+	color: #EBEEEF;
+	fontSize: 9; 
+	textSelectedColor: #FFFFFF;
+	textRollOverColor: #FFFFFF;
+	cornerRadius: 9;
+   	fillColors: #00ccff, #cccccc, #ffffff, #eeeeee;
+   	textAlign: center;
+}
+
+.myhSliderLabelStyle {
+	/*paddingLeft: 24;*/
+	paddingLeft: 25;
+	paddingBottom: -10;
+	fontSize: 9;
+	/*paddingBottom: -4;*/
+}

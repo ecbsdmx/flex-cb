@@ -26,19 +26,27 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view.filter
 {
-	import mx.core.UIComponent;
-	import mx.styles.StyleManager;
+	import flexlib.controls.HSlider;
+	import flexlib.controls.sliderClasses.SliderThumb;
+	
+	import flash.geom.Rectangle; 
+	import flash.display.BitmapData;
+	import flash.geom.Matrix;	
+	
+	import mx.core.UITextField;
+	import mx.graphics.ImageSnapshot;
+	import mx.skins.Border;
 
 	/**
 	 * @private
 	 * 
 	 * This skin is used by the RangeSelectorBox.
 	 */ 
-	internal class ECBSliderTrackSkin extends UIComponent
-	{
+	internal class ECBSliderThumbSkin extends Border
+	{		
 		/*===========================Constructor==============================*/
 		
-		public function ECBSliderTrackSkin()
+		public function ECBSliderThumbSkin()
 		{
 			super();
 		}
@@ -49,11 +57,11 @@ package eu.ecb.core.view.filter
 		 * inheritDoc
 		 */
 		override protected function updateDisplayList(w:Number, h:Number):void
-		{	
-			super.updateDisplayList(w, h);	
+		{
+			super.updateDisplayList(w, h);
 			graphics.clear();
-			graphics.beginFill(0xEBEEEF, 1.0);
-			graphics.drawRoundRect(-27, -7, w + 54, 14, 8, 8);
+			graphics.beginFill(0x2C70AA, 1);
+			graphics.drawRoundRect(0, 3, 54, 14, 8, 8);
 		}
 	}
 }
