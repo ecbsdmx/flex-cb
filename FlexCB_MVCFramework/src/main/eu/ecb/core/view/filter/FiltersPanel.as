@@ -662,7 +662,7 @@ package eu.ecb.core.view.filter
 			var ids: Array = [];
 			if (!_inclusiveUseWindow){
 				for each (var child:DisplayObject in _inclusiveFormItem.getChildren()){
-					if ((child as CheckBox).selected)
+					if (child is CheckBox && (child as CheckBox).selected) //class check added by SBa 2010-09-21
 						ids.push((child as CheckBox).id);
 				}
 			}else{
@@ -722,8 +722,13 @@ package eu.ecb.core.view.filter
 				    ArrayCollection) inclusive.push(code.id);
 						
 				for each (var child: DisplayObject in _inclusiveFormItem.getChildren()){
-					var checkBox:CheckBox = child as CheckBox;
-					checkBox.enabled = inclusive.indexOf(checkBox.id) != -1;
+					//condition added by SBa 2010-09-31 to protect against when the submit button
+					// is enabled and then is included in the children
+					if (child is CheckBox) {
+					    var checkBox:CheckBox = child as CheckBox;
+					    checkBox.enabled = inclusive.indexOf(checkBox.id) != -1;
+					}
+					//end SBa fix
 				}
 			}
 		}
@@ -761,5 +766,3 @@ package eu.ecb.core.view.filter
 	}
 	
 } // package
-
-
