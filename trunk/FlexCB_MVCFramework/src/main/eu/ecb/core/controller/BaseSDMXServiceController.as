@@ -31,7 +31,8 @@ package eu.ecb.core.controller
 	import eu.ecb.core.model.ISDMXServiceModel;
 	
 	import flash.events.Event;
-	import flash.net.URLRequest;	
+	import flash.net.URLRequest;
+	
 	import mx.collections.ArrayCollection;
 	
 	import org.sdmx.event.SDMXDataEvent;
@@ -396,7 +397,8 @@ package eu.ecb.core.controller
 		 */ 
 		public function fetchKeyFamily(keyFamilyID:String = null, 
 			agencyID:String = null, version:String = null):void
-		{			_keyFamilyParams = 
+		{			
+			_keyFamilyParams = 
 				{id: keyFamilyID, agency: agencyID, version: version};
 			var request:Object = new Object();
 			request["type"] = "keyFamilyQuery";
@@ -431,6 +433,13 @@ package eu.ecb.core.controller
 				dataRequest["type"] = "dataQuery";
 				dataRequest["method"] = prepareDataProvider;
 			} else if (_dataToFetch) {
+				if (null == (_model as ISDMXServiceModel).keyFamilies) {
+					var kfRequest:Object = new Object();
+					kfRequest["type"] = "keyFamilyQuery";
+					kfRequest["method"] = performKeyFamilyRequest;
+					_keyFamilyParams = {id: null, agency: null, version: null};
+					_pendingRequests.addItem(kfRequest);
+				}
 				request["method"] = prepareDataProvider;
 			} else {
 				if (null != _tmpDataSet && (null == _filesToFetch || 
@@ -565,13 +574,13 @@ package eu.ecb.core.controller
 		protected function handleHierarchicalCodeScheme(
 			event:SDMXDataEvent):void 
 		{
-			(_model as BaseSDMXServiceModel).hierarchicalCodeSchemes = 
-				event.data as HierarchicalCodeSchemesCollection;
 			_pendingRequests.removeItemAt(0);
 			if (_pendingRequests.length > 0) {
 				(_pendingRequests.getItemAt(0)["method"] 
 					as Function).call(this);
 			}		
+			(_model as BaseSDMXServiceModel).hierarchicalCodeSchemes = 
+				event.data as HierarchicalCodeSchemesCollection;
 			event.stopImmediatePropagation();
 			event = null;
 		}
