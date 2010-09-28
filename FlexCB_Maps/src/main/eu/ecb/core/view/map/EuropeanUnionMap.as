@@ -74,26 +74,17 @@ package eu.ecb.core.view.map
 		/*==============================Fields================================*/
 		
 		private var _map:EuropeMap;
-		
 		private var _mapLegend:IMapComponent;
-		
 		private var _euCountries:EUCountries;
-		
 		private var _dsCountries:ArrayCollection;
-		
 		private var _showDataTip:Boolean;
-		
 		private var _toolTip:IToolTip;
-		
 		private var _euroAreaCode:String;
-		
 		private var _splitEuroArea:Boolean;
-		
 		private var _observations:XSObservationsCollection;
-		
 		private var _effects:Object;
-		
 		private var _minimized:Object;
+		private var _euroAreaOnly:Boolean;
 		
 		/*===========================Constructor==============================*/
 		
@@ -162,11 +153,19 @@ package eu.ecb.core.view.map
 			return _mapLegend;	
 		}
 		
+		public function set euroAreaOnly(flag:Boolean):void
+		{
+			_euroAreaOnly = flag;
+			if (null != _map) {
+				populateMap();
+			}
+		}
+		
 		/*==========================Public methods============================*/
 		
 		/**
 		 * Handles the event that specifies whether the data for the euro area
-		 * should be displayed as a whole or if it should be spli into its
+		 * should be displayed as a whole or if it should be split into its
 		 * constituent countries. 
 		 * 
 		 * @param event 
@@ -177,6 +176,24 @@ package eu.ecb.core.view.map
 			if (_splitEuroArea != flag) { 
 				_splitEuroArea = flag;
 				populateMap();
+			}
+		}
+		
+		/**
+		 * Handles the event that specifies whether only the euro area countries
+		 * should be displayed. 
+		 * 
+		 * @param event 
+		 */
+		public function handleEuroAreaOnlyUpdated(event:DataEvent):void
+		{
+			var flag:Boolean = (event.data == "true") ? true : false;
+			_euroAreaOnly = flag;
+			if (null != _map) {
+				populateMap();
+			}
+			if (_mapLegend is ECBMapLegend) {
+				(_mapLegend as ECBMapLegend).handleEuroAreaOnlyUpdated(event);
 			}
 		}
 		
@@ -305,29 +322,32 @@ package eu.ecb.core.view.map
 					throw new ArgumentError("Reference area code not" + 
 						" found");
 				}
-				_dsCountries.addItem(countryCode);
-				var mapFeature:MapFeature = _map.getFeature(_euCountries.
-					translateTwoLettersCode(countryCode));
-				if (null != mapFeature) {
-					if (null == _helper) {
-						throw new ArgumentError("Helper cannot be null");
+				if (!_euroAreaOnly || (_euroAreaOnly && _euCountries.
+					belongsToEuroArea(countryCode, _selectedDate))) {
+					_dsCountries.addItem(countryCode);
+					var mapFeature:MapFeature = _map.getFeature(_euCountries.
+						translateTwoLettersCode(countryCode));
+					if (null != mapFeature) {
+						if (null == _helper) {
+							throw new ArgumentError("Helper cannot be null");
+						}
+						var value:Number = (obs is UncodedXSObservation) ? 
+							Number((obs as UncodedXSObservation).value) :
+							Number((obs as CodedXSObservation).value.id);	
+						mapFeature.styleName = (_euCountries.belongsToEuroArea(
+							mapFeature.key, _selectedDate) && !_splitEuroArea && 
+							null != euValue) ?
+							_helper.getStyleName(Number(euValue)) :  
+							_helper.getStyleName(value); 
+						if (mapFeature.key == "MLT") {
+							mapFeature.setStyle("stroke", 
+								uint(mapFeature.getStyle("fill")));
+							mapFeature.setStyle("highlightStroke", 
+								uint(mapFeature.getStyle("fill")));	
+						}
+						
+						euc.removeItemAt(euc.getItemIndex(countryCode));
 					}
-					var value:Number = (obs is UncodedXSObservation) ? 
-						Number((obs as UncodedXSObservation).value) :
-						Number((obs as CodedXSObservation).value.id);	
-					mapFeature.styleName = (_euCountries.belongsToEuroArea(
-						mapFeature.key, _selectedDate) && !_splitEuroArea && 
-						null != euValue) ?
-						_helper.getStyleName(Number(euValue)) :  
-						_helper.getStyleName(value); 
-					if (mapFeature.key == "MLT") {
-						mapFeature.setStyle("stroke", 
-							uint(mapFeature.getStyle("fill")));
-						mapFeature.setStyle("highlightStroke", 
-							uint(mapFeature.getStyle("fill")));	
-					}
-					
-					euc.removeItemAt(euc.getItemIndex(countryCode));
 				}
 			}	
 			for each (var missingCountry:String in euc) {
@@ -342,10 +362,12 @@ package eu.ecb.core.view.map
 		private function handleMouseOver(event:MapEvent):void
 		{
 			event.stopImmediatePropagation();
-			if (_showDataTip) {
+			if (_showDataTip && null != _dataSet) {
 				var f:MapFeature = event.mapFeature;
-				if (_euCountries.belongsToEuropeanUnion(_euCountries.
-					translateThreeLettersCode(f.key))) {
+				if ((_euroAreaOnly && _euCountries.
+						belongsToEuroArea(f.key, _selectedDate)) || 
+					(!_euroAreaOnly && _euCountries.belongsToEuropeanUnion(
+					 _euCountries.translateThreeLettersCode(f.key)))) {
 					f.highlighted = true;
 					playEffect(f, "zoom", false);
 					makeToolTip(f);	
@@ -379,14 +401,19 @@ package eu.ecb.core.view.map
 				var feature:MapFeature = 
 					_map.getFeatureAt(event.stageX, event.stageY);
 				if (null != feature) {	
-					var obs:XSObservation = _observations.getObsByCode(
-						_euCountries.translateThreeLettersCode(feature.key));
-					if (null != obs) {
-						var measure:XSMeasure = (obs is UncodedXSObservation) ? 
-							(obs as UncodedXSObservation).measure : 
-							(obs as CodedXSObservation).measure;
-						dispatchEvent(new XSMeasureSelectionEvent(measure, 
-							event.ctrlKey, "measureSelected"));
+					if (!_euroAreaOnly || (_euroAreaOnly && _euCountries.
+						belongsToEuroArea(feature.key, _selectedDate))) {
+						var obs:XSObservation = _observations.getObsByCode(
+							_euCountries.translateThreeLettersCode(
+							feature.key));
+						if (null != obs) {
+							var measure:XSMeasure = 
+								(obs is UncodedXSObservation) ? 
+									(obs as UncodedXSObservation).measure : 
+									(obs as CodedXSObservation).measure;
+							dispatchEvent(new XSMeasureSelectionEvent(measure, 
+								event.ctrlKey, "measureSelected"));
+						}
 					}
 				} else {
 					dispatchEvent(new XSMeasureSelectionEvent(null, false,

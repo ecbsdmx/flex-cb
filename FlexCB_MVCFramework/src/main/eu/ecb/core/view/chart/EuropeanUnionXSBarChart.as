@@ -30,8 +30,9 @@ package eu.ecb.core.view.chart
 {
 	import eu.ecb.core.util.helper.EUCountries;
 	
+	import flash.events.DataEvent;
+	
 	import mx.charts.ChartItem;
-	import mx.charts.Legend;
 	import mx.charts.LegendItem;
 	import mx.charts.renderers.CircleItemRenderer;
 	import mx.charts.series.ColumnSeries;
@@ -42,10 +43,13 @@ package eu.ecb.core.view.chart
 	
 	import org.sdmx.model.v2.reporting.dataset.CodedXSObservation;
 	import org.sdmx.model.v2.reporting.dataset.Section;
+	import org.sdmx.model.v2.reporting.dataset.SectionsCollection;
 	import org.sdmx.model.v2.reporting.dataset.UncodedXSObservation;
 	import org.sdmx.model.v2.reporting.dataset.XSDataSet;
 	import org.sdmx.model.v2.reporting.dataset.XSGroup;
+	import org.sdmx.model.v2.reporting.dataset.XSGroupsCollection;
 	import org.sdmx.model.v2.reporting.dataset.XSObservation;
+	import org.sdmx.model.v2.reporting.dataset.XSObservationsCollection;
 	import org.sdmx.model.v2.structure.keyfamily.XSMeasure;
 	
 	/**
@@ -57,12 +61,19 @@ package eu.ecb.core.view.chart
 	public class EuropeanUnionXSBarChart extends XSBarChart
 	{
 		/*==============================Fields================================*/
+		/**
+		 * @private
+		 */ 		
+		protected var _euroAreaOnlyChanged:Boolean;
+		
 		private var _euCountries:EUCountries;
 		private var _euroAreaLegend:LegendItem;
 		private var _eUnionLegend:LegendItem;
 		private var _sectionId:String;
 		private var _euroAreaCode:String;
 		private var _euCode:String;
+		private var _euroAreaOnly:Boolean;
+		private var _fullXSDataSet:XSDataSet;
 		
 		/*===========================Constructor==============================*/
 		
@@ -96,6 +107,29 @@ package eu.ecb.core.view.chart
 		public function set euCode(code:String):void
 		{
 			_euCode = code;
+		}
+		
+		public function set euroAreaOnly(flag:Boolean):void
+		{
+			_euroAreaOnly = flag;
+			if (null != _dataSet) {
+				_dataSetChanged = true;
+				commitProperties();
+			}
+		}
+		
+		/**
+		 * Handles the event that specifies whether only the euro area countries
+		 * should be displayed. 
+		 * 
+		 * @param event 
+		 */
+		public function handleEuroAreaOnlyUpdated(event:DataEvent):void
+		{
+			var flag:Boolean = (event.data == "true") ? true : false;
+			_euroAreaOnly = flag;
+			_euroAreaOnlyChanged = true;
+			commitProperties();
 		}
 		
 		/*========================Protected methods===========================*/
@@ -139,7 +173,7 @@ package eu.ecb.core.view.chart
 				_euroAreaLegend = new LegendItem();
 				_euroAreaLegend.setStyle("legendMarkerRenderer", 
 					new ClassFactory(mx.charts.renderers.CircleItemRenderer));
-				var color1:SolidColor = new SolidColor(0x034267);				
+				var color1:SolidColor = new SolidColor(0x2C70AA);				
 				_euroAreaLegend.setStyle("fill", color1);
 				_euroAreaLegend.setStyle("fontWeight", "normal");
 				_euroAreaLegend.visible = false;
@@ -177,6 +211,27 @@ package eu.ecb.core.view.chart
 						replace("\.", "_");
 					sortField = _sectionId;		
 				}
+				_fullXSDataSet = _dataSet as XSDataSet;
+				if (_euroAreaOnly) {
+					_dataSet = createFilteredXSDataSet();
+				}
+			}
+			
+			if (_euroAreaOnlyChanged) {
+				_euroAreaOnlyChanged = false;
+				_dataSet = 
+					_euroAreaOnly ? createFilteredXSDataSet() : _fullXSDataSet;
+				_dataSetChanged = true;	
+				addAverageLines = true;
+				if (_dataSet is XSDataSet && (_dataSet as XSDataSet).groups.
+					length == 1 && ((_dataSet as XSDataSet).groups.getItemAt(0) 
+					as XSGroup).sections.length == 1) {
+					section = ((_dataSet as XSDataSet).groups.getItemAt(0) as 
+						XSGroup).sections.getItemAt(0) as Section;		
+					_sectionId = "value_" + section.keyValues.seriesKey.
+						replace("\.", "_");
+					sortField = _sectionId;		
+				}
 			}
 			
 			super.commitProperties();
@@ -185,7 +240,7 @@ package eu.ecb.core.view.chart
 				var u2Obs:UncodedXSObservation = section.observations.
 					getObsByCode(_euroAreaCode) as UncodedXSObservation;
 				if (null != u2Obs) {	 
-					addAverageLine(u2Obs.value,	0x034267);
+					addAverageLine(u2Obs.value,	0x2C70AA);
 					_euroAreaLegend.label = "Euro area (" + u2Obs.value + 
 						(_isPercentage ? "%" : "") + ")";
 					_euroAreaLegend.visible = true;
@@ -193,14 +248,20 @@ package eu.ecb.core.view.chart
 				
 				var d0Obs:UncodedXSObservation = section.observations.
 					getObsByCode(_euCode) as UncodedXSObservation;
-				if (null != d0Obs) {	 
-					addAverageLine(d0Obs.value, 0xa6bddb);
-					_eUnionLegend.label = "European Union (" + d0Obs.value + 
-						(_isPercentage ? "%" : "") + ")";
-					_eUnionLegend.visible = true;
+				if (!_euroAreaOnly) {	
+					if (null != d0Obs) {	 
+						addAverageLine(d0Obs.value, 0xa6bddb);
+						_eUnionLegend.label = "European Union (" + d0Obs.value + 
+							(_isPercentage ? "%" : "") + ")";
+						_eUnionLegend.visible = true;
+					} else {
+						_eUnionLegend.label = "European Union";
+						_eUnionLegend.visible = true;
+					}
+					_eUnionLegend.width = NaN;
 				} else {
-					_eUnionLegend.label = "European Union";
-					_eUnionLegend.visible = true;
+					_eUnionLegend.visible = false;
+					_eUnionLegend.width = 0;
 				}
 			}
 		}
@@ -212,10 +273,36 @@ package eu.ecb.core.view.chart
 			var c:SolidColor = new SolidColor(0xa6bddb);
 			if (_euCountries.belongsToEuroArea(element.item.measure, 
 				_selectedDate)) {
-				c.color = 0x034267;
+				c.color = 0x2C70AA;
 			}			
 			c.alpha = 1.0;
 	        return c;
+		}
+		
+		private function createFilteredXSDataSet():XSDataSet 
+		{
+			var tmpDataSet:XSDataSet = new XSDataSet();
+			tmpDataSet.groups = new XSGroupsCollection();
+			var group:XSGroup = new XSGroup();
+			group.keyValues = ((_dataSet as XSDataSet).
+				groups.getItemAt(0) as XSGroup).keyValues;
+			tmpDataSet.groups.addItem(group);
+			group.sections = new SectionsCollection();
+			var section:Section = new Section();
+			section.keyValues = (((_dataSet as XSDataSet).
+				groups.getItemAt(0) as XSGroup).sections.getItemAt(0) as 
+				Section).keyValues;
+			group.sections.addItem(section);
+			section.observations = new XSObservationsCollection();
+			for each (var obs:UncodedXSObservation in (((_dataSet as XSDataSet).
+				groups.getItemAt(0) as XSGroup).sections.getItemAt(0) as 
+				Section).observations) {
+				if (_euCountries.belongsToEuroArea(obs.measure.code.id, 
+					_selectedDate) || obs.measure.code.id == _euroAreaCode) {
+					section.observations.addItem(obs);	
+				}
+			}
+			return tmpDataSet;
 		}
 	}
 }
