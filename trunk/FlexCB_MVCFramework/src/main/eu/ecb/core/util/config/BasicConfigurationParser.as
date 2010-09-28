@@ -28,6 +28,7 @@ package eu.ecb.core.util.config
 {
 	import eu.ecb.core.command.ICommand;
 	import eu.ecb.core.event.SDMXObjectEvent;
+	import eu.ecb.core.util.helper.ISeriesKeyBuilder;
 	import eu.ecb.core.util.net.locator.ISeriesLocator;
 	import eu.ecb.core.view.ISDMXComposite;
 	import eu.ecb.core.view.ISDMXServiceView;
@@ -82,6 +83,14 @@ package eu.ecb.core.util.config
 	[Event(name="dboardSettingsExtracted", type="eu.ecb.core.event.SDMXObjectEvent")]
 	
 	/**
+	 * Event triggered when a hierarchy has been extracted from the 
+	 * configuration file.
+	 * 
+	 * @eventType eu.ecb.core.util.config.ECBConfigurationParser.HIERARCHY_EXTRACTED
+	 */
+	[Event(name="hierarchyExtracted", type="eu.ecb.core.event.SDMXObjectEvent")]
+	
+	/**
 	 * The base implementation of the IConfigurationParser interface. 
 	 * 
 	 * @author Xavier Sosnovsky
@@ -128,6 +137,15 @@ package eu.ecb.core.util.config
 		 */
 		public static const DBOARD_SETTINGS_EXTRACTED:String = 
 			"dboardSettingsExtracted";
+			
+		/**
+		 * The ECBConfigurationParser.HIERARCHY_EXTRACTED constant defines the 
+		 * value of the <code>type</code> property of the event object for a 
+		 * <code>hierarchyExtracted</code> event.
+		 * 
+		 * @eventType hierarchyExtracted
+		 */
+		public static const HIERARCHY_EXTRACTED:String = "hierarchyExtracted";	
 		
 		/*==============================Fields================================*/
 		
@@ -225,6 +243,13 @@ package eu.ecb.core.util.config
 				if (!(seriesCollection.contains(String(seriesXML.@key)))) {
 					seriesCollection.addItem(String(seriesXML.@key));
 				}
+			}
+			
+			if (configurationXML.data.elements("hierarchy").length() > 0) {
+				var hierarchy:Object = extractHierarchy(configurationXML.data);	
+				hierarchy["panelId"] = panelSettings["id"];
+				dispatchEvent(new SDMXObjectEvent(HIERARCHY_EXTRACTED, 
+					hierarchy));
 			}
 			
 			for each (var eventXML:XML in configurationXML.events.event) {
@@ -439,6 +464,24 @@ package eu.ecb.core.util.config
 				}
 				target[optionName] = optionValue;
 			}
+        }
+        
+        private function extractHierarchy(panelXML:XMLList):Object {
+        	checkMandatoryAttribute("id", panelXML.hierarchy[0]);
+			checkMandatoryAttribute("schemeID", panelXML.hierarchy[0]);
+			checkMandatoryAttribute("schemeAgencyID", panelXML.hierarchy[0]);
+			checkMandatoryAttribute("seriesKeyBuilder", 
+				panelXML.hierarchy[0]);
+			checkMandatoryAttribute("selectedItem", panelXML.hierarchy[0]);	
+			var hierarchy:Object = new Object();
+			hierarchy["id"] = panelXML.hierarchy[0].@id;
+			hierarchy["schemeID"] = panelXML.hierarchy[0].@schemeID;
+			hierarchy["schemeAgencyID"] = panelXML.hierarchy[0].@schemeAgencyID;
+			hierarchy["selectedItem"] = panelXML.hierarchy[0].@selectedItem;				
+			var HClass:Class = 
+				getClassFromString(panelXML.hierarchy[0].@seriesKeyBuilder); 
+			hierarchy["seriesKeyBuilder"] = new HClass() as ISeriesKeyBuilder; 
+			return hierarchy;
         }
 	}
 }
