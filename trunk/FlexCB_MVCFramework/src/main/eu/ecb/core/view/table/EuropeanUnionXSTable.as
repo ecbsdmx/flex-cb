@@ -26,13 +26,23 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view.table
 {
-	import eu.ecb.core.util.helper.EUCountries;
 	import eu.ecb.core.event.XSMeasureSelectionEvent;
+	import eu.ecb.core.util.helper.EUCountries;
+	
+	import flash.events.DataEvent;
 	
 	import mx.controls.DataGrid;
 	import mx.controls.Label;
 	import mx.controls.dataGridClasses.DataGridColumn;
 	import mx.events.ListEvent;
+	
+	import org.sdmx.model.v2.reporting.dataset.Section;
+	import org.sdmx.model.v2.reporting.dataset.SectionsCollection;
+	import org.sdmx.model.v2.reporting.dataset.UncodedXSObservation;
+	import org.sdmx.model.v2.reporting.dataset.XSDataSet;
+	import org.sdmx.model.v2.reporting.dataset.XSGroup;
+	import org.sdmx.model.v2.reporting.dataset.XSGroupsCollection;
+	import org.sdmx.model.v2.reporting.dataset.XSObservationsCollection;
 	
 	/**
 	 * A table containing cross-sectional data, with one row per country
@@ -46,6 +56,9 @@ package eu.ecb.core.view.table
 		
 		private var _euCountries:EUCountries;
 		private var _statusBar:Label;
+		private var _euroAreaOnly:Boolean;
+		private var _euroAreaOnlyChanged:Boolean;
+		private var _fullXSDataSet:XSDataSet;
 		
 		/*===========================Constructor==============================*/
 		
@@ -53,6 +66,29 @@ package eu.ecb.core.view.table
 		{
 			super(direction);
 			_euCountries = EUCountries.getInstance();
+		}
+		
+		public function set euroAreaOnly(flag:Boolean):void
+		{
+			_euroAreaOnly = flag;
+			if (null != _dataSet) {
+				_euroAreaOnlyChanged = true;
+				commitProperties();
+			}
+		}
+		
+		/**
+		 * Handles the event that specifies whether only the euro area countries
+		 * should be displayed. 
+		 * 
+		 * @param event 
+		 */
+		public function handleEuroAreaOnlyUpdated(event:DataEvent):void
+		{
+			var flag:Boolean = (event.data == "true") ? true : false;
+			_euroAreaOnly = flag;
+			_euroAreaOnlyChanged = true;
+			commitProperties();
 		}
 		
 		/*========================Protected methods===========================*/
@@ -69,6 +105,26 @@ package eu.ecb.core.view.table
 				_statusBar.text = "(*) Euro area country"; 
 				addChild(_statusBar);
 			}
+		}
+		
+		/**
+		 * @inheritDoc
+		 */ 
+		override protected function commitProperties():void
+		{
+			if (_dataSetChanged) {
+				_fullXSDataSet = _dataSet as XSDataSet;
+				if (_euroAreaOnly) {
+					_dataSet = createFilteredXSDataSet();
+				}
+			}
+			if (_euroAreaOnlyChanged) {
+				_euroAreaOnlyChanged = false;
+				_dataSet = 
+					_euroAreaOnly ? createFilteredXSDataSet() : _fullXSDataSet;
+				_dataSetChanged = true;	
+			}
+			super.commitProperties();
 		}
 		
 		/**
@@ -104,6 +160,32 @@ package eu.ecb.core.view.table
 				_dispatchedEvent = null;
 			}
 			event = null;
+		}
+		
+		private function createFilteredXSDataSet():XSDataSet 
+		{
+			var tmpDataSet:XSDataSet = new XSDataSet();
+			tmpDataSet.groups = new XSGroupsCollection();
+			var group:XSGroup = new XSGroup();
+			group.keyValues = ((_dataSet as XSDataSet).
+				groups.getItemAt(0) as XSGroup).keyValues;
+			tmpDataSet.groups.addItem(group);
+			group.sections = new SectionsCollection();
+			var section:Section = new Section();
+			section.keyValues = (((_dataSet as XSDataSet).
+				groups.getItemAt(0) as XSGroup).sections.getItemAt(0) as 
+				Section).keyValues;
+			group.sections.addItem(section);
+			section.observations = new XSObservationsCollection();
+			for each (var obs:UncodedXSObservation in (((_dataSet as XSDataSet).
+				groups.getItemAt(0) as XSGroup).sections.getItemAt(0) as 
+				Section).observations) {
+				if (_euCountries.belongsToEuroArea(obs.measure.code.id, 
+					_selectedDate)) {
+					section.observations.addItem(obs);	
+				}
+			}
+			return tmpDataSet;
 		}
 	}
 }

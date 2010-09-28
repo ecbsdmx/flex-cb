@@ -28,6 +28,7 @@ package eu.ecb.core.view.map
 {
 	import eu.ecb.core.util.helper.EUCountries;
 	
+	import flash.events.DataEvent;
 	import flash.events.MouseEvent;
 	
 	import mx.collections.ArrayCollection;
@@ -71,6 +72,9 @@ package eu.ecb.core.view.map
 		private var _euroAreaCode:String;
 		private var _referenceValue:String;
 		private var _useAbsoluteValue:Boolean;
+		private var _euroAreaOnly:Boolean;
+		private var _euroAreaMinMaxOnly:Boolean;
+		private var _euroAreaOnlyChanged:Boolean;
 		
 		/*===========================Constructor==============================*/
 		
@@ -82,6 +86,7 @@ package eu.ecb.core.view.map
 			_displayEUData = true;
 			_displayUSData = true;
 			_euroAreaCode = "U2";	
+			_euroAreaMinMaxOnly = true;
 		}
 		
 		/*============================Accessors===============================*/
@@ -145,6 +150,48 @@ package eu.ecb.core.view.map
 			_useAbsoluteValue = flag;
 		}
 		
+		/**
+		 * Whether only euro area countries should be displayed or all countries
+		 * of the European Union. Default to false.
+		 */ 
+		public function set euroAreaOnly(flag:Boolean):void
+		{
+			_euroAreaOnly = flag;
+			if (null != _dataSet) {
+				_dataSetChanged = true;
+				commitProperties();
+			}
+		}
+		
+		/**
+		 * Whether only  the minimum and maximum values of the euro area 
+		 * countries should be displayed. Defaults to true; 
+		 */ 
+		public function set euroAreaMinMaxOnly(flag:Boolean):void
+		{
+			_euroAreaMinMaxOnly = flag;
+			if (null != _dataSet) {
+				_dataSetChanged = true;
+				commitProperties();
+			}
+		}
+		
+		/*===========================Public methods===========================*/
+		
+		/**
+		 * Handles the event that specifies whether only the euro area countries
+		 * should be displayed. 
+		 * 
+		 * @param event 
+		 */
+		public function handleEuroAreaOnlyUpdated(event:DataEvent):void
+		{
+			var flag:Boolean = (event.data == "true") ? true : false;
+			_euroAreaOnly = flag;
+			_dataSetChanged = true;
+			commitProperties();
+		}
+		
 		/*=========================Protected methods==========================*/
 		
 		/**
@@ -179,6 +226,11 @@ package eu.ecb.core.view.map
 				}
 				var minValue:Number;
 				var maxValue:Number;	
+				_minEuroAreaObs = null;
+				_maxEuroAreaObs = null;
+				_euObs = null;
+				_euroAreaObs = null;
+				_usObs = null;
 				for each (var obs:XSObservation in (((_dataSet as 
 					XSDataSet).groups.getItemAt(0) as XSGroup).sections.
 					getItemAt(0) as Section).observations) {
@@ -203,7 +255,9 @@ package eu.ecb.core.view.map
 					if (_displayUSData && countryCode == "US") {
 						_usObs = obs;
 					}
-					if (_euCountries.belongsToEuropeanUnion(countryCode)) {
+					if ((_euroAreaOnly && _euCountries.belongsToEuroArea(
+						countryCode, _selectedDate)) || (!_euroAreaOnly && 
+						_euCountries.belongsToEuropeanUnion(countryCode))) {
 						var realValue:Number = Number(getObsValue(obs));
 						var cmpValue:Number = _useAbsoluteValue ?  
 							Math.abs(realValue) : realValue;  
@@ -219,15 +273,19 @@ package eu.ecb.core.view.map
 						_obsPerCategory[category.styleName]["count"]++;
 						(_obsPerCategory[category.styleName]["countries"] as
 							ArrayCollection).addItem(getCountryName(obs));	
-						if (_displayEuroAreaData && _euCountries.
-							belongsToEuroArea(countryCode, _selectedDate) && 
-							(isNaN(minValue) || minValue > cmpValue)) {
+						if (_displayEuroAreaData && ((_euroAreaMinMaxOnly &&
+							_euCountries.belongsToEuroArea(countryCode, 
+							_selectedDate)) || (!_euroAreaMinMaxOnly && 
+							_euCountries.belongsToEuropeanUnion(countryCode))) 
+							&& (isNaN(minValue) || minValue > cmpValue)) {
 							minValue = cmpValue;	
 							_minEuroAreaObs = obs;	
 						}
-						if (_displayEuroAreaData && _euCountries.
-							belongsToEuroArea(countryCode, _selectedDate) && 
-							(isNaN(maxValue) || maxValue < cmpValue)) {
+						if (_displayEuroAreaData && ((_euroAreaMinMaxOnly &&
+							_euCountries.belongsToEuroArea(countryCode, 
+							_selectedDate)) || (!_euroAreaMinMaxOnly && 
+							_euCountries.belongsToEuropeanUnion(countryCode)))
+							&& (isNaN(maxValue) || maxValue < cmpValue)) {
 							maxValue = cmpValue;	
 							_maxEuroAreaObs = obs;	
 						}				
