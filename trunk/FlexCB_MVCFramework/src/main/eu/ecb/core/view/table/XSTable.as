@@ -55,6 +55,7 @@ package eu.ecb.core.view.table
 	import org.sdmx.model.v2.reporting.dataset.XSDataSet;
 	import org.sdmx.model.v2.reporting.dataset.XSGroup;
 	import org.sdmx.model.v2.reporting.dataset.XSObservation;
+	import org.sdmx.model.v2.reporting.dataset.XSObservationsCollection;
 	import org.sdmx.model.v2.structure.code.CodeList;
 	import org.sdmx.model.v2.structure.hierarchy.CodeAssociation;
 	import org.sdmx.model.v2.structure.hierarchy.Hierarchy;
@@ -413,25 +414,31 @@ package eu.ecb.core.view.table
 				_observations = new ArrayCollection();
 				_measureMap = new Object();
 				
-				var obs:XSObservation = (((_dataSet as XSDataSet).groups.
-					getItemAt(0) as XSGroup).sections.getItemAt(0) as Section).
-					observations.getItemAt(0) as XSObservation;
-				var measure:XSMeasure = (obs is UncodedXSObservation) ? 
-					(obs as UncodedXSObservation).measure : 
-					(obs as CodedXSObservation).measure;
-				allColumns.push(createReferenceColumn(measure));
+				var curObsCol:XSObservationsCollection = (((_dataSet as 
+					XSDataSet).groups.getItemAt(0) as XSGroup).sections.
+					getItemAt(0) as Section).observations;
+				if (curObsCol.length > 0) {	 
+					var obs:XSObservation = 
+						curObsCol.getItemAt(0) as XSObservation;
+					var measure:XSMeasure = (obs is UncodedXSObservation) ? 
+						(obs as UncodedXSObservation).measure : 
+						(obs as CodedXSObservation).measure;
+					allColumns.push(createReferenceColumn(measure));
 				
-				for each (var group:XSGroup in (_dataSet as XSDataSet).groups) {
-					for each (var section:Section in group.sections) {
-						var newColumn:DataGridColumn =createDataColumn(section,group);
-						if (newColumn!=null) {
-							allColumns.push(newColumn);
+					for each (var group:XSGroup in 
+						(_dataSet as XSDataSet).groups) {
+						for each (var section:Section in group.sections) {
+							var newColumn:DataGridColumn =
+								createDataColumn(section,group);
+							if (newColumn!=null) {
+								allColumns.push(newColumn);
+							}
 						}
 					}
-				}
-				
-				if (null != _sort) {
-					triggerSort();
+					
+					if (null != _sort) {
+						triggerSort();
+					}
 				}
 				
 				_dataGrid.columns = allColumns;
@@ -537,7 +544,8 @@ package eu.ecb.core.view.table
 			return contains; 
 		}	
 		
-		protected function createReferenceColumn(measure:XSMeasure):DataGridColumn
+		protected function createReferenceColumn(
+			measure:XSMeasure):DataGridColumn
 		{
 			var col:DataGridColumn = new DataGridColumn();
 			col.width = 100;
