@@ -66,7 +66,7 @@ package eu.ecb.core.view.panel
 		private var _commands:Object;
 		private var _views:Object;
 		private var _runOnceEvents:Object;
-		
+		private var _hierarchies:Object;
 		
 		/*===========================Constructor==============================*/
 		
@@ -98,6 +98,9 @@ package eu.ecb.core.view.panel
 			}
 			command.receiver = receiver;
 			command.model = _model;
+			command.hierarchies = _hierarchies;
+			command.controller = _controller;
+			command.fileLocator = _fileLocator;
 			(_commands[eventType][eventSource] as ArrayCollection).
 				addItem(command);
 		}
@@ -229,6 +232,9 @@ package eu.ecb.core.view.panel
 			configurationParser.addEventListener(
 				BasicConfigurationParser.VIEW_EXTRACTED,
 				 handleViewExtracted,false,0,true);
+			configurationParser.addEventListener(
+				BasicConfigurationParser.HIERARCHY_EXTRACTED,
+				handleHierarchyExtracted);	 
 			configurationParser.parse(settings);
 		}
 		
@@ -288,6 +294,18 @@ package eu.ecb.core.view.panel
 				addView(event.sdmxObject.view);
 			}
 			event = null;
+		}
+		
+		private function handleHierarchyExtracted(event:SDMXObjectEvent):void {
+			event.stopImmediatePropagation();
+			if (null == _hierarchies) {
+				_hierarchies = new Object();
+			}
+			_hierarchies[event.sdmxObject.panelId] = event.sdmxObject;
+			_controller.fetchHierarchicalCodeScheme(
+				event.sdmxObject["schemeID"], 
+				event.sdmxObject["schemeAgencyID"]);
+			event = null;			
 		}
 	}
 }
