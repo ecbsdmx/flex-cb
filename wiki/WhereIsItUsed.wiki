@@ -19,7 +19,17 @@ The European Central Bank uses the Flex-CB libraries to power various vizualizat
 
 = [http://www.newyorkfed.org Federal Reserve Bank of New York] =
 
+[http://data.newyorkfed.org/creditconditions/ Credit Conditions in the U.S.]
+
 Charts displaying serious delinquency, roll rate, loss severity, and projected performance by market and asset class for nonprime mortgages within the U.S. It is part of [http://data.newyorkfed.org/creditconditions/ dashboard application] to show credit conditions throughout the United States.
+
+[http://www.newyorkfed.org/markets/securitieslending.html/ Securities Lending]
+
+The New York Fed provides a secondary and temporary source of securities to the financing market through a [http://www.newyorkfed.org/markets/securitieslending.html/ Securities Lending] program to promote smooth clearing of Treasury and Agency securities. The program offers securities for loan from the System Open Market Account (SOMA) portfolio in accordance with program terms and conditions. Securities loans are awarded to primary dealers based on competitive bidding in an auction held each business day at noon eastern standard time.
+
+[http://www.newyorkfed.org/banking/discountwindow.html/ Discount Window Lending]
+
+The Discount Window functions as a safety valve in relieving pressures in reserve markets; extensions of credit can help alleviate liquidity strains in a depository institution and in the banking system as a whole. It also helps ensure the basic stability of the payment system by supplying liquidity during times of systemic stress.
 
 = [http://kostat.go.kr/eng/ Statistics Korea] =
 The [http://kosis.kr/nsportal/bulletin/html/index_eng.html dashboards] from Statistics Korea present, in an interactive fashion, key economic and financial indicators from the G20 countries.
