@@ -2,7 +2,7 @@
 
 As with all Flash-based applications, performance ultimately depends on the technical specifications of the client computer. Nevertheless, the Flex-CB code has also been optimized to quickly process relatively large SDMX-ML data files and also offers settings to further improve data extraction time. 
 
-By default, the SDMX-ML readers extract all available information out of the SDMX-ML files but this information might not always be used in the visualisation tools. There are settings to instruct the SDMX-ML readers not to extract certain types of information and these settings are described on this page. The settings are defined at the level of the org.sdmx.stores.api.ISDMXDaoFactory interface.
+By default, the SDMX-ML readers extract all available information out of the SDMX-ML files but this information might not always be used in the visualization tools. There are settings to instruct the SDMX-ML readers not to extract certain types of information and these settings are described on this page. The settings are defined at the level of the org.sdmx.stores.api.ISDMXDaoFactory interface.
 
 {{{
 var daoFactory:ISDMXDaoFactory = new SDMXMLDaoFactory();
@@ -16,13 +16,13 @@ In SDMX, attributes can be attached at various levels, such as the dataset, the 
 = Handling of groups =
 In SDMX, _groups_ exist for the sole purpose of attaching attributes. 
 
-If the attributes attached to the group, as defined in the data structure definition, are not important for the visualisation tool, extraction of groups (and therefore of attributes attached to the groups) can be turned off using the following setting:
+If the attributes attached to the group, as defined in the data structure definition, are not important for the visualization tool, extraction of groups (and therefore of attributes attached to the groups) can be turned off using the following setting:
 {{{
 daoFactory.disableGroups = true;
 }}}
 
 = Handling of observations =
-Like for groups, if the attributes attached at the observation level are not important for the visualisation tool, extraction of the observation-level attributes can be turned off using the following setting:
+Like for groups, if the attributes attached at the observation level are not important for the visualization tool, extraction of the observation-level attributes can be turned off using the following setting:
 
 {{{
 daoFactory.disableObservationAttribute = true;	
