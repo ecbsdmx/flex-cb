@@ -28,7 +28,7 @@ Like for groups, if the attributes attached at the observation level are not imp
 daoFactory.disableObservationAttribute = true;	
 }}}
 
-The SDMX information model specify that time series contain a collection of time periods. Each time period is made of a time value and an observation. Each observation contains a value, a reference to the measure and the attributes attached to the observation. In concrete terms, this means that for each data point to be displayed, there are 2 objects in memory, the observation and the time period containing the observation. As there are already a getter for the observation value in the time period object, it is not necessary to embed the observation object in the time period, except if observation level attributes are important. In case attributes are not needed, we may as well turn the creation of the embeded observation objects completely by using the setting below:
+The SDMX information model specify that time series contain a collection of time periods. Each time period is made of a time value and an observation. Each observation contains a value, a reference to the measure and the attributes attached to the observation. In concrete terms, this means that for each data point to be displayed, there are 2 objects in memory, the observation and the time period containing the observation. As there is already a getter for the observation value in the time period object, it is not necessary to embed the observation object in the time period, except if observation level attributes are important. In case attributes are not needed, we may as well turn the creation of the embedded observation objects completely by using the setting below:
 
 {{{
 daoFactory.disableObservationsCreation = true;
