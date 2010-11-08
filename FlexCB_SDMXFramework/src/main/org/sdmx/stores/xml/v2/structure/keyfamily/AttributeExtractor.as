@@ -84,23 +84,14 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 		public function extract(items:XML):SDMXArtefact {
 			var conceptRef:String = (items.attribute("conceptRef").length() > 0) 
 				? items.@conceptRef : null;
-			var conceptVersion:String = (items.attribute("conceptVersion").
-				length() > 0) ? items.@conceptVersion : null;
-			var conceptAgency:String = (items.attribute("conceptAgency").
-				length() > 0) ? items.@conceptAgency : null;
 			var conceptSchemeRef:String = (items.attribute("conceptSchemeRef").
 				length() > 0) ? items.@conceptSchemeRef : null;
-			var conceptSchemeAgency:String = (items.attribute(
-				"conceptSchemeAgency").length() > 0) ? 
-				items.@conceptSchemeAgency : null;
 			if (null == conceptRef) {
 				throw new SyntaxError("Could not find the conceptRef attribute:" 
 					+ items);
 			}
 			var concept:Concept = 
-				_concepts.getConcept(conceptRef, conceptVersion, (null == 
-					conceptSchemeAgency) ? conceptAgency : conceptSchemeAgency,
-					conceptSchemeRef);
+				_concepts.getConcept(conceptRef, conceptSchemeRef);
 			if (null == concept) {
 				throw new SyntaxError("Could not find any concept with id: " 
 					+ items.@conceptRef);

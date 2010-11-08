@@ -56,7 +56,7 @@ package org.sdmx.model.v2.structure.keyfamily
 		
 		public function DataflowsCollection(id:String = "Dataflows", 
 			source:Array=null) {
-			super();
+			super(source);
 			_id = id;
 		}
 		

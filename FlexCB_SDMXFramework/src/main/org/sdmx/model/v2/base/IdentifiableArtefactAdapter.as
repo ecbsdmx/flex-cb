@@ -54,8 +54,6 @@ package org.sdmx.model.v2.base
 		
 		private var _description:InternationalString;
 		
-		private var _argumentError:String = "The id cannot be null or empty";
-		
 		/*===========================Constructor==============================*/
 		
 		/**
@@ -143,7 +141,7 @@ package org.sdmx.model.v2.base
 		 */
 		public function set id(id:String):void {
 			if (null == id || "" == StringUtil.trim(id)) {
-				throw new ArgumentError(_argumentError);
+				throw new ArgumentError("The id cannot be null or empty");
 			} else {
 				_id = id;
 			}

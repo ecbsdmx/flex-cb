@@ -68,7 +68,7 @@ package org.sdmx.model.v2.structure.concept
 		/*===========================Constructor==============================*/
 		
 		public function Concepts(id:String = "Concepts", source:Array = null) {
-			super();
+			super(source);
 			_id = id;
 			var sortByID:Sort = new Sort();
 			sortByID.fields=[new SortField("id")];
@@ -123,14 +123,10 @@ package org.sdmx.model.v2.structure.concept
 		 * Returns the concept matching the supplied data 
 		 * 
 		 * @param conceptRef The ID of the concept
-		 * @param conceptVersion The version number of the concept
-		 * @param conceptAgency The agency maintaining the concept scheme to 
-		 * 	which the concept belongs
 		 * @param conceptScheme The concept scheme to which the concept belongs 
 		 * @return The concept matching the supplied data, if any 
 		 */
 		public function getConcept(conceptRef:String, 
-			conceptVersion:String = null, conceptAgency:String = null, 
 			conceptSchemeName:String = null):Concept {
 				
 			if (null == conceptRef || 0 == conceptRef.length) {
@@ -151,7 +147,7 @@ package org.sdmx.model.v2.structure.concept
             	}
             } else {
             	if (_cursor.findAny({id:conceptRef})) {
-					concept = _cursor.current as Concept;     
+					concept = _cursor.current as Concept; 
             	} else {
             		concept = null;
             	}
