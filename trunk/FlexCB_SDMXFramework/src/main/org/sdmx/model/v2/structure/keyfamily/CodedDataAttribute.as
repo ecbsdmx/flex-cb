@@ -28,7 +28,6 @@ package org.sdmx.model.v2.structure.keyfamily
 {
 	import org.sdmx.model.v2.base.item.ItemScheme;
 	import org.sdmx.model.v2.base.structure.CodedArtefact;
-	import mx.controls.List;
 	import org.sdmx.model.v2.structure.concept.Concept;
 
 	/**

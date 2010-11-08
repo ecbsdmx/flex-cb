@@ -35,7 +35,7 @@ package org.sdmx.util.net
 	/**
 	 * Event dispatched when the XML data has been successfully loaded.
 	 */	
-	[Event(name="dataLoaded", type="eu.ecb.event.XMLDataEvent")]
+	[Event(name="dataLoaded", type="org.sdmx.event.XMLDataEvent")]
 	
 	/**
 	 * Loads an XML file, either in compressed or uncompressed format.

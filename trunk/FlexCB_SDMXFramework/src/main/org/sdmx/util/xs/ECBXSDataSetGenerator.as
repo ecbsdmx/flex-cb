@@ -146,7 +146,6 @@ package org.sdmx.util.xs
 			var obs:TimePeriod;
 			var measure:UncodedXSMeasure;
 			var observations:XSObservationsCollection;
-			var observationsArray:Array = new Array();
 			var kv:KeyValue;
 			var tmpXSOBs:Array = new Array();
 			for each (var s:TimeseriesKey in dataSet.timeseriesKeys) {
@@ -190,9 +189,9 @@ package org.sdmx.util.xs
 				measureDimensionCode = null;
 			}
 			
-			for (var key:String in tmpXSOBs) {
-				(sectionKeys[key] as Section).observations =
-				new XSObservationsCollection(tmpXSOBs[key]);
+			for (var obsKey:String in tmpXSOBs) {
+				(sectionKeys[obsKey] as Section).observations =
+				new XSObservationsCollection(tmpXSOBs[obsKey]);
 			}
 			
 			group.sections = sections;
