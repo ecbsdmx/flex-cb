@@ -53,9 +53,11 @@ package eu.ecb.core.util.helper
 		
 		private var _euroAreaJoinDates:Object;
 		
+		private var _useFixedComposition:Boolean;
+		
 		/*===========================Constructor==============================*/
 		
-		public function EUCountries(enforcer:SingletonEnforcer)
+		public function EUCountries()
 		{
 			super();
 			_2To3Codes = {AT: "AUT", BE: "BEL", CY: "CYP", DE: "DEU", ES: "ESP", 
@@ -95,21 +97,15 @@ package eu.ecb.core.util.helper
 			return _europeanUnion;
 		}
 		
-		/*==========================Public methods============================*/
-		
-		
 		/**
-		 * Gets an instance of the EUCountries class (singleton pattern)
-		 *  
-		 * @return An instance of the EUCountries class
-		 */
-		static public function getInstance():EUCountries 
+		 * Whether the fixed euro area composition should be used.
+		 */ 
+		public function set useFixedEuroAreaComposition(flag:Boolean):void
 		{
-			if (null == _instance) {
-				_instance = new EUCountries(new SingletonEnforcer());
-			}
-			return _instance;
+			_useFixedComposition = flag;
 		}
+		
+		/*==========================Public methods============================*/
 		
 		/**
 		 * Translates a 2-letters country code into a 3-letters one. 
@@ -138,6 +134,38 @@ package eu.ecb.core.util.helper
 		 */
 		public function belongsToEuroArea(code:String, date:String):Boolean 
 		{
+			if (_useFixedComposition) {
+				return belongsToLatestEuroAreaComposition(code);
+			} else {
+				if (null != code) {
+					var targetCode:String;
+					if (code.length == 2) {
+						targetCode = code;
+					} else if (code.length == 3 && 
+						_3To2Codes.hasOwnProperty(code)) {
+						targetCode = _3To2Codes[code];
+					} else {
+						return false;
+					}
+					if (date.length == 4) {
+						date = date + "-01";
+					}
+					return _euroArea.contains(targetCode) && 
+						date >= _euroAreaJoinDates[targetCode]; 
+				} else {
+					return false;
+				}
+			}
+		}
+		
+		/**
+		 * Whether or not the country belongs to the latest euro area 
+		 * composition. 
+		 * 
+		 * @param code The country code
+		 */
+		public function belongsToLatestEuroAreaComposition(code:String):Boolean 
+		{
 			if (null != code) {
 				var targetCode:String;
 				if (code.length == 2) {
@@ -148,11 +176,7 @@ package eu.ecb.core.util.helper
 				} else {
 					return false;
 				}
-				if (date.length == 4) {
-					date = date + "-01";
-				}
-				return _euroArea.contains(targetCode) && 
-					date >= _euroAreaJoinDates[targetCode]; 
+				return _euroArea.contains(targetCode); 
 			} else {
 				return false;
 			}
@@ -176,5 +200,3 @@ package eu.ecb.core.util.helper
 		}
 	}
 }
-
-class SingletonEnforcer{}
