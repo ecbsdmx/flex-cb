@@ -81,7 +81,7 @@ package eu.ecb.core.view.chart
 			chartLayout:String="vertical")
 		{
 			super(direction, chartLayout);
-			_euCountries = EUCountries.getInstance();
+			_euCountries = new EUCountries();
 			_euroAreaCode = "U2";	
 			_euCode = "D0";
 			_sortDescending = true;
@@ -109,6 +109,9 @@ package eu.ecb.core.view.chart
 			_euCode = code;
 		}
 		
+		/**
+		 * Whether the chart should display euro area countries only.
+		 */ 
 		public function set euroAreaOnly(flag:Boolean):void
 		{
 			_euroAreaOnly = flag;
@@ -117,6 +120,16 @@ package eu.ecb.core.view.chart
 				commitProperties();
 			}
 		}
+		
+		/**
+		 * Whether the fixed euro area composition should be used.
+		 */ 
+		public function set useFixedEuroAreaComposition(flag:Boolean):void
+		{
+			_euCountries.useFixedEuroAreaComposition = flag;
+		}
+		
+		/*==========================Public methods============================*/
 		
 		/**
 		 * Handles the event that specifies whether only the euro area countries

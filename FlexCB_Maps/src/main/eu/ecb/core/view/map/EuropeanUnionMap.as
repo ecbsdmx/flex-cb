@@ -93,7 +93,7 @@ package eu.ecb.core.view.map
 			super(direction);
 			percentHeight = 100;
 			percentWidth  = 100;
-			_euCountries = EUCountries.getInstance();	
+			_euCountries = new EUCountries();	
 			_showDataTip = true;	
 			_euroAreaCode = "U2";	
 			_splitEuroArea = true;
@@ -153,12 +153,23 @@ package eu.ecb.core.view.map
 			return _mapLegend;	
 		}
 		
+		/**
+		 * Whether the map should display euro area countries only.
+		 */ 
 		public function set euroAreaOnly(flag:Boolean):void
 		{
 			_euroAreaOnly = flag;
 			if (null != _map) {
 				populateMap();
 			}
+		}
+		
+		/**
+		 * Whether the fixed euro area composition should be used.
+		 */ 
+		public function set useFixedEuroAreaComposition(flag:Boolean):void
+		{
+			_euCountries.useFixedEuroAreaComposition = flag;
 		}
 		
 		/*==========================Public methods============================*/
