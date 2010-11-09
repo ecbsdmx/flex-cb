@@ -81,7 +81,7 @@ package eu.ecb.core.view.map
 		public function ECBMapLegend(direction:String="vertical")
 		{
 			super(direction);
-			_euCountries = EUCountries.getInstance();
+			_euCountries = new EUCountries();
 			_displayEuroAreaData = true;	
 			_displayEUData = true;
 			_displayUSData = true;
@@ -161,6 +161,14 @@ package eu.ecb.core.view.map
 				_dataSetChanged = true;
 				commitProperties();
 			}
+		}
+		
+		/**
+		 * Whether the fixed euro area composition should be used.
+		 */ 
+		public function set useFixedEuroAreaComposition(flag:Boolean):void
+		{
+			_euCountries.useFixedEuroAreaComposition = flag;
 		}
 		
 		/**

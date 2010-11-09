@@ -65,9 +65,14 @@ package eu.ecb.core.view.table
 		public function EuropeanUnionXSTable(direction:String="vertical")
 		{
 			super(direction);
-			_euCountries = EUCountries.getInstance();
+			_euCountries = new EUCountries();
 		}
 		
+		/*============================Accessors===============================*/
+		
+		/**
+		 * Whether the table should display euro area countries only.
+		 */ 
 		public function set euroAreaOnly(flag:Boolean):void
 		{
 			_euroAreaOnly = flag;
@@ -76,6 +81,16 @@ package eu.ecb.core.view.table
 				commitProperties();
 			}
 		}
+		
+		/**
+		 * Whether the fixed euro area composition should be used.
+		 */ 
+		public function set useFixedEuroAreaComposition(flag:Boolean):void
+		{
+			_euCountries.useFixedEuroAreaComposition = flag;
+		}
+		
+		/*==========================Public methods============================*/
 		
 		/**
 		 * Handles the event that specifies whether only the euro area countries
