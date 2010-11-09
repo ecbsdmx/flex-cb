@@ -29,7 +29,12 @@ package eu.ecb.core.util.net.locator
 	import flash.net.URLRequest;
 
 	/**
-	 * Base implementation for the ISeriesLocator interface.
+	 * This locator returns the expected file location of data represented by a
+	 * particular series keys (e.g.: M.DE.0000.N). This locator expects to 
+	 * find the data file below a data folder and a data folder representing a
+	 * reference area. It uses the series key as file name where . are replaced 
+	 * by _, prepends the dataflow id and appends the .xml extension 
+	 * (e.g.: data/DE/ICP.M.DE.0000.N.xml).
 	 * 
 	 * @author Xavier Sosnovsky
 	 * @author Karine Feraboli
