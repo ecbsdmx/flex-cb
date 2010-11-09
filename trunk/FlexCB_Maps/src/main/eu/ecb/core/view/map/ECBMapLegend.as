@@ -74,7 +74,6 @@ package eu.ecb.core.view.map
 		private var _useAbsoluteValue:Boolean;
 		private var _euroAreaOnly:Boolean;
 		private var _euroAreaMinMaxOnly:Boolean;
-		private var _euroAreaOnlyChanged:Boolean;
 		
 		/*===========================Constructor==============================*/
 		

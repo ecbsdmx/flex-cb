@@ -318,8 +318,6 @@ package eu.ecb.core.view.map
 			var euValue:String = (euroAreaObs is UncodedXSObservation) ? 
 				(euroAreaObs as UncodedXSObservation).value : 
 				(euroAreaObs as CodedXSObservation).value.id;
-			var minValue:Number;
-			var maxValue:Number;			
 			for each (var obs:XSObservation in _observations) {
 				var countryCode:String;
 				if (obs is UncodedXSObservation) {
