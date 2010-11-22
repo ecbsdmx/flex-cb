@@ -281,7 +281,7 @@ package eu.ecb.core.view.chart
 		
 		/*=========================Private methods============================*/
 		
-		private function setColumnColor(element:ChartItem):IFill
+		private function setColumnColor(element:ChartItem, index:Number):IFill
 		{
 			var c:SolidColor = new SolidColor(0xa6bddb);
 			if (_euCountries.belongsToEuroArea(element.item.measure, 
