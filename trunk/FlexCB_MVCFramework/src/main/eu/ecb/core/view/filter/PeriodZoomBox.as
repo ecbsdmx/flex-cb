@@ -47,7 +47,7 @@ package eu.ecb.core.view.filter
 	 * 
 	 * @eventType eu.ecb.core.view.filter.PeriodZoomBox.SELECTED_PERIOD_CHANGED
 	 */
-	[Event(name="selectedPeriodChanged", type="org.sdmx.event.DataEvent")]
+	[Event(name="selectedPeriodChanged", type="flash.events.DataEvent")]
 
 	/**
 	 * This component displays a link bar with all available periods for 
