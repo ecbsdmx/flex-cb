@@ -66,7 +66,7 @@ package eu.ecb.core.view.chart
 		 */
 		protected var _chartLayout:String;
 		
-		[Embed(source="../../../assets/images/ZoomIn.png")]
+		[Embed(source="/assets/images/ZoomIn.png")]
 		/**
 		 * @private
 		 */ 

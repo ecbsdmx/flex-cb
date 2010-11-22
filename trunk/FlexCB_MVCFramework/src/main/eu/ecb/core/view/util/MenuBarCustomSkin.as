@@ -71,36 +71,20 @@ package eu.ecb.core.view.util
 		{
 			super.updateDisplayList(w, h);
 		
-			var bevel:Boolean = getStyle("bevel");
 			var borderColor:uint = getStyle("borderColor");
 			var cornerRadius:Number = getStyle("cornerRadius");
 			var fillAlphas:Array = getStyle("fillAlphas");
 			var fillColors:Array = getStyle("fillColors");
 			StyleManager.getColorNames(fillColors);
 			var themeColor:uint = getStyle("themeColor");
-			var derStyles:Object = calcDerivedStyles(themeColor, fillColors[0],
-				fillColors[1]);
 			var borderColorDrk1:Number =
 				ColorUtil.adjustBrightness2(borderColor, -25);
-			var cr:Number = Math.max(0, cornerRadius);
 			var cr1:Number = Math.max(0, cornerRadius - 1);
 			var upFillColors:Array = [ fillColors[0], fillColors[1] ];
 			var upFillAlphas:Array = [ fillAlphas[0], fillAlphas[1] ];
 			graphics.clear();
 			drawRoundRect(1, 1, w - 2, h - 2, cr1, upFillColors, upFillAlphas,
 				verticalGradientMatrix(1, 1, w - 2, h - 2));
-		}
-
-		private static function calcDerivedStyles(themeColor:uint,		
-			fillColor0:uint, fillColor1:uint):Object
-		{
-			var key:String = HaloColors.getCacheKey(themeColor,
-			fillColor0, fillColor1);
-			if (!cache[key]) {
-				var o:Object = cache[key] = {};
-				HaloColors.addHaloColors(o, themeColor, fillColor0, fillColor1);	
-			}
-			return cache[key];
 		}
 	}
 }

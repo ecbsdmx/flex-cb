@@ -42,8 +42,6 @@ package eu.ecb.core.view.util
 	 */ 
 	public class ECBToolTipBorder extends ToolTipBorder
 	{
-		private var dropShadow:RectangularDropShadow;
-		
 		public function ECBToolTipBorder()
 		{
 			super();

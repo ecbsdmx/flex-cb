@@ -41,8 +41,6 @@ package eu.ecb.core.util.helper
 	{
 		/*==============================Fields================================*/
 		
-		private static var _instance:EUCountries;
-		
 		private var _2To3Codes:Object;
 		
 		private var _3To2Codes:Object;

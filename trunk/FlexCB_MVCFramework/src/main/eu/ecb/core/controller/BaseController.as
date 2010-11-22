@@ -52,7 +52,7 @@ package eu.ecb.core.controller
 	 * 
 	 * @eventType eu.ecb.core.controller.ControllerAdapter.TASK_PROGRESS
 	 */
-	[Event(name="taskProgress", type="eu.ecb.event.ProgressEventMessage")]
+	[Event(name="taskProgress", type="eu.ecb.core.event.ProgressEventMessage")]
 	
 	/**
 	 * Event triggered when a task has started

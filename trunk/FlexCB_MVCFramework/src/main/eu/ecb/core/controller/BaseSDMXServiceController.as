@@ -424,7 +424,7 @@ package eu.ecb.core.controller
 			var request:Object = new Object();
 			request["type"] = "dataQuery";
 			var dataRequest:Object;
-			if (_structureToFetch == true) {
+			if (_structureToFetch) {
 				_keyFamilyParams = {id: null, agency: null, version: null};
 				request["type"] = "keyFamilyQuery";
 				request["method"] = prepareStructureProvider;
@@ -876,7 +876,7 @@ package eu.ecb.core.controller
 		
 		private function createDataProvider():IDataProvider
 		{
-			return _dataProvidersFactory.getDataDAO();;
+			return _dataProvidersFactory.getDataDAO();
 		}
 	}
 }

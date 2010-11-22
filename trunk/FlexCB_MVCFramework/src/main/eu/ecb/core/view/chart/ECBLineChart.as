@@ -144,7 +144,7 @@ package eu.ecb.core.view.chart
 		/**
 		 * The icon for the cursor used when dragging the chart
 		 */
-		[Embed(source="../../../assets/images/fleur.png")] 
+		[Embed(source="/assets/images/fleur.png")] 
 		private var _dragCursor:Class;
 		
 		private var _effect:SeriesInterpolate;
@@ -498,12 +498,12 @@ package eu.ecb.core.view.chart
 			if (_selectedDataSetChanged) {
 				_selectedDataSetChanged = false;
 				_highlightedDataSet = null;
-				drawLineSeries(_selectedDataSet as DataSet);
+				drawLineSeries();
 			}
 			
 			if (_highlightedDataSetChanged) {
 				_highlightedDataSetChanged = false;
-				drawLineSeries(_highlightedDataSet as DataSet);
+				drawLineSeries();
 			}
 			
 			if (_referenceSeriesFrequencyChanged) {
@@ -1006,7 +1006,7 @@ package eu.ecb.core.view.chart
 			dispatchEvent(event);
 		}
 		
-		private function drawLineSeries(ds:DataSet):void
+		private function drawLineSeries():void
 		{
 			var allLineSeries:Array = _chart.series;				
 			for (var i:uint = 0; i < _filteredDataSet.timeseriesKeys.length; 
