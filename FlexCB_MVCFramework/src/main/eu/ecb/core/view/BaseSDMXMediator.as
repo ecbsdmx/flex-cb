@@ -28,8 +28,6 @@ package eu.ecb.core.view
 {
 	import eu.ecb.core.controller.ISDMXServiceController;
 	import eu.ecb.core.model.ISDMXServiceModel;
-	import eu.ecb.core.view.ISDMXMediator;
-	import eu.ecb.core.view.BaseSDMXViewComposite;
 	
 	/**
 	 * Basic implementation of the ISDMXMediator interface.
