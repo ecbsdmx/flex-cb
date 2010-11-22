@@ -163,13 +163,13 @@ package eu.ecb.core.view.filter
 		
 		private var _initialEndValue:uint;
 		
-		[Embed(source="eu/ecb/assets/images/icon_play.png")]
+		[Embed(source="/assets/images/icon_play.png")]
 		private var _playIcon:Class;
 		
-		[Embed(source="eu/ecb/assets/images/icon_stop.png")]
+		[Embed(source="/assets/images/icon_stop.png")]
 		private var _stopIcon:Class;
 		
-		[Embed(source="eu/ecb/assets/images/icon_pause.png")]
+		[Embed(source="/assets/images/icon_pause.png")]
 		private var _pauseIcon:Class;
 		
 		private var _timer:Timer;
