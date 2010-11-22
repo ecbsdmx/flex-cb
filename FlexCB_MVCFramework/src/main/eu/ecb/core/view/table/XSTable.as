@@ -122,11 +122,10 @@ package eu.ecb.core.view.table
 		protected var _isHidden:Boolean;
 		private var _sectionFormatter:ISectionTitleFormatter;
 		private var _obsFormatter:IXSObsTitleFormatter;
-		private var _referenceColumn:DataGridColumn;
 		private var _sort:Sort;
 		private var _upLink:LinkUp;
 		private var _parentsAssoc:Object; 
-		[Embed(source="../../../assets/images/ZoomIn.png")]
+		[Embed(source="/assets/images/ZoomIn.png")]
 		private var _drillDownCursor:Class;
 		private var _headerPressed:Boolean;
 		private var _fullWidth:Boolean;

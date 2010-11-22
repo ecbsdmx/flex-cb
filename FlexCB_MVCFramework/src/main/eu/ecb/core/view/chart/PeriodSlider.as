@@ -100,12 +100,10 @@ package eu.ecb.core.view.chart
 
 		private var _cursorId:Number;
 		
-		private var _downLeftWidth:Number;
-		
-		[Embed(source="../../../assets/images/fleur.png")] 
+		[Embed(source="/assets/images/fleur.png")] 
 		private var _dragCursor:Class;
 		
-		[Embed(source="../../../assets/images/blank.png")]
+		[Embed(source="/assets/images/blank.png")]
 		private var _blankDividerClass:Class;
 				
 		/*===========================Constructor==============================*/

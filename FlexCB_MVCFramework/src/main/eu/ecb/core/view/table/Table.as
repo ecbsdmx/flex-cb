@@ -124,8 +124,6 @@ package eu.ecb.core.view.table
 		
 		private var _descending:Boolean;
 		
-		private var _rowDimensionSort:Sort;
-		
 		private var _showChangePercentage:Boolean;
 		
 		/*===========================Constructor==============================*/
@@ -133,7 +131,7 @@ package eu.ecb.core.view.table
 		public function Table(direction:String = "horizontal", 
 			showChangePercentage:Boolean = true)
 		{
-			super();
+			super(direction);
 			_dateFormatter = new SDMXDateFormatter();
 			_dateFormatter.isShortFormat = true;
 			_numberFormatter = new ExtendedNumberFormatter();

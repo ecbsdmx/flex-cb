@@ -55,15 +55,5 @@ package eu.ecb.core.view.chart
 		{
 			return 0;
 		}
-		
-		/*========================Protected methods===========================*/
-		
-	    /**
-		 *  @private
-		 */
-		override protected function updateDisplayList(w:Number, h:Number):void
-		{	
-			super.updateDisplayList(w, h);
-		}
 	}
 }

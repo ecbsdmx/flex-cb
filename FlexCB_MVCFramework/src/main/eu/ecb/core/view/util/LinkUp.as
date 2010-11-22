@@ -44,7 +44,7 @@ package eu.ecb.core.view.util
 		
 		/*==============================Fields================================*/
 		
-		[Embed(source="../../../assets/images/arrow.gif")] 
+		[Embed(source="/assets/images/arrow.gif")] 
 		private var _arrow:Class;
 		
 		private var _link:LinkButton;
