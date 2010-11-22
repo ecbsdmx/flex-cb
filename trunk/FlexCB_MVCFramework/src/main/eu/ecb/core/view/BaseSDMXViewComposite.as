@@ -25,12 +25,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package eu.ecb.core.view
-{
-	import eu.ecb.core.view.BaseSDMXView;
-	import eu.ecb.core.view.ISDMXComposite;
-	import eu.ecb.core.view.ISDMXServiceView;
-	import eu.ecb.core.view.ISDMXView;
-	
+{	
 	import flash.display.DisplayObject;
 
 	/**
