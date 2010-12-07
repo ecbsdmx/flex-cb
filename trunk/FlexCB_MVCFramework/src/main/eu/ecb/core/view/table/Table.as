@@ -114,17 +114,17 @@ package eu.ecb.core.view.table
 		 */
 		protected var _createChangeColumn:Boolean;
 		
+		/**
+		 * @private
+		 */
 		protected var _obsDisplaySort:Sort;
 		
 		private var _dateConverter:SDMXDate;
-		
 		private var _isHidden:Boolean;
-		
 		private var _formatter:ISeriesTitleFormatter;
-		
 		private var _descending:Boolean;
-		
 		private var _showChangePercentage:Boolean;
+		private var _minColumnWidth:Number;
 		
 		/*===========================Constructor==============================*/
 		
@@ -135,6 +135,12 @@ package eu.ecb.core.view.table
 			_dateFormatter = new SDMXDateFormatter();
 			_dateFormatter.isShortFormat = true;
 			_numberFormatter = new ExtendedNumberFormatter();
+			_numberFormatter.thousandsSeparatorTo = 
+				resourceManager.getString("flex_cb_mvc_lang", 
+				"thousands_separator");
+			_numberFormatter.decimalSeparatorTo = 
+				resourceManager.getString("flex_cb_mvc_lang", 
+				"decimal_separator");					
 			_changeNumberFormatter = new ExtendedNumberFormatter();
 			_changeNumberFormatter.forceSigned = true;	
 			_percentFormatter = new ExtendedNumberFormatter();
@@ -146,7 +152,8 @@ package eu.ecb.core.view.table
 				"flex_cb_mvc_lang", "monthNamesShort");	
 			_dateConverter = new SDMXDate();
 			_showChangeChanged = showChangePercentage;
-			
+			_minColumnWidth = 20;
+			_descending = true;
 		}
 		
 		/*============================Accessors===============================*/
@@ -192,23 +199,44 @@ package eu.ecb.core.view.table
 			_createChangeColumn = flag;
 		}
 		
+		/**
+		 * This flag can be used for performance reasons. In case the table is
+		 * not visible on the screen (for example, in a stack panel), there is 
+		 * no need to perform expensive operations.
+		 *  
+		 * @param flag
+		 */
 		public function set isHidden(flag:Boolean):void
 		{
 			_isHidden = flag;
 			invalidateProperties();
 		}
 		
+		/**
+		 * Handle the event indicating that a dimension has been selected.
+		 */ 
 		public function handleMeasureSelected(
 			event:XSMeasureSelectionEvent):void 
 		{
 			dimensionCode = event.measure.conceptIdentity.id;	
 		}
 		
+		/**
+		 * Sets the formatter to be used for formatting for series title.
+		 */ 
 		public function set titleFormatter(formatter:ISeriesTitleFormatter):void
 		{
 			if (null != formatter) {
 				_formatter = formatter;
 			}
+		}
+		
+		/**
+		 * Sets the column minimum width. 
+		 */ 
+		public function set minColumnWidth(min:Number):void
+		{
+			_minColumnWidth = min;
 		}
 		
 		/*========================Protected methods===========================*/
@@ -250,6 +278,7 @@ package eu.ecb.core.view.table
 				var columns:Array = new Array();
 				var refCol:DataGridColumn = new DataGridColumn();
 				refCol.width = 100;
+				refCol.minWidth = _minColumnWidth;
 				refCol.dataField = "rowDimension";
 
 				if (null == _referenceColumn) {
@@ -340,11 +369,13 @@ package eu.ecb.core.view.table
 				//Need to populate the two collections
 				var quickMode:Boolean = (null == _dimensionCode && 
 					1 == _filteredDataSet.timeseriesKeys.length); 
+				var dimensionValues:Array = new Array();	
 				for each (var series:TimeseriesKey in 
 					_filteredDataSet.timeseriesKeys) {
 					var colKeyCode:String = (quickMode) ? "value" : 
 						(series.keyValues.getItemAt(
 						colDimensionPosition) as KeyValue).value.id;
+					dimensionValues.push(colKeyCode);	
 					var colKeyDesc:String = (quickMode) ? "Value" :
 						(null == _formatter) ? 
 						(series.keyValues.getItemAt(
@@ -421,14 +452,18 @@ package eu.ecb.core.view.table
 				}
 				
 				var foundSortDimension:Boolean = false;
+				var allColumnsForSorting:Object = new Object();
 				for (var i:uint = 0; i < colDimensions.length; i++) {
 					(allColumns[i + 1] as DataGridColumn).dataField = 
 						colDimensions.getItemAt(i).key;
 					(allColumns[i + 1] as DataGridColumn).headerText = 
 						colDimensions.getItemAt(i).desc;
+					var cols:Array = new Array();
+					cols.push(allColumns[i + 1]);	
 					if (_sortDimension == colDimensions.getItemAt(i).key) {
 						foundSortDimension = true;
-					}		
+					}	
+					allColumnsForSorting[colDimensions.getItemAt(i).key] = cols;	
 					if (_createChangeColumn) {
 						(allColumns[i + 2] as DataGridColumn).dataField = 
 							colDimensions.getItemAt(i).key + "_change";
@@ -440,16 +475,26 @@ package eu.ecb.core.view.table
 							sortCompareFunction = sortChanges;
 						(allColumns[i + 2] as DataGridColumn).itemRenderer = 
 							new ClassFactory(ChangeRenderer);
+						cols.push(allColumns[i + 2]);	
 						i++;
 					}	
 				}
-				_dataGrid.columns = allColumns;
+				var sortedColumns:Array = new Array();
+				sortedColumns.push(allColumns[0]);
+				for each (var dim:String in dimensionValues) {
+					if (allColumnsForSorting.hasOwnProperty(dim)) {
+						for each (var item:DataGridColumn in 
+							allColumnsForSorting[dim]) {
+							sortedColumns.push(item);
+						}
+					}
+				}
+				_dataGrid.columns = sortedColumns;
 				
 				if (!foundSortDimension) {
 					_sortDimension = null;
 				}
 				_obsDisplaySort = new Sort();
-				_descending = (_descending) ? false : true;
 				_obsDisplaySort.fields = (null == _sortDimension) ?
 					[new SortField("rowDimension", false, _descending, false)] :
 					[new SortField(_sortDimension, false, _descending, true)];
@@ -517,8 +562,14 @@ package eu.ecb.core.view.table
 			var returnedValue:String = "";
 			if (item.hasOwnProperty(column.dataField) && 
 				!isNaN(Number(item[column.dataField]))) {
-				returnedValue = (_isPercentage) ? 
-					item[column.dataField] + "%" : item[column.dataField]; 
+				var rowValue:String = String(item[column.dataField]);	
+				_numberFormatter.precision = 
+					rowValue.indexOf(".") > -1 ? 
+			    		rowValue.substring(rowValue.indexOf(".") + 1, 
+		    			rowValue.length).length : 0;		
+				var value:String = 
+					_numberFormatter.format(Number(rowValue));	
+				returnedValue = (_isPercentage) ? value + "%" : value; 
 			} else {
 				returnedValue = "-";
 			}
@@ -532,6 +583,7 @@ package eu.ecb.core.view.table
 				var valueColumn:DataGridColumn = new DataGridColumn();
 				valueColumn.labelFunction = formatValue;
 				valueColumn.width = 100;
+				valueColumn.minWidth = _minColumnWidth;
 				valueColumn.setStyle("textAlign", "right");
 				valueColumn.sortCompareFunction = sortValues;
 				valueColumn.headerWordWrap = true;
