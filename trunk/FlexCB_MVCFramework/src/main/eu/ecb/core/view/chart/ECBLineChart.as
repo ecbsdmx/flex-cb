@@ -43,7 +43,6 @@ package eu.ecb.core.view.chart
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.text.TextField;
-	import flash.utils.getTimer;
 	
 	import mx.charts.AxisRenderer;
 	import mx.charts.DateTimeAxis;
@@ -157,16 +156,13 @@ package eu.ecb.core.view.chart
 		protected var _showSeriesTitle:Boolean;
 		
 		private var _baseAtZero:Boolean;
-		
 		private var _indexColor:Array;
-		
 		private var _effects:Object = new Object();
-		
 		private var _minimized:Object = new Object();
-		
 		private var _formatter:ISeriesTitleFormatter;
-		
 		private var _lineSeriesData:Object;
+		private var _lineSeriesIndex:uint;
+		private var _colorBySeriesKeys:Boolean;
 		
 		/*===========================Constructor==============================*/
 
@@ -210,6 +206,7 @@ package eu.ecb.core.view.chart
 			(_formatter as AttributesSeriesTitleFormatter).attachmentLevel = 
 				AttachmentLevel.GROUP;
 			_lineSeriesData = new Object(); 	
+			_lineSeriesIndex = 0;
 		}
 		
 		/*========================Protected methods===========================*/
@@ -298,6 +295,11 @@ package eu.ecb.core.view.chart
 			if (null != formatter) {
 				_formatter = formatter;
 			}
+		}
+		
+		public function set colorBySeriesKeys(flag:Boolean):void 
+		{
+			_colorBySeriesKeys = flag; 
 		}
 		
 		/*==========================Public methods============================*/
@@ -453,17 +455,23 @@ package eu.ecb.core.view.chart
 					
 					if (isSeriesChanged) {	
 						var axisStroke:Stroke = new Stroke();
-						if (_indexColor != null){
+						if (_indexColor != null) {
 							axisStroke.color = 
 								(SeriesColors.getColors().length > i) ?
 								SeriesColors.getColors().getItemAt(
 								_indexColor[i])	as uint : Math.round(
 								Math.random()*0xFFFFFF);
 						} else {
-							axisStroke.color = 
-								(SeriesColors.getColors().length > i) ?
-								SeriesColors.getColors().getItemAt(i) as uint : 
-								Math.round( Math.random()*0xFFFFFF );
+							if (_colorBySeriesKeys) {
+								axisStroke.color = SeriesColors.
+									getColorForSeriesKey(curSeries.seriesKey);
+							} else {
+								axisStroke.color = 
+									(SeriesColors.getColors().length > i) ?
+									SeriesColors.getColors().getItemAt(i) 
+										as uint :
+										Math.round( Math.random()*0xFFFFFF );
+							}
 						}
 						if (null != _selectedDataSet &&	(_selectedDataSet as
 							DataSet).timeseriesKeys.contains(curSeries)) 
@@ -961,7 +969,7 @@ package eu.ecb.core.view.chart
 			}
 			for (var i:int = availableLineSeries; i < 0; i++) {
 				var lineSeries:LineSeries = new LineSeries();
-				lineSeries.id = String(getTimer());
+				lineSeries.id = "lineSeriesChart"+_lineSeriesIndex;
 				lineSeries.yField = "observationValue";
 				lineSeries.xField = "timeValue";
 				lineSeries.filterData = true;
@@ -969,6 +977,7 @@ package eu.ecb.core.view.chart
 					lineSeries.setStyle("showDataEffect", _effect);
 				}
 				allLineSeries.push(lineSeries);
+				_lineSeriesIndex++;
 			}
 		}
 		
