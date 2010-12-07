@@ -34,6 +34,7 @@ package eu.ecb.core.util.helper
 	 * A utility class that contains the list of valid colors for series
 	 *   
 	 * @author Xavier Sosnovsky
+	 * @author Rok Povse
 	 * 
 	 * @todo
 	 * 		- The list of colours should be in an XML file 
@@ -43,6 +44,7 @@ package eu.ecb.core.util.helper
 		/*==============================Fields================================*/
 		
 		private static var _colors:ArrayCollection;
+		private static var _seriesKeysColors:ArrayCollection;
 		
 		/*==========================Public methods============================*/
 		
@@ -58,10 +60,46 @@ package eu.ecb.core.util.helper
 			return _colors;
 		}
 		
+		/**
+		 * Gets the color for given series key
+		 * @return the color for series key
+		 */ 
+		public static function getColorForSeriesKey(seriesKey:String):uint {
+			if (null == _colors) {
+				createColorsCollection();
+			}
+			
+			if (!_seriesKeysColors.contains(seriesKey)) {
+				_seriesKeysColors.addItem(seriesKey);
+		    }
+		
+			if (_seriesKeysColors.length > _colors.length) {
+				_colors.addItem(Math.round( Math.random() * 0xFFFFFF ));
+			}
+			
+			return _colors.getItemAt(_seriesKeysColors.getItemIndex(seriesKey))
+				as uint;
+		}
+		
+		/**
+		 * Clears stored seriesKeys
+		 */ 
+		public static function resetSeriesKeysColors():void {
+			_seriesKeysColors = new ArrayCollection();
+		}
+		
+		/**
+		 * Returns stored series keys collection
+		 */ 
+		public static function getSeriesKeys():ArrayCollection {
+			return _seriesKeysColors;
+		}
+		
 		/*==========================Private methods===========================*/
 		
 		private static function createColorsCollection():void 
 		{
+			_seriesKeysColors = new ArrayCollection();
 			_colors = new ArrayCollection();
 			_colors.addItem(0x2C70AA);
 			_colors.addItem(0xDECF4D);
