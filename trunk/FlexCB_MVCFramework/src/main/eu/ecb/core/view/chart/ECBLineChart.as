@@ -117,7 +117,7 @@ package eu.ecb.core.view.chart
       	/**
 		 * @private
 		 */ 
-      	protected var _dateFormatter:DateFormatter;
+      	protected var _dateFormatter:SDMXDateFormatter;
       	
       	protected var _isoDateFormatter:DateFormatter;
       	
@@ -176,7 +176,7 @@ package eu.ecb.core.view.chart
 		public function ECBLineChart(direction:String = "vertical")
 		{
 			super(direction);
-			_dateFormatter = new DateFormatter();
+			_dateFormatter = new SDMXDateFormatter();
 			_isoDateFormatter = new DateFormatter();
 			_percentFormatter = new ExtendedNumberFormatter();
 			_percentFormatter.forceSigned = true;
@@ -404,25 +404,33 @@ package eu.ecb.core.view.chart
 					_referenceSeriesFrequency == "D") {
 		            if (_dataLength >= 1320) {
 		            	_dateAxisFormatter.frequency = "A";
+		            	_dateFormatter.frequency = "A";
 	        	    } else if (_dataLength <= 50) {
 	        	    	_dateAxisFormatter.frequency = "D";
+	        	    	_dateFormatter.frequency = "D";
 		            } else {
 	    	            _dateAxisFormatter.frequency = "M";
+	    	            _dateFormatter.frequency = "M";
 	        	    }
 	            } else if (_referenceSeriesFrequency == "M") {
 	            	if (_dataLength < 130) {
 		            	_dateAxisFormatter.frequency = "M";
+		            	_dateFormatter.frequency = "M";
 	        	    } else {
 	    	            _dateAxisFormatter.frequency = "A";
+	    	            _dateFormatter.frequency = "A";
 	        	    }
 	            } else if (_referenceSeriesFrequency == "Q") {
 	            	if (_dataLength < 60) {
 		            	_dateAxisFormatter.frequency = "Q";
+		            	_dateFormatter.frequency = "Q";
 	        	    } else {
 	    	            _dateAxisFormatter.frequency = "A";
+	    	            _dateFormatter.frequency = "A";
 	        	    }
 	            } else if (_referenceSeriesFrequency == "A") {
 	            	_dateAxisFormatter.frequency = "A";
+	            	_dateFormatter.frequency = "A";
 	            }	
 				
 				var isChanged:Boolean = false
