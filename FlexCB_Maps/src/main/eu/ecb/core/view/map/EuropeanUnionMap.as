@@ -85,6 +85,7 @@ package eu.ecb.core.view.map
 		private var _effects:Object;
 		private var _minimized:Object;
 		private var _euroAreaOnly:Boolean;
+		private var _bsdImpl:Boolean;
 		
 		/*===========================Constructor==============================*/
 		
@@ -101,6 +102,7 @@ package eu.ecb.core.view.map
 			setStyle("horizontalGap", -4);
 			_effects = new Object();
 			_minimized = new Object();
+			_bsdImpl = true;
 		}
 		
 		/*============================Accessors===============================*/
@@ -172,6 +174,24 @@ package eu.ecb.core.view.map
 			_euCountries.useFixedEuroAreaComposition = flag;
 		}
 		
+		/**
+		 * Indicates whether the BSD-compliant version of the map should be used. 
+		 * 
+		 * The Flex-CB Maps library comes with 2 versions of the map of Europe. 
+		 * One version (Europe.as) is covered by a BSD license and can therefore 
+		 * freely be used, including in commercial products. A more detailed 
+		 * version of the map of Europe (Europe2.as) has been provided by 
+		 * EuroGeographics but is covered by a different license, which, among 
+		 * others, does not allow its use in commercial products. Please refer
+		 * to the source code files, for additional information regarding the
+		 * respective licenses. Unless this flag is set to false, the Flex-CB 
+		 * library will use the BSD-compliant version of the map.   
+		 */ 
+		public function set useBsdLicense(flag:Boolean):void
+		{
+			_bsdImpl = flag;
+		}
+		
 		/*==========================Public methods============================*/
 		
 		/**
@@ -218,7 +238,7 @@ package eu.ecb.core.view.map
 			super.createChildren();
 			
 			if (null == _map) {
-				_map = new EuropeMap();
+				_map = new EuropeMap(_bsdImpl);
 				_map.addEventListener(MapEvent.ITEM_ROLL_OVER, handleMouseOver);
 				_map.addEventListener(MapEvent.ITEM_ROLL_OUT, handleMouseOut);
 				_map.addEventListener(MouseEvent.CLICK, handleMapClicked);
