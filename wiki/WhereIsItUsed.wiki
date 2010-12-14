@@ -31,6 +31,12 @@ The New York Fed provides a secondary and temporary source of securities to the 
 
 The Discount Window functions as a safety valve in relieving pressures in reserve markets; extensions of credit can help alleviate liquidity strains in a depository institution and in the banking system as a whole. It also helps ensure the basic stability of the payment system by supplying liquidity during times of systemic stress.
 
+
+[http://www.newyorkfed.org/markets/maidenlane.html/ Maiden Lane Transactions]
+
+The formation of the Maiden Lane LLCs in 2008 occurred during a time of severe economic distress in the United States. The sharp deterioration in the U.S. housing market in 2007, led to a loss of confidence in the value of mortgage-related products and in the financial institutions with exposures to these products. The ensuing funding pressures on a range of financial institutions and strained liquidity conditions across the financial system led the Federal Reserve to take a series of unprecedented policy actions to contain the broader risks the financial crisis posed to the economy. Among these actions, the Federal Reserve Board authorized the Federal Reserve Bank of New York (New York Fed) to form three limited liability companies under Section 13(3) of the Federal Reserve Act  to facilitate lending in support of specific institutions.
+
+
 = [http://kostat.go.kr/eng/ Statistics Korea] =
 The [http://kosis.kr/nsportal/bulletin/html/index_eng.html dashboards] from Statistics Korea present, in an interactive fashion, key economic and financial indicators from the G20 countries.
 
