@@ -13,9 +13,6 @@ The European Central Bank uses the Flex-CB libraries to power various vizualizat
   * [http://www.ecb.europa.eu/stats/exchange/eurofxref/html/index.en.html Charts for the bilateral exchange rates] and the [http://www.ecb.europa.eu/stats/exchange/effective/html/index.en.html effective exchange rates].
   * Various charts to inform the general public about [http://www.ecb.int/ecb/educational/hicp/html/index.en.html inflation]. These charts are currently available in 22 languages.
 
-= [http://www.bankofcanada.ca/ Bank of Canada] =
-
-[http://credit.bank-banque-canada.ca/ Bank of Canada Credit Conditions Site]. This website brings together statistics and graphs that were previously available in several different places. To meet its mandate, the Bank carefully monitors changes in credit conditions, the money supply, financial system liquidity, as well as in other credit-market indicators such as the issuance of bonds and money-market instruments, among many other indicators. These reflect changes in the economy, the influence of monetary policy, and financial market conditions. These charts are currently available in English and French.
 
 = [http://www.newyorkfed.org Federal Reserve Bank of New York] =
 
@@ -36,6 +33,9 @@ The Discount Window functions as a safety valve in relieving pressures in reserv
 
 The formation of the Maiden Lane LLCs in 2008 occurred during a time of severe economic distress in the United States. The sharp deterioration in the U.S. housing market in 2007, led to a loss of confidence in the value of mortgage-related products and in the financial institutions with exposures to these products. The ensuing funding pressures on a range of financial institutions and strained liquidity conditions across the financial system led the Federal Reserve to take a series of unprecedented policy actions to contain the broader risks the financial crisis posed to the economy. Among these actions, the Federal Reserve Board authorized the Federal Reserve Bank of New York (New York Fed) to form three limited liability companies under Section 13(3) of the Federal Reserve Act  to facilitate lending in support of specific institutions.
 
+= [http://www.bankofcanada.ca/ Bank of Canada] =
+
+[http://credit.bank-banque-canada.ca/ Bank of Canada Credit Conditions Site]. This website brings together statistics and graphs that were previously available in several different places. To meet its mandate, the Bank carefully monitors changes in credit conditions, the money supply, financial system liquidity, as well as in other credit-market indicators such as the issuance of bonds and money-market instruments, among many other indicators. These reflect changes in the economy, the influence of monetary policy, and financial market conditions. These charts are currently available in English and French.
 
 = [http://kostat.go.kr/eng/ Statistics Korea] =
 The [http://kosis.kr/nsportal/bulletin/html/index_eng.html dashboards] from Statistics Korea present, in an interactive fashion, key economic and financial indicators from the G20 countries.
