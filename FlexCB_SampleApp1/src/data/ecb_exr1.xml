@@ -1,1270 +1,366 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<message:Structure xmlns:message="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message">
-<Header xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-		<ID>IREF000570</ID>
-		<Test>false</Test>
-		<Name>ECB structural definitions</Name>
-		<Prepared>2008-03-07T03:08:00</Prepared>
-		<Sender id="4F0"/>
-		<Receiver id="ZZZ"/>
-	</Header>
-<message:CodeLists>
-<CodeList xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="CL_FREQ">
-			<Name>Frequency code list</Name>
-			<Code value="A">
-				<Description>Annual</Description>
-			</Code>
-			<Code value="B">
-				<Description>Business</Description>
-			</Code>
-			<Code value="D">
-				<Description>Daily</Description>
-			</Code>
-			<Code value="E">
-				<Description>Event (not supported)</Description>
-			</Code>
-			<Code value="H">
-				<Description>Half-yearly</Description>
-			</Code>
-			<Code value="M">
-				<Description>Monthly</Description>
-			</Code>
-			<Code value="N">
-				<Description>Hourly</Description>
-			</Code>
-			<Code value="Q">
-				<Description>Quarterly</Description>
-			</Code>
-			<Code value="W">
-				<Description>Weekly</Description>
-			</Code>
-		</CodeList>
-<CodeList xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="CL_CURRENCY">
-			<Name>Currency code list</Name>
-			<Code value="AFN">
-				<Description>Afghanistan, Afghanis</Description>
-			</Code>
-			<Code value="ALL">
-				<Description>Albanian lek</Description>
-			</Code>
-			<Code value="AOA">
-				<Description>Angola, Kwanza</Description>
-			</Code>
-			<Code value="ARS">
-				<Description>Argentine peso</Description>
-			</Code>
-			<Code value="ATS">
-				<Description>Austrian schilling</Description>
-			</Code>
-			<Code value="AUD">
-				<Description>Australian dollar</Description>
-			</Code>
-			<Code value="AZN">
-				<Description>Azerbaijan, manats</Description>
-			</Code>
-			<Code value="BAM">
-				<Description>Bosnia-Hezergovinian convertible mark</Description>
-			</Code>
-			<Code value="BEF">
-				<Description>Belgian franc</Description>
-			</Code>
-			<Code value="BEL">
-				<Description>Belgian franc (financial)</Description>
-			</Code>
-			<Code value="BGN">
-				<Description>Bulgarian lev</Description>
-			</Code>
-			<Code value="BRL">
-				<Description>Brazilian real</Description>
-			</Code>
-			<Code value="BYR">
-				<Description>Belarus, Rubles</Description>
-			</Code>
-			<Code value="CAD">
-				<Description>Canadian dollar</Description>
-			</Code>
-			<Code value="CHF">
-				<Description>Swiss franc</Description>
-			</Code>
-			<Code value="CLP">
-				<Description>Chilean peso</Description>
-			</Code>
-			<Code value="CNY">
-				<Description>Chinese yuan renminbi</Description>
-			</Code>
-			<Code value="COP">
-				<Description>Colombian peso</Description>
-			</Code>
-			<Code value="CSD">
-				<Description>Serbian dinar</Description>
-			</Code>
-			<Code value="CYP">
-				<Description>Cyprus pound</Description>
-			</Code>
-			<Code value="CZK">
-				<Description>Czech koruna</Description>
-			</Code>
-			<Code value="DEM">
-				<Description>German mark</Description>
-			</Code>
-			<Code value="DKK">
-				<Description>Danish krone</Description>
-			</Code>
-			<Code value="DZD">
-				<Description>Algerian dinar</Description>
-			</Code>
-			<Code value="EEK">
-				<Description>Estonian kroon</Description>
-			</Code>
-			<Code value="EGP">
-				<Description>Egyptian pound</Description>
-			</Code>
-			<Code value="ESP">
-				<Description>Spanish peseta</Description>
-			</Code>
-			<Code value="EUR">
-				<Description>Euro</Description>
-			</Code>
-			<Code value="FIM">
-				<Description>Finnish markka</Description>
-			</Code>
-			<Code value="FRF">
-				<Description>French franc</Description>
-			</Code>
-			<Code value="GBP">
-				<Description>UK pound sterling</Description>
-			</Code>
-			<Code value="GGP">
-				<Description>Guernsey, Pounds</Description>
-			</Code>
-			<Code value="GHS">
-				<Description>Ghana Cedi</Description>
-			</Code>
-			<Code value="GRD">
-				<Description>Greek drachma</Description>
-			</Code>
-			<Code value="HKD">
-				<Description>Hong Kong dollar</Description>
-			</Code>
-			<Code value="HRK">
-				<Description>Croatian kuna</Description>
-			</Code>
-			<Code value="HUF">
-				<Description>Hungarian forint</Description>
-			</Code>
-			<Code value="IDR">
-				<Description>Indonesian rupiah</Description>
-			</Code>
-			<Code value="IEP">
-				<Description>Irish pound</Description>
-			</Code>
-			<Code value="ILS">
-				<Description>Israeli shekel</Description>
-			</Code>
-			<Code value="IMP">
-				<Description>Isle of Man, Pounds</Description>
-			</Code>
-			<Code value="INR">
-				<Description>Indian rupee</Description>
-			</Code>
-			<Code value="IQD">
-				<Description>Iraqi dinar</Description>
-			</Code>
-			<Code value="IRR">
-				<Description>Iranian rial</Description>
-			</Code>
-			<Code value="ISK">
-				<Description>Iceland krona</Description>
-			</Code>
-			<Code value="ITL">
-				<Description>Italian lira</Description>
-			</Code>
-			<Code value="JEP">
-				<Description>Jersey, Pounds</Description>
-			</Code>
-			<Code value="JOD">
-				<Description>Jordanian dinar</Description>
-			</Code>
-			<Code value="JPY">
-				<Description>Japanese yen</Description>
-			</Code>
-			<Code value="KPW">
-				<Description>Korean won (North)</Description>
-			</Code>
-			<Code value="KRW">
-				<Description>Korean won (Republic)</Description>
-			</Code>
-			<Code value="KWD">
-				<Description>Kuwait dinar</Description>
-			</Code>
-			<Code value="LBP">
-				<Description>Lebanese pound</Description>
-			</Code>
-			<Code value="LKR">
-				<Description>Sri Lanka rupee</Description>
-			</Code>
-			<Code value="LTL">
-				<Description>Lithuanian litas</Description>
-			</Code>
-			<Code value="LUF">
-				<Description>Luxembourg franc</Description>
-			</Code>
-			<Code value="LVL">
-				<Description>Latvian lats</Description>
-			</Code>
-			<Code value="LYD">
-				<Description>Libyan dinar</Description>
-			</Code>
-			<Code value="MAD">
-				<Description>Moroccan dirham</Description>
-			</Code>
-			<Code value="MGA">
-				<Description>Madagascar, Ariary</Description>
-			</Code>
-			<Code value="MKD">
-				<Description>Macedonian denar</Description>
-			</Code>
-			<Code value="MTL">
-				<Description>Maltese lira</Description>
-			</Code>
-			<Code value="MXN">
-				<Description>Mexican peso</Description>
-			</Code>
-			<Code value="MXP">
-				<Description>Mexican peso (old)</Description>
-			</Code>
-			<Code value="MYR">
-				<Description>Malaysian ringgit</Description>
-			</Code>
-			<Code value="MZN">
-				<Description>Mozambique, Meticais</Description>
-			</Code>
-			<Code value="NLG">
-				<Description>Netherlands guilder</Description>
-			</Code>
-			<Code value="NOK">
-				<Description>Norwegian krone</Description>
-			</Code>
-			<Code value="NZD">
-				<Description>New Zealand dollar</Description>
-			</Code>
-			<Code value="PEN">
-				<Description>Peru nuevo sol</Description>
-			</Code>
-			<Code value="PHP">
-				<Description>Philippine peso</Description>
-			</Code>
-			<Code value="PKR">
-				<Description>Pakistan rupee</Description>
-			</Code>
-			<Code value="PLN">
-				<Description>Polish zloty</Description>
-			</Code>
-			<Code value="PTE">
-				<Description>Portugese escudo</Description>
-			</Code>
-			<Code value="ROL">
-				<Description>Romanian leu (old)</Description>
-			</Code>
-			<Code value="RON">
-				<Description>Romanian leu</Description>
-			</Code>
-			<Code value="RUB">
-				<Description>Rouble</Description>
-			</Code>
-			<Code value="SAR">
-				<Description>Saudi riyal</Description>
-			</Code>
-			<Code value="SDG">
-				<Description>Sudan, Dinars</Description>
-			</Code>
-			<Code value="SEK">
-				<Description>Swedish krona</Description>
-			</Code>
-			<Code value="SGD">
-				<Description>Singapore dollar</Description>
-			</Code>
-			<Code value="SIT">
-				<Description>Slovenian tolar</Description>
-			</Code>
-			<Code value="SKK">
-				<Description>Slovak koruna</Description>
-			</Code>
-			<Code value="SPL">
-				<Description>Seborga, Luigini</Description>
-			</Code>
-			<Code value="SRD">
-				<Description>Suriname, Dollars</Description>
-			</Code>
-			<Code value="SYP">
-				<Description>Syrian pound</Description>
-			</Code>
-			<Code value="THB">
-				<Description>Thai bhat</Description>
-			</Code>
-			<Code value="TJS">
-				<Description>Tajikistan, Somoni</Description>
-			</Code>
-			<Code value="TND">
-				<Description>Tunisian dinar</Description>
-			</Code>
-			<Code value="TRL">
-				<Description>Turkish lira (old)</Description>
-			</Code>
-			<Code value="TRY">
-				<Description>Turkish lira</Description>
-			</Code>
-			<Code value="TVD">
-				<Description>Tuvalu, Tuvalu Dollars</Description>
-			</Code>
-			<Code value="TWD">
-				<Description>New Taiwan dollar</Description>
-			</Code>
-			<Code value="UAH">
-				<Description>Ukraine hryvnia</Description>
-			</Code>
-			<Code value="USD">
-				<Description>US dollar</Description>
-			</Code>
-			<Code value="VEB">
-				<Description>Venezuela bolivar (old)</Description>
-			</Code>
-			<Code value="VEF">
-				<Description>Venezuela bolivar</Description>
-			</Code>
-			<Code value="XAG">
-				<Description>Silver</Description>
-			</Code>
-			<Code value="XAU">
-				<Description>Gold in units of grams</Description>
-			</Code>
-			<Code value="XDR">
-				<Description>Special Drawing Rights (SDR)</Description>
-			</Code>
-			<Code value="XEU">
-				<Description>European Currency Unit (E.C.U.)</Description>
-			</Code>
-			<Code value="XPD">
-				<Description>Palladium Ounces</Description>
-			</Code>
-			<Code value="XPT">
-				<Description>Platinum, Ounces</Description>
-			</Code>
-			<Code value="Z01">
-				<Description>All currencies combined</Description>
-			</Code>
-			<Code value="Z02">
-				<Description>Euro and euro area national currencies</Description>
-			</Code>
-			<Code value="Z03">
-				<Description>Other EU currencies combined</Description>
-			</Code>
-			<Code value="Z04">
-				<Description>Other currencies than EU combined</Description>
-			</Code>
-			<Code value="Z05">
-				<Description>All currencies other than EU, EUR, USD, CHF, JPY</Description>
-			</Code>
-			<Code value="Z06">
-				<Description>Non-Euro and non-euro area currencies combined</Description>
-			</Code>
-			<Code value="Z07">
-				<Description>All currencies other than domestic, Euro and euro area currencies</Description>
-			</Code>
-			<Code value="Z08">
-				<Description>ECB EER-12 group of currencies (AU, CA, DK, HK, JP, NO, SG, KR, SE, CH, GB, US), changing composition of the euro area</Description>
-			</Code>
-			<Code value="Z09">
-				<Description>EER broad group of currencies including also Greece until 01 january 2001</Description>
-			</Code>
-			<Code value="Z0Z">
-				<Description>Not applicable</Description>
-			</Code>
-			<Code value="Z10">
-				<Description>EER-12 group of currencies (AU, CA, DK, HK, JP, NO, SG, KR, SE, CH, GB, US)</Description>
-			</Code>
-			<Code value="Z11">
-				<Description>EER broad group of currencies (excluding Greece)</Description>
-			</Code>
-			<Code value="Z12">
-				<Description>Euro and Euro Area countries currencies (including Greece)</Description>
-			</Code>
-			<Code value="Z13">
-				<Description>Other EU currencies combined (MU12; excluding GRD)</Description>
-			</Code>
-			<Code value="Z14">
-				<Description>Other currencies than EU15 and EUR combined</Description>
-			</Code>
-			<Code value="Z15">
-				<Description>All currencies other than EU15, EUR, USD, CHF, JPY</Description>
-			</Code>
-			<Code value="Z16">
-				<Description>Non-MU12 currencies combined</Description>
-			</Code>
-			<Code value="Z17">
-				<Description>ECB EER-12 group of currencies and Euro Area countries currencies (FR, BE, LU, NL, DE, IT, IE, PT, ES, FI, AT, GR, AU, CA, DK, HK, JP, NO, SG, KR, SE, CH, GB, US)</Description>
-			</Code>
-			<Code value="Z18">
-				<Description>ECB EER broad group of currencies and Euro Area countries currencies</Description>
-			</Code>
-			<Code value="Z20">
-				<Description>ECB EER-12 group of currencies (AU, CA, DK, HK, JP, NO, SG, KR, SE, CH, GB, US) - Euro area 15</Description>
-			</Code>
-			<Code value="Z21">
-				<Description>ECB EER broad group, regional breakdown, industrialised countries</Description>
-			</Code>
-			<Code value="Z22">
-				<Description>ECB EER broad group, regional breakdown, non-Japan Asia</Description>
-			</Code>
-			<Code value="Z23">
-				<Description>ECB EER broad group, regional breakdown, Latin America</Description>
-			</Code>
-			<Code value="Z24">
-				<Description>ECB EER broad group, regional breakdown, Central and Eastern Europe (CEEC)</Description>
-			</Code>
-			<Code value="Z25">
-				<Description>ECB EER broad group, regional breakdown, other countries</Description>
-			</Code>
-			<Code value="Z26">
-				<Description>Euro area 15 countries currencies (FR, BE, LU, NL, DE, IT, IE, PT, ES, FI, AT, GR, SI, MT and CY)</Description>
-			</Code>
-			<Code value="Z27">
-				<Description>ECB EER-12 group of currencies and Euro area 15 country currencies (FR, BE, LU, NL, DE, IT, IE, PT, ES, FI, AT, GR, SI, CY, MT, AU, CA, DK, HK, JP, NO, SG, KR, SE, CH, GB, US)</Description>
-			</Code>
-			<Code value="Z30">
-				<Description>EER-23 group of currencies (CZ, CY, DK, EE, LV, LT, HU, MT, PL, SI, SK, SE, GB, AU, CA, CN, HK, JP, NO, SG, KR, CH, US)</Description>
-			</Code>
-			<Code value="Z31">
-				<Description>EER-42 group of currencies (CZ, CY, DK, EE, LV, LT, HU, MT, PL, SI, SK, SE, GB, AU, CA, CN, HK, JP, NO, SG, KR, CH, US, DZ, AR, BR, BG, HR, IN, ID, IL, MY, MX, MA, NZ, PH, RO, RU, ZA, TW, TH, TR)</Description>
-			</Code>
-			<Code value="Z37">
-				<Description>ECB EER-23 group of currencies and Euro Area countries currencies (FR, BE, LU, NL, DE, IT, IE, PT, ES, FI, AT, GR, CZ, CY, DK, EE, LV, LT, HU, MT, PL, SI, SK, SE, GB, AU, CA, CN, HK, JP, NO, SG, KR, CH, US)</Description>
-			</Code>
-			<Code value="Z38">
-				<Description>ECB EER-42 group of currencies and Euro Area countries currencies (FR, BE, LU, NL, DE, IT, IE, PT, ES, FI, AT, GR, CZ, CY, DK, EE, LV, LT, HU, MT, PL, SI, SK, SE, GB, AU, CA, CN, HK, JP, NO, SG, KR, CH, US, DZ, AR, BR, BG, HR, IN, ID, IL, MY, MX, MA, NZ, PH, RO, RU, ZA, TW, TH, TR)</Description>
-			</Code>
-			<Code value="Z40">
-				<Description>ECB EER-12 group of currencies (AU, CA, DK, HK, JP, NO, SG, KR, SE, CH, GB, US)</Description>
-			</Code>
-			<Code value="Z41">
-				<Description>All currencies other than domestic</Description>
-			</Code>
-			<Code value="Z44">
-				<Description>Other currencies than EU15, EUR and domestic</Description>
-			</Code>
-			<Code value="Z45">
-				<Description>All currencies other than EU15, EUR, USD, CHF, JPY and domestic</Description>
-			</Code>
-			<Code value="Z50">
-				<Description>ECB EER-24 group of currencies (AU, CA, CN, DK, HK, JP, NO, SG, KR, SE, CH, GB, US, CY, CZ, EE, HU, LV, LT, MT, PL, SK, BG, RO)</Description>
-			</Code>
-			<Code value="Z51">
-				<Description>ECB EER-44 group of currencies (AU, CA, CN, DK, HK, JP, NO, SG, KR, SE, CH, GB, US, CY, CZ, EE, HU, LV, LT, MT, PL, SK, BG, RO, NZ, DZ, AR, BR, HR, IN, ID, IL, MY, MX, MA, PH, RU, ZA, TW, TH, TR, IS, CL, VE)</Description>
-			</Code>
-			<Code value="Z52">
-				<Description>Euro and Euro area country currencies (FR, BE, LU, NL, DE, IT, IE, PT, ES, FI, AT, GR, SI)</Description>
-			</Code>
-			<Code value="Z53">
-				<Description>Non-euro area 13 currencies combined (FR, BE, LU, NL, DE, IT, IE, PT, ES, FI, AT, GR, SI)</Description>
-			</Code>
-			<Code value="Z54">
-				<Description>ECB EER-22 group of currencies (AU, CA, CN, DK, HK, JP, NO, SG, KR, SE, CH, GB, US,CZ, EE, HU, LV, LT, PL, SK, BG, RO) - Euro area 15</Description>
-			</Code>
-			<Code value="Z55">
-				<Description>ECB EER-42 group of currencies (AU, CA, CN, DK, HK, JP, NO, SG, KR, SE, CH, GB, US, CY, CZ, EE, HU, LV, LT, MT, PL, SK, BG, RO, NZ, DZ, AR, BR, HR, IN, ID, IL, MY, MX, MA, PH, RU, ZA, TW, TH, TR, IS, CL, VE) - Euro area 15</Description>
-			</Code>
-			<Code value="Z56">
-				<Description>ECB EER-12 group of currencies and Euro area country currencies (FR, BE, LU, NL, DE, IT, IE, PT, ES, FI, AT, GR, SI, AU, CA, DK, HK, JP, NO, SG, KR, SE, CH, GB, US)</Description>
-			</Code>
-			<Code value="Z57">
-				<Description>ECB EER-22 group of currencies and Euro area 15 country currencies (FR, BE, LU, NL, DE, IT, IE, PT, ES, FI, AT, GR, SI, AU, CA, CN, DK, HK, JP, NO, SG, KR, SE, CH, GB, US, CY, CZ, EE, HU, LV, LT, MT, PL, SK, BG, RO)</Description>
-			</Code>
-			<Code value="Z58">
-				<Description>ECB EER-42 group of currencies and Euro area 15 country currencies (FR, BE, LU, NL, DE, IT, IE, PT, ES, FI, AT, GR, SI, AU, CA, CN, DK, HK, JP, NO, SG, KR, SE, CH, GB, US, CY, CZ, EE, HU, LV, LT, MT, PL, SK, BG, RO, NZ, DZ, AR, BR, HR, IN, ID, IL, MY, MX, MA, PH, RU, ZA, TW, TH, TR, IS, CL, VE)</Description>
-			</Code>
-			<Code value="Z62">
-				<Description>Euro and Euro area country currencies (FR, BE, LU, NL, DE, IT, IE, PT, ES, FI, AT, GR, SI, CY, MT)</Description>
-			</Code>
-			<Code value="Z63">
-				<Description>Non-euro area 15 currencies combined (FR, BE, LU, NL, DE, IT, IE, PT, ES, FI, AT, GR, SI, CY, MT)</Description>
-			</Code>
-			<Code value="ZAR">
-				<Description>South African Rand</Description>
-			</Code>
-			<Code value="ZWN">
-				<Description>Zimbabwe, Zimbabwe Dollars</Description>
-			</Code>
-		</CodeList>
-<CodeList xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="CL_EXR_TYPE">
-			<Name>Exchange rate type code list</Name>
-			<Code value="BRC0">
-				<Description>Real bilateral exchange rate, CPI deflated</Description>
-			</Code>
-			<Code value="CR00">
-				<Description>Central rate</Description>
-			</Code>
-			<Code value="EN00">
-				<Description>Nominal effective exch. rate</Description>
-			</Code>
-			<Code value="ERC0">
-				<Description>Real effective exch. rate CPI deflated</Description>
-			</Code>
-			<Code value="ERC1">
-				<Description>Real effective exch. rate retail prices deflated</Description>
-			</Code>
-			<Code value="ERD0">
-				<Description>Real effective exch. rate GDP deflators deflated</Description>
-			</Code>
-			<Code value="ERM0">
-				<Description>Real effective exch. rate import unit values deflated</Description>
-			</Code>
-			<Code value="ERP0">
-				<Description>Real effective exch. rate producer prices deflated</Description>
-			</Code>
-			<Code value="ERU0">
-				<Description>Real effective exch. rate ULC manufacturing deflated</Description>
-			</Code>
-			<Code value="ERU1">
-				<Description>Real effective exch. rate ULC total economy deflated</Description>
-			</Code>
-			<Code value="ERW0">
-				<Description>Real effective exch. rate wholesale prices deflated</Description>
-			</Code>
-			<Code value="ERX0">
-				<Description>Real effective exch. rate export unit values deflated</Description>
-			</Code>
-			<Code value="F01M">
-				<Description>1m-forward</Description>
-			</Code>
-			<Code value="F03M">
-				<Description>3m-forward</Description>
-			</Code>
-			<Code value="F06M">
-				<Description>6m-forward</Description>
-			</Code>
-			<Code value="F12M">
-				<Description>12m-forward</Description>
-			</Code>
-			<Code value="IR00">
-				<Description>Indicative rate</Description>
-			</Code>
-			<Code value="NN00">
-				<Description>Nominal harmonised competitiveness indicator</Description>
-			</Code>
-			<Code value="NRC0">
-				<Description>Real harmonised competitiveness indicator CPI deflated</Description>
-			</Code>
-			<Code value="NRD0">
-				<Description>Real harmonised competitiveness indicator GDP deflators deflated</Description>
-			</Code>
-			<Code value="NRP0">
-				<Description>Real harmonised competitiveness indicator Producer Prices deflated</Description>
-			</Code>
-			<Code value="NRU0">
-				<Description>Real harmonised competitiveness indicator ULC manufacturing deflated</Description>
-			</Code>
-			<Code value="NRU1">
-				<Description>Real harmonised competitiveness indicator ULC in total economy deflated</Description>
-			</Code>
-			<Code value="OF00">
-				<Description>Official fixing</Description>
-			</Code>
-			<Code value="RR00">
-				<Description>Reference rate</Description>
-			</Code>
-			<Code value="SP00">
-				<Description>Spot</Description>
-			</Code>
-		</CodeList>
-<CodeList xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="CL_EXR_SUFFIX">
-			<Name>Exch. rate series variation code list</Name>
-			<Code value="A">
-				<Description>Average or standardised measure for given frequency</Description>
-			</Code>
-			<Code value="E">
-				<Description>End-of-period</Description>
-			</Code>
-			<Code value="P">
-				<Description>Growth rate to previous period</Description>
-			</Code>
-			<Code value="R">
-				<Description>Annual rate of change</Description>
-			</Code>
-		</CodeList>
-<CodeList xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="CL_OBS_STATUS">
-			<Name>Observation status code list</Name>
-			<Code value="A">
-				<Description>Normal value</Description>
-			</Code>
-			<Code value="B">
-				<Description>Break</Description>
-			</Code>
-			<Code value="E">
-				<Description>Estimated value</Description>
-			</Code>
-			<Code value="F">
-				<Description>Forecast value</Description>
-			</Code>
-			<Code value="H">
-				<Description>Missing value; holiday or weekend</Description>
-			</Code>
-			<Code value="L">
-				<Description>Missing value; data exist but were not collected</Description>
-			</Code>
-			<Code value="M">
-				<Description>Missing value; data cannot exist</Description>
-			</Code>
-			<Code value="P">
-				<Description>Provisional value</Description>
-			</Code>
-			<Code value="Q">
-				<Description>Missing value; suppressed</Description>
-			</Code>
-			<Code value="S">
-				<Description>Strike</Description>
-			</Code>
-		</CodeList>
-<CodeList xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="CL_OBS_CONF">
-			<Name>Observation confidentiality code list</Name>
-			<Code value="C">
-				<Description>Confidential statistical information</Description>
-			</Code>
-			<Code value="D">
-				<Description>Secondary confidentiality set by the sender, not for publication</Description>
-			</Code>
-			<Code value="F">
-				<Description>Free (free for publication)</Description>
-			</Code>
-			<Code value="N">
-				<Description>Not for publication, restricted for internal use only</Description>
-			</Code>
-			<Code value="R">
-				<Description>Discontinued from 13 October 2006</Description>
-			</Code>
-		</CodeList>
-<CodeList xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="CL_COLLECTION">
-			<Name>Collection indicator code list</Name>
-			<Code value="A">
-				<Description>Average of observations through period</Description>
-			</Code>
-			<Code value="B">
-				<Description>Beginning of period</Description>
-			</Code>
-			<Code value="E">
-				<Description>End of period</Description>
-			</Code>
-			<Code value="H">
-				<Description>Highest in period</Description>
-			</Code>
-			<Code value="L">
-				<Description>Lowest in period</Description>
-			</Code>
-			<Code value="M">
-				<Description>Middle of period</Description>
-			</Code>
-			<Code value="S">
-				<Description>Summed through period</Description>
-			</Code>
-			<Code value="U">
-				<Description>Unknown</Description>
-			</Code>
-			<Code value="V">
-				<Description>Other</Description>
-			</Code>
-			<Code value="Y">
-				<Description>Annualised summed</Description>
-			</Code>
-		</CodeList>
-<CodeList xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="CL_DECIMALS">
-			<Name>Decimals codelist</Name>
-			<Code value="0">
-				<Description>Zero</Description>
-			</Code>
-			<Code value="1">
-				<Description>One</Description>
-			</Code>
-			<Code value="2">
-				<Description>Two</Description>
-			</Code>
-			<Code value="3">
-				<Description>Three</Description>
-			</Code>
-			<Code value="4">
-				<Description>Four</Description>
-			</Code>
-			<Code value="5">
-				<Description>Five</Description>
-			</Code>
-			<Code value="6">
-				<Description>Six</Description>
-			</Code>
-			<Code value="7">
-				<Description>Seven</Description>
-			</Code>
-			<Code value="8">
-				<Description>Eight</Description>
-			</Code>
-			<Code value="9">
-				<Description>Nine</Description>
-			</Code>
-		</CodeList>
-<CodeList xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="CL_UNIT">
-			<Name>Unit code list</Name>
-			<Code value="AFN">
-				<Description>Afghanistan, Afghanis</Description>
-			</Code>
-			<Code value="AOA">
-				<Description>Angolan kwanza</Description>
-			</Code>
-			<Code value="ARS">
-				<Description>Argentine peso</Description>
-			</Code>
-			<Code value="ATS">
-				<Description>Austrian schilling</Description>
-			</Code>
-			<Code value="AUD">
-				<Description>Australian dollar</Description>
-			</Code>
-			<Code value="AZN">
-				<Description>Azerbaijan, manats</Description>
-			</Code>
-			<Code value="BEF">
-				<Description>Belgian franc</Description>
-			</Code>
-			<Code value="BEL">
-				<Description>Belgian franc (financial)</Description>
-			</Code>
-			<Code value="BGN">
-				<Description>Bulgarian lev</Description>
-			</Code>
-			<Code value="BRL">
-				<Description>Brazilian real</Description>
-			</Code>
-			<Code value="BYR">
-				<Description>Belarus, Rubles</Description>
-			</Code>
-			<Code value="CAD">
-				<Description>Canadian dollar</Description>
-			</Code>
-			<Code value="CHF">
-				<Description>Swiss franc</Description>
-			</Code>
-			<Code value="CLP">
-				<Description>Chilean peso</Description>
-			</Code>
-			<Code value="CNY">
-				<Description>Chinese yuan renminbi</Description>
-			</Code>
-			<Code value="COP">
-				<Description>Colombian peso</Description>
-			</Code>
-			<Code value="CSD">
-				<Description>Serbian dinar</Description>
-			</Code>
-			<Code value="CYP">
-				<Description>Cypriot pound</Description>
-			</Code>
-			<Code value="CZK">
-				<Description>Czech koruna</Description>
-			</Code>
-			<Code value="DAYS">
-				<Description>Days</Description>
-			</Code>
-			<Code value="DEM">
-				<Description>German mark</Description>
-			</Code>
-			<Code value="DEM/C_DEM">
-				<Description>Current German mark/Constant German mark</Description>
-			</Code>
-			<Code value="DKK">
-				<Description>Danish krone</Description>
-			</Code>
-			<Code value="DZD">
-				<Description>Algerian dinar</Description>
-			</Code>
-			<Code value="EEK">
-				<Description>Estonian kroon</Description>
-			</Code>
-			<Code value="EGP">
-				<Description>Egyptian pound</Description>
-			</Code>
-			<Code value="ESP">
-				<Description>Spanish peseta</Description>
-			</Code>
-			<Code value="EUR">
-				<Description>Euro</Description>
-			</Code>
-			<Code value="FIM">
-				<Description>Finnish markka</Description>
-			</Code>
-			<Code value="FRF">
-				<Description>French franc</Description>
-			</Code>
-			<Code value="FRF/C_FRF">
-				<Description>Current French franc/Constant French franc</Description>
-			</Code>
-			<Code value="GBP">
-				<Description>UK pound sterling</Description>
-			</Code>
-			<Code value="GGP">
-				<Description>Guernsey, Pounds</Description>
-			</Code>
-			<Code value="GHS">
-				<Description>Ghana Cedi</Description>
-			</Code>
-			<Code value="GRD">
-				<Description>Greek drachma</Description>
-			</Code>
-			<Code value="HKD">
-				<Description>Hong Kong dollar</Description>
-			</Code>
-			<Code value="HOURS">
-				<Description>Hours</Description>
-			</Code>
-			<Code value="HRK">
-				<Description>Croatian kuna</Description>
-			</Code>
-			<Code value="HUF">
-				<Description>Hungarian forint</Description>
-			</Code>
-			<Code value="IDR">
-				<Description>Indonesian rupiah</Description>
-			</Code>
-			<Code value="IEP">
-				<Description>Irish pound</Description>
-			</Code>
-			<Code value="ILS">
-				<Description>Israeli shekel</Description>
-			</Code>
-			<Code value="IMP">
-				<Description>Isle of Man, Pounds</Description>
-			</Code>
-			<Code value="INR">
-				<Description>Indian rupee</Description>
-			</Code>
-			<Code value="IQD">
-				<Description>Iraqi dinar</Description>
-			</Code>
-			<Code value="IRR">
-				<Description>Iranian rial</Description>
-			</Code>
-			<Code value="ISK">
-				<Description>Iceland krona</Description>
-			</Code>
-			<Code value="ITL">
-				<Description>Italian lira</Description>
-			</Code>
-			<Code value="JEP">
-				<Description>Jersey, Pounds</Description>
-			</Code>
-			<Code value="JOD">
-				<Description>Jordanian dinar</Description>
-			</Code>
-			<Code value="JPY">
-				<Description>Japanese yen</Description>
-			</Code>
-			<Code value="KILO">
-				<Description>Kilograms</Description>
-			</Code>
-			<Code value="KLITRE">
-				<Description>Kilolitres</Description>
-			</Code>
-			<Code value="KPW">
-				<Description>Korean won (North)</Description>
-			</Code>
-			<Code value="KRW">
-				<Description>Korean won (Republic)</Description>
-			</Code>
-			<Code value="KWD">
-				<Description>Kuwait dinar</Description>
-			</Code>
-			<Code value="LBP">
-				<Description>Lebanese pound</Description>
-			</Code>
-			<Code value="LITRES">
-				<Description>Litres</Description>
-			</Code>
-			<Code value="LKR">
-				<Description>Sri Lanka rupee</Description>
-			</Code>
-			<Code value="LTL">
-				<Description>Lithuanian litas</Description>
-			</Code>
-			<Code value="LUF">
-				<Description>Luxembourg franc</Description>
-			</Code>
-			<Code value="LVL">
-				<Description>Latvian lats</Description>
-			</Code>
-			<Code value="LYD">
-				<Description>Libyan dinar</Description>
-			</Code>
-			<Code value="MAD">
-				<Description>Moroccan dirham</Description>
-			</Code>
-			<Code value="MAN-DY">
-				<Description>Man Days</Description>
-			</Code>
-			<Code value="MAN-YR">
-				<Description>Man Years</Description>
-			</Code>
-			<Code value="MGA">
-				<Description>Madagascar, Ariary</Description>
-			</Code>
-			<Code value="MONTHS">
-				<Description>Months</Description>
-			</Code>
-			<Code value="MTL">
-				<Description>Maltese lira</Description>
-			</Code>
-			<Code value="MXN">
-				<Description>Mexican peso</Description>
-			</Code>
-			<Code value="MXP">
-				<Description>Mexican peso (old)</Description>
-			</Code>
-			<Code value="MYR">
-				<Description>Malaysian ringgit</Description>
-			</Code>
-			<Code value="MZN">
-				<Description>Mozambique, Meticais</Description>
-			</Code>
-			<Code value="NATCUR">
-				<Description>National currency</Description>
-			</Code>
-			<Code value="NLG">
-				<Description>Netherlands guilder</Description>
-			</Code>
-			<Code value="NOK">
-				<Description>Norwegian krone</Description>
-			</Code>
-			<Code value="NZD">
-				<Description>New Zealand dollar</Description>
-			</Code>
-			<Code value="OUNCES">
-				<Description>Ounces</Description>
-			</Code>
-			<Code value="PC">
-				<Description>Percent</Description>
-			</Code>
-			<Code value="PCCH">
-				<Description>Percentage change</Description>
-			</Code>
-			<Code value="PCPA">
-				<Description>Percent per annum</Description>
-			</Code>
-			<Code value="PCT">
-				<Description>Percentage change</Description>
-			</Code>
-			<Code value="PEN">
-				<Description>Peru nuevo sol</Description>
-			</Code>
-			<Code value="PERS">
-				<Description>Persons</Description>
-			</Code>
-			<Code value="PHP">
-				<Description>Philippine peso</Description>
-			</Code>
-			<Code value="PKR">
-				<Description>Pakistan rupee</Description>
-			</Code>
-			<Code value="PLN">
-				<Description>Polish zloty</Description>
-			</Code>
-			<Code value="PM">
-				<Description>Per thousand</Description>
-			</Code>
-			<Code value="POINTS">
-				<Description>Points</Description>
-			</Code>
-			<Code value="PTE">
-				<Description>Portugese escudo</Description>
-			</Code>
-			<Code value="PURE_NUMB">
-				<Description>Pure number</Description>
-			</Code>
-			<Code value="ROL">
-				<Description>Romanian leu (old)</Description>
-			</Code>
-			<Code value="RON">
-				<Description>Romanian leu</Description>
-			</Code>
-			<Code value="RUB">
-				<Description>Rouble</Description>
-			</Code>
-			<Code value="SAR">
-				<Description>Saudi riyal</Description>
-			</Code>
-			<Code value="SDG">
-				<Description>Sudan, Dinars</Description>
-			</Code>
-			<Code value="SEK">
-				<Description>Swedish krona</Description>
-			</Code>
-			<Code value="SGD">
-				<Description>Singapore dollar</Description>
-			</Code>
-			<Code value="SIT">
-				<Description>Slovenian tolar</Description>
-			</Code>
-			<Code value="SKK">
-				<Description>Slovak koruna</Description>
-			</Code>
-			<Code value="SPL">
-				<Description>Seborga, Luigini</Description>
-			</Code>
-			<Code value="SQ_M">
-				<Description>Square Metres</Description>
-			</Code>
-			<Code value="SRD">
-				<Description>Suriname, Dollars</Description>
-			</Code>
-			<Code value="SYP">
-				<Description>Syrian pound</Description>
-			</Code>
-			<Code value="THB">
-				<Description>Thai bhat</Description>
-			</Code>
-			<Code value="TJS">
-				<Description>Tajikistan, Somoni</Description>
-			</Code>
-			<Code value="TND">
-				<Description>Tunisian dinar</Description>
-			</Code>
-			<Code value="TONNES">
-				<Description>Tonnes</Description>
-			</Code>
-			<Code value="TRL">
-				<Description>Turkish lira (old)</Description>
-			</Code>
-			<Code value="TRY">
-				<Description>Turkish lira</Description>
-			</Code>
-			<Code value="TVD">
-				<Description>Tuvalu, Tuvalu Dollars</Description>
-			</Code>
-			<Code value="TWD">
-				<Description>New Taiwan dollar</Description>
-			</Code>
-			<Code value="UAH">
-				<Description>Ukraine hryvnia</Description>
-			</Code>
-			<Code value="UNITS">
-				<Description>Unit described in title</Description>
-			</Code>
-			<Code value="USD">
-				<Description>US dollar</Description>
-			</Code>
-			<Code value="VEB">
-				<Description>Venezuela bolivar (old)</Description>
-			</Code>
-			<Code value="VEF">
-				<Description>Venezuela bolivar</Description>
-			</Code>
-			<Code value="XAG">
-				<Description>Silver</Description>
-			</Code>
-			<Code value="XAU">
-				<Description>Gold in units of grams</Description>
-			</Code>
-			<Code value="XDR">
-				<Description>Special Drawing Rights (S.D.R.)</Description>
-			</Code>
-			<Code value="XEU">
-				<Description>European Currency Unit (E.C.U.)</Description>
-			</Code>
-			<Code value="XPD">
-				<Description>Palladium Ounces</Description>
-			</Code>
-			<Code value="XPT">
-				<Description>Platinum, Ounces</Description>
-			</Code>
-			<Code value="YEARS">
-				<Description>Years</Description>
-			</Code>
-			<Code value="ZAR">
-				<Description>South African rand</Description>
-			</Code>
-			<Code value="ZWN">
-				<Description>Zimbabwe, Zimbabwe Dollars</Description>
-			</Code>
-		</CodeList>
-<CodeList xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="CL_UNIT_MULT">
-			<Name>Unit multiplier code list</Name>
-			<Code value="0">
-				<Description>Units</Description>
-			</Code>
-			<Code value="1">
-				<Description>Tens</Description>
-			</Code>
-			<Code value="2">
-				<Description>Hundreds</Description>
-			</Code>
-			<Code value="3">
-				<Description>Thousands</Description>
-			</Code>
-			<Code value="4">
-				<Description>Tens of thousands</Description>
-			</Code>
-			<Code value="6">
-				<Description>Millions</Description>
-			</Code>
-			<Code value="9">
-				<Description>Billions</Description>
-			</Code>
-		</CodeList>
-</message:CodeLists>
-<message:Concepts>
-<Concept xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="FREQ">
-			<Name>Frequency</Name>
-		</Concept>
-<Concept xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="CURRENCY">
-			<Name>Currency</Name>
-		</Concept>
-<Concept xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="CURRENCY_DENOM">
-			<Name>Currency denominator</Name>
-		</Concept>
-<Concept xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="EXR_TYPE">
-			<Name>Exchange rate type</Name>
-		</Concept>
-<Concept xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="EXR_SUFFIX">
-			<Name>Series variation - EXR context</Name>
-		</Concept>
-<Concept xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="TIME_PERIOD">
-			<Name>Time period or range</Name>
-		</Concept>
-<Concept xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="OBS_VALUE">
-			<Name>Observation value</Name>
-		</Concept>
-<Concept xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="TIME_FORMAT">
-			<Name>Time format code</Name>
-		</Concept>
-<Concept xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="OBS_STATUS">
-			<Name>Observation status</Name>
-		</Concept>
-<Concept xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="OBS_CONF">
-			<Name>Observation confidentiality</Name>
-		</Concept>
-<Concept xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="OBS_PRE_BREAK">
-			<Name>Pre-break observation value</Name>
-		</Concept>
-<Concept xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="OBS_COM">
-			<Name>Observation comment</Name>
-		</Concept>
-<Concept xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="BREAKS">
-			<Name>Breaks</Name>
-		</Concept>
-<Concept xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="COLLECTION">
-			<Name>Collection indicator</Name>
-		</Concept>
-<Concept xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="UNIT_INDEX_BASE">
-			<Name>Unit index base</Name>
-		</Concept>
-<Concept xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="COMPILATION">
-			<Name>Compilation</Name>
-		</Concept>
-<Concept xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="COVERAGE">
-			<Name>Coverage</Name>
-		</Concept>
-<Concept xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="DECIMALS">
-			<Name>Decimals</Name>
-		</Concept>
-<Concept xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="NAT_TITLE">
-			<Name>National language title</Name>
-		</Concept>
-<Concept xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="TITLE">
-			<Name>Title</Name>
-		</Concept>
-<Concept xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="TITLE_COMPL">
-			<Name>Title complement</Name>
-		</Concept>
-<Concept xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="UNIT">
-			<Name>Unit</Name>
-		</Concept>
-<Concept xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="UNIT_MULT">
-			<Name>Unit multiplier</Name>
-		</Concept>
-</message:Concepts>
-<message:KeyFamilies>
-<KeyFamily xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" agencyID="ECB" id="ECB_EXR1" uri="https://www.ecb.europa.eu/vocabulary/stats/exr/1">
-			<Name>Exchange Rates</Name>
-			<Components>
-				<Dimension conceptRef="FREQ" codelist="CL_FREQ" isFrequencyDimension="true"/>
-				<Dimension conceptRef="CURRENCY" codelist="CL_CURRENCY" isFrequencyDimension="false"/>
-				<Dimension conceptRef="CURRENCY_DENOM" codelist="CL_CURRENCY" isFrequencyDimension="false"/>
-				<Dimension conceptRef="EXR_TYPE" codelist="CL_EXR_TYPE" isFrequencyDimension="false"/>
-				<Dimension conceptRef="EXR_SUFFIX" codelist="CL_EXR_SUFFIX" isFrequencyDimension="false"/>
-				<TimeDimension conceptRef="TIME_PERIOD"/>
-				<Group id="Group">
-					<DimensionRef>CURRENCY</DimensionRef>
-					<DimensionRef>CURRENCY_DENOM</DimensionRef>
-					<DimensionRef>EXR_TYPE</DimensionRef>
-					<DimensionRef>EXR_SUFFIX</DimensionRef>
-				</Group>
-				<PrimaryMeasure conceptRef="OBS_VALUE"/>
-				<Attribute conceptRef="TIME_FORMAT" attachmentLevel="Series" assignmentStatus="Mandatory" isTimeFormat="true">
-					<TextFormat textType="String" minLength="3" maxLength="3"/>
-				</Attribute>
-				<Attribute conceptRef="OBS_STATUS" attachmentLevel="Observation" codelist="CL_OBS_STATUS" assignmentStatus="Mandatory" isTimeFormat="false">
-					<TextFormat textType="String" minLength="1" maxLength="1"/>
-				</Attribute>
-				<Attribute conceptRef="OBS_CONF" attachmentLevel="Observation" codelist="CL_OBS_CONF" assignmentStatus="Conditional" isTimeFormat="false">
-					<TextFormat textType="String" minLength="1" maxLength="1"/>
-				</Attribute>
-				<Attribute conceptRef="OBS_PRE_BREAK" attachmentLevel="Observation" assignmentStatus="Conditional" isTimeFormat="false">
-					<TextFormat textType="String" minLength="0" maxLength="15"/>
-				</Attribute>
-				<Attribute conceptRef="OBS_COM" attachmentLevel="Observation" assignmentStatus="Conditional" isTimeFormat="false">
-					<TextFormat textType="String" minLength="0" maxLength="1050"/>
-				</Attribute>
-				<Attribute conceptRef="BREAKS" attachmentLevel="Series" assignmentStatus="Conditional" isTimeFormat="false">
-					<TextFormat textType="String" minLength="0" maxLength="350"/>
-				</Attribute>
-				<Attribute conceptRef="COLLECTION" attachmentLevel="Series" codelist="CL_COLLECTION" assignmentStatus="Mandatory" isTimeFormat="false">
-					<TextFormat textType="String" minLength="1" maxLength="1"/>
-				</Attribute>
-				
-				
-				
-				
-				<Attribute conceptRef="UNIT_INDEX_BASE" attachmentLevel="Series" assignmentStatus="Conditional" isTimeFormat="false">
-					<TextFormat textType="String" minLength="0" maxLength="35"/>
-				</Attribute>
-				<Attribute conceptRef="COMPILATION" attachmentLevel="Group" assignmentStatus="Conditional" isTimeFormat="false">
-					<TextFormat textType="String" minLength="0" maxLength="1050"/>
-					<AttachmentGroup>Group</AttachmentGroup>
-				</Attribute>
-				<Attribute conceptRef="COVERAGE" attachmentLevel="Group" assignmentStatus="Conditional" isTimeFormat="false">
-					<TextFormat textType="String" minLength="0" maxLength="350"/>
-					<AttachmentGroup>Group</AttachmentGroup>
-				</Attribute>
-				<Attribute conceptRef="DECIMALS" attachmentLevel="Group" codelist="CL_DECIMALS" assignmentStatus="Mandatory" isTimeFormat="false">
-					<TextFormat textType="BigInteger" minLength="1" maxLength="1"/>
-					<AttachmentGroup>Group</AttachmentGroup>
-				</Attribute>
-				<Attribute conceptRef="NAT_TITLE" attachmentLevel="Group" assignmentStatus="Conditional" isTimeFormat="false">
-					<TextFormat textType="String" minLength="0" maxLength="350"/>
-					<AttachmentGroup>Group</AttachmentGroup>
-				</Attribute>
-				
-				
-				<Attribute conceptRef="TITLE" attachmentLevel="Group" assignmentStatus="Conditional" isTimeFormat="false">
-					<TextFormat textType="String" minLength="0" maxLength="70"/>
-					<AttachmentGroup>Group</AttachmentGroup>
-				</Attribute>
-				<Attribute conceptRef="TITLE_COMPL" attachmentLevel="Group" assignmentStatus="Mandatory" isTimeFormat="false">
-					<TextFormat textType="String" minLength="0" maxLength="1050"/>
-					<AttachmentGroup>Group</AttachmentGroup>
-				</Attribute>
-				<Attribute conceptRef="UNIT" attachmentLevel="Group" codelist="CL_UNIT" assignmentStatus="Mandatory" isTimeFormat="false">
-					<TextFormat textType="String" minLength="0" maxLength="12"/>
-					<AttachmentGroup>Group</AttachmentGroup>
-				</Attribute>
-				<Attribute conceptRef="UNIT_MULT" attachmentLevel="Group" codelist="CL_UNIT_MULT" assignmentStatus="Mandatory" isTimeFormat="false">
-					<TextFormat textType="String" minLength="0" maxLength="2"/>
-					<AttachmentGroup>Group</AttachmentGroup>
-				</Attribute>
-			</Components>
-		</KeyFamily>
-</message:KeyFamilies>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<message:Structure xsi:schemaLocation="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message http://ollie:8080/scorpio-external/vocabulary/sdmx/2.0/SDMXMessage.xsd http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure http://ollie:8080/scorpio-external/vocabulary/sdmx/2.0/SDMXStructure.xsd" xmlns:generic="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/generic" xmlns:message="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message" xmlns:structure="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:compact="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/compact" xmlns:metadatareport="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/metadatareport" xmlns:utility="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/utility" xmlns:common="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/common" xmlns:query="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/query" xmlns:genericmetadata="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/genericmetadata" xmlns:registry="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cross="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/cross">
+    <message:Header>
+        <message:ID>52910b33-b1c0-4d2b-bddd-c40c3176a72d</message:ID>
+        <message:Test>false</message:Test>
+        <message:Prepared>2009-07-22T12:19:33+02:00</message:Prepared>
+        <message:Sender id="ECB">
+            <message:Name>European Central Bank</message:Name>
+            <message:Contact>
+                <message:Email>statistics@ecb.europa.eu</message:Email>
+            </message:Contact>
+        </message:Sender>
+    </message:Header>
+    <message:CodeLists>
+        <structure:CodeList isFinal="true" version="1.0" agencyID="ECB" id="CL_COLLECTION">
+            <structure:Name>Collection indicator code list</structure:Name>
+            <structure:Code value="A">
+                <structure:Description>Average of observations through period</structure:Description>
+            </structure:Code>
+        </structure:CodeList>
+        <structure:CodeList isFinal="true" version="1.0" agencyID="ECB" id="CL_CURRENCY">
+            <structure:Name>Currency code list</structure:Name>
+            <structure:Code value="EUR">
+                <structure:Description>Euro</structure:Description>
+            </structure:Code>
+            <structure:Code value="Z59">
+                <structure:Description>Euro area-16 countries vis-à-vis the EER-21 group of trading partners (AU, CA, DK, HK, JP, NO, SG, KR, SE, CH, GB, US, BG, CZ, EE, LV, LT, HU, PL, RO and CN)</structure:Description>
+            </structure:Code>
+        </structure:CodeList>
+        <structure:CodeList isFinal="true" version="1.0" agencyID="ECB" id="CL_DECIMALS">
+            <structure:Name>Decimals code list</structure:Name>
+            <structure:Code value="0">
+                <structure:Description>Zero</structure:Description>
+            </structure:Code>
+            <structure:Code value="1">
+                <structure:Description>One</structure:Description>
+            </structure:Code>
+            <structure:Code value="2">
+                <structure:Description>Two</structure:Description>
+            </structure:Code>
+            <structure:Code value="3">
+                <structure:Description>Three</structure:Description>
+            </structure:Code>
+            <structure:Code value="4">
+                <structure:Description>Four</structure:Description>
+            </structure:Code>
+            <structure:Code value="5">
+                <structure:Description>Five</structure:Description>
+            </structure:Code>
+            <structure:Code value="6">
+                <structure:Description>Six</structure:Description>
+            </structure:Code>
+            <structure:Code value="7">
+                <structure:Description>Seven</structure:Description>
+            </structure:Code>
+            <structure:Code value="8">
+                <structure:Description>Eight</structure:Description>
+            </structure:Code>
+            <structure:Code value="9">
+                <structure:Description>Nine</structure:Description>
+            </structure:Code>
+        </structure:CodeList>
+        <structure:CodeList isFinal="true" version="1.0" agencyID="ECB" id="CL_EXR_SUFFIX">
+            <structure:Name>Exch. rate series variation code list</structure:Name>
+            <structure:Code value="A">
+                <structure:Description>Average or standardised measure for given frequency</structure:Description>
+            </structure:Code>
+        </structure:CodeList>
+        <structure:CodeList isFinal="true" version="1.0" agencyID="ECB" id="CL_EXR_TYPE">
+            <structure:Name>Exchange rate type code list</structure:Name>
+            <structure:Code value="EN00">
+                <structure:Description>Nominal effective exch. rate</structure:Description>
+            </structure:Code>
+        </structure:CodeList>
+        <structure:CodeList isFinal="true" version="1.0" agencyID="ECB" id="CL_FREQ">
+            <structure:Name>Frequency code list</structure:Name>
+            <structure:Code value="A">
+                <structure:Description>Annual</structure:Description>
+            </structure:Code>
+            <structure:Code value="B">
+                <structure:Description>Business</structure:Description>
+            </structure:Code>
+            <structure:Code value="D">
+                <structure:Description>Daily</structure:Description>
+            </structure:Code>
+            <structure:Code value="E">
+                <structure:Description>Event (not supported)</structure:Description>
+            </structure:Code>
+            <structure:Code value="H">
+                <structure:Description>Half-yearly</structure:Description>
+            </structure:Code>
+            <structure:Code value="M">
+                <structure:Description>Monthly</structure:Description>
+            </structure:Code>
+            <structure:Code value="N">
+                <structure:Description>Minutely</structure:Description>
+            </structure:Code>
+            <structure:Code value="Q">
+                <structure:Description>Quarterly</structure:Description>
+            </structure:Code>
+            <structure:Code value="W">
+                <structure:Description>Weekly</structure:Description>
+            </structure:Code>
+        </structure:CodeList>
+        <structure:CodeList isFinal="true" version="1.0" agencyID="ECB" id="CL_OBS_CONF">
+            <structure:Name>Observation confidentiality code list</structure:Name>
+            <structure:Code value="C">
+                <structure:Description>Confidential statistical information</structure:Description>
+            </structure:Code>
+            <structure:Code value="D">
+                <structure:Description>Secondary confidentiality set by the sender, not for publication</structure:Description>
+            </structure:Code>
+            <structure:Code value="F">
+                <structure:Description>Free</structure:Description>
+            </structure:Code>
+            <structure:Code value="N">
+                <structure:Description>Not for publication, restricted for internal use only</structure:Description>
+            </structure:Code>
+            <structure:Code value="S">
+                <structure:Description>Secondary confidentiality set and managed by the receiver, not for publication</structure:Description>
+            </structure:Code>
+        </structure:CodeList>
+        <structure:CodeList isFinal="true" version="1.0" agencyID="ECB" id="CL_OBS_STATUS">
+            <structure:Name>Observation status code list</structure:Name>
+            <structure:Code value="A">
+                <structure:Description>Normal value</structure:Description>
+            </structure:Code>
+            <structure:Code value="B">
+                <structure:Description>Break</structure:Description>
+            </structure:Code>
+            <structure:Code value="E">
+                <structure:Description>Estimated value</structure:Description>
+            </structure:Code>
+            <structure:Code value="F">
+                <structure:Description>Forecast value</structure:Description>
+            </structure:Code>
+            <structure:Code value="H">
+                <structure:Description>Missing value; holiday or weekend</structure:Description>
+            </structure:Code>
+            <structure:Code value="L">
+                <structure:Description>Missing value; data exist but were not collected</structure:Description>
+            </structure:Code>
+            <structure:Code value="M">
+                <structure:Description>Missing value; data cannot exist</structure:Description>
+            </structure:Code>
+            <structure:Code value="P">
+                <structure:Description>Provisional value</structure:Description>
+            </structure:Code>
+            <structure:Code value="Q">
+                <structure:Description>Missing value; suppressed</structure:Description>
+            </structure:Code>
+            <structure:Code value="S">
+                <structure:Description>Strike</structure:Description>
+            </structure:Code>
+        </structure:CodeList>
+        <structure:CodeList isFinal="true" version="1.0" agencyID="ECB" id="CL_UNIT">
+            <structure:Name>Unit code list</structure:Name>
+            <structure:Code value="POINTS">
+                <structure:Description>Points</structure:Description>
+            </structure:Code>
+        </structure:CodeList>
+        <structure:CodeList isFinal="true" version="1.0" agencyID="ECB" id="CL_UNIT_MULT">
+            <structure:Name>Unit multiplier code list</structure:Name>
+            <structure:Code value="-2">
+                <structure:Description>Hundredth</structure:Description>
+            </structure:Code>
+            <structure:Code value="0">
+                <structure:Description>Units</structure:Description>
+            </structure:Code>
+            <structure:Code value="1">
+                <structure:Description>Tens</structure:Description>
+            </structure:Code>
+            <structure:Code value="2">
+                <structure:Description>Hundreds</structure:Description>
+            </structure:Code>
+            <structure:Code value="3">
+                <structure:Description>Thousands</structure:Description>
+            </structure:Code>
+            <structure:Code value="4">
+                <structure:Description>Tens of thousands</structure:Description>
+            </structure:Code>
+            <structure:Code value="6">
+                <structure:Description>Millions</structure:Description>
+            </structure:Code>
+            <structure:Code value="9">
+                <structure:Description>Billions</structure:Description>
+            </structure:Code>
+        </structure:CodeList>
+    </message:CodeLists>
+    <message:Concepts>
+        <structure:Concept version="1.0" agencyID="ECB" id="BREAKS">
+            <structure:Name>Breaks</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="COLLECTION">
+            <structure:Name>Collection indicator</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="COMPILATION">
+            <structure:Name>Compilation</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="COVERAGE">
+            <structure:Name>Coverage</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="CURRENCY">
+            <structure:Name>Currency</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="CURRENCY_DENOM">
+            <structure:Name>Currency denominator</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="DECIMALS">
+            <structure:Name>Decimals</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="DOM_SER_IDS">
+            <structure:Name>Domestic series ids</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="EXR_SUFFIX">
+            <structure:Name>Series variation - EXR context</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="EXR_TYPE">
+            <structure:Name>Exchange rate type</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="FREQ">
+            <structure:Name>Frequency</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="NAT_TITLE">
+            <structure:Name>National language title</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="OBS_COM">
+            <structure:Name>Observation comment</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="OBS_CONF">
+            <structure:Name>Observation confidentiality</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="OBS_PRE_BREAK">
+            <structure:Name>Pre-break observation value</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="OBS_STATUS">
+            <structure:Name>Observation status</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="OBS_VALUE">
+            <structure:Name>Observation value</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="OBS_VALUE">
+            <structure:Name>Observation value</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="PUBL_ECB">
+            <structure:Name>Source publication (ECB only)</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="PUBL_MU">
+            <structure:Name>Source publication (Euro area only)</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="PUBL_PUBLIC">
+            <structure:Name>Source publication (public)</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="SOURCE_AGENCY">
+            <structure:Name>Source agency</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="SOURCE_PUB">
+            <structure:Name>Source publication</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="TIME_FORMAT">
+            <structure:Name>Time format code</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="TIME_PERIOD">
+            <structure:Name>Time period or range</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="TITLE">
+            <structure:Name>Title</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="TITLE_COMPL">
+            <structure:Name>Title complement</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="UNIT">
+            <structure:Name>Unit</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="UNIT_INDEX_BASE">
+            <structure:Name>Unit index base</structure:Name>
+        </structure:Concept>
+        <structure:Concept version="1.0" agencyID="ECB" id="UNIT_MULT">
+            <structure:Name>Unit multiplier</structure:Name>
+        </structure:Concept>
+    </message:Concepts>
+    <message:KeyFamilies>
+        <structure:KeyFamily isFinal="true" urn="urn:sdmx:org.sdmx.infomodel.keyfamily.KeyFamily=ECB:ECB_EXR1" version="1.0" agencyID="ECB" id="ECB_EXR1">
+            <structure:Name>Exchange Rates</structure:Name>
+            <structure:Components>
+                <structure:Dimension isFrequencyDimension="true" codelistAgency="ECB" codelistVersion="1.0" codelist="CL_FREQ" conceptAgency="ECB" conceptVersion="1.0" conceptRef="FREQ"/>
+                <structure:Dimension codelistAgency="ECB" codelistVersion="1.0" codelist="CL_CURRENCY" conceptAgency="ECB" conceptVersion="1.0" conceptRef="CURRENCY"/>
+                <structure:Dimension codelistAgency="ECB" codelistVersion="1.0" codelist="CL_CURRENCY" conceptAgency="ECB" conceptVersion="1.0" conceptRef="CURRENCY_DENOM"/>
+                <structure:Dimension codelistAgency="ECB" codelistVersion="1.0" codelist="CL_EXR_TYPE" conceptAgency="ECB" conceptVersion="1.0" conceptRef="EXR_TYPE"/>
+                <structure:Dimension codelistAgency="ECB" codelistVersion="1.0" codelist="CL_EXR_SUFFIX" conceptAgency="ECB" conceptVersion="1.0" conceptRef="EXR_SUFFIX"/>
+                <structure:TimeDimension conceptAgency="ECB" conceptVersion="1.0" conceptRef="TIME_PERIOD"/>
+                <structure:Group id="Group">
+                    <structure:DimensionRef>CURRENCY</structure:DimensionRef>
+                    <structure:DimensionRef>CURRENCY_DENOM</structure:DimensionRef>
+                    <structure:DimensionRef>EXR_TYPE</structure:DimensionRef>
+                    <structure:DimensionRef>EXR_SUFFIX</structure:DimensionRef>
+                </structure:Group>
+                <structure:PrimaryMeasure conceptAgency="ECB" conceptVersion="1.0" conceptRef="OBS_VALUE"/>
+                <structure:Attribute assignmentStatus="Conditional" attachmentLevel="Group" conceptAgency="ECB" conceptVersion="1.0" conceptRef="COMPILATION">
+                    <structure:TextFormat maxLength="1050" minLength="0" textType="String"/>
+                    <structure:AttachmentGroup>Group</structure:AttachmentGroup>
+                </structure:Attribute>
+                <structure:Attribute assignmentStatus="Conditional" attachmentLevel="Group" conceptAgency="ECB" conceptVersion="1.0" conceptRef="COVERAGE">
+                    <structure:TextFormat maxLength="350" minLength="0" textType="String"/>
+                    <structure:AttachmentGroup>Group</structure:AttachmentGroup>
+                </structure:Attribute>
+                <structure:Attribute assignmentStatus="Mandatory" attachmentLevel="Group" codelistAgency="ECB" codelistVersion="1.0" codelist="CL_DECIMALS" conceptAgency="ECB" conceptVersion="1.0" conceptRef="DECIMALS">
+                    <structure:AttachmentGroup>Group</structure:AttachmentGroup>
+                </structure:Attribute>
+                <structure:Attribute assignmentStatus="Conditional" attachmentLevel="Group" conceptAgency="ECB" conceptVersion="1.0" conceptRef="NAT_TITLE">
+                    <structure:TextFormat maxLength="350" minLength="0" textType="String"/>
+                    <structure:AttachmentGroup>Group</structure:AttachmentGroup>
+                </structure:Attribute>
+                <structure:Attribute assignmentStatus="Conditional" attachmentLevel="Group" conceptAgency="ECB" conceptVersion="1.0" conceptRef="SOURCE_PUB">
+                    <structure:TextFormat maxLength="350" minLength="0" textType="String"/>
+                    <structure:AttachmentGroup>Group</structure:AttachmentGroup>
+                </structure:Attribute>
+                <structure:Attribute assignmentStatus="Conditional" attachmentLevel="Group" conceptAgency="ECB" conceptVersion="1.0" conceptRef="TITLE">
+                    <structure:TextFormat maxLength="70" minLength="0" textType="String"/>
+                    <structure:AttachmentGroup>Group</structure:AttachmentGroup>
+                </structure:Attribute>
+                <structure:Attribute assignmentStatus="Mandatory" attachmentLevel="Group" conceptAgency="ECB" conceptVersion="1.0" conceptRef="TITLE_COMPL">
+                    <structure:TextFormat maxLength="1050" minLength="1" textType="String"/>
+                    <structure:AttachmentGroup>Group</structure:AttachmentGroup>
+                </structure:Attribute>
+                <structure:Attribute assignmentStatus="Mandatory" attachmentLevel="Group" codelistAgency="ECB" codelistVersion="1.0" codelist="CL_UNIT" conceptAgency="ECB" conceptVersion="1.0" conceptRef="UNIT">
+                    <structure:AttachmentGroup>Group</structure:AttachmentGroup>
+                </structure:Attribute>
+                <structure:Attribute assignmentStatus="Mandatory" attachmentLevel="Group" codelistAgency="ECB" codelistVersion="1.0" codelist="CL_UNIT_MULT" conceptAgency="ECB" conceptVersion="1.0" conceptRef="UNIT_MULT">
+                    <structure:AttachmentGroup>Group</structure:AttachmentGroup>
+                </structure:Attribute>
+                <structure:Attribute assignmentStatus="Conditional" attachmentLevel="Series" conceptAgency="ECB" conceptVersion="1.0" conceptRef="BREAKS">
+                    <structure:TextFormat maxLength="350" minLength="0" textType="String"/>
+                </structure:Attribute>
+                <structure:Attribute assignmentStatus="Mandatory" attachmentLevel="Series" codelistAgency="ECB" codelistVersion="1.0" codelist="CL_COLLECTION" conceptAgency="ECB" conceptVersion="1.0" conceptRef="COLLECTION"/>
+                <structure:Attribute assignmentStatus="Conditional" attachmentLevel="Series" conceptAgency="ECB" conceptVersion="1.0" conceptRef="DOM_SER_IDS">
+                    <structure:TextFormat maxLength="70" minLength="0" textType="String"/>
+                </structure:Attribute>
+                <structure:Attribute assignmentStatus="Conditional" attachmentLevel="Series" conceptAgency="ECB" conceptVersion="1.0" conceptRef="PUBL_ECB">
+                    <structure:TextFormat maxLength="1050" minLength="0" textType="String"/>
+                </structure:Attribute>
+                <structure:Attribute assignmentStatus="Conditional" attachmentLevel="Series" conceptAgency="ECB" conceptVersion="1.0" conceptRef="PUBL_MU">
+                    <structure:TextFormat maxLength="1050" minLength="0" textType="String"/>
+                </structure:Attribute>
+                <structure:Attribute assignmentStatus="Conditional" attachmentLevel="Series" conceptAgency="ECB" conceptVersion="1.0" conceptRef="PUBL_PUBLIC">
+                    <structure:TextFormat maxLength="1050" minLength="0" textType="String"/>
+                </structure:Attribute>
+                <structure:Attribute isTimeFormat="true" assignmentStatus="Mandatory" attachmentLevel="Series" conceptAgency="ECB" conceptVersion="1.0" conceptRef="TIME_FORMAT">
+                    <structure:TextFormat maxLength="3" minLength="1" textType="String"/>
+                </structure:Attribute>
+                <structure:Attribute assignmentStatus="Conditional" attachmentLevel="Series" conceptAgency="ECB" conceptVersion="1.0" conceptRef="UNIT_INDEX_BASE">
+                    <structure:TextFormat maxLength="35" minLength="0" textType="String"/>
+                </structure:Attribute>
+                <structure:Attribute assignmentStatus="Conditional" attachmentLevel="Observation" conceptAgency="ECB" conceptVersion="1.0" conceptRef="OBS_COM">
+                    <structure:TextFormat maxLength="1050" minLength="0" textType="String"/>
+                </structure:Attribute>
+                <structure:Attribute assignmentStatus="Conditional" attachmentLevel="Observation" codelistAgency="ECB" codelistVersion="1.0" codelist="CL_OBS_CONF" conceptAgency="ECB" conceptVersion="1.0" conceptRef="OBS_CONF"/>
+                <structure:Attribute assignmentStatus="Conditional" attachmentLevel="Observation" conceptAgency="ECB" conceptVersion="1.0" conceptRef="OBS_PRE_BREAK">
+                    <structure:TextFormat maxLength="15" minLength="0" textType="String"/>
+                </structure:Attribute>
+                <structure:Attribute assignmentStatus="Mandatory" attachmentLevel="Observation" codelistAgency="ECB" codelistVersion="1.0" codelist="CL_OBS_STATUS" conceptAgency="ECB" conceptVersion="1.0" conceptRef="OBS_STATUS"/>
+            </structure:Components>
+        </structure:KeyFamily>
+    </message:KeyFamilies>
 </message:Structure>
+
