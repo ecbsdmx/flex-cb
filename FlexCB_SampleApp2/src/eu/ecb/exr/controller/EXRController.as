@@ -34,12 +34,15 @@ package eu.ecb.exr.controller
 	
 	import flash.events.DataEvent;
 	import flash.events.Event;
+	
+	import org.sdmx.stores.api.ISDMXDaoFactory;
 
 	public class EXRController extends BaseSDMXViewController
 	{
-		public function EXRController(model:ISDMXViewModel)
+		public function EXRController(model:ISDMXViewModel, 
+			factory:ISDMXDaoFactory)
 		{
-			super(model);
+			super(model, factory);
 		}
 		
 		public function handleCurrencySwitched(event:Event):void
