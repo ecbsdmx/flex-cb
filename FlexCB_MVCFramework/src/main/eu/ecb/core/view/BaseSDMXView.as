@@ -174,6 +174,11 @@ package eu.ecb.core.view
 		 */
 		protected var _selectedDateChanged:Boolean;
 		
+		/**
+		 * @private
+		 */ 
+		protected var _desiredSeriesKeys:ArrayCollection;
+		
 		/*===========================Constructor==============================*/
 				
 		public function BaseSDMXView(direction:String = "vertical") 
@@ -331,6 +336,20 @@ package eu.ecb.core.view
 				_selectedDateChanged = true;
 				invalidateProperties();
 			}
+		}
+		
+		/**
+		 * @inheritDoc
+		 */ 
+		public function get desiredSeriesKeys():ArrayCollection {
+			return _desiredSeriesKeys;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */  
+		public function set desiredSeriesKeys(series:ArrayCollection):void {
+			_desiredSeriesKeys = series;
 		}
 		
 		/*========================Protected methods===========================*/

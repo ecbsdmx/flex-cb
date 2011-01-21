@@ -141,5 +141,20 @@ package eu.ecb.core.view
 		 * @param date
 		 */
 		function set selectedDate(date:String):void;
+		
+		/**
+		 * The keys of the series to be displayed by the view.
+		 * 
+		 * A collection of series key (strings) for the series that need to be 
+		 * displayed by the view. Using this information, a mediator can get the
+		 * desired series from the model, if these have already been fetched, or
+		 * can instruct the controller to fetch them.
+		 */
+		function get desiredSeriesKeys():ArrayCollection;
+		
+		/**
+		 * @private
+		 */ 
+		function set desiredSeriesKeys(series:ArrayCollection):void;
 	}
 }
