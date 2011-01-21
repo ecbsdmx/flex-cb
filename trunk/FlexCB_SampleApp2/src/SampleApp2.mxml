@@ -32,9 +32,13 @@
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute"
 	creationComplete="setup();" width="100%" height="100%" 
 	backgroundColor="#FFFFFF" frameRate="99" paddingTop="10" paddingLeft="10">
-	<mx:Style source="src/main/eu/ecb/assets/styles/ecb.css"/>
+	<mx:Style source="assets/styles/ecb.css"/>
 	<mx:Script>
 		<![CDATA[
+			import mx.containers.HBox;
+			import org.sdmx.stores.xml.v2.SDMXDataFormats;
+			import org.sdmx.stores.xml.v2.compact.CompactReader;
+			import org.sdmx.stores.xml.v2.SDMXMLDaoFactory;
 			import org.sdmx.stores.api.BaseSDMXDaoFactory;
 			import org.sdmx.stores.api.ISDMXDaoFactory;
 			import eu.ecb.exr.controller.EXRController;
@@ -43,16 +47,20 @@
 
 			private function setup():void {
 				var model:EXRModel    = new EXRModel();
-				var controller:EXRController = new EXRController(model);
+				var daoFactory:ISDMXDaoFactory = new SDMXMLDaoFactory();
+	      		daoFactory.optimisationLevel =
+	      			CompactReader.SERIES_POSITION_OPTIMISATION;
+	      		daoFactory.disableObservationAttribute = true;
+				var controller:EXRController = 
+					new EXRController(model, daoFactory);
 				controller.dataSource = new URLRequest("data/all.xml");
 				controller.structureSource = 
 					new URLRequest("data/ecb_exr1.xml");
-				var view:EXRDataPanel = new EXRDataPanel(model, controller, 
-					true);
+				var view:EXRDataPanel = new EXRDataPanel(model, controller, true);
 				view.percentWidth  = 100;
 				view.percentHeight = 100;
 				addChild(view);
-				controller.fetchData();
+				controller.fetchData(null);
 			}
 		]]>
 	</mx:Script>

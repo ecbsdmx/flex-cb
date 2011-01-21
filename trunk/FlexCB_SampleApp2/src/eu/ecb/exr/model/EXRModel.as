@@ -45,7 +45,6 @@ package eu.ecb.exr.model
 	import org.sdmx.model.v2.reporting.dataset.TimePeriodsCollection;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKeysCollection;
-	import org.sdmx.model.v2.reporting.dataset.UncodedObservation;
 	import org.sdmx.model.v2.structure.code.Code;
 	import org.sdmx.util.date.SDMXDate;
 	
@@ -251,11 +250,13 @@ package eu.ecb.exr.model
 		
 		private function createObservation(obs:TimePeriod):TimePeriod
 		{
-			var obsValue:UncodedObservation = new UncodedObservation(
+			/*var obsValue:UncodedObservation = new UncodedObservation(
 				_numberFormatter.format(1 / 
 				(Number((obs.observation as UncodedObservation).value))), 
 				(obs.observation as UncodedObservation).valueFor)
-			obsValue.attributeValues = obs.observation.attributeValues;	
+			obsValue.attributeValues = obs.observation.attributeValues;*/
+			var obsValue:String = _numberFormatter.format(1 / 
+				(Number(obs.observationValue)));	
 			return new TimePeriod(obs.periodComparator, obsValue, _sdmxDate);
 		}
 	}
