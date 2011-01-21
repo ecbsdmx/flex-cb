@@ -72,6 +72,8 @@ package eu.ecb.core.util.formatter
 					formatString = 
 						(isShortFormat) ? "D MMM YYYY" : "D MMMM YYYY";				
 					break;
+				case "H":
+					break; //Will depend on the value passed (see format method)
 				case "M":
 					formatString = (isShortFormat) ? "MMM YYYY" : 
 						resourceManager.getString("flex_cb_mvc_lang", 
@@ -124,20 +126,27 @@ package eu.ecb.core.util.formatter
 					"objects.");
 			}
 			
-			var quarter:String;
+			var suffix:String;
 			if (frequency == "Q") {
 				if (value.month >= 0 && value.month < 3) {
-					quarter = "Q1";
+					suffix = "Q1";
 				} else if (value.month >= 3 && value.month < 6) {
-					quarter = "Q2";
+					suffix = "Q2";
 				} else if (value.month >= 6 && value.month < 9) {
-					quarter = "Q3";
+					suffix = "Q3";
 				} else if (value.month >= 9) {
-					quarter = "Q4";
+					suffix = "Q4";
 				}
 				formatString = "YYYY ";
+			} else if (frequency == "H") {
+				if (value.month >= 0 && value.month < 6) {
+					suffix = "H1";
+				} else {
+					suffix = "H2";
+				} 
+				formatString = "YYYY ";
 			}
-			return super.format(value) + (null != quarter ? quarter : "");
+			return super.format(value) + (null != suffix ? suffix : "");
 		}
 	}
 }

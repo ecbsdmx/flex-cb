@@ -105,6 +105,19 @@ package org.sdmx.util.date
 							default:
 								throw new Error("Not yet implemented");				
 						}
+					} else if ("B" == target) {
+						switch (date.charAt(6)) {
+							case "1":
+								_dates[date] = 
+									new Date(Number(date.substr(0, 4)), 0, 1);
+								break;
+							case "2":
+								_dates[date] = 
+									new Date(Number(date.substr(0, 4)), 6, 1);
+								break;
+							default:
+								throw new Error("Not yet implemented");				
+						}
 					}
 					
 				} else {

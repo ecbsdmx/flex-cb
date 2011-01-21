@@ -431,7 +431,10 @@ package eu.ecb.core.view.chart
 	            } else if (_referenceSeriesFrequency == "A") {
 	            	_dateAxisFormatter.frequency = "A";
 	            	_dateFormatter.frequency = "A";
-	            }	
+	            } else if (_referenceSeriesFrequency == "H") {	            	
+    	            _dateAxisFormatter.frequency = "H";
+    	            _dateFormatter.frequency = "H";
+	            }
 				
 				var isChanged:Boolean = false
 				var allLineSeries:Array = _chart.series;
@@ -536,7 +539,10 @@ package eu.ecb.core.view.chart
 		    	} else if (_referenceSeriesFrequency == "A") {
 			    	_isoDateFormatter.formatString = "YYYY";
 			    	_dateFormatter.formatString = "YYYY";
-		    	}
+		    	} else if (_referenceSeriesFrequency == "H") {
+			    	_isoDateFormatter.formatString = "YYYY";
+			    	_dateFormatter.formatString = "YYYY";
+			    }
 			}
 			
 			if (_isPercentageChanged) {
@@ -682,6 +688,10 @@ package eu.ecb.core.view.chart
         		(_chart.horizontalAxis as DateTimeAxis).dataUnits = "years";
         		(_chart.horizontalAxis as DateTimeAxis).dataInterval = 1;
         		(_chart.horizontalAxis as DateTimeAxis).alignLabelsToUnits = true;
+        	} else if (_referenceSeriesFrequency == "H") {
+        		(_chart.horizontalAxis as DateTimeAxis).dataUnits = "months";
+        		(_chart.horizontalAxis as DateTimeAxis).dataInterval = 6;
+        		(_chart.horizontalAxis as DateTimeAxis).labelUnits = "months";
         	}
         }
         
