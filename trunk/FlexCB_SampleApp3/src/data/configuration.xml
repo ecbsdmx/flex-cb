@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<panel id="effective_exr" keyFamilyURI="data/ecb_exr1.xml">
+	<seriesLocator className="eu.ecb.core.util.net.locator.ECBSeriesLocator" dataflowId="EXR" isCompressed="false"/>
+	<seriesMatcher className="eu.ecb.core.util.helper.SeriesMatcher"/>
+	<views>
+		<view className="eu.ecb.core.view.summary.SeriesSummaryBox" id="exrSeriesSummaryBox" />
+		<view className="eu.ecb.core.view.panel.FlexCBHBox" id="exrFilterPanel">
+			<options>
+				<option name="styleName" value="filterBox" valueType="string" />
+				<option name="height" value="28" valueType="number" />
+				<option name="percentWidth" value="100" valueType="number" />
+			</options>
+			<views>
+				<view className="eu.ecb.core.view.filter.PeriodZoomBox" id="exrPeriodZoomBox">
+					<options>
+						<option name="percentWidth" value="100" valueType="number" />
+					</options>
+				</view>
+				<view className="eu.ecb.core.view.filter.ViewSelector" id="exrViewSelector">
+					<options>
+						<option name="views" valueType="arrayCollection" itemsValueType="string">
+							<item>Chart</item>
+							<item>Table</item>
+							<item>Explanation</item>
+						</option>
+					</options>
+				</view>
+			</views>
+		</view>
+		<view className="eu.ecb.core.view.summary.ChartSummaryBox" id="exrChartSummaryBox">
+			<options>
+				<option name="percentWidth" value="100" valueType="number" />
+			</options>
+		</view>
+		<view className="eu.ecb.core.view.panel.StackPanel" id="exrStack">
+			<views>
+				<view className="eu.ecb.core.view.BaseSDMXViewComposite" id="exrChartPeriodSliderContainer">
+					<options>
+						<option name="percentWidth" value="100" valueType="number" />
+						<option name="percentHeight" value="100" valueType="number" />
+					</options>
+					<views>
+						<view className="eu.ecb.core.view.chart.ECBLineChart" id="exrChart">
+							<options>
+								<option name="showChange" value="true" valueType="boolean" />
+							</options>
+						</view>
+						<view className="eu.ecb.core.view.chart.PeriodSlider" id="exrPeriodSlider" >
+							<options>
+								<option name="percentWidth" value="100" valueType="number" />
+							</options>
+						</view>
+					</views>
+				</view>
+				<view className="eu.ecb.core.view.table.Table" id="exrTable">
+					<options>
+						<option name="createChangeColumn" value="true" valueType="boolean" />
+						<option name="isHidden" value="true" valueType="boolean" />
+					</options>
+				</view>
+				<view className="eu.ecb.core.view.summary.MetadataPanel" id="exrMeta">
+					<options>
+						<option name="percentWidth" value="100" valueType="number" />
+					</options>
+				</view>
+			</views>
+		</view>
+	</views>
+	<data>
+		<series key="D.Z59.EUR.EN00.A"/>
+	</data>
+	<events>
+		<event  
+			type="filteredDataSetUpdated"
+			sources="model" 
+			invoker="effective_exr"
+			command="eu.ecb.core.command.UpdateMutatorCmd"
+			receivers="exrChart,exrTable,exrPeriodZoomBox" />	
+		<event  
+			type="isPercentageUpdated"
+			sources="model" 
+			invoker="effective_exr"
+			command="eu.ecb.core.command.UpdateMutatorCmd"
+			receivers="exrChart" />	
+		<event  
+			type="referenceSeriesFrequencyUpdated"
+			sources="model" 
+			invoker="effective_exr"
+			command="eu.ecb.core.command.UpdateMutatorCmd"
+			receivers="exrChart,exrSeriesSummaryBox,exrChartSummaryBox,exrTable" />
+		<event  
+			type="referenceSeriesUpdated"
+			sources="model"
+			invoker="effective_exr"
+			command="eu.ecb.core.command.UpdateMutatorCmd"
+			receivers="exrPeriodSlider,exrSeriesSummaryBox,exrMeta,exrChart" />
+		<event  
+			type="periodsUpdated"
+			sources="model" 
+			invoker="effective_exr"
+			command="eu.ecb.core.command.UpdateMutatorCmd"
+			receivers="exrPeriodZoomBox" />
+		<event  
+			type="selectedPeriodChanged"
+			sources="exrPeriodZoomBox" 
+			invoker="effective_exr"
+			command="eu.ecb.core.command.FunctionCallCmd"
+			receivers="controller" />
+		<event  
+			type="stackItemSelected"
+			sources="exrViewSelector" 
+			invoker="effective_exr"
+			command="eu.ecb.core.command.FunctionCallCmd"
+			receivers="exrStack" />
+		<event  
+			type="filteredReferenceSeriesUpdated"
+			sources="model"
+			invoker="effective_exr"
+			command="eu.ecb.core.command.UpdateMutatorCmd"
+			receivers="exrPeriodSlider,exrChartSummaryBox,exrChart" />
+		<event  
+			type="leftDividerDragged"
+			sources="exrPeriodSlider" 
+			invoker="effective_exr"
+			command="eu.ecb.core.command.FunctionCallCmd"
+			receivers="controller,exrPeriodZoomBox" >
+			<options>
+				<option name="methodName" value="removeSelectedPeriodHighlight" />
+			</options>		
+		</event>
+		<event  
+			type="rightDividerDragged"
+			sources="exrPeriodSlider" 
+			invoker="effective_exr"
+			command="eu.ecb.core.command.FunctionCallCmd"
+			receivers="controller,exrPeriodZoomBox"> 
+			<options>
+				<option name="methodName" value="removeSelectedPeriodHighlight" />
+			</options>	
+		</event>
+		<event  
+			type="chartDragged"
+			sources="exrPeriodSlider,exrChart" 
+			invoker="effective_exr"
+			command="eu.ecb.core.command.FunctionCallCmd"
+			receivers="controller" />
+		
+	</events>							
+</panel>
