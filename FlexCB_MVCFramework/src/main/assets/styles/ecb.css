@@ -544,3 +544,10 @@ SliderThumb {
 	fontSize: 9;
 	/*paddingBottom: -4;*/
 }
+
+.textSummaryTitle {
+	fontWeight: bold;
+	fontSize: 11;
+	textAlign: center;
+	color: #707070;
+}
