@@ -29,19 +29,16 @@ package eu.ecb.core.util.config
 	import eu.ecb.core.command.ICommand;
 	import eu.ecb.core.event.SDMXObjectEvent;
 	import eu.ecb.core.util.helper.ISeriesKeyBuilder;
+	import eu.ecb.core.util.helper.ISeriesMatcher;
 	import eu.ecb.core.util.net.locator.ISeriesLocator;
 	import eu.ecb.core.view.ISDMXComposite;
 	import eu.ecb.core.view.ISDMXServiceView;
 	import eu.ecb.core.view.ISDMXView;
+	import eu.ecb.core.view.filter.IDimensionFilter;
 	import eu.ecb.core.view.map.IMap;
 	import eu.ecb.core.view.map.IMapComponent;
 	import eu.ecb.core.view.map.MapCategory;
 	import eu.ecb.core.view.map.MapComponentHelper;
-	
-	import flash.events.EventDispatcher;
-	import flash.net.URLRequest;
-	import flash.utils.getDefinitionByName;
-	import flash.utils.getQualifiedClassName;
 	
 	import mx.collections.ArrayCollection;
 	import mx.logging.ILogger;
@@ -50,6 +47,12 @@ package eu.ecb.core.util.config
 	import org.sdmx.event.XMLDataEvent;
 	import org.sdmx.util.net.LoaderAdapter;
 	import org.sdmx.util.net.XMLLoader;
+	
+	import flash.events.EventDispatcher;
+	import flash.net.URLRequest;
+	import flash.utils.getDefinitionByName;
+	import flash.utils.getQualifiedClassName;
+
 	
 	/**
 	 * Event triggered when an event has been extracted from the configuration 
@@ -89,6 +92,15 @@ package eu.ecb.core.util.config
 	 * @eventType eu.ecb.core.util.config.ECBConfigurationParser.HIERARCHY_EXTRACTED
 	 */
 	[Event(name="hierarchyExtracted", type="eu.ecb.core.event.SDMXObjectEvent")]
+	
+	/**
+	 * Event triggered when a view has been extracted from the configuration 
+	 * file.
+	 * 
+	 * @eventType eu.ecb.core.util.config.ECBConfigurationParser.FORMATTER_EXTRACTED
+	 */
+	[Event(name="formatterExtracted", type="eu.ecb.core.event.SDMXObjectEvent")]
+
 	
 	/**
 	 * The base implementation of the IConfigurationParser interface. 
@@ -147,6 +159,16 @@ package eu.ecb.core.util.config
 		 */
 		public static const HIERARCHY_EXTRACTED:String = "hierarchyExtracted";	
 		
+		/**
+		 * The ECBConfigurationParser.FORMATTER_EXTRACTED constant defines the 
+		 * value of the <code>type</code> property of the event object for a 
+		 * <code>formatterExtracted</code> event.
+		 * 
+		 * @eventType formatterExtracted
+		 */
+		public static const FORMATTER_EXTRACTED:String = "formatterExtracted";
+
+				
 		/*==============================Fields================================*/
 		
 		/**
@@ -159,6 +181,8 @@ package eu.ecb.core.util.config
 		 * settings.
 		 */ 
 		protected var _loader:XMLLoader;
+		
+		private var _dimensionFilters:ArrayCollection;
 				
 		/*===========================Constructor==============================*/
 		
@@ -225,7 +249,19 @@ package eu.ecb.core.util.config
 						"true" == configurationXML.seriesLocator.@isCompressed ?
 							true : false;
 				} 
+				
+				setOptions(fileLocator, (configurationXML.seriesLocator as
+					XMLList).options);
 				panelSettings["fileLocator"] = fileLocator;
+			}
+			
+			if (configurationXML.child("seriesMatcher").length() > 0) {
+				var matcherClass:Class = getClassFromString(
+					configurationXML.seriesMatcher.@className);
+				var seriesMatcher:ISeriesMatcher = 
+					new matcherClass() as ISeriesMatcher;	
+				panelSettings["seriesMatcher"] = seriesMatcher;
+				_dimensionFilters = new ArrayCollection();
 			}
 			
 			panelSettings["keyFamilyURI"] = 
@@ -255,9 +291,16 @@ package eu.ecb.core.util.config
 			for each (var eventXML:XML in configurationXML.events.event) {
 				extractEvent(eventXML);
 			}
+			 
 			
 			var data:Object = new Object();
 			data["files"] = seriesCollection;
+			
+			if (panelSettings.hasOwnProperty("seriesMatcher")) {
+				(panelSettings["seriesMatcher"] as ISeriesMatcher).
+					dimensionFilters = _dimensionFilters;
+			}
+			
 			dispatchEvent(new SDMXObjectEvent(DATA_INFO_EXTRACTED, data));
 			
 			event = null;
@@ -370,6 +413,10 @@ package eu.ecb.core.util.config
 			view["isRoot"] = isRoot;
 			dispatchEvent(new SDMXObjectEvent(VIEW_EXTRACTED, view));
 			
+			for each (var formatterXML:XML in xml.formatters.formatter) {
+				extractFormatter(formatterXML, sdmxView);	
+			}
+			
 			for each (var viewXML:XML in xml.views.view) {
 				if (!(sdmxView is ISDMXComposite)) {
 					throwError("Only ISDMXComposite classes are " + 
@@ -411,6 +458,11 @@ package eu.ecb.core.util.config
 					(sdmxView as IMap).mapLegend = mapLegendView; 
 				}
 			}
+			
+			if (sdmxView is IDimensionFilter && null != _dimensionFilters) {
+				_dimensionFilters.addItem(sdmxView);
+			}
+			
 			return sdmxView;
 		}
 		
@@ -464,6 +516,40 @@ package eu.ecb.core.util.config
 				}
 				target[optionName] = optionValue;
 			}
+        }
+        
+        private function extractFormatter(fmtXML:XML,
+			view:ISDMXView):void {
+			checkMandatoryAttribute("type", fmtXML);
+			checkMandatoryAttribute("className", fmtXML);
+			var FmtClass:Class = getClassFromString(fmtXML.@className);
+			var formatter:* = new FmtClass();
+			setOptions(formatter, fmtXML.options);
+			var target:Object = new Object();
+			target["view"] = view;
+			target["formatter"] = formatter;
+			if (fmtXML.attribute("id").length() > 0) {
+				target["id"] = String(fmtXML.@id);
+			}
+			if (fmtXML.child("trigger").length() == 0) {
+				setFormatter(view as Object, formatter, fmtXML.@type);
+			} else {
+				checkMandatoryAttribute("eventType", new XML(fmtXML.trigger));
+				target["eventType"] = String(fmtXML.trigger.@eventType);			
+				if (fmtXML.trigger.attribute("eventSource").length() > 0) {
+					target["eventSource"] = String(fmtXML.trigger.@eventSource);
+				}	
+			}
+			dispatchEvent(new SDMXObjectEvent(FORMATTER_EXTRACTED, target));
+		}
+		
+		private function setFormatter(view:Object, formatter:*, 
+        	type:String):void {
+        	if (type == "IObservationFormatter") {
+        		view.observationValueFormatter = formatter;
+        	} else if (type == "ISeriesTitleFormatter") {
+        		view.titleFormatter = formatter;
+        	}
         }
         
         private function extractHierarchy(panelXML:XMLList):Object {
