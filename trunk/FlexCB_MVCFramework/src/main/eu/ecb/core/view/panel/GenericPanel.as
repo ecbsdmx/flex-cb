@@ -35,19 +35,23 @@ package eu.ecb.core.view.panel
 	import eu.ecb.core.event.SDMXObjectEvent;
 	import eu.ecb.core.model.IModel;
 	import eu.ecb.core.model.ISDMXServiceModel;
+	import eu.ecb.core.model.ISDMXViewModel;
 	import eu.ecb.core.util.config.BasicConfigurationParser;
 	import eu.ecb.core.util.config.IConfigurationParser;
+	import eu.ecb.core.util.formatter.observation.IObservationFormatter;
+	import eu.ecb.core.util.formatter.series.ISeriesTitleFormatter;
+	import eu.ecb.core.util.helper.ISeriesMatcher;
 	import eu.ecb.core.util.net.locator.ISeriesLocator;
 	import eu.ecb.core.view.BaseSDMXMediator;
 	import eu.ecb.core.view.util.ProgressBox;
+	
+	import mx.collections.ArrayCollection;
+	import mx.managers.PopUpManager;
 	
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
 	import flash.net.URLRequest;
 	
-	import mx.collections.ArrayCollection;
-	import mx.managers.PopUpManager;
-
 	/**
 	 * Generic Flex-CB panel, driven by an XML configuration file. 
 	 * 
@@ -62,9 +66,11 @@ package eu.ecb.core.view.panel
 		 * @private
 		 */ 	
 		protected var _fileLocator:ISeriesLocator;
+		private var _seriesMatcher:ISeriesMatcher;
 		private var _pBar:ProgressBox;
 		private var _commands:Object;
 		private var _views:Object;
+		private var _formatters:Object;
 		private var _runOnceEvents:Object;
 		private var _hierarchies:Object;
 		
@@ -75,6 +81,7 @@ package eu.ecb.core.view.panel
 		{
 			super(model, controller, "vertical");
 			_views = new Object();
+			_formatters = new Object();
 			setTaskProgressHandlers();
 			setConfigParserHandlers(settings);
 		}
@@ -101,6 +108,7 @@ package eu.ecb.core.view.panel
 			command.hierarchies = _hierarchies;
 			command.controller = _controller;
 			command.fileLocator = _fileLocator;
+			command.formatters = _formatters;
 			(_commands[eventType][eventSource] as ArrayCollection).
 				addItem(command);
 		}
@@ -109,8 +117,14 @@ package eu.ecb.core.view.panel
 		 * @inheritDoc
 		 */	
 		public function handleEvent(event:Event):void {
-			var source:String = (event.currentTarget is IModel) ? 
-				"model" : event.currentTarget.id;
+			var source:String;
+			if (event.currentTarget is IModel) {
+				source = "model";
+			} else if (event.currentTarget is ISeriesMatcher) {
+				source = "seriesMatcher";
+			} else {
+				source = event.currentTarget.id;	
+			}
 			if (_commands.hasOwnProperty(event.type)) {
 				if (_commands[event.type].hasOwnProperty(source)) {
 					for each (var command:ICommand in _commands[event.type]
@@ -144,6 +158,10 @@ package eu.ecb.core.view.panel
 			}
 			if (sdmxObject.hasOwnProperty("fileLocator")) {
 				_fileLocator = sdmxObject.fileLocator;	
+			}
+			if (sdmxObject.hasOwnProperty("seriesMatcher")) {
+				_seriesMatcher = sdmxObject.seriesMatcher;	
+				_seriesMatcher.model = _model as ISDMXViewModel;
 			}
 			var root:Object = new Object();
 			root["view"] = this;
@@ -234,7 +252,11 @@ package eu.ecb.core.view.panel
 				 handleViewExtracted,false,0,true);
 			configurationParser.addEventListener(
 				BasicConfigurationParser.HIERARCHY_EXTRACTED,
-				handleHierarchyExtracted);	 
+				handleHierarchyExtracted,false,0,true);
+			configurationParser.addEventListener(
+				BasicConfigurationParser.FORMATTER_EXTRACTED, 
+				handleFormatterExtracted,false,0,true);
+
 			configurationParser.parse(settings);
 		}
 		
@@ -265,10 +287,22 @@ package eu.ecb.core.view.panel
 		private function handleEventExtracted(event:SDMXObjectEvent):void {
 			event.stopImmediatePropagation();
 			var obj:Object = event.sdmxObject; 						
-			var source:IEventDispatcher = (obj["source"] == "model") ? 
-				_model : _views[obj["source"]]["view"];
-			var receiver:* = (obj["receiver"] == "controller") ? 
-				_controller : _views[obj["receiver"]]["view"];
+			var source:IEventDispatcher;
+			if (obj["source"] == "model") {
+				source = _model;
+			} else if (obj["source"] == "seriesMatcher") {
+				source = _seriesMatcher;
+			} else {
+				source = _views[obj["source"]]["view"];
+			}	
+			var receiver:*;
+			if (obj["receiver"] == "controller") {
+				receiver = _controller;
+			} else if (obj["receiver"] == "seriesMatcher") {
+				receiver = _seriesMatcher;
+			} else {
+				receiver = _views[obj["receiver"]]["view"];
+			}
 			source.addEventListener(obj["type"], _views[obj["invoker"]]
 				["view"]["handleEvent"], false); 
 			source.addEventListener(obj["type"], _views[obj["invoker"]]
@@ -295,6 +329,24 @@ package eu.ecb.core.view.panel
 			}
 			event = null;
 		}
+		
+		private function handleFormatterExtracted(event:SDMXObjectEvent):void {			
+			event.stopImmediatePropagation();
+			var object:Object = event.sdmxObject;
+			var target:Object;
+			if (object.formatter is ISeriesTitleFormatter) {
+				target = _formatters;
+				if (!(target.hasOwnProperty(object.eventType))){	
+					target[object.eventType] = new Array();
+				}
+				(target[object.eventType] as Array).push(object);
+			}
+			_views[object.id] = new Object();
+			_views[object.id]["view"] = object.formatter;
+			event = null;
+		}
+		
+
 		
 		private function handleHierarchyExtracted(event:SDMXObjectEvent):void {
 			event.stopImmediatePropagation();
