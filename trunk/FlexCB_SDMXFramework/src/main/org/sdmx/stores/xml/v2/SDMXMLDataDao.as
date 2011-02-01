@@ -95,8 +95,8 @@ package org.sdmx.stores.xml.v2
 					_format = GuessDataType.guessFormat(_dataXML);
 					if (_format == null) {
 						var element:XML = _dataXML.children()[1];
-						if ((_dataXML.children()[1] as XML).elements()
-							.length() > 0) {	
+						if (element != null && 
+							element.elements().length() > 0) {	
 							dispatchEvent(new ErrorEvent(
 								BaseSDMXDaoFactory.DAO_ERROR_EVENT, false, 
 								false, _format + " is currently not " + 
