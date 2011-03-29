@@ -53,14 +53,14 @@ package eu.ecb.core.view.chart
 	 * Event triggered when one of the items in the legend has been selected or
 	 * deselected by clicking on it.
 	 */
-	[Event(name="legendSelected", type="flash.events.DataEvent")]
+	[Event(name="legendItemSelected", type="flash.events.DataEvent")]
 	
 	/**
 	 * Event triggered when one of the items in the legend has been highlighted 
 	 * by hovering over it, or when focus has been removed from it by mousing 
 	 * out from the label.
 	 */
-	[Event(name="legendHighlighted", type="flash.events.DataEvent")]
+	[Event(name="legendItemHighlighted", type="flash.events.DataEvent")]
 	
 	/**
 	 * The chart legend
@@ -82,6 +82,7 @@ package eu.ecb.core.view.chart
 		private var _disableContentCheck:Boolean;
 		private var _legendContainer:Container;
 		private var _legendMarkerFactory:IFactory;
+		private var _labels:ArrayCollection; 
 		
 		/*===========================Constructor==============================*/
 		
@@ -223,7 +224,7 @@ package eu.ecb.core.view.chart
 	 		if (_dataSetChanged && _dataSet is DataSet) {
 	 			_dataSetChanged = false;
 		 		_legendContainer.removeAllChildren();
-		 		var labels:ArrayCollection = new ArrayCollection(); 
+		 		_labels = new ArrayCollection(); 
 				if (!_autoHide || (_dataSet as DataSet).timeseriesKeys.
 					length > 1) {
 					for (var i:uint = 0; i < (_dataSet as DataSet).
@@ -261,8 +262,8 @@ package eu.ecb.core.view.chart
 								handleMouseOut);	
 						}
 						legendItem.id = series.seriesKey;						
-						if (!(labels.contains(seriesTitle))) {
-							labels.addItem(seriesTitle);
+						if (!(_labels.contains(seriesTitle))) {
+							_labels.addItem(seriesTitle);
 						}
 						legendItem.label = seriesTitle;																	
 						legendItem.setStyle("legendMarkerRenderer", 
@@ -270,13 +271,6 @@ package eu.ecb.core.view.chart
 						legendItem.markerAspectRatio = 1; 						
 						legendItem.styleName = "ecbLegendItem";	
 						_legendContainer.addChild(legendItem);
-					}
-					if (!_disableContentCheck) {
-						if (labels.length == 1) {
-							_forceHide = true;
-						} else {
-							_forceHide = false;
-						}
 					}
 				}
 	 		}
@@ -289,7 +283,7 @@ package eu.ecb.core.view.chart
 	 		unscaledHeight:Number):void
  		{
  			super.updateDisplayList(unscaledWidth, unscaledHeight);
- 			
+ 			checkForceHide();
  			if (_dataSet is DataSet) {
 	 			if (_forceHide || (_autoHide && null != _dataSet && 
 	 				null != (_dataSet as DataSet).timeseriesKeys && 
@@ -323,7 +317,7 @@ package eu.ecb.core.view.chart
 	 			_highlightedSeries.addItem(key);
 	 			event.currentTarget.styleName = "legendItemSelected";
 	 		}
-	 		dispatchEvent(new DataEvent("legendSelected", false, false, key)); 
+	 		dispatchEvent(new DataEvent("legendItemSelected", false, false, key)); 
 	 	}
 	 	
 	 	private function handleMouseOver(event:MouseEvent):void
@@ -332,7 +326,7 @@ package eu.ecb.core.view.chart
 	 		if (null == _highlightedSeries || (null != _highlightedSeries && 
 	 			!(_highlightedSeries.contains(key)))) {
 	 			event.currentTarget.styleName = "legendItemSelected";
-	 			dispatchEvent(new DataEvent("legendHighlighted", false, false, 
+	 			dispatchEvent(new DataEvent("legendItemHighlighted", false, false, 
 	 				key));
 	 		}
 	 	}
@@ -343,9 +337,19 @@ package eu.ecb.core.view.chart
 	 		if (null == _highlightedSeries || (null != _highlightedSeries &&
 	 			!(_highlightedSeries.contains(key)))) {
 	 			event.currentTarget.styleName = "ecbLegendItem";
-	 			dispatchEvent(new DataEvent("legendHighlighted", false, false, 
+	 			dispatchEvent(new DataEvent("legendItemHighlighted", false, false, 
 	 				key));
 	 		}
+	 	}
+	 	
+	 	private function checkForceHide():void {
+	 		if (!_disableContentCheck && _labels != null) {
+				if (_labels.length == 1) {
+					_forceHide = true;
+				} else {
+					_forceHide = false;
+				}
+			}
 	 	}
 	}
 }
