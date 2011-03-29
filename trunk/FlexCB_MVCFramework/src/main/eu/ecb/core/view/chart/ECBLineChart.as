@@ -50,6 +50,7 @@ package eu.ecb.core.view.chart
 	import mx.charts.HitData;
 	import mx.charts.LineChart;
 	import mx.charts.LinearAxis;
+	import mx.charts.chartClasses.IAxis;
 	import mx.charts.chartClasses.NumericAxis;
 	import mx.charts.effects.SeriesInterpolate;
 	import mx.charts.events.ChartItemEvent;
@@ -148,7 +149,7 @@ package eu.ecb.core.view.chart
 		
 		private var _effect:SeriesInterpolate;
 		
-		private var _showECBToolTip:Boolean;
+		protected var _showECBToolTip:Boolean;
 		
 		/**
 		 * @private
@@ -195,7 +196,6 @@ package eu.ecb.core.view.chart
 				"decimal_separator");	
 			_dateAxisFormatter = new SDMXDateFormatter();
 			_dateAxisFormatter.isShortFormat = true;
-			_chart = new LineChart();
 			_referenceSeriesFrequency = "M";
 			_isFirst = true;
 			_showECBToolTip = true;
@@ -244,7 +244,7 @@ package eu.ecb.core.view.chart
 		public function set showECBToolTip(flag:Boolean):void
 		{
 			_showECBToolTip = flag;
-			if (!flag) {
+			if (!flag && null != _chart) {
 				_chart.showDataTips = true;
 				_chart.dataTipMode  = "multiple";
 				_chart.dataTipFunction = customizeDataTip;
@@ -325,67 +325,78 @@ package eu.ecb.core.view.chart
 		override protected function createChildren():void 
 		{
 			super.createChildren();
-			//Displaying the chart
 			
-			_chart.showDataTips = false;
-			_chart.percentHeight = 100;
-			_chart.percentWidth = 100;
-			_chart.styleName = "ecbLineChart";
-			
-			_chart.addEventListener(MouseEvent.MOUSE_DOWN, setMouseDown, 
-				false, 0, true);
-			_chart.addEventListener(MouseEvent.MOUSE_UP, 
-				cleanItemsOnChart, false, 0, true);
-			_chart.addEventListener(MouseEvent.ROLL_OUT, 
-				cleanItemsOnChart, false, 0, true);
-			_chart.addEventListener(MouseEvent.MOUSE_MOVE, 
-				moveOverChart, false, 0, true);
-			_chart.addEventListener(ChartItemEvent.ITEM_CLICK,
-				handleItemClicked);	
-			
-			//Configure the tool tips					
-			if (!_showECBToolTip) {
-				_chart.showDataTips = true;
-				_chart.dataTipMode  = "multiple";
-				_chart.dataTipFunction = customizeDataTip;
-			}	
-			
-			//Removes the shadow of the lines
-			_chart.seriesFilters = new Array();
-			
-			var verticalAxis:LinearAxis = new LinearAxis();
-			verticalAxis.baseAtZero = false;
-			_chart.verticalAxis = verticalAxis;
-			
-			var horizontalAxis:DateTimeAxis = new DateTimeAxis();
-			horizontalAxis.labelFunction = formatDateAxisLabels;
-			_chart.horizontalAxis = horizontalAxis;
-			
-			var stroke:Stroke = new Stroke();
-			stroke.color = 0xEDEFF1;
-			stroke.weight = 1;
-			
-			var gridLines:GridLines = new GridLines();
-			gridLines.styleName = "ecbLineChartGridLines";
-			gridLines.setStyle("horizontalOriginStroke", stroke);
-			gridLines.setStyle("horizontalStroke", stroke);
-			gridLines.setStyle("verticalOriginStroke", stroke);
-			gridLines.setStyle("verticalStroke", stroke);												
-			_chart.backgroundElements = [gridLines];
-			
-			var horizontalAxisRenderer:AxisRenderer = new AxisRenderer();	
-			horizontalAxisRenderer.styleName = "ecbLineChartHorizontalAxis";
-			horizontalAxisRenderer.setStyle("axisStroke", stroke);
-			horizontalAxisRenderer.setStyle("minorTickStroke", stroke);
-			horizontalAxisRenderer.setStyle("tickStroke", stroke);
-			_chart.horizontalAxisRenderer = horizontalAxisRenderer;
-			
-			var verticalAxisRenderer:AxisRenderer = new AxisRenderer();
-			verticalAxisRenderer.setStyle("axisStroke", stroke);
-			verticalAxisRenderer.setStyle("tickStroke", stroke);
-			_chart.verticalAxisRenderer = verticalAxisRenderer;
-			
-			addChild(_chart);
+			if (null == _chart) {
+				//Displaying the chart
+				_chart = new LineChart();
+				
+				if (_showECBToolTip) {
+					_chart.showDataTips = false;
+				} else {
+					_chart.showDataTips = true;
+					_chart.dataTipMode  = "multiple";
+					_chart.dataTipFunction = customizeDataTip;
+				} 
+				_chart.percentHeight = 100;
+				_chart.percentWidth = 100;
+				_chart.styleName = "ecbLineChart";
+				
+				_chart.addEventListener(MouseEvent.MOUSE_DOWN, setMouseDown, 
+					false, 0, true);
+				_chart.addEventListener(MouseEvent.MOUSE_UP, 
+					cleanItemsOnChart, false, 0, true);
+				_chart.addEventListener(MouseEvent.ROLL_OUT, 
+					cleanItemsOnChart, false, 0, true);
+				_chart.addEventListener(MouseEvent.MOUSE_MOVE, 
+					moveOverChart, false, 0, true);
+				_chart.addEventListener(ChartItemEvent.ITEM_CLICK,
+					handleItemClicked);	
+				
+				//Configure the tool tips					
+				if (!_showECBToolTip) {
+					_chart.showDataTips = true;
+					_chart.dataTipMode  = "multiple";
+					_chart.dataTipFunction = customizeDataTip;
+				}	
+				
+				//Removes the shadow of the lines
+				_chart.seriesFilters = new Array();
+				
+				var verticalAxis:LinearAxis = new LinearAxis();
+				verticalAxis.baseAtZero = false;
+				verticalAxis.labelFunction = formatVerticalAxisLabels;
+				_chart.verticalAxis = verticalAxis;
+				
+				var horizontalAxis:DateTimeAxis = new DateTimeAxis();
+				horizontalAxis.labelFunction = formatDateAxisLabels;
+				_chart.horizontalAxis = horizontalAxis;
+				
+				var stroke:Stroke = new Stroke();
+				stroke.color = 0xEDEFF1;
+				stroke.weight = 1;
+				
+				var gridLines:GridLines = new GridLines();
+				gridLines.styleName = "ecbLineChartGridLines";
+				gridLines.setStyle("horizontalOriginStroke", stroke);
+				gridLines.setStyle("horizontalStroke", stroke);
+				gridLines.setStyle("verticalOriginStroke", stroke);
+				gridLines.setStyle("verticalStroke", stroke);												
+				_chart.backgroundElements = [gridLines];
+				
+				var horizontalAxisRenderer:AxisRenderer = new AxisRenderer();	
+				horizontalAxisRenderer.styleName = "ecbLineChartHorizontalAxis";
+				horizontalAxisRenderer.setStyle("axisStroke", stroke);
+				horizontalAxisRenderer.setStyle("minorTickStroke", stroke);
+				horizontalAxisRenderer.setStyle("tickStroke", stroke);
+				_chart.horizontalAxisRenderer = horizontalAxisRenderer;
+				
+				var verticalAxisRenderer:AxisRenderer = new AxisRenderer();
+				verticalAxisRenderer.setStyle("axisStroke", stroke);
+				verticalAxisRenderer.setStyle("tickStroke", stroke);
+				_chart.verticalAxisRenderer = verticalAxisRenderer;
+				
+				addChild(_chart);
+			}
 		}
 		
 		/**
@@ -628,17 +639,31 @@ package eu.ecb.core.view.chart
 			}
 		}
 		
-		/*=========================Private methods============================*/
-		
 		/**
          * This method formats the labels for the data chart, depending on the
          * frequency and the length of the longest series.
          */
-        private function formatDateAxisLabels(labelValue:Object, 
+        protected function formatDateAxisLabels(labelValue:Object, 
             previousLabelValue:Object, axis:DateTimeAxis):String 
 		{
             return _dateAxisFormatter.format(labelValue as Date);
         }
+        
+        /**
+         * This method formats the labels for the data chart, depending on the
+         * frequency and the length of the longest series.
+         */
+        protected function formatVerticalAxisLabels(labelValue:Object, 
+        	previousValue:Object, axis:IAxis):String {
+        	_numberFormatter.forceSigned = false;
+        	var value:String = _numberFormatter.format(labelValue) + 
+        		(_isPercentage ? "%" : ""); 	
+        	_numberFormatter.forceSigned = true;
+        	return value;
+        }
+        
+        /*=========================Private methods============================*/
+
         
         private function setAxisTicksAndLabels():void 
         {
@@ -936,7 +961,7 @@ package eu.ecb.core.view.chart
 		    }
         }
         
-        private function moveOverChart(event:MouseEvent):void 
+        protected function moveOverChart(event:MouseEvent):void 
         {
 			if (_isDragging) {
 					
@@ -963,7 +988,7 @@ package eu.ecb.core.view.chart
 		 * the cursor goes out of the chart area. It will either remove the hand 
 		 * cursor or the tool tip, if any.
 		 */
-		private function cleanItemsOnChart(event:MouseEvent):void 
+		protected function cleanItemsOnChart(event:MouseEvent):void 
 		{
 			if (_isDragging) {
 				CursorManager.removeAllCursors();
@@ -1028,7 +1053,7 @@ package eu.ecb.core.view.chart
         	return observations;
 		}
 		
-		private function handleItemClicked(event:ChartItemEvent):void
+		protected function handleItemClicked(event:ChartItemEvent):void
 		{
 			dispatchEvent(event);
 		}
