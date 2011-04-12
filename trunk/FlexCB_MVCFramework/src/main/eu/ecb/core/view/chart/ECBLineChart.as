@@ -415,13 +415,13 @@ package eu.ecb.core.view.chart
 					_referenceSeriesFrequency == "D") {
 		            if (_dataLength >= 1320) {
 		            	_dateAxisFormatter.frequency = "A";
-		            	_dateFormatter.frequency = "A";
+		            	_dateFormatter.frequency = "D";
 	        	    } else if (_dataLength <= 50) {
 	        	    	_dateAxisFormatter.frequency = "D";
 	        	    	_dateFormatter.frequency = "D";
 		            } else {
 	    	            _dateAxisFormatter.frequency = "M";
-	    	            _dateFormatter.frequency = "M";
+	    	            _dateFormatter.frequency = "D";
 	        	    }
 	            } else if (_referenceSeriesFrequency == "M") {
 	            	if (_dataLength < 130) {
@@ -429,7 +429,7 @@ package eu.ecb.core.view.chart
 		            	_dateFormatter.frequency = "M";
 	        	    } else {
 	    	            _dateAxisFormatter.frequency = "A";
-	    	            _dateFormatter.frequency = "A";
+	    	            _dateFormatter.frequency = "M";
 	        	    }
 	            } else if (_referenceSeriesFrequency == "Q") {
 	            	if (_dataLength < 60) {
@@ -437,7 +437,7 @@ package eu.ecb.core.view.chart
 		            	_dateFormatter.frequency = "Q";
 	        	    } else {
 	    	            _dateAxisFormatter.frequency = "A";
-	    	            _dateFormatter.frequency = "A";
+	    	            _dateFormatter.frequency = "Q";
 	        	    }
 	            } else if (_referenceSeriesFrequency == "A") {
 	            	_dateAxisFormatter.frequency = "A";
