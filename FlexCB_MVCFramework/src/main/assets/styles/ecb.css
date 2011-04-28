@@ -564,3 +564,23 @@ SliderThumb {
     borderThickness: 0;
     textSelectedColor: #0000FF;
 } 
+
+.KFPanel {
+    headerColors:           #A6C4D7, #A6C4D7;
+    paddingTop:             8;
+    paddingRight:           0;
+    paddingBottom:          0;
+    paddingLeft:            0;
+    cornerRadius:           4;
+    dropShadowEnabled:      true;
+    roundedBottomCorners:   true;
+    dropShadowColor: 		#999999;
+    highlightAlphas: 		.9, 0;
+    borderColor:            #FFFFFF;
+    borderThicknessRight:   1;
+    borderThicknessBottom:  1;
+    borderStyle:            solid;
+    borderThickness:        0;
+    borderAlpha:            1;
+    backgroundColor:        #FFFFFF;
+}
