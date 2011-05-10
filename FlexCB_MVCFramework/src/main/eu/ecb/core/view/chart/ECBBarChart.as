@@ -148,7 +148,7 @@ package eu.ecb.core.view.chart
 		
 		protected function formatYAxisLabel(labelValue:Object, 
 			previousValue:Object, axis:IAxis):String {
-	        return String(labelValue);
+	        return String(labelValue) + (_isPercentage ? "%" : "");
 		}
 	}
 }

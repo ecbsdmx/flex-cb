@@ -656,6 +656,11 @@ package eu.ecb.core.view.chart
         protected function formatVerticalAxisLabels(labelValue:Object, 
         	previousValue:Object, axis:IAxis):String {
         	_numberFormatter.forceSigned = false;
+        	var valueString:String = labelValue.toString();
+        	_numberFormatter.precision = 
+				valueString.indexOf(".") > -1 ? 
+			    	valueString.substring(valueString.indexOf(".") + 1, 
+		    		valueString.length).length : 0;
         	var value:String = _numberFormatter.format(labelValue) + 
         		(_isPercentage ? "%" : ""); 	
         	_numberFormatter.forceSigned = true;
