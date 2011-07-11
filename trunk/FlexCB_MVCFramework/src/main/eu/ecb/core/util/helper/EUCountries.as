@@ -70,17 +70,17 @@ package eu.ecb.core.util.helper
 				LTU: "LT", GBR: "GB", DNK: "DK", POL: "PL", EST: "EE",
 				LVA: "LV", CZE: "CZ", SVK: "SK", BGR: "BG", SWE: "SE",
 				ROM: "RO", HUN: "HU"};
-			_euroArea = new ArrayCollection(["AT", "BE", "CY", "DE", "ES", 
+			_euroArea = new ArrayCollection(["AT", "BE", "CY", "DE", "EE", "ES", 
 				"FI", "FR", "GR", "IE", "IT", "LU", "MT", "NL", "PT", "SI", 
 				"SK"]);
 			_europeanUnion = new ArrayCollection(_euroArea.toArray().concat([
-				"LT", "GB", "DK", "PL", "EE", "LV", "CZ", "BG", "SE", "RO", 
+				"LT", "GB", "DK", "PL", "LV", "CZ", "BG", "SE", "RO", 
 				"HU"]));	
 			_euroAreaJoinDates = {AT: "1996-01", BE: "1996-01", CY: "2008-01", 
-				DE: "1996-01", ES: "1996-01", FI: "1996-01", FR: "1996-01", 
-				GR: "2001-01", IE: "1996-01", IT: "1996-01", LU: "1996-01", 
-				MT: "2008-01", NL: "1996-01", PT: "1996-01", SI: "2007-01",
-				SK: "2009-01"};	
+				DE: "1996-01", EE: "2011-01", ES: "1996-01", FI: "1996-01", 
+				FR: "1996-01", GR: "2001-01", IE: "1996-01", IT: "1996-01", 
+				LU: "1996-01", MT: "2008-01", NL: "1996-01", PT: "1996-01", 
+				SI: "2007-01", SK: "2009-01"};	
 		}
 		
 		/*============================Accessors===============================*/
