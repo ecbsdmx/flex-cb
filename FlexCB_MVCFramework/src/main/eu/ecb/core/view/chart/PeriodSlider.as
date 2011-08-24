@@ -100,6 +100,11 @@ package eu.ecb.core.view.chart
 
 		private var _cursorId:Number;
 		
+		/**
+		 * Flag on whether live dragging should be enabled.
+		 */
+		private var _liveDragging:Boolean;
+		
 		[Embed(source="/assets/images/fleur.png")] 
 		private var _dragCursor:Class;
 		
@@ -112,6 +117,20 @@ package eu.ecb.core.view.chart
 		{
 			super(direction);
 			styleName = "ecbPeriodChartBox";
+			_liveDragging = true;
+		}
+		
+		/*============================Accessors===============================*/
+		
+		/**
+		 * Allow live dragging to be switched off. This may be desired
+		 * especially for larger datasets.
+		 *  
+		 * @param flag
+		 */
+		public function set liveDragging(flag:Boolean):void
+		{
+			_liveDragging = flag;
 		}
 				
 		/*========================Protected methods===========================*/
@@ -215,6 +234,7 @@ package eu.ecb.core.view.chart
 				_slider.setStyle("trackSkin", PeriodSliderTrackSkin);
 				_slider.setStyle("trackHighlightSkin", 
 					PeriodSliderHighlightSkin);
+				_slider.liveDragging = _liveDragging;
 				_sliderBox.addChild(_slider);
 			}
 		}
