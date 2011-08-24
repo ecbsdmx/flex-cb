@@ -30,15 +30,23 @@ package eu.ecb.core.view.filter
 	
 	import flash.events.MouseEvent;
 	
+	import mx.charts.AxisRenderer;
+	import mx.charts.LineChart;
+	import mx.charts.series.LineSeries;
 	import mx.collections.ArrayCollection;
 	import mx.containers.Box;
 	import mx.containers.HBox;
+	import mx.containers.VBox;
 	import mx.controls.CheckBox;
 	import mx.controls.VRule;
+	import mx.core.ClassFactory;
+	import mx.graphics.Stroke;
 	
 	import org.sdmx.model.v2.base.LocalisedString;
 	import org.sdmx.model.v2.structure.code.Code;
 	import org.sdmx.model.v2.structure.code.CodeList;
+	
+	import qs.charts.DashedLineRenderer;
 	
 	/**
 	 * This component displays codes for certain dimension and supports
@@ -46,6 +54,7 @@ package eu.ecb.core.view.filter
 	 * as check box.
 	 *  
 	 * @author Rok Povse
+	 * @author Steven Bagshaw
 	 */
 	public class CheckBoxDimensionFilter extends DimensionFilter
 	{
@@ -53,7 +62,13 @@ package eu.ecb.core.view.filter
 		
 		private var _checkBoxes:ArrayCollection;
 		private var _checkBoxesContainers:ArrayCollection;
+		private var _columns:ArrayCollection; //SBa - just for cleanup - TODO is this needed???
 		private var _coloredCheckboxes:Boolean;
+		private var _colorByCode:Boolean; //SBa
+		private var _numColumns:Number; //SBa
+		private var _greyOutCodes:Boolean; //SBa
+		private var _codesInitialised:Boolean; //SBa
+		private var _colorCheckboxesDirection:String; //SBa
 		
 		/*===========================Constructor==============================*/
 		
@@ -62,6 +77,11 @@ package eu.ecb.core.view.filter
 			super(direction);
 			_checkBoxes = new ArrayCollection();
 			_checkBoxesContainers = new ArrayCollection();
+			_columns = new ArrayCollection(); //SBa
+			_numColumns = 1; //SBa
+			_greyOutCodes = false; //SBa
+			_codesInitialised = false; //SBa
+			_colorCheckboxesDirection = "horizontal"; //SBa
 		}
 		
 		/*============================Accessors===============================*/
@@ -73,6 +93,9 @@ package eu.ecb.core.view.filter
 			return true;
 		}
 		
+		public function get greyOutCodes():Boolean{
+			return _greyOutCodes;
+		}
 		
 		/**
 		 * Whether a vertical color bar should be added to the checkbox, 
@@ -82,7 +105,73 @@ package eu.ecb.core.view.filter
 		 */
 		public function set colouredCheckBoxes(value:Boolean):void {
 			_coloredCheckboxes = value;
-		}		
+		}	
+		
+		/**
+		 * Whether the colour associated with a particular code should be based
+		 * on the code name. If false, then it will just be based on 
+		 * the index of the code in the array.
+		 * 
+		 * @param value
+		 */
+		public function set colorByCode(value:Boolean):void {
+		    _colorByCode = value; //SBa
+		}
+		
+		/**
+		 * Set the number of columns the codes should appear in.
+		 * 
+		 * @param value
+		 */
+		public function set numColumns(value:Number):void {
+		    _numColumns = value; //SBa
+		}
+		
+		public function set greyOutCodes(value:Boolean): void {
+		    _greyOutCodes = value;
+		}
+		
+		/**
+		 * When checkboxes are coloured, the colour indicator can 
+		 * appear on a horizontal or vertical orientation to 
+		 * the checkbox.
+		 * 
+		 * @param value currently "vertical" or "horizontal"
+		 */
+		public function set colorCheckboxesDirection(value:String): void {
+		    _colorCheckboxesDirection = value;
+		}
+		
+		/**
+		 * We override the super function, which just displays all codes and
+		 * all of them as selected. Here we want to grey out any codes
+		 * not specified initially, but otherwise leave the interface intact.
+		 * 
+		 * This is however an option. By default, the super will be called. 
+		 * 
+		 * @param codes
+		 */
+		override public function set displayedCodes(codes:ArrayCollection):void
+		{
+			if (!_greyOutCodes || !_codesInitialised) {
+			    _codesInitialised = true;
+			    super.displayedCodes = codes;
+			    return;
+			}
+			
+			for each (var checkbox:CheckBox in _checkBoxes) {
+			    var active:Boolean = false;
+			    
+			    for each (var codeID:String in codes) {
+			        if (codeID == checkbox.id) {
+			            active = true;
+			            break;
+			        }
+			    }
+			    
+			    checkbox.enabled = active;
+			}
+		}
 		
 		/*==========================Protected methods========================*/
 		
@@ -111,8 +200,15 @@ package eu.ecb.core.view.filter
 					cb.removeEventListener(MouseEvent.CLICK,
 						checkBoxClickHandler);
 					container.removeAllChildren();
-					this.removeChild(container);
+					//this.removeChild(container); SBa - container is now a child of the column
 				}
+				
+				//start SBa
+				for each (var col:VBox in _columns) {
+				    col.removeAllChildren();
+				    this.removeChild(col);
+				}
+				//end SBa
 				
 				_checkBoxes.removeAll();
 				_checkBoxesContainers.removeAll();
@@ -129,18 +225,32 @@ package eu.ecb.core.view.filter
 			
 			var checkBox:CheckBox;
 			var index:uint = 0;
+			var columns:ArrayCollection = new ArrayCollection();
+			
+			for (var i:int = 0; i < _numColumns; i++) {
+			    columns.addItem(new VBox());
+			}
 			
 			for each (var displayedCode:String in displayCodes) {
 				var code:Code = codes.codes.getCode(displayedCode);
-		
+				
 				if (code != null) {
-					var container:Box = new HBox();		
-					container.setStyle("verticalAlign","middle");
+					var container:Box;
+					
+					if (_colorCheckboxesDirection == "vertical") {
+					    container = new VBox();
+					    container.setStyle("verticalAlign", "top");
+					}
+					else {
+					    container = new HBox();	
+					    container.setStyle("verticalAlign","middle");
+					}
 					
 					checkBox = new CheckBox();
 					checkBox.label = (code.description.
 						localisedStrings.getItemAt(0) as LocalisedString).label;
 					checkBox.styleName = "textBox";
+					checkBox.id = code.id; //added by SBa to ease greying out
 					checkBox.addEventListener(MouseEvent.CLICK,
 						checkBoxClickHandler,false,0,true);
 					
@@ -149,32 +259,107 @@ package eu.ecb.core.view.filter
 					}
 					
 					if (_coloredCheckboxes) {
-						
 						//TODO: coloring should rely on series key rather than
 						//indexes in case the series are sorted differently
-						var codeColor:uint = SeriesColors.getColors().
-						getItemAt(index) as uint;
+						//(but... can this be done, as we don't know the series here???)
 						
-						var verticalLine:VRule = new VRule();
-						verticalLine.setStyle("strokeColor",codeColor);
-						verticalLine.setStyle("shadowColor",codeColor);
-						verticalLine.opaqueBackground = codeColor;
-						verticalLine.setStyle("strokeWidth",4);
-						verticalLine.height=19;
-						container.addChild(verticalLine);
+						//start SBa
+						//var codeColor:uint = SeriesColors.getColors().getItemAt(index) as uint;
+						var codeColor:uint;
+						var line:LineSeries = new LineSeries();
+						
+						if (_colorByCode)
+						{
+						    codeColor = SeriesColors.getColorForCode(code.id);
+						        
+						    //make a fake time series to produce a straight line    
+						    var zzData:ArrayCollection = new ArrayCollection([
+                                {val:0},
+                                {val:0}
+                            ]);
+
+						    var lineChart:LineChart = new LineChart();
+						    lineChart.dataProvider = zzData;
+						    lineChart.height = 8;
+						    lineChart.width = 100;
+						    lineChart.setStyle("paddingLeft", -16);
+						    //this makes the line come down close to the text
+						    lineChart.setStyle("paddingBottom", -14); 
+						    
+						    checkBox.setStyle("paddingTop", -5);
+						    //without this, hanging g q etc letters get cut off
+						    checkBox.setStyle("paddingBottom", 3); 
+                             
+				            //hide axes
+            				var horizontalAxisRenderer:AxisRenderer = new AxisRenderer();
+            				lineChart.horizontalAxisRenderer = horizontalAxisRenderer;
+            				lineChart.horizontalAxisRenderer.visible = false;
+            				var verticalAxisRenderer:AxisRenderer = new AxisRenderer();
+            				verticalAxisRenderer.placement = "top";
+            				verticalAxisRenderer.alpha = 0;
+            				lineChart.verticalAxisRenderer = verticalAxisRenderer;
+            				lineChart.verticalAxisRenderer.visible = false;
+            				
+            				//hide grid lines
+                            lineChart.backgroundElements = new Array();
+				            
+				            //hide series line shadow
+				            lineChart.seriesFilters = new Array();
+				
+						    line.yField = "val";
+						    line.dataProvider = zzData;
+
+						    var cf:ClassFactory = new ClassFactory(qs.charts.DashedLineRenderer);
+                            cf.properties = SeriesColors.getPatternForCode(code.id);
+                            line.setStyle("lineSegmentRenderer", cf);
+                            line.interpolateValues = true;
+                            
+                            var arr:Array = new Array();
+                            arr.push(line);
+                            lineChart.series = arr;
+                            
+                            var stroke:Stroke = new Stroke();
+						    stroke.color = codeColor; 
+						    
+						    var weight:uint = SeriesColors.getWeightForCode(code.id);
+						    stroke.weight = weight == 1 ? 2 : weight;
+						    line.setStyle("lineStroke", stroke);
+						    
+						    container.addChild(lineChart);
+						}
+						else
+						{
+						    codeColor = SeriesColors.getColorByIndex(index); 
+						    var verticalLine:VRule = new VRule();
+    						verticalLine.setStyle("strokeColor", codeColor);
+    						verticalLine.setStyle("shadowColor", codeColor);
+    						verticalLine.opaqueBackground = codeColor;
+    						verticalLine.setStyle("strokeWidth", 4);
+    						verticalLine.height=19;
+    						
+    						container.addChild(verticalLine);
+						}
 					}
 					
 					_checkBoxes.addItem(checkBox);
 					container.addChild(checkBox);
-					_checkBoxesContainers.addItem(container);
+				    _checkBoxesContainers.addItem(container);
+				    this.addChild(container); 
 					
-					this.addChild(container);
+					(columns.getItemAt(index % _numColumns) as VBox).addChild(container); //SBa
 					
 					index++;
 				}
 				else {
 					throw new ArgumentError("Unknown code " + displayedCode);
 				}
+			}
+			
+			this.setStyle("verticalAlign","top");
+			
+			for each (var col:VBox in columns) {
+			    this.addChild(col);
+			    _columns.addItem(col);
 			}
 		}
 		

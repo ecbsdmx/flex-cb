@@ -56,6 +56,7 @@ package eu.ecb.core.view.chart
 	import mx.charts.events.ChartItemEvent;
 	import mx.charts.series.LineSeries;
 	import mx.collections.IViewCursor;
+	import mx.core.ClassFactory;
 	import mx.effects.Effect;
 	import mx.effects.Fade;
 	import mx.effects.easing.Quadratic;
@@ -67,9 +68,13 @@ package eu.ecb.core.view.chart
 	import org.sdmx.model.v2.reporting.dataset.DataSet;
 	import org.sdmx.model.v2.reporting.dataset.GroupKey;
 	import org.sdmx.model.v2.reporting.dataset.GroupKeysCollection;
+	import org.sdmx.model.v2.reporting.dataset.KeyValue;
 	import org.sdmx.model.v2.reporting.dataset.TimePeriod;
 	import org.sdmx.model.v2.reporting.dataset.TimePeriodsCollection;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
+	import org.sdmx.model.v2.reporting.dataset.TimeseriesKeysCollection;
+	
+	import qs.charts.DashedLineRenderer;
 
 	/**
 	 * Event triggered when the chart is dragged in the left or right direction
@@ -82,6 +87,7 @@ package eu.ecb.core.view.chart
 	 * Base class to create line charts on the ECB website. 
 	 * 
 	 * @author Xavier Sosnovsky
+	 * @author Steven Bagshaw
 	 */ 
 	[ResourceBundle("flex_cb_mvc_lang")] 
 	public class ECBLineChart extends ECBChart {
@@ -164,6 +170,13 @@ package eu.ecb.core.view.chart
 		private var _lineSeriesData:Object;
 		private var _lineSeriesIndex:uint;
 		private var _colorBySeriesKeys:Boolean;
+		
+		/**
+		 * if we are colouring a series based on a particular code
+		 * value, then here we specify which dimension the codes
+		 * belong to
+		 */
+		private var _colorByCodeDimension:String;
 		
 		/*===========================Constructor==============================*/
 
@@ -302,6 +315,17 @@ package eu.ecb.core.view.chart
 			_colorBySeriesKeys = flag; 
 		}
 		
+		/**
+		 * When true, the series line will have a colour that is
+		 * dependent on the code value of the specified dimension
+		 * 
+		 * @param dimension a dimension ID
+		 */
+		public function set colorByCodeDimension(dimension:String):void 
+		{
+			_colorByCodeDimension = dimension; 
+		}
+		
 		/*==========================Public methods============================*/
 		
 		public function handleMovieStarted(event:Event):void
@@ -380,7 +404,9 @@ package eu.ecb.core.view.chart
 				gridLines.setStyle("horizontalOriginStroke", stroke);
 				gridLines.setStyle("horizontalStroke", stroke);
 				gridLines.setStyle("verticalOriginStroke", stroke);
-				gridLines.setStyle("verticalStroke", stroke);												
+				gridLines.setStyle("verticalStroke", stroke);										
+
+		
 				_chart.backgroundElements = [gridLines];
 				
 				var horizontalAxisRenderer:AxisRenderer = new AxisRenderer();	
@@ -449,62 +475,134 @@ package eu.ecb.core.view.chart
 				
 				var isChanged:Boolean = false
 				var allLineSeries:Array = _chart.series;
-				var availableLineSeries:int = allLineSeries.length - 
+					
+			    //SBa - changed to avoid double-handling of series when
+			    //some series would remain on screen
+			    /*var availableLineSeries:int = allLineSeries.length - 
 					_filteredDataSet.timeseriesKeys.length;
-				if (availableLineSeries < 0) {
+			    if (availableLineSeries < 0) {
 					createLineSeries(availableLineSeries, allLineSeries);
 					isChanged = true;
 				} else if (availableLineSeries > 0) {
 					deleteLineSeries(availableLineSeries, allLineSeries);
 					isChanged = true;
-				}
+				}*/
+				
+			    isChanged = refreshLineSeries(allLineSeries, _filteredDataSet.timeseriesKeys);
+				//end SBa
 				
 				for (var i:uint = 0; i < _filteredDataSet.timeseriesKeys.length; 
 					i++) {
-					var isSeriesChanged:Boolean = true;	
+					var isSeriesChanged:Boolean = false; //SBa - was true, but that seems wrong	
 					var curSeries:TimeseriesKey = 
 						_filteredDataSet.timeseriesKeys.getItemAt(i) 
 						as TimeseriesKey;	
 					var periods:TimePeriodsCollection = curSeries.timePeriods; 	
 					
-					if (allLineSeries[i].dataProvider != periods) {
+					//SBa - here we had a lot of double handling. What would happen
+					//is that the sequence of the series in _filteredDataSet would
+					//change. Then the sequence of allLineSeries would no longer
+					//correspond and so series would be flagged as changed, because
+					//allLineSeries[i] no longer matched. Therefore, the series
+					//would be reprocessed, even though it had already been done - 
+					//it was simply now later in the array. I changed the logic 
+					//to stop this. Hope it works!
+					/*if (allLineSeries[i].dataProvider != periods) {
 						allLineSeries[i].dataProvider = periods;
 						_lineSeriesData[(allLineSeries[i] as LineSeries).id] = 
 							curSeries;
 						isChanged = true;
 						isSeriesChanged = true;
-					} 
+					}*/
+					var thisLineSeriesIndex:int = -1;
+					
+					for (var j:int = 0; j < allLineSeries.length; j++) {
+					    if (allLineSeries[j].uid == curSeries.seriesKey)
+					    {
+					        thisLineSeriesIndex = j;
+					        break;
+					    }
+					}
+					
+					if (thisLineSeriesIndex < 0) {
+					    //series is new. Put it into the first empty slot.
+					    for (var j:int = 0; j < allLineSeries.length; j++) {
+    					    if (allLineSeries[j].uid == null)
+    					    {
+    					        thisLineSeriesIndex = j;
+    					        break;
+    					    }
+    					}
+					}
+					
+					if (allLineSeries[thisLineSeriesIndex].dataProvider != periods) {
+					    allLineSeries[thisLineSeriesIndex].dataProvider = periods;
+						//this just helps us to identify the series - we use the uid field out of convenience
+						//because it's not being used for anything else at the moment
+						(allLineSeries[thisLineSeriesIndex] as LineSeries).uid = curSeries.seriesKey; 
+						//_lineSeriesData[(allLineSeries[thisLineSeriesIndex] as LineSeries).id] = curSeries; done in refreshLineSeries()
+						isChanged = true;
+						isSeriesChanged = true;
+					   
+					}
+					//end SBa
 					
 					if (isSeriesChanged) {	
 						var axisStroke:Stroke = new Stroke();
 						if (_indexColor != null) {
-							axisStroke.color = 
+							axisStroke.color = SeriesColors.getColorByIndex(i); //SBa
+							/*axisStroke.color = 
 								(SeriesColors.getColors().length > i) ?
 								SeriesColors.getColors().getItemAt(
 								_indexColor[i])	as uint : Math.round(
-								Math.random()*0xFFFFFF);
+								Math.random()*0xFFFFFF);*/
 						} else {
-							if (_colorBySeriesKeys) {
+							if (null != _colorByCodeDimension) { //SBa
+							    for each (var dim:KeyValue in curSeries.keyValues) {
+                    				if (dim.valueFor.conceptIdentity.id == _colorByCodeDimension) {
+                    					axisStroke.color = SeriesColors.getColorForCode(dim.value.id);
+                    				}
+                    			}
+							}
+							else if (_colorBySeriesKeys) {
 								axisStroke.color = SeriesColors.
 									getColorForSeriesKey(curSeries.seriesKey);
-							} else {
-								axisStroke.color = 
-									(SeriesColors.getColors().length > i) ?
+							} 
+							else {
+								axisStroke.color = SeriesColors.getColorByIndex(i); //SBa
+								
+									/*(SeriesColors.getColors().length > i) ?
 									SeriesColors.getColors().getItemAt(i) 
 										as uint :
-										Math.round( Math.random()*0xFFFFFF );
+										Math.round( Math.random()*0xFFFFFF );*/
 							}
 						}
+						
+						//start SBa
+						var weightMultiplier:uint = 1;
+						
+						if (null != _colorByCodeDimension)
+						{
+						    //fatness
+						    weightMultiplier = SeriesColors.getWeightForCode(dim.value.id);
+						    
+						    //dashedness
+						    var cf:ClassFactory = new ClassFactory(qs.charts.DashedLineRenderer);
+                            cf.properties = SeriesColors.getPatternForCode(dim.value.id);
+                            (allLineSeries[thisLineSeriesIndex] as LineSeries).setStyle("lineSegmentRenderer", cf);
+                        }
+						//end SBa
+						
 						if (null != _selectedDataSet &&	(_selectedDataSet as
 							DataSet).timeseriesKeys.contains(curSeries)) 
 						{
-							axisStroke.weight = 2;	
+							axisStroke.weight = 2 * weightMultiplier; //added weightMultiplier SBa
 						} else { 
-							axisStroke.weight = 1;
+							axisStroke.weight = 1 * weightMultiplier; //added weightMultiplier SBa
 						}
-						(allLineSeries[i] as LineSeries).setStyle("lineStroke", 
-							axisStroke);
-					
+						
+						(allLineSeries[thisLineSeriesIndex] as LineSeries).setStyle("lineStroke", axisStroke);
+						
 						if (_showSeriesTitle) {
 							if (_formatter is AttributesSeriesTitleFormatter && 
 								(_formatter as AttributesSeriesTitleFormatter).
@@ -514,7 +612,7 @@ package eu.ecb.core.view.chart
 									getGroupsForTimeseries(curSeries).
 									getItemAt(0) as GroupKey;
 							}	
-							allLineSeries[i].displayName = 
+							allLineSeries[thisLineSeriesIndex].displayName = 
 								_formatter.getSeriesTitle(curSeries);	
 						}
 					}
@@ -592,8 +690,9 @@ package eu.ecb.core.view.chart
 					_dateFormatter.format(obs.timeValue) + ":</b> " + 
 					"<font color='#000000'>";
 			if (null != observationValueFormatter) {
-				var ts:TimeseriesKey = _lineSeriesData[(data.element as 
-					LineSeries).id] as TimeseriesKey;
+				//var ts:TimeseriesKey = _lineSeriesData[(data.element as 
+				//	LineSeries).id] as TimeseriesKey;
+				var ts:TimeseriesKey = _lineSeriesData[(data.element as LineSeries).uid] as TimeseriesKey;
 				observationValueFormatter.series = ts;
 				if ((_filteredDataSet.groupKeys.getGroupsForTimeseries(ts)
 					as GroupKeysCollection).length > 0) {
@@ -973,13 +1072,17 @@ package eu.ecb.core.view.chart
 				 var delta:Number = (this.mouseX - _mouseXRef)/_chart.width;
 				
 				 var fullFirstMillis:Number=(_referenceSeries.timePeriods.getItemAt(0) as TimePeriod).timeValue.time;
-				 var fullLastMillis:Number=(_referenceSeries.timePeriods.getItemAt(_referenceSeries.timePeriods.length-1) as TimePeriod).timeValue.time;
+				 var fullLastMillis:Number=(_referenceSeries.timePeriods.getItemAt(_referenceSeries.timePeriods.length-1) as 
+
+TimePeriod).timeValue.time;
 				 var fullPeriodMillis:Number = fullLastMillis - fullFirstMillis;
 			 
 			 	 var filteredPeriodMillis:Number = _dragFilteredEndDate.time - _dragFilteredStartDate.time;
 			 
 				 var currentPercentage:Number = filteredPeriodMillis/fullPeriodMillis;
-				 var finalPercentage:Number=-delta*currentPercentage+((_dragFilteredEndDate.time-fullFirstMillis)/fullPeriodMillis) ;
+				 var finalPercentage:Number=-delta*currentPercentage+((_dragFilteredEndDate.time-fullFirstMillis)/fullPeriodMillis) 
+
+;
 				 dispatchEvent(new DataEvent(ECBChartEvents.CHART_DRAGGED,false, false, String(finalPercentage*100)));
 			} else if (event.currentTarget == _chart && _showECBToolTip) {
 				displayObsData(event);
@@ -1005,7 +1108,7 @@ package eu.ecb.core.view.chart
 			event = null;
 		}
 		
-		private function createLineSeries(availableLineSeries:int, 
+		/*private function createLineSeries(availableLineSeries:int, 
 			allLineSeries:Array):void
 		{
 			if (null == _effect && _showEffect) {
@@ -1027,16 +1130,95 @@ package eu.ecb.core.view.chart
 				allLineSeries.push(lineSeries);
 				_lineSeriesIndex++;
 			}
-		}
+		}*/
 		
 		
-		private function deleteLineSeries(availableLineSeries:int, 
+		/*private function deleteLineSeries(availableLineSeries:int, 
 			allLineSeries:Array):void
 		{
 			while (availableLineSeries > 0) {
 				allLineSeries.pop();	
 				availableLineSeries--;
 			}
+		}*/
+		
+		/**
+		 * Delete line series that are no longer present.
+		 * Add new ones.
+		 * Retain ones that remain present.
+		 * 
+		 * @param allLineSeries current set of series
+		 * @param validSeries series to be displayed
+		 * 
+		 * @return true if there were any changes
+		 */
+		private function refreshLineSeries(allLineSeries:Array, validSeries:TimeseriesKeysCollection):Boolean
+		{
+		    var index:int = 0;
+	        var changed:Boolean = false;
+	        //make a copy to allow us to remove elements from the array and still loop OK
+	        var tempAllLines:Array = allLineSeries.concat();
+		    
+		    //remove
+			for each (var line:LineSeries in tempAllLines) {
+			    var found:Boolean = false;
+			    
+			    for each (var series:TimeseriesKey in validSeries) {
+			        if (series.seriesKey == line.uid) {
+			            found = true;
+			            break;
+			        }
+			    }
+			    
+			    if (!found) {
+			        allLineSeries.splice(index, 1);
+			        _lineSeriesData[line.id] = null;
+			        _lineSeriesIndex--;
+			        changed = true;
+			    }
+			    else    
+			        index++;
+			}
+			
+			//add new series
+			for each (var series2:TimeseriesKey in validSeries) {
+			    var found:Boolean = false;
+			    
+			    for each (var line:LineSeries in allLineSeries) {
+    		        if (series2.seriesKey == line.uid) {
+    		            found = true;
+    		            break;
+    		        }
+    		    }
+    		    
+    		    if (!found) {
+    		        if (null == _effect && _showEffect) {
+        				_effect = new SeriesInterpolate();
+        				_effect.duration = 800;
+        				_effect.minimumElementDuration = 1;
+        				_effect.easingFunction = Quadratic.easeOut;
+        				_effect.elementOffset = 1;
+        			}
+        			
+    				var lineSeries:LineSeries = new LineSeries();
+    				lineSeries.id = "lineSeriesChart" + _lineSeriesIndex;
+    				lineSeries.yField = "observationValue";
+    				lineSeries.xField = "timeValue";
+    				lineSeries.filterData = true;
+
+    				if (_showEffect)
+    					lineSeries.setStyle("showDataEffect", _effect);
+
+                    //use this to identify the series in the UI component
+    				lineSeries.uid = series2.seriesKey; 
+    				allLineSeries.push(lineSeries);
+    				_lineSeriesData[lineSeries.uid] = series2;
+    				_lineSeriesIndex++;
+    				changed = true;
+    		    }
+		    }
+			
+			return changed;
 		}
 		
 		private function findObservations(period:String):Array

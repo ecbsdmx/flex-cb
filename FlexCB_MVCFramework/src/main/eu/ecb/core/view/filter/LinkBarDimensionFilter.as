@@ -46,12 +46,17 @@ package eu.ecb.core.view.filter
 	 * as link bars.
 	 *  
 	 * @author Rok Povse
+	 * @author Steven Bagshaw
 	 */
 	public class LinkBarDimensionFilter extends DimensionFilter
 	{
 		/*==============================Fields================================*/
 		
 		private var _linkBar:LinkBar;
+		private var _activeColor:String = "#C0C0C0"; //ECB default
+		private var _inactiveColor:String = "#0031AD"; //ECB default
+		private var _hoverColor:String; 
+		private var _hideUnderlineOnHoverOverActive:Boolean = false; //ECB default
 		
 		/*===========================Constructor==============================*/
 		
@@ -67,6 +72,29 @@ package eu.ecb.core.view.filter
 		 */ 
 		override public function get allowMultipleSelection():Boolean{
 			return false;
+		}
+		
+		public function set activeColor(value:String):void {
+		    _activeColor = value;
+		}
+		
+		public function set inactiveColor(value:String):void {
+		    _inactiveColor = value;
+		}
+		
+		public function set hoverColor(value:String):void {
+		    _hoverColor = value;
+		}
+		
+		/**
+		 * By default, the currently active is underlined on
+		 * mouse hover. This value can be set to true to stop 
+		 * this behaviour.
+		 * 
+		 * param value
+		 */
+		public function set hideUnderlineOnHoverOverActive(value:Boolean):void {
+		    _hideUnderlineOnHoverOverActive = value;
 		}
 		
 		/*==========================Protected methods========================*/
@@ -132,35 +160,77 @@ package eu.ecb.core.view.filter
 				}
 			}
 			
-			_linkBar.setStyle("paddingLeft",5);
-			_linkBar.dataProvider = items;				
+			_linkBar.setStyle("paddingLeft", 5);
+			_linkBar.setStyle("color", _activeColor);
+			_linkBar.setStyle("disabledColor", _inactiveColor);
+			
+			if (_hoverColor)
+			    _linkBar.setStyle("textRollOverColor", _hoverColor);
+			    
+			_linkBar.dataProvider = items;	
 		
-			this.addChild(_linkBar)
+			this.addChild(_linkBar);
 		}
 		
 		private function handleNewChild(event:ChildExistenceChangedEvent):void 
 		{
 			event.stopImmediatePropagation();
+			var button:LinkButton = event.relatedObject as LinkButton; //SBa
 			event = null;
 			
-			 var kf:KeyFamily = _keyFamilies.getItemAt(0) as KeyFamily;
-			 var dim:Dimension = findDimensionByDimensionId(kf,_dimensionId);
-			 var list:CodeList = dim.localRepresentation as CodeList;
+			//changed by SBa - we were previously looping through all links
+			//to find the currently selected every time one was added
+			if (_linkBar.numChildren - 1 == getSelectedCodeIndex())
+				button.setStyle("color", _activeColor);
+            else
+                button.setStyle("color", _inactiveColor);
+                
+			/* var index:int = 0;
 			 
-			 var codeIndex:int = list.codes.getItemIndex(list.codes.getCode(
-			 _selectedCodes.getItemAt(0) as String));
+			for each (var button:LinkButton in _linkBar.getChildren()) {
+    			if (index == codeIndex)
+    				button.setStyle("color", _activeColor);
+                else
+                    button.setStyle("color", _inactiveColor);
+                    
+                index++;
+            } */
+		}
+		
+		/**
+		 * Convenience function to determine which is the currently selected code.
+		 * It is needed because the LinkBar selectedIndex is not set (or able to 
+		 * be set) correctly on initial startup.
+		 * 
+		 * @return int
+		 */
+		private function getSelectedCodeIndex():int
+		{
+		    if (_linkBar && _linkBar.selectedIndex >= 0)
+		        return _linkBar.selectedIndex;
+		        
+		    var kf:KeyFamily = _keyFamilies.getItemAt(0) as KeyFamily;
+			var dim:Dimension = findDimensionByDimensionId(kf, _dimensionId);
+			var list:CodeList = dim.localRepresentation as CodeList;
 			 
-			if (_linkBar.getChildren().length - 1 == codeIndex) {
-				(_linkBar.getChildAt(codeIndex) as 
-					LinkButton).setStyle("color", "#C0C0C0");
-			} 
+			return list.codes.getItemIndex(list.codes.getCode(_selectedCodes.getItemAt(0) as String));
 		}
 		
 		private function onHoverOverUnderline(event:MouseEvent):void 
 		{
 			if (event.target is LinkButton) {
-		    	event.target.setStyle("textDecoration", "underline");
+			    var linkBar:LinkBar = event.currentTarget as LinkBar;
+			    var codeSelected:Boolean = linkBar.getChildAt(getSelectedCodeIndex()) == event.target;
+			    
+			    if (!codeSelected || !_hideUnderlineOnHoverOverActive)
+			    {
+		    	    event.target.setStyle("textDecoration", "underline");
+		    	    event.target.setStyle("textRollOverColor", _hoverColor);
+		    	}
+		    	else
+		    	    event.target.setStyle("textRollOverColor", _activeColor);
 		 	}
+		 	
 		 	event.stopImmediatePropagation();
 			event = null;
 	    }
@@ -180,7 +250,7 @@ package eu.ecb.core.view.filter
 	    	for (var i:uint = 0; i < _linkBar.getChildren().length; i++) {
 				var button:LinkButton = _linkBar.getChildAt(i) as LinkButton;
 				button.setStyle("color", 
-					(i == event.index) ? "#C0C0C0" : "#0031AD");					
+					(i == event.index) ? _activeColor : _inactiveColor);					
 			}
 			event = null;
 			
