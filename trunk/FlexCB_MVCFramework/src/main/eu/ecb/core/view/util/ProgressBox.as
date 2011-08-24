@@ -32,11 +32,14 @@ package eu.ecb.core.view.util
 	
 	import mx.containers.VBox;
 	import mx.controls.ProgressBar;
+	import mx.skins.halo.ProgressIndeterminateSkin;
+	import flash.utils.getDefinitionByName;
 
 	/**
 	 * A box containing a progress bar.
 	 *  
 	 * @author Xavier Sosnovsky
+	 * @author Steven Bagshaw
 	 */
 	public class ProgressBox extends VBox
 	{
@@ -82,6 +85,15 @@ package eu.ecb.core.view.util
 			
 			if (null == _progressBar) {
 				_progressBar = new ProgressBar();
+				
+				//next 4 lines added, because in certain contexts (i.e. one of my projects)
+				//the default styles are not getting registered, which causes a crash
+				//see http://tech.groups.yahoo.com/group/flexcoders/message/158663 - SBa 20110720
+				_progressBar.setStyle("maskSkin", getDefinitionByName("mx.skins.halo.ProgressMaskSkin") as Class);
+				_progressBar.setStyle("barSkin", getDefinitionByName("mx.skins.halo.ProgressBarSkin") as Class);
+				_progressBar.setStyle("trackSkin", getDefinitionByName("mx.skins.halo.ProgressTrackSkin") as Class);
+				_progressBar.setStyle("indeterminateSkin", getDefinitionByName("mx.skins.halo.ProgressIndeterminateSkin") as Class);
+				
 				_progressBar.mode = "manual";
 				_progressBar.label = "0% Complete";
 				addChild(_progressBar);

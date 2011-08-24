@@ -49,6 +49,7 @@ package eu.ecb.core.util.helper
 	 * Base implementation of the ISeriesMatcher interface.
 	 * 
 	 * @author Xavier Sosnovsky
+	 * @author Steven Bagshaw
 	 */
 	public class SeriesMatcher extends EventDispatcher implements ISeriesMatcher
 	{
@@ -67,8 +68,8 @@ package eu.ecb.core.util.helper
 		/*==============================Fields================================*/
 		
 		private var _model:ISDMXServiceModel;
-		private var _matchingSeries:ArrayCollection;
-		private var _dimensionFilters:ArrayCollection;
+		protected var _matchingSeries:ArrayCollection;
+		protected var _dimensionFilters:ArrayCollection;
 		
 		/*===========================Constructor==============================*/
 		
@@ -123,20 +124,9 @@ package eu.ecb.core.util.helper
 			updateMatchingSeries();
 		}
 		
-		/*==========================Private methods===========================*/
+		/*==========================Protected methods============================*/
 		
-		private function updateMatchingSeries():void
-		{
-			_matchingSeries = identifySeriesKeysPool();
-			
-			for each (var filter:IDimensionFilter in _dimensionFilters) {
-				computeSeries(filter);
-			}
-			
-			dispatchEvent(new Event(MATCHING_SERIES_UPDATED));
-		}
-		
-		private function identifySeriesKeysPool():ArrayCollection {
+		protected function identifySeriesKeysPool():ArrayCollection {
 			var targetKeys:ArrayCollection = new ArrayCollection();
 			for each (var series:TimeseriesKey in 
 				_model.dataSet.timeseriesKeys) {
@@ -145,20 +135,14 @@ package eu.ecb.core.util.helper
 			return targetKeys;
 		}
 		
-		private function computeSeries(filter:IDimensionFilter):void
-		{
-			_matchingSeries = identifyMatchingSubset(filter, 
-				_matchingSeries,filter.dimensionId,filter.selectedCodes);
-		}
-		
-		private function identifyDimensionPosition(dimensionId:String):uint
+		protected function identifyDimensionPosition(dimensionId:String):uint
 		{
 			var kf:KeyFamily = _model.allKeyFamilies.getItemAt(0) as KeyFamily;
 			return kf.keyDescriptor.getItemIndex(
 				kf.keyDescriptor.getDimension(dimensionId));
 		}
 		
-		private function updateDimensionFilters(filter:IDimensionFilter):void
+		protected function updateDimensionFilters(filter:IDimensionFilter):void
 		{
 			var targetKeys:ArrayCollection = identifySeriesKeysPool();
 			var matchingSubset:ArrayCollection = identifyMatchingSubset(filter, 
@@ -170,7 +154,7 @@ package eu.ecb.core.util.helper
 			}
 		}
 		
-		private function identifyMatchingSubset(filter:IDimensionFilter, 
+		protected function identifyMatchingSubset(filter:IDimensionFilter, 
 			targetKeys:ArrayCollection, dimensionId:String,
 			codes:ArrayCollection):ArrayCollection
 		{
@@ -186,7 +170,7 @@ package eu.ecb.core.util.helper
 			return matchingSubset;
 		}
 		
-		private function updateFilter(filter:IDimensionFilter, 
+		protected function updateFilter(filter:IDimensionFilter, 
 			validKeys:ArrayCollection):void
 		{
 			var dimPos:uint = identifyDimensionPosition(filter.dimensionId);
@@ -204,8 +188,18 @@ package eu.ecb.core.util.helper
 			}
 		}
 		
-		private function equalsCodelists(sourceList:ArrayCollection, 
-			targetList:ArrayCollection):Boolean
+		protected function updateMatchingSeries():void
+		{
+			_matchingSeries = identifySeriesKeysPool();
+			
+			for each (var filter:IDimensionFilter in _dimensionFilters) {
+				computeSeries(filter);
+			}
+			
+			dispatchEvent(new Event(MATCHING_SERIES_UPDATED));
+		}
+		
+		protected function equalsCodelists(sourceList:ArrayCollection, targetList:ArrayCollection):Boolean
 		{
 			var equalLists:Boolean = true;
 			for each (var item:String in targetList) {
@@ -216,5 +210,14 @@ package eu.ecb.core.util.helper
 			}
 			return equalLists;
 		}
+		
+		/*==========================Private methods===========================*/
+		
+		private function computeSeries(filter:IDimensionFilter):void
+		{
+			_matchingSeries = identifyMatchingSubset(filter, 
+				_matchingSeries,filter.dimensionId,filter.selectedCodes);
+		}
+		
 	}
 }

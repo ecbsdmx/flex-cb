@@ -38,25 +38,28 @@ package eu.ecb.core.view.panel
 	import eu.ecb.core.model.ISDMXViewModel;
 	import eu.ecb.core.util.config.BasicConfigurationParser;
 	import eu.ecb.core.util.config.IConfigurationParser;
-	import eu.ecb.core.util.formatter.observation.IObservationFormatter;
 	import eu.ecb.core.util.formatter.series.ISeriesTitleFormatter;
 	import eu.ecb.core.util.helper.ISeriesMatcher;
 	import eu.ecb.core.util.net.locator.ISeriesLocator;
 	import eu.ecb.core.view.BaseSDMXMediator;
+	import eu.ecb.core.view.ISDMXView;
 	import eu.ecb.core.view.util.ProgressBox;
 	
-	import mx.collections.ArrayCollection;
-	import mx.managers.PopUpManager;
-	
+	import flash.events.DataEvent;
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
 	import flash.net.URLRequest;
+	
+	import mx.collections.ArrayCollection;
+	import mx.core.Container;
+	import mx.managers.PopUpManager;
 	
 	/**
 	 * Generic Flex-CB panel, driven by an XML configuration file. 
 	 * 
 	 * @author Xavier Sosnovsky
 	 * @author Rok Povse
+	 * @author Steven Bagshaw
 	 */
 	public class GenericPanel extends BaseSDMXMediator implements IInvoker
 	{
@@ -133,6 +136,42 @@ package eu.ecb.core.view.panel
 						command.execute();	
 					}	
 				}
+			}
+		}
+		
+		/**
+		 * This event is called when certain UI components are to be hidden.
+		 * 
+		 * @param event this is a <code>DataEvent</code> and
+		 * the value of the data is a comma-delimited list of components by ID.
+		 */
+		public function handleComponentsToHide(event:DataEvent):void
+		{
+			if (event.data)
+			{
+			    for each(var componentID:String in event.data.split(","))
+			    {
+			        var view:ISDMXView = _views[componentID]["view"] as ISDMXView;
+			        view.setVisible(false);
+			        view.includeInLayout = false;
+			    }
+			}
+		}
+		
+		/**
+		 * This event is called when certain UI components were hidden
+		 * and should no longer be so.
+		 * 
+		 * @param event this is a <code>DataEvent</code> and
+		 * the value of the data is a single component ID.
+		 */
+		public function handleComponentToUnhide(event:DataEvent):void
+		{
+			if (event.data)
+			{
+			    var view:ISDMXView = _views[event.data]["view"] as ISDMXView;
+			    view.setVisible(true);
+			    view.includeInLayout = true;
 			}
 		}
 		

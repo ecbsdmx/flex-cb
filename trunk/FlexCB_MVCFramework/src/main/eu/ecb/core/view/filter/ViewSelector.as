@@ -45,6 +45,10 @@ package eu.ecb.core.view.filter
 	 * @eventType eu.ecb.core.view.filter.ViewSelector.SELECTED_VIEW_CHANGED
 	 */
 	[Event(name="stackItemSelected", type="flash.events.DataEvent")]
+	
+	[Event(name="componentsToHide", type="flash.events.DataEvent")]
+	
+	[Event(name="componentToUnhide", type="flash.events.DataEvent")]
 
 	/**
 	 * This component displays a link bar with all possible views of the data
@@ -57,6 +61,7 @@ package eu.ecb.core.view.filter
 	 * ("selectedViewChanged"), containing the new desired view.
 	 * 
 	 * @author Xavier Sosnovsky 
+	 * @author Steven Bagshaw
 	 */
 	public class ViewSelector extends BaseSDMXView
 	{
@@ -72,6 +77,9 @@ package eu.ecb.core.view.filter
 		public static const SELECTED_VIEW_CHANGED:String = 
 			"stackItemSelected";
 			
+		public static const COMPONENTS_TO_HIDE:String = "componentsToHide";
+		public static const COMPONENT_TO_UNHIDE:String = "componentToUnhide";
+			
 		/*==============================Fields================================*/
 		
 		private var _links:LinkBar;
@@ -83,6 +91,17 @@ package eu.ecb.core.view.filter
 		private var _selectedViewIndex:uint;
 		
 		private var _selectedViewIndexChanged:Boolean;
+		
+		/**
+		 * Components by ID that should be hidden for certain views. SBa
+		 * Comma-delimited.
+		 */
+		private var _componentHideLists:ArrayCollection;
+		
+		private var _activeColor:String = "#C0C0C0"; //ECB default
+		private var _inactiveColor:String = "#0031AD"; //ECB default
+		private var _hoverColor:String; 
+		private var _hideUnderlineOnHoverOverActive:Boolean = false; //ECB default
 		
 		/*===========================Constructor==============================*/
 		
@@ -133,6 +152,43 @@ package eu.ecb.core.view.filter
 			return _selectedViewIndex;
 		}
 		
+		public function set componentHideLists(componentHideLists:ArrayCollection):void
+		{
+			_componentHideLists = componentHideLists;
+		}
+		
+		public function get componentHideLists():ArrayCollection
+		{
+			return componentHideLists;
+		}
+		
+		public function set activeColor(value:String):void 
+		{
+		    _activeColor = value;
+		}
+		
+		public function set inactiveColor(value:String):void 
+		{
+		    _inactiveColor = value;
+		}
+		
+		public function set hoverColor(value:String):void 
+		{
+		    _hoverColor = value;
+		}
+		
+		/**
+		 * By default, the currently active is underlined on
+		 * mouse hover. This value can be set to true to stop 
+		 * this behaviour.
+		 * 
+		 * @param value
+		 */
+		public function set hideUnderlineOnHoverOverActive(value:Boolean):void 
+		{
+		    _hideUnderlineOnHoverOverActive = value;
+		}
+		
 		/*========================Protected methods===========================*/
 		
 		/**
@@ -152,7 +208,7 @@ package eu.ecb.core.view.filter
 					handleClickEvent, false, 0, true);
 				_links.addEventListener(ChildExistenceChangedEvent.
 					CHILD_ADD, handleNewChild, false, 0, true);	
-				addChild(_links);	
+				addChild(_links);
 			}
 		}
 		
@@ -175,7 +231,7 @@ package eu.ecb.core.view.filter
 				for (var i:uint = 0; i < _links.getChildren().length; i++) {
 					var button:LinkButton = _links.getChildAt(i) as LinkButton;
 					button.setStyle("color", 
-						(i == position) ? "#C0C0C0" : "#0031AD");					
+						(i == position) ? _activeColor : _inactiveColor);					
 				}
 			}
 		}
@@ -186,17 +242,30 @@ package eu.ecb.core.view.filter
 		{
 			event.stopImmediatePropagation();
 			event = null;
-			if (_links.getChildren().length == _views.length) {
+			
+			/* if (_links.getChildren().length == _views.length) {
 				(_links.getChildAt(_selectedViewIndex) as 
-					LinkButton).setStyle("color", "#C0C0C0");
-			}
+					LinkButton).setStyle("color", _activeColor);
+			} */
+			
+			if (_links.numChildren - 1 == _selectedViewIndex)
+				(_links.getChildAt(_selectedViewIndex) as LinkButton).setStyle("color", _activeColor);
+            else
+                (_links.getChildAt(_links.numChildren - 1) as LinkButton).setStyle("color", _inactiveColor);
 		}
 		
 		private function onHoverOverUnderline(event:MouseEvent):void 
 		{
-			if (event.target is LinkButton) {
+			var codeSelected:Boolean = _links.getChildAt(_links.selectedIndex) == event.target;
+			
+			if (event.target is LinkButton && (!codeSelected || !_hideUnderlineOnHoverOverActive))
+			{
 		    	event.target.setStyle("textDecoration", "underline");
-		 	}
+		        event.target.setStyle("textRollOverColor", _hoverColor);
+		    }
+		    else
+		    	event.target.setStyle("textRollOverColor", _activeColor);
+		 	
 		 	event.stopImmediatePropagation();
 			event = null;
 	    }
@@ -215,11 +284,42 @@ package eu.ecb.core.view.filter
 	    	event.stopImmediatePropagation();
 	    	for (var i:uint = 0; i < _links.getChildren().length; i++) {
 				var button:LinkButton = _links.getChildAt(i) as LinkButton;
-				button.setStyle("color", 
-					(i == event.index) ? "#C0C0C0" : "#0031AD");					
+				button.setStyle("color", (i == event.index) ? _activeColor : _inactiveColor);	
 			}
 	    	dispatchEvent(new DataEvent(SELECTED_VIEW_CHANGED, false, false, 
 	    		String(event.index)));
+	    	
+	    	//start added SBa
+	    	if (_componentHideLists != null && _componentHideLists.length > 0)
+	    	{
+    	    	var componentsToHide:String = String(_componentHideLists.getItemAt(event.index));
+    	    	var hiddenComponents:String = String(_componentHideLists.getItemAt(_selectedViewIndex)); //currently hidden
+    	    	
+    	    	if (componentsToHide)
+    	    	    dispatchEvent(new DataEvent(COMPONENTS_TO_HIDE, false, false, componentsToHide));
+    	    	
+    	    	//if there were some components hidden and now they should no longer be...
+    	    	if (hiddenComponents.length > 0)
+    	    	{
+    	    	    for each(var hidden:String in hiddenComponents.split(","))
+    	    	    {
+    	    	        var unhideIt:Boolean = true;
+    	    	        
+    	    	        for each(var toHide:String in componentsToHide.split(","))
+    	    	        {
+    	    	            if (hidden == toHide) //i.e. it is still in the toHide list for the new view
+    	    	                unhideIt = false;
+    	    	        }
+    	    	        
+    	    	        if (unhideIt)
+    	    	            dispatchEvent(new DataEvent(COMPONENT_TO_UNHIDE, false, false, hidden));   
+    	    	    }
+    	    	}
+    	    } 
+	    	
+	    	_selectedViewIndex = event.index; 
+	    	//end added SBa			
+			
 			event = null;	
 	    }		
 	}
