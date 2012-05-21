@@ -48,6 +48,11 @@ package eu.ecb.core.view.map
 		 */
 		protected var _helperChanged:Boolean;
 		
+		/**
+		 * @private
+		 */
+		protected var _measureDimension:String;
+		
 		/*===========================Constructor==============================*/
 		
 		public function BaseMapComponent(direction:String="vertical")
@@ -76,5 +81,21 @@ package eu.ecb.core.view.map
 		{
 			return _helper;
 		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function set measureDimension(measureDimension:String):void
+		{
+			_measureDimension = measureDimension;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		 public function get measureDimension():String
+		 {
+		 	return _measureDimension;
+		 }
 	}
 }
