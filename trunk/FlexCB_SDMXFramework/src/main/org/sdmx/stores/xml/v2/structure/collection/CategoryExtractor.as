@@ -59,6 +59,10 @@ package org.sdmx.stores.xml.v2.structure.collection
 		private namespace structure = 
 			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure";		
 		use namespace structure;
+		
+		private namespace structure_v2_1 = 
+			"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure";	
+		use namespace structure_v2_1;
 			
 		/*===========================Constructor==============================*/
 		
@@ -113,6 +117,35 @@ package org.sdmx.stores.xml.v2.structure.collection
 			for each (var subcategory:XML in items.Category) {
 				category.categories.addItem(
 					categoryExtractor.extract(subcategory));
+			}
+			return category;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function extract21(items:XML, flows:Object):SDMXArtefact 
+		{
+			var vaExtractor:VersionableArtefactExtractor = 
+				ExtractorPool.getInstance().versionableArtefactExtractor;	
+			var item:VersionableArtefact 
+				= vaExtractor.extract(items) as VersionableArtefact;	
+			var category:Category = new Category(item.id);
+			category.annotations = item.annotations;
+			category.description = item.description;
+			category.name = item.name;
+			category.uri = item.uri;
+			category.urn = item.urn;
+			category.version = item.version;
+			if (flows.hasOwnProperty(category.id)) {
+				category.dataflows = flows[category.id];
+			}	
+			
+			var categoryExtractor:CategoryExtractor = 
+				new CategoryExtractor(_dataflows);
+			for each (var subcategory:XML in items.Category) {
+				category.categories.addItem(
+					categoryExtractor.extract21(subcategory, flows));
 			}
 			return category;
 		}

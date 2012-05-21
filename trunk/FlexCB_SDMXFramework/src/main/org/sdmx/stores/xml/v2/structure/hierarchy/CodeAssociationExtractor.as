@@ -47,6 +47,10 @@ package org.sdmx.stores.xml.v2.structure.hierarchy
 			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure";		
 		use namespace structure;
 		
+		private namespace structure21 = 
+			"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure";		
+		use namespace structure21;
+		
 		private var _codeListRef:Object;
 		
 		/*===========================Constructor==============================*/
@@ -105,6 +109,41 @@ package org.sdmx.stores.xml.v2.structure.hierarchy
 				new CodeAssociationExtractor(_codeListRef);
 			for each (var codeRefXML:XML in items.CodeRef) {
 				codeAssociations.addItem(caExtractor.extract(codeRefXML));
+			}
+			codeAssociation.children = codeAssociations;
+			return codeAssociation;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function extract21(items:XML):SDMXArtefact
+		{
+			var codelistAliasRef:String = String(items.CodelistAliasRef);
+			if (!(_codeListRef.hasOwnProperty(codelistAliasRef))) {
+				throw new ArgumentError("Could not find code list with alias: " 
+					+ codelistAliasRef);
+			}
+			
+			var codeList:CodeList = _codeListRef[codelistAliasRef] as CodeList;
+			
+			var codeID:String = items.CodeID.Ref.@id;
+			var code:Code = codeList.codes.getCode(codeID);
+			if (null == code) {
+				throw new ArgumentError("Could not find code with id " + 
+					codeID + " in list with alias: " + codelistAliasRef);
+			}
+			
+			var codeAssociation:CodeAssociation = 
+				new CodeAssociation(code, codeList);
+			codeAssociation.id = items.@id;
+			
+			var codeAssociations:CodeAssociationsCollection = 
+				new CodeAssociationsCollection();
+			var caExtractor:CodeAssociationExtractor = 
+				new CodeAssociationExtractor(_codeListRef);
+			for each (var codeRefXML:XML in items.HierarchicalCode) {
+				codeAssociations.addItem(caExtractor.extract21(codeRefXML));
 			}
 			codeAssociation.children = codeAssociations;
 			return codeAssociation;

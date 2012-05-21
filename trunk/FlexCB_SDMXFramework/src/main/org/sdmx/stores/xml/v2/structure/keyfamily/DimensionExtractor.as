@@ -56,6 +56,14 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 		
 		private var _concepts:Concepts;
 		
+		private namespace structure = 
+			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure";		
+		use namespace structure;
+		
+		private namespace structure21 = 
+			"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure";		
+		use namespace structure21;
+		
 		/*===========================Constructor==============================*/
 		
 		public function DimensionExtractor(codeLists:CodeLists, 
@@ -102,8 +110,7 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 					null;
 				if (null != codelistEl) {
 					var codeList:CodeList = _codeLists.getCodeList(
-						items.@codelist, items.@codelistVersion, 
-						items.@codelistAgency);
+						codelistEl, codelistVersionEl, codelistAgencyEl);
 					if (null != codeList) {
 						dimension.localRepresentation = codeList;
 					} else {
@@ -133,6 +140,75 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 				dimension.xsAttachmentLevel = XSAttachmentLevel.GROUP;
 			} else if (items.@crossSectionalAttachDataSet == true) {
 				dimension.xsAttachmentLevel = XSAttachmentLevel.XSDATASET;
+			}
+			return dimension;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function extract21(items:XML):SDMXArtefact {
+			var conceptRef:String = null;
+			var conceptSchemeRef:String = null
+			if (items.ConceptIdentity.Ref.length() > 0) {
+				conceptRef = (items.ConceptIdentity.Ref.attribute("id").
+					length() > 0) ? items.ConceptIdentity.Ref.@id : null;
+				conceptSchemeRef = (items.ConceptIdentity.Ref.
+					attribute("maintainableParentID").length() > 0) ? 
+					items.ConceptIdentity.Ref.@maintainableParentID : null; 
+			} else if (items.ConceptIdentity.URN.length() > 0) {
+				var urn:String = items.ConceptIdentity.URN[0].toString();
+				conceptRef = urn.substring(urn.lastIndexOf(".") + 1, urn.length);
+				conceptSchemeRef = urn.substring(urn.lastIndexOf(":") + 1, urn.indexOf("("));
+			}
+			if (null == conceptRef) {
+				throw new SyntaxError("Could not find the concept reference:" 
+					+ items);
+			}
+			var concept:Concept = 
+				_concepts.getConcept(conceptRef, conceptSchemeRef);
+			if (null == concept) {
+				throw new SyntaxError("Could not find any concept with id: " + 
+					items.@conceptRef);
+			}
+			var dimension:Dimension = new Dimension(concept.id, concept);
+			if (null != _codeLists) {	
+				var codelistEl:String = null;
+				var codelistVersionEl:String = null;
+				var codelistAgencyEl:String = null;
+				if (items.LocalRepresentation.Enumeration.Ref.length() > 0) {
+					codelistEl = (items.LocalRepresentation.Enumeration.
+						Ref.attribute("id").length() > 0) ? 
+						items.LocalRepresentation.Enumeration.Ref.@id : null;
+					codelistVersionEl = (items.LocalRepresentation.
+						Enumeration.Ref.attribute("version").length() > 0) ? 
+						items.LocalRepresentation.Enumeration.Ref.@version : null;
+					codelistAgencyEl = (items.LocalRepresentation.
+						Enumeration.Ref.attribute("agencyID").length() > 0) ? 
+						items.LocalRepresentation.Enumeration.Ref.@agencyID : null;
+				} else if (items.LocalRepresentation.Enumeration.URN.length() > 0) {
+					var urn:String = 
+						items.LocalRepresentation.Enumeration.URN[0].toString();
+					codelistEl = urn.substring(urn.lastIndexOf(":") + 1, urn.indexOf("("));
+					codelistVersionEl = 
+						urn.substring(urn.indexOf("(") + 1, urn.indexOf(")"));
+					codelistAgencyEl = 
+						urn.substring(urn.indexOf("=") + 1, urn.lastIndexOf(":"));
+				} 
+				if (null != codelistEl) {
+					var codeList:CodeList = _codeLists.getCodeList(
+						codelistEl, codelistVersionEl, codelistAgencyEl);
+					if (null != codeList) {
+						dimension.localRepresentation = codeList;
+					} else {
+						throw new SyntaxError("Could not find any code list" + 
+								" with id: " + codelistEl);
+					}
+				} 
+			}	
+			if ((items.ConceptRole.length() > 0 && 
+				items.ConceptRole.Ref.@id == "FREQ") || conceptRef == "FREQ") {
+				dimension.conceptRole = ConceptRole.FREQUENCY;
 			}
 			return dimension;
 		}

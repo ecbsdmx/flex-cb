@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -31,9 +29,10 @@ package org.sdmx.stores.xml.v2.structure.collection
 	import org.sdmx.model.v2.base.MaintainableArtefact;
 	import org.sdmx.model.v2.base.SDMXArtefact;
 	import org.sdmx.model.v2.base.item.Item;
+	import org.sdmx.model.v2.structure.code.CodeLists;
 	import org.sdmx.model.v2.structure.concept.ConceptScheme;
-	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
 	import org.sdmx.stores.xml.v2.structure.ExtractorPool;
+	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
 	import org.sdmx.stores.xml.v2.structure.base.MaintainableArtefactExtractor;
 
 	/**
@@ -48,14 +47,20 @@ package org.sdmx.stores.xml.v2.structure.collection
 		
 		/*==============================Fields================================*/
 		
-		private namespace structure = 
-			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure";		
-		use namespace structure;
+		private namespace structure_v2_0 = 
+			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure";	
+		use namespace structure_v2_0;	
+		private namespace structure_v2_1 = 
+			"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure";	
+		use namespace structure_v2_1;
+		
+		private var _codeLists:CodeLists;
 		
 		/*===========================Constructor==============================*/
 		
-		public function ConceptSchemeExtractor() {
+		public function ConceptSchemeExtractor(codeLists:CodeLists) {
 			super();
+			_codeLists = codeLists;
 		}
 		
 		/*==========================Public methods============================*/
@@ -78,7 +83,8 @@ package org.sdmx.stores.xml.v2.structure.collection
 			conceptScheme.validFrom = itemScheme.validFrom;
 			conceptScheme.validTo = itemScheme.validTo;
 			conceptScheme.annotations = itemScheme.annotations;
-			var conceptExtractor:ConceptExtractor = new ConceptExtractor();
+			var conceptExtractor:ConceptExtractor = 
+				new ConceptExtractor(_codeLists);
 			for each (var concept:XML in items.Concept) {
 				conceptScheme.concepts.addItem(
 					conceptExtractor.extract(concept) as Item);

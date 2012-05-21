@@ -32,6 +32,7 @@ package org.sdmx.stores.xml.v2.structure.hierarchy
 	import org.sdmx.model.v2.structure.code.CodeLists;
 	import org.sdmx.model.v2.structure.hierarchy.HierarchicalCodeScheme;
 	import org.sdmx.model.v2.structure.hierarchy.HierarchiesCollection;
+	import org.sdmx.stores.xml.v2.GuessSDMXVersion;
 	import org.sdmx.stores.xml.v2.structure.ExtractorPool;
 	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
 	import org.sdmx.stores.xml.v2.structure.base.MaintainableArtefactExtractor;
@@ -49,6 +50,10 @@ package org.sdmx.stores.xml.v2.structure.hierarchy
 		private namespace structure = 
 			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure";		
 		use namespace structure;
+		
+		private namespace structure21 = 
+			"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure";		
+		use namespace structure21;
 		
 		private var _codelists:CodeLists;
 		
@@ -84,6 +89,24 @@ package org.sdmx.stores.xml.v2.structure.hierarchy
 			scheme.annotations = artefact.annotations;
 			
 			var referencedCodeLists:Object = new Object();
+			if ("2.1" == GuessSDMXVersion.getSdmxVersion()) {
+				extractCodelistRef21(referencedCodeLists, items);
+			} else {
+				extractCodelistRef(referencedCodeLists, items);
+			}
+			
+			var hierarchies:HierarchiesCollection = new HierarchiesCollection();
+			var hierarchyExtractor:HierarchyExtractor = 
+				new HierarchyExtractor(referencedCodeLists);
+			for each (var hierarchyXML:XML in items.Hierarchy) {
+				hierarchies.addItem(hierarchyExtractor.extract(hierarchyXML));
+			}
+			scheme.hierarchies = hierarchies;
+			return scheme;
+		}
+		
+		private function extractCodelistRef(referencedCodeLists:Object, 
+			items:XML):void {
 			for each (var codeListRef:XML in items.CodelistRef) {
 				if (codeListRef.child(new QName(
 					"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure", 
@@ -122,15 +145,23 @@ package org.sdmx.stores.xml.v2.structure.hierarchy
 				}			
 				referencedCodeLists[alias] = codeList; 
 			}
-			
-			var hierarchies:HierarchiesCollection = new HierarchiesCollection();
-			var hierarchyExtractor:HierarchyExtractor = 
-				new HierarchyExtractor(referencedCodeLists);
-			for each (var hierarchyXML:XML in items.Hierarchy) {
-				hierarchies.addItem(hierarchyExtractor.extract(hierarchyXML));
+		}
+		
+		private function extractCodelistRef21(referencedCodeLists:Object, 
+			items:XML):void {
+			for each (var codeListRef:XML in items.IncludedCodelist) {
+				var alias:String = codeListRef.@alias;
+				var codeListID:String = codeListRef.Ref.@id;
+				var agencyID:String = codeListRef.Ref.@agencyId;				
+				var version:String = "1.0";
+				var codeList:CodeList = _codelists.getCodeList(codeListID, 
+					version, agencyID);
+				if (null == codeList) {
+					throw new ArgumentError("Could not find code list with " + 
+						codeListID + " - " + agencyID + " - " + version);
+				}			
+				referencedCodeLists[alias] = codeList; 
 			}
-			scheme.hierarchies = hierarchies;
-			return scheme;
 		}
 	}
 }

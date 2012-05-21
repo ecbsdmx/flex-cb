@@ -47,7 +47,7 @@ package org.sdmx.stores.xml.v2.structure.collection
 			return new TestSuite(CodeListExtractorTest);
 		}
 		
-		public function testCodeListExtraction():void {
+		public function testCodeListExtractionSdmx20():void {
 			var xml:XML = 
 				<CodeList agencyID="ECB" id="CL_COLLECTION" version="1.0" uri="http://www.sdmx.org/" urn="urn:sdmx:org.sdmx.infomodel.codelist.CodeList=ECB:CL_COLLECTION" isFinal="true" validFrom="2007-01-01" validTo="2008-12-31" xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:common="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/common">
 					<Name xml:lang="en">Collection indicator code list</Name>
@@ -135,6 +135,69 @@ package org.sdmx.stores.xml.v2.structure.collection
 			assertEquals("There should be 1 localised strings in the description collection for code2", 1, code2.description.localisedStrings.length);			
 			assertEquals("The descriptions for EN should be equal for code1", "Average of observations through period", code1.description.localisedStrings.getDescriptionByLocale("en"));
 			assertEquals("The descriptions for EN should be equal for code2", "Annualised summed", code2.description.localisedStrings.getDescriptionByLocale("en"));			
+		}
+		
+		public function testCodeListExtractionSdmx21():void {
+			var xml:XML = 
+			<structure:Codelist isFinal="true" version="1.0" isExternalReference="false"
+				validFrom="2010-01-01T00:00:00Z" validTo="2010-12-31T23:59:59Z" agencyID="ECB" id="CL_OBS_CONF"
+				urn="urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ECB:CL_OBS_CONF[1.0]"
+				xmlns:structure="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure" 
+				xmlns:common="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common">
+				<common:Name>Observation confidentiality code list</common:Name>
+				<common:Description>Test description in English</common:Description>				
+				<structure:Code id="C">
+					<common:Name>Confidential statistical information</common:Name>
+				</structure:Code>
+				<structure:Code id="D">
+					<common:Name>Secondary confidentiality set by the sender,
+						not for publication</common:Name>
+				</structure:Code>
+				<structure:Code id="F">
+					<common:Name>Free</common:Name>
+				</structure:Code>
+				<structure:Code id="N">
+					<common:Name>Not for publication, restricted for internal
+						use only</common:Name>
+				</structure:Code>
+				<structure:Code id="S">
+					<common:Name>Secondary confidentiality set and managed by the receiver, not for publication</common:Name>
+				</structure:Code>
+			</structure:Codelist>
+
+			var extractor:CodeListExtractor = new CodeListExtractor();
+			var item:CodeList = extractor.extract(xml) as CodeList;
+			assertNotNull("The item cannot be null", item);
+			assertEquals("The IDs should be equal", "CL_OBS_CONF", item.id);
+			assertEquals("The URNs should be equal", "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ECB:CL_OBS_CONF[1.0]", item.urn);
+			assertEquals("The versions should be equal", "1.0", item.version);
+			var sdmxDate:SDMXDate = new SDMXDate();
+			assertEquals("The validFrom should be equal", sdmxDate.getDate("2010-01-01T00:00:00Z").getTime(), item.validFrom.getTime());
+			assertEquals("The validTo should be equal", sdmxDate.getDate("2010-12-31T23:59:59Z").getTime(), item.validTo.getTime());			
+			assertTrue("The isFinal flag should be equal", item.isFinal);
+			assertEquals("The ECB should be the maintenance agency", "ECB", item.maintainer.id);
+			assertNotNull("The name cannot be null", item.name);
+			assertEquals("There should be 1 localised strings in the name collection", 1, item.name.localisedStrings.length);
+			assertEquals("The names for EN should be equal", "Observation confidentiality code list", item.name.localisedStrings.getDescriptionByLocale("en"));
+			assertNotNull("The description cannot be null", item.description);
+			assertEquals("There should be 1 localised strings in the description collection", 1, item.description.localisedStrings.length);
+			assertEquals("The descriptions for EN should be equal", "Test description in English", item.description.localisedStrings.getDescriptionByLocale("en"));
+			assertNotNull("The list of codes cannot be null", item.codes);
+			assertEquals("There should be 5 codes in the list", 5, item.codes.length);
+			var code1:Code = item.codes.getItemAt(0) as Code;
+			var code2:Code = item.codes.getItemAt(4) as Code;
+			assertNotNull("The code1 cannot be null", code1);
+			assertNotNull("The code2 cannot be null", code2);
+			assertEquals("The IDs for code1 should be equal", "C", code1.id);
+			assertEquals("The IDs for code1 should be equal", "S", code2.id);
+			assertNull("There should be no URN for code1", code1.urn);
+			assertNull("There should be no URN for code2", code2.urn);
+			assertNotNull("The description for code1 cannot be null", code1.description);
+			assertNotNull("The description for code2 cannot be null", code2.description);			
+			assertEquals("There should be 1 localised strings in the description collection for code1", 1, code1.description.localisedStrings.length);
+			assertEquals("There should be 1 localised strings in the description collection for code2", 1, code2.description.localisedStrings.length);			
+			assertEquals("The descriptions for EN should be equal for code1", "Confidential statistical information", code1.description.localisedStrings.getDescriptionByLocale("en"));
+			assertEquals("The descriptions for EN should be equal for code2", "Secondary confidentiality set and managed by the receiver, not for publication", code2.description.localisedStrings.getDescriptionByLocale("en"));			
 		}
 	}
 }

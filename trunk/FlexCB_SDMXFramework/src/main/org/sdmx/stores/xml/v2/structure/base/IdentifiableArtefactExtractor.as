@@ -31,6 +31,7 @@ package org.sdmx.stores.xml.v2.structure.base
 	import org.sdmx.model.v2.base.IdentifiableArtefactAdapter;
 	import org.sdmx.model.v2.base.InternationalString;
 	import org.sdmx.model.v2.base.SDMXArtefact;
+	import org.sdmx.stores.xml.v2.GuessSDMXVersion;
 	import org.sdmx.stores.xml.v2.structure.ExtractorPool;
 	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
 
@@ -46,19 +47,22 @@ package org.sdmx.stores.xml.v2.structure.base
 		private namespace xml = "http://www.w3.org/XML/1998/namespace";
 		use namespace xml;
 		
-		private namespace structure = 
+		private namespace structure_v2_0 = 
 			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure";		
-		use namespace structure;
+		use namespace structure_v2_0;
 		
-		private var _isExtractor:InternationalStringExtractor;
+		private namespace structure_v2_1 = 
+			"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure";		
+		use namespace common_v2_1;
 		
-		private static var _nameQName:QName = new QName(
-				"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure", 
-				"Name");
+		private namespace common_v2_1 = 
+			"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common";		
+		use namespace common_v2_1;
 		
-		private static var _descQName:QName = new QName(
-				"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure", 
-				"Description");		
+		private var _isExtractor:InternationalStringExtractor;		
+		private var _nameQName:QName;
+		private var _descQName:QName;
+		private var _currentVersion:String;
 			
 		/*===========================Constructor==============================*/
 		
@@ -74,6 +78,11 @@ package org.sdmx.stores.xml.v2.structure.base
 		 * @inheritDoc
 		 */
 		public function extract(items:XML):SDMXArtefact {
+			GuessSDMXVersion.setSdmxVersion(items);
+			if (null == _currentVersion || _currentVersion !=
+				GuessSDMXVersion.getSdmxVersion()) { 
+				setQNames();
+			}
 			var id:String = null;		
 			if (items.attribute("id").length() > 0) {
 				id = items.@id;
@@ -124,6 +133,16 @@ package org.sdmx.stores.xml.v2.structure.base
 				item.annotations = annotations
 			}*/	
 			return item;
+		}
+		
+		private function setQNames():void {
+			_currentVersion = GuessSDMXVersion.getSdmxVersion();
+			var ns:String = (GuessSDMXVersion.SDMX_v2_1 == 
+					GuessSDMXVersion.getSdmxVersion() ?
+				"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" :
+				"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure");
+			_nameQName = new QName(ns, "Name");
+			_descQName = new QName(ns, "Description");
 		}
 	}
 }

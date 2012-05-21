@@ -51,6 +51,10 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure";		
 		use namespace structure;
 		
+		private namespace structure21 = 
+			"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure";		
+		use namespace structure21;
+		
 		/*===========================Constructor==============================*/
 		
 		public function GroupExtractor(dimensions:KeyDescriptor) {
@@ -67,6 +71,17 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 			var group:GroupKeyDescriptor = new GroupKeyDescriptor(items.@id);
 			for each (var dimension:XML in items.DimensionRef) {
 				group.addItem(_dimensions.getDimension(String(dimension)));
+			}
+			return group;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function extract21(items:XML):SDMXArtefact {
+			var group:GroupKeyDescriptor = new GroupKeyDescriptor(items.@id);
+			for each (var dimension:XML in items.GroupDimension) {
+				group.addItem(_dimensions.getDimension(dimension.DimensionReference.Ref.@id));
 			}
 			return group;
 		}

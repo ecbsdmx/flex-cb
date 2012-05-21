@@ -71,6 +71,14 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/common";		
 		use namespace common;
 		
+		private namespace structure21 = 
+			"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure";		
+		use namespace structure21;
+		
+		private namespace common21 = 
+			"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common";		
+		use namespace common21;
+		
 		/*===========================Constructor==============================*/
 		
 		public function DataflowExtractor(keyFamilies:KeyFamilies) {
@@ -151,7 +159,7 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 							member.structureComponent = component;
 							var values:ArrayCollection = new ArrayCollection();
 							for each (var val:XML in mem.MemberValue) {
-								values.addItem(val.Value); 
+								values.addItem(String(val.Value[0].text())); 
 							}		
 							member.values = values;
 							members.addItem(member);			
@@ -162,6 +170,46 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 				constraint.permittedContentRegion = cubeCollection;
 				dataflow.contentConstraint = constraint;
 			}
+			return dataflow;	
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function extract21(items:XML):SDMXArtefact {
+			var maExtractor:MaintainableArtefactExtractor = 
+				ExtractorPool.getInstance().maintainableArtefactExtractor;
+			var maintenableArtefact:MaintainableArtefact 
+				= maExtractor.extract(items) as MaintainableArtefact;
+			if (null == maintenableArtefact) {
+				throw new SyntaxError("Could not get maintainable artefact");
+			}
+	        var dsdId:String = items.Structure.Ref.@id;    
+	        var dsdAgencyId:String = items.Structure.Ref.@agencyID;
+	        var keyFamily:KeyFamily = null;
+			if (null != _keyFamilies) {
+				keyFamily = _keyFamilies.getKeyFamilyByID(dsdId, dsdAgencyId);
+			} else {
+				keyFamily = new KeyFamily(dsdId, new InternationalString(), 
+					new MaintenanceAgency(dsdAgencyId), null, null, true);
+				keyFamily.version = "1.0"; 	
+			}
+			if (null == keyFamily) {
+				throw new SyntaxError("Could not find key family");
+			}
+			var dataflow:DataflowDefinition = 
+				new DataflowDefinition(maintenableArtefact.id, 
+					maintenableArtefact.name, maintenableArtefact.maintainer, 
+					keyFamily);
+			dataflow.annotations = maintenableArtefact.annotations;	
+			dataflow.description = maintenableArtefact.description;	
+			dataflow.uri = maintenableArtefact.uri;
+			dataflow.urn = maintenableArtefact.urn;
+			dataflow.version = maintenableArtefact.version;
+			dataflow.validFrom = maintenableArtefact.validFrom;
+			dataflow.validTo = maintenableArtefact.validTo;
+			dataflow.version = maintenableArtefact.version;
+			dataflow.isFinal = maintenableArtefact.isFinal;
 			return dataflow;	
 		}
 	}

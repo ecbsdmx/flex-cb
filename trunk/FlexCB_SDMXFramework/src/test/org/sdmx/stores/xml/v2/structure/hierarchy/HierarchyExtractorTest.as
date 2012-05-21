@@ -24,7 +24,7 @@ package org.sdmx.stores.xml.v2.structure.hierarchy
 		public function testExtractHierarchy():void 
 		{
 			var xml:XML = 
-				<Hierarchy id="H_ICP_ITEM_1">
+				<Hierarchy id="H_ICP_ITEM_1" xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure" xmlns:common="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/common">
     				<Name>Breakdown by purpose of consumption</Name>
     				<CodeRef>
 	    				<CodelistAliasRef>ICP_ITEM</CodelistAliasRef>

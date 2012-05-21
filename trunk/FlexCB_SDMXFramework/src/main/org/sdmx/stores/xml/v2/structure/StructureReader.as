@@ -31,20 +31,28 @@ package org.sdmx.stores.xml.v2.structure
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
 	
+	import mx.collections.ArrayCollection;
+	
 	import org.sdmx.event.SDMXDataEvent;
+	import org.sdmx.model.v2.base.InternationalString;
+	import org.sdmx.model.v2.reporting.provisioning.ContentConstraint;
 	import org.sdmx.model.v2.structure.category.CategorieSchemesCollection;
 	import org.sdmx.model.v2.structure.code.CodeLists;
 	import org.sdmx.model.v2.structure.concept.Concepts;
 	import org.sdmx.model.v2.structure.hierarchy.HierarchicalCodeSchemesCollection;
+	import org.sdmx.model.v2.structure.keyfamily.DataflowDefinition;
 	import org.sdmx.model.v2.structure.keyfamily.DataflowsCollection;
 	import org.sdmx.model.v2.structure.keyfamily.KeyFamilies;
+	import org.sdmx.model.v2.structure.organisation.MaintenanceAgency;
 	import org.sdmx.model.v2.structure.organisation.OrganisationSchemes;
+	import org.sdmx.stores.xml.v2.GuessSDMXVersion;
 	import org.sdmx.stores.xml.v2.structure.collection.CategorySchemeExtractor;
 	import org.sdmx.stores.xml.v2.structure.collection.CodeListExtractor;
 	import org.sdmx.stores.xml.v2.structure.collection.ConceptExtractor;
 	import org.sdmx.stores.xml.v2.structure.collection.ConceptSchemeExtractor;
 	import org.sdmx.stores.xml.v2.structure.collection.OrganisationSchemeExtractor;
 	import org.sdmx.stores.xml.v2.structure.hierarchy.HierarchicalCodeSchemeExtractor;
+	import org.sdmx.stores.xml.v2.structure.keyfamily.ConstraintExtractor;
 	import org.sdmx.stores.xml.v2.structure.keyfamily.DataflowExtractor;
 	import org.sdmx.stores.xml.v2.structure.keyfamily.KeyFamilyExtractor;
 		
@@ -212,6 +220,8 @@ package org.sdmx.stores.xml.v2.structure
 		
 		private var _hierarchies:HierarchicalCodeSchemesCollection;
 		
+		private var _referencedFlows:Object;
+		
 		/*============================Namespaces==============================*/
 		
 		private namespace message = 
@@ -221,6 +231,14 @@ package org.sdmx.stores.xml.v2.structure
 		private namespace structure = 
 			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure";		
 		use namespace structure;
+		
+		private namespace message21 = 
+			"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/message";
+		use namespace message21;
+		
+		private namespace structure21 = 
+			"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure";		
+		use namespace structure21;
 				
 		/*===========================Constructor==============================*/
 		
@@ -301,6 +319,7 @@ package org.sdmx.stores.xml.v2.structure
 		public function read(data:XML):void 
 		{
 			_data = data;
+			GuessSDMXVersion.setSdmxVersion(_data);
 			if (_dispatchOrganisationSchemes) {
 				extractOrganisationSchemes();
 			}
@@ -354,9 +373,15 @@ package org.sdmx.stores.xml.v2.structure
 		{
 			_codeLists = new CodeLists();
 			var clExtractor:CodeListExtractor = new CodeListExtractor();
-			for each (var codeList:XML in _data.CodeLists.CodeList) {
-				_codeLists.addItem(clExtractor.extract(codeList));
-			}	
+			if ("2.1" == GuessSDMXVersion.getSdmxVersion()) {
+				for each (var codeList:XML in _data.Structures.Codelists.Codelist) {
+					_codeLists.addItem(clExtractor.extract(codeList));
+				}
+			} else {
+				for each (var codeList:XML in _data.CodeLists.CodeList) {
+					_codeLists.addItem(clExtractor.extract(codeList));
+				}	
+			}
 			if (_codeLists.length > 0) {
 				dispatchEvent(new SDMXDataEvent(_codeLists, CODE_LISTS_EVENT));
 			}
@@ -365,14 +390,21 @@ package org.sdmx.stores.xml.v2.structure
 		private function extractConceptSchemes():void 
 		{
 			_concepts = new Concepts();
-			var conceptExtractor:ConceptExtractor = new ConceptExtractor();
+			var conceptExtractor:ConceptExtractor = 
+				new ConceptExtractor(_codeLists);
 			var csExtractor:ConceptSchemeExtractor = 
-				new ConceptSchemeExtractor();
+				new ConceptSchemeExtractor(_codeLists);
 			for each (var concept:XML in _data.Concepts.Concept) {
 				_concepts.addItem(conceptExtractor.extract(concept));
 			}
-			for each (var conceptScheme:XML in _data.Concepts.ConceptScheme) {
-				_concepts.addItem(csExtractor.extract(conceptScheme));
+			if ("2.1" == GuessSDMXVersion.getSdmxVersion()) {
+				for each (var conceptScheme:XML in _data.Structures.Concepts.ConceptScheme) {
+					_concepts.addItem(csExtractor.extract(conceptScheme));
+				}
+			} else {
+				for each (var conceptScheme:XML in _data.Concepts.ConceptScheme) {
+					_concepts.addItem(csExtractor.extract(conceptScheme));
+				}	
 			}
 			if (_concepts.length > 0) {
 				dispatchEvent(new SDMXDataEvent(_concepts, CONCEPTS_EVENT));
@@ -384,8 +416,14 @@ package org.sdmx.stores.xml.v2.structure
 			_keyFamilies = new KeyFamilies();
 			var kfExtractor:KeyFamilyExtractor = 
 				new KeyFamilyExtractor(_codeLists, _concepts);
-			for each (var keyFamily:XML in _data.KeyFamilies.KeyFamily) {
-				_keyFamilies.addItem(kfExtractor.extract(keyFamily));
+			if ("2.1" == GuessSDMXVersion.getSdmxVersion()) {
+				for each (var keyFamily:XML in _data.Structures.DataStructures.DataStructure) {
+					_keyFamilies.addItem(kfExtractor.extract(keyFamily));
+				}
+			} else {	
+				for each (var keyFamily:XML in _data.KeyFamilies.KeyFamily) {
+					_keyFamilies.addItem(kfExtractor.extract(keyFamily));
+				}
 			}
 			if (_keyFamilies.length > 0) {
 				dispatchEvent(new SDMXDataEvent(_keyFamilies, 
@@ -398,8 +436,21 @@ package org.sdmx.stores.xml.v2.structure
 			_dataflows = new DataflowsCollection();
 			var dfExtractor:DataflowExtractor = 
 				new DataflowExtractor(_keyFamilies);
-			for each (var dataflow:XML in _data.Dataflows.Dataflow) {
-				_dataflows.addItem(dfExtractor.extract(dataflow));
+			if ("2.1" == GuessSDMXVersion.getSdmxVersion()) {
+				for each (var dataflow:XML in _data.Structures.Dataflows.Dataflow) {
+					var extractedFlow:DataflowDefinition = 
+						dfExtractor.extract21(dataflow) as DataflowDefinition;
+					var constraint:ContentConstraint = 
+						extractConstraints(extractedFlow);
+					if (null != constraint) {
+						extractedFlow.contentConstraint = constraint;
+					}	
+					_dataflows.addItem(extractedFlow);
+				}
+			} else {	
+				for each (var dataflow:XML in _data.Dataflows.Dataflow) {
+					_dataflows.addItem(dfExtractor.extract(dataflow));
+				}
 			}
 			if (_dataflows.length > 0) {
 				dispatchEvent(new SDMXDataEvent(_dataflows, DATAFLOWS_EVENT));
@@ -412,9 +463,21 @@ package org.sdmx.stores.xml.v2.structure
 				new CategorieSchemesCollection();
 			var catExtractor:CategorySchemeExtractor 
 				= new CategorySchemeExtractor(_dataflows);
-			for each (var scheme:XML in _data.CategorySchemes.CategoryScheme) {
-				categories.addItem(catExtractor.extract(scheme));
+			if ("2.1" == GuessSDMXVersion.getSdmxVersion()) {
+				_referencedFlows = new Object();
+				extractReferencedFlows();
+				catExtractor.flows = _referencedFlows;
+				for each (var scheme:XML in _data.Structures.CategorySchemes.
+					CategoryScheme) {
+					categories.addItem(catExtractor.extract(scheme));
+				}
+			} else {
+				for each (var scheme:XML in _data.CategorySchemes.
+					CategoryScheme) {
+					categories.addItem(catExtractor.extract(scheme));
+				}
 			}
+
 			if (categories.length > 0) {
 				dispatchEvent(new SDMXDataEvent(categories, 
 					CATEGORY_SCHEMES_EVENT));
@@ -426,13 +489,56 @@ package org.sdmx.stores.xml.v2.structure
 			_hierarchies = new HierarchicalCodeSchemesCollection();
 			var hcsExtractor:HierarchicalCodeSchemeExtractor = 
 				new HierarchicalCodeSchemeExtractor(_codeLists);
-			for each (var hcs:XML in 
-				_data.HierarchicalCodelists.HierarchicalCodelist) {
-				_hierarchies.addItem(hcsExtractor.extract(hcs));
-			}	
+			if ("2.1" == GuessSDMXVersion.getSdmxVersion()) {
+				for each (var hcs:XML in _data.Structures.HierarchicalCodelists.
+					HierarchicalCodelist) {
+					_hierarchies.addItem(hcsExtractor.extract(hcs));
+				}
+			} else {	
+				for each (var hcs:XML in 
+					_data.HierarchicalCodelists.HierarchicalCodelist) {
+					_hierarchies.addItem(hcsExtractor.extract(hcs));
+				}	
+			}
 			if (_hierarchies.length > 0) {
 				dispatchEvent(new SDMXDataEvent(_hierarchies, 
 					HIERARCHICAL_CODE_SCHEMES_EVENT));
+			}
+		}
+		
+		private function extractConstraints(
+			flow:DataflowDefinition):ContentConstraint {
+			var constraintExtractor:ConstraintExtractor = 
+				new ConstraintExtractor();
+			var xml:XML = new XML(_data.Structures.Constraints.ContentConstraint.(
+				ConstraintAttachment.Dataflow.Ref.attribute("id") == flow.id));
+			return constraintExtractor.extract(xml) as ContentConstraint;	
+		}
+		
+		private function extractReferencedFlows() {
+			for each (var cat:XML in _data.Structures.Categorisations.
+				Categorisation) {
+				var category:String = cat.Target.Ref.@id;
+				if (!(_referencedFlows.hasOwnProperty(category))) {
+					_referencedFlows[category] = new DataflowsCollection();
+				}  	
+				var flowId:String = cat.Source.Ref.@id;
+				var flowAgencyId:String = cat.Source.Ref.@agencyID;
+				var flowVersion:String = cat.Source.Ref.@version;
+				var dataflow:DataflowDefinition = null;
+				if (null != _dataflows) {
+					dataflow = _dataflows.getDataflowById(
+						flowId,	flowAgencyId, flowVersion);
+				} else {
+					dataflow = new DataflowDefinition(
+						flowId, new InternationalString(),
+						new MaintenanceAgency(flowAgencyId), null);
+					dataflow.version = flowVersion;	
+				}
+				if (null != dataflow) {	
+					(_referencedFlows[category] as 
+						DataflowsCollection).addItem(dataflow);	
+				}		
 			}
 		}
 	}

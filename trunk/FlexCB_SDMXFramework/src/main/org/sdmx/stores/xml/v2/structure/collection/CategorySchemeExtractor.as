@@ -32,8 +32,9 @@ package org.sdmx.stores.xml.v2.structure.collection
 	import org.sdmx.model.v2.base.SDMXArtefact;
 	import org.sdmx.model.v2.structure.category.CategoryScheme;
 	import org.sdmx.model.v2.structure.keyfamily.DataflowsCollection;
-	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
+	import org.sdmx.stores.xml.v2.GuessSDMXVersion;
 	import org.sdmx.stores.xml.v2.structure.ExtractorPool;
+	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
 	import org.sdmx.stores.xml.v2.structure.base.MaintainableArtefactExtractor;
 
 	/**
@@ -52,13 +53,35 @@ package org.sdmx.stores.xml.v2.structure.collection
 			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure";		
 		use namespace structure;
 		
+		private namespace structure_v2_1 = 
+			"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure";	
+		use namespace structure_v2_1;
+		
 		private var _dataflows:DataflowsCollection;
+		
+		private var _referencedFlows;
 		
 		/*===========================Constructor==============================*/
 		
 		public function CategorySchemeExtractor(dataflows:DataflowsCollection) {
 			super();
 			_dataflows = dataflows;
+		}
+		
+		/*============================Accessors===============================*/
+		
+		/**
+		 * @inheritDoc 
+		 */
+		public function get flows():Object {
+			return _referencedFlows;
+		}
+		
+		/**
+		 * @inheritDoc 
+		 */
+		public function set flows(flows:Object):void {
+			_referencedFlows = flows;
 		}
 		
 		/*==========================Public methods============================*/
@@ -85,8 +108,13 @@ package org.sdmx.stores.xml.v2.structure.collection
 			var categoryExtractor:CategoryExtractor = 
 				new CategoryExtractor(_dataflows);
 			for each (var category:XML in items.Category) {
-				categoryScheme.categories.addItem(
-					categoryExtractor.extract(category));
+				if ("2.1" == GuessSDMXVersion.getSdmxVersion()) {
+					categoryScheme.categories.addItem(
+						categoryExtractor.extract21(category, flows));
+				} else {
+					categoryScheme.categories.addItem(
+						categoryExtractor.extract(category));
+				}
 			}
 			return categoryScheme;
 		}

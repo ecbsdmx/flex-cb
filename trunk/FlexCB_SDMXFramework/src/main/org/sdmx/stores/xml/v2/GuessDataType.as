@@ -66,7 +66,13 @@ package org.sdmx.stores.xml.v2
 				format = SDMXDataFormats.SDMX_ML_GENERIC;
 			} else if ("UtilityData" == file.localName()) {
 				format = SDMXDataFormats.SDMX_ML_UTILITY;
-			}
+			} else if ("GenericTimeSeriesData" == file.localName()) {
+				format = SDMXDataFormats.SDMX_ML_GENERIC;
+			} else if ("StructureSpecificTimeSeriesData" == file.localName()) {
+				format = SDMXDataFormats.SDMX_ML_COMPACT;
+			} else if ("StructureSpecificData" == file.localName()) {
+				format = SDMXDataFormats.SDMX_ML_COMPACT;
+			} 
 			return format; 
 		}
 	}

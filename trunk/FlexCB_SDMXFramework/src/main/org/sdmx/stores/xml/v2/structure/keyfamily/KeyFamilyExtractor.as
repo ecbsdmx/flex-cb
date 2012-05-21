@@ -38,8 +38,9 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 	import org.sdmx.model.v2.structure.keyfamily.KeyDescriptor;
 	import org.sdmx.model.v2.structure.keyfamily.KeyFamily;
 	import org.sdmx.model.v2.structure.keyfamily.MeasureDescriptor;
-	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
+	import org.sdmx.stores.xml.v2.GuessSDMXVersion;
 	import org.sdmx.stores.xml.v2.structure.ExtractorPool;
+	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
 	import org.sdmx.stores.xml.v2.structure.base.MaintainableArtefactExtractor;
 
 	/**
@@ -55,6 +56,10 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 		private namespace structure = 
 			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure";		
 		use namespace structure;
+		
+		private namespace structure21 = 
+			"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure";		
+		use namespace structure21;
 		
 		private var _codeLists:CodeLists;
 		
@@ -84,30 +89,52 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 			var dimExtractor:DimensionExtractor = 
 				new DimensionExtractor(_codeLists, _concepts);
 			var dimensions:KeyDescriptor = new KeyDescriptor("Dimensions");
-			for each (var dimension:XML in items.Components.Dimension) {
-				dimensions.addItem(dimExtractor.extract(dimension));
+			if ("2.1" == GuessSDMXVersion.getSdmxVersion()) {
+				for each (var dimension:XML in items.DataStructureComponents.DimensionList.Dimension) {
+					dimensions.addItem(dimExtractor.extract21(dimension));
+				}
+			} else {			
+				for each (var dimension:XML in items.Components.Dimension) {
+					dimensions.addItem(dimExtractor.extract(dimension));
+				}
 			}
 			
 			// Add time dimension
 			var tdExtractor:TimeDimensionExtractor = 
 				new TimeDimensionExtractor(_codeLists, _concepts);
-			dimensions.addItem(tdExtractor.extract(
-				items.Components.TimeDimension[0]));
+			if ("2.1" == GuessSDMXVersion.getSdmxVersion()) {
+				dimensions.addItem(tdExtractor.extract21(
+					items.DataStructureComponents.DimensionList.TimeDimension[0]));
+			} else {			
+				dimensions.addItem(tdExtractor.extract(
+					items.Components.TimeDimension[0]));
+			}	
 			
 			// Add groups
 			var groupExtractor:GroupExtractor = new GroupExtractor(dimensions);
 			var groups:GroupKeyDescriptorsCollection = 
 				new GroupKeyDescriptorsCollection();
-			for each (var group:XML in items.Components.Group) {
-				groups.addItem(groupExtractor.extract(group));
+			if ("2.1" == GuessSDMXVersion.getSdmxVersion()) {				
+				for each (var group:XML in items.DataStructureComponents.Group) {
+					groups.addItem(groupExtractor.extract21(group));
+				}
+			} else {
+				for each (var group:XML in items.Components.Group) {
+					groups.addItem(groupExtractor.extract(group));
+				}
 			}
 			
 			// Add measures
 			var measureExtractor:PrimaryMeasureExtractor = 
 				new PrimaryMeasureExtractor(_codeLists, _concepts);
 			var measures:MeasureDescriptor = new MeasureDescriptor("Measures");
-			measures.addItem(measureExtractor.extract(
-				items.Components.PrimaryMeasure[0]));
+			if ("2.1" == GuessSDMXVersion.getSdmxVersion()) {
+				measures.addItem(measureExtractor.extract21(
+					items.DataStructureComponents.MeasureList.PrimaryMeasure[0]));
+			} else {
+				measures.addItem(measureExtractor.extract(
+					items.Components.PrimaryMeasure[0]));
+			}
 			
 			// Add attributes
 			var firstGroup:GroupKeyDescriptor = null;
@@ -118,8 +145,15 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 				new AttributeExtractor(_codeLists, _concepts, firstGroup);
 			var attributes:AttributeDescriptor = 
 				new AttributeDescriptor("Attributes");
-			for each (var attribute:XML in items.Components.Attribute) {
-				attributes.addItem(attributeExtractor.extract(attribute));
+			if ("2.1" == GuessSDMXVersion.getSdmxVersion()) {
+				for each (var attribute:XML in 
+					items.DataStructureComponents.AttributeList.Attribute) {
+					attributes.addItem(attributeExtractor.extract21(attribute));
+				}
+			} else {
+				for each (var attribute:XML in items.Components.Attribute) {
+					attributes.addItem(attributeExtractor.extract(attribute));
+				}
 			}	
 			
 			// Create key family
