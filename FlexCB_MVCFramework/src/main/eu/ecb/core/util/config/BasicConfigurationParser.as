@@ -455,6 +455,7 @@ package eu.ecb.core.util.config
 					var mapLegendView:IMapComponent = 
 						new LegendClass() as IMapComponent;	
 					mapLegendView.helper = mapHelper;	
+					setOptions(mapLegendView, xml.init.mapLegend.options);
 					(sdmxView as IMap).mapLegend = mapLegendView; 
 				}
 			}
