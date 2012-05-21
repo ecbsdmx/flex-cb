@@ -415,7 +415,7 @@ package eu.ecb.core.view.table
 								obs.observationValue;
 							if (_createChangeColumn && 0 < j) {
 								createChangeObs(series.timePeriods.getItemAt(
-								j + 1) as TimePeriod, obs, obsCursor.current, 
+								j - 1) as TimePeriod, obs, obsCursor.current, 
 								colKeyCode);
 							} 	
 						}
@@ -453,31 +453,33 @@ package eu.ecb.core.view.table
 				
 				var foundSortDimension:Boolean = false;
 				var allColumnsForSorting:Object = new Object();
+				var allColCnt:uint = 1; 
 				for (var i:uint = 0; i < colDimensions.length; i++) {
-					(allColumns[i + 1] as DataGridColumn).dataField = 
+					(allColumns[allColCnt] as DataGridColumn).dataField = 
 						colDimensions.getItemAt(i).key;
-					(allColumns[i + 1] as DataGridColumn).headerText = 
+					(allColumns[allColCnt] as DataGridColumn).headerText = 
 						colDimensions.getItemAt(i).desc;
 					var cols:Array = new Array();
-					cols.push(allColumns[i + 1]);	
+					cols.push(allColumns[allColCnt]);	
 					if (_sortDimension == colDimensions.getItemAt(i).key) {
 						foundSortDimension = true;
 					}	
 					allColumnsForSorting[colDimensions.getItemAt(i).key] = cols;	
 					if (_createChangeColumn) {
-						(allColumns[i + 2] as DataGridColumn).dataField = 
+						allColCnt++;
+						(allColumns[allColCnt] as DataGridColumn).dataField = 
 							colDimensions.getItemAt(i).key + "_change";
-						(allColumns[i + 2] as DataGridColumn).headerText = 
+						(allColumns[allColCnt] as DataGridColumn).headerText = 
 							"Change";
-						(allColumns[i + 2] as DataGridColumn).labelFunction = 
+						(allColumns[allColCnt] as DataGridColumn).labelFunction = 
 							null;
-						(allColumns[i + 2] as DataGridColumn).
+						(allColumns[allColCnt] as DataGridColumn).
 							sortCompareFunction = sortChanges;
-						(allColumns[i + 2] as DataGridColumn).itemRenderer = 
+						(allColumns[allColCnt] as DataGridColumn).itemRenderer = 
 							new ClassFactory(ChangeRenderer);
-						cols.push(allColumns[i + 2]);	
-						i++;
+						cols.push(allColumns[allColCnt]);	
 					}	
+					allColCnt++;
 				}
 				var sortedColumns:Array = new Array();
 				sortedColumns.push(allColumns[0]);
