@@ -68,6 +68,15 @@ package org.sdmx.stores.xml.v2.generic
 			structureReader.read(_bisStructureXml);
 		}	
 		
+		public function testBIS21Data():void
+		{
+			var structureReader:StructureReader = new StructureReader();
+			structureReader.dispatchKeyFamilies = true;
+			structureReader.addEventListener(StructureReader.KEY_FAMILIES_EVENT,
+				addAsync(handleBISKeyFamiliesFor21Data, 3000));
+			structureReader.read(_bisStructureXml);
+		}	
+		
 		private function handleBISKeyFamilies(event:SDMXDataEvent):void 
 		{
 			_reader = new GenericReader((event.data as KeyFamilies).getItemAt(0) 
@@ -75,6 +84,15 @@ package org.sdmx.stores.xml.v2.generic
 			_reader.addEventListener(DataReaderAdapter.INIT_READY, 
 				handleBISDataReady);
 			_reader.dataFile = _bisDataXml;
+		}
+		
+		private function handleBISKeyFamiliesFor21Data(event:SDMXDataEvent):void 
+		{
+			_reader = new GenericReader((event.data as KeyFamilies).getItemAt(0) 
+				as KeyFamily);
+			_reader.addEventListener(DataReaderAdapter.INIT_READY, 
+				handleBISDataReady);
+			_reader.dataFile = _bisData21Xml;
 		}
 		
 		private function handleBISDataReady(event:Event):void
@@ -661,5 +679,155 @@ package org.sdmx.stores.xml.v2.generic
 		</generic:Group>
 	</DataSet>
 </GenericData>
+
+private var _bisData21Xml:XML =
+<message:GenericData 
+xmlns:message="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/message" 
+xmlns:common="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" 
+xmlns:generic="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/data/generic" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/message ../../xsd/SDMX/2.1/SDMXMessage.xsd">
+	<message:Header>
+			<message:ID>JD014</message:ID>
+			<message:Test>true</message:Test>
+			<message:Prepared>2001-03-11T09:30:47-05:00</message:Prepared>
+			<message:Sender id="BIS"/>
+			<message:Structure structureID="BIS_JOINT_DEBT" dimensionAtObservation="TIME_PERIOD">
+				<common:Structure>
+					<Ref agencyID="BIS" id="BIS_JOINT_DEBT" version="1.0"/>
+				</common:Structure>
+			</message:Structure>
+	</message:Header>
+	<message:DataSet structureRef="BIS_JOINT_DEBT">
+		<generic:Group type="Group">
+			<generic:GroupKey>
+				<generic:Value id="JD_TYPE" value="P"/>
+				<generic:Value id="JD_CATEGORY" value="A"/>
+				<generic:Value id="VIS_CTY" value="MX"/>
+			</generic:GroupKey>
+			<generic:Attributes>
+				<generic:Value id="AVAILABILITY" value="A"/>
+				<generic:Value id="DECIMALS" value="2"/>
+				<generic:Value id="BIS_UNIT" value="USD"/>
+				<generic:Value id="UNIT_MULT" value="5"/>
+			</generic:Attributes>
+		</generic:Group>
+		<generic:Series>
+				<generic:SeriesKey>
+					<generic:Value id="FREQ" value="M"/>
+					<generic:Value id="JD_TYPE" value="P"/>
+					<generic:Value id="JD_CATEGORY" value="A"/>
+					<generic:Value id="VIS_CTY" value="MX"/>
+				</generic:SeriesKey>
+				<generic:Attributes>
+					<generic:Value id="COLLECTION" value="B"/>
+					<generic:Value id="TIME_FORMAT" value="P1M"/>
+				</generic:Attributes>
+				<generic:Obs>
+					<generic:ObsDimension value="2000-01"/>
+					<generic:ObsValue  value="3.14"/>
+					<generic:Attributes>
+						<generic:Value id="OBS_STATUS" value="A"/>
+					</generic:Attributes>
+				</generic:Obs>
+				<generic:Obs>
+					<generic:ObsDimension value="2000-02"/>
+					<generic:ObsValue  value="3.14"/>
+					<generic:Attributes>
+						<generic:Value id="OBS_STATUS" value="A"/>
+					</generic:Attributes>
+				</generic:Obs>
+				<generic:Obs>
+					<generic:ObsDimension value="2000-03"/>
+					<generic:ObsValue  value="4.29"/>
+					<generic:Attributes>
+						<generic:Value id="OBS_STATUS" value="A"/>
+					</generic:Attributes>
+				</generic:Obs>
+				<generic:Obs>
+					<generic:ObsDimension value="2000-04"/>
+					<generic:ObsValue  value="6.04"/>
+					<generic:Attributes>
+						<generic:Value id="OBS_STATUS" value="A"/>
+					</generic:Attributes>
+				</generic:Obs>
+				<generic:Obs>
+					<generic:ObsDimension value="2000-05"/>
+					<generic:ObsValue  value="5.18"/>
+					<generic:Attributes>
+						<generic:Value id="OBS_STATUS" value="A"/>
+					</generic:Attributes>
+				</generic:Obs>
+				<generic:Obs>
+					<generic:ObsDimension value="2000-06"/>
+					<generic:ObsValue  value="5.07"/>
+					<generic:Attributes>
+						<generic:Value id="OBS_STATUS" value="A"/>
+					</generic:Attributes>
+				</generic:Obs>
+				<generic:Obs>
+					<generic:ObsDimension value="2000-07"/>
+					<generic:ObsValue  value="3.13"/>
+					<generic:Attributes>
+						<generic:Value id="OBS_STATUS" value="A"/>
+					</generic:Attributes>
+				</generic:Obs>
+				<generic:Obs>
+					<generic:ObsDimension value="2000-08"/>
+					<generic:ObsValue  value="1.17"/>
+					<generic:Attributes>
+						<generic:Value id="OBS_STATUS" value="A"/>
+					</generic:Attributes>
+				</generic:Obs>
+				<generic:Obs>
+					<generic:ObsDimension value="2000-09"/>
+					<generic:ObsValue  value="1.14"/>
+					<generic:Attributes>
+						<generic:Value id="OBS_STATUS" value="A"/>
+					</generic:Attributes>
+				</generic:Obs>
+				<generic:Obs>
+					<generic:ObsDimension value="2000-10"/>
+					<generic:ObsValue  value="3.04"/>
+					<generic:Attributes>
+						<generic:Value id="OBS_STATUS" value="A"/>
+					</generic:Attributes>
+				</generic:Obs>
+				<generic:Obs>
+					<generic:ObsDimension value="2000-11"/>
+					<generic:ObsValue  value="1.14"/>
+					<generic:Attributes>
+						<generic:Value id="OBS_STATUS" value="A"/>
+					</generic:Attributes>
+				</generic:Obs>
+				<generic:Obs>
+					<generic:ObsDimension value="2000-12"/>
+					<generic:ObsValue  value="3.24"/>
+					<generic:Attributes>
+						<generic:Value id="OBS_STATUS" value="A"/>
+					</generic:Attributes>
+				</generic:Obs>
+			</generic:Series>
+			<generic:Series>
+				<generic:SeriesKey>
+					<generic:Value id="FREQ" value="A"/>
+					<generic:Value id="JD_TYPE" value="P"/>
+					<generic:Value id="JD_CATEGORY" value="A"/>
+					<generic:Value id="VIS_CTY" value="MX"/>
+				</generic:SeriesKey>
+				<generic:Attributes>
+					<generic:Value id="COLLECTION" value="B"/>
+					<generic:Value id="TIME_FORMAT" value="P1Y"/>
+				</generic:Attributes>
+				<generic:Obs>
+					<generic:ObsDimension value="2000-01"/>
+					<generic:ObsValue  value="3.14"/>
+					<generic:Attributes>
+						<generic:Value id="OBS_STATUS" value="A"/>
+					</generic:Attributes>
+				</generic:Obs>
+			</generic:Series>
+	</message:DataSet>
+</message:GenericData>
 	}
 }

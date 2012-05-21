@@ -113,6 +113,15 @@ package org.sdmx.stores.xml.v2.compact
 			structureReader.read(_structureXML);
 		}
 		
+		public function testSdmx21():void
+		{
+			var structureReader:StructureReader = new StructureReader();
+			structureReader.dispatchKeyFamilies = true;
+			structureReader.addEventListener(StructureReader.KEY_FAMILIES_EVENT,
+				addAsync(handleKeyFamilies4, 3000));
+			structureReader.read(_structureXML);
+		}
+		
 		private function handleKeyFamilies(event:SDMXDataEvent):void 
 		{
 			_compactReader = new CompactReader((event.data as KeyFamilies).
@@ -154,6 +163,17 @@ package org.sdmx.stores.xml.v2.compact
 			_compactReader.optimisationLevel = 
 				CompactReader.SERIES_POSITION_OPTIMISATION;	
 			_compactReader.dataFile = _compactXML2;	
+		}
+		
+		private function handleKeyFamilies4(event:SDMXDataEvent):void 
+		{
+			_compactReader = new CompactReader((event.data as KeyFamilies).
+				getItemAt(0) as KeyFamily);
+			_compactReader.addEventListener(DataReaderAdapter.INIT_READY, 
+				handleInitReady3);
+			_compactReader.optimisationLevel = 
+				CompactReader.SERIES_POSITION_OPTIMISATION;	
+			_compactReader.dataFile = _compactXML21;	
 		}
 		
 		private function handleInitReady(event:Event):void
@@ -326,6 +346,39 @@ package org.sdmx.stores.xml.v2.compact
 		</Series>
 	</DataSet>
 </CompactData>		
+
+	private var _compactXML21:XML =
+<message:StructureSpecificData 
+	xmlns:exr="urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=ECB:ECB_EXR_SG[1.0]:ObsLevelDim:TIME_PERIOD" 
+	xmlns:message="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/message" 
+	xmlns:data="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/data/structurespecific" 
+	xmlns:common="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/message ../../xsd/SDMX/2.1/SDMXMessage.xsd urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=ECB:ECB_EXR_SG[1.0]:ObsLevelDim:TIME_PERIOD ecb_exr_sg_ts.xsd">
+	<message:Header>
+		<message:ID>Generic</message:ID>
+		<message:Test>false</message:Test>
+		<message:Prepared>2010-01-04T16:21:49+01:00</message:Prepared>
+		<message:Sender id="ECB"/>
+		<message:Structure structureID="STR1" dimensionAtObservation="TIME_PERIOD" namespace="urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=ECB:ECB_EXR_SG[1.0]:ObsLevelDim:TIME_PERIOD">
+			<common:Structure>
+				<Ref agencyID="ECB" id="ECB_EXR_SG" version="1.0"/>
+			</common:Structure>
+		</message:Structure>
+		<message:Extracted>2007-04-26T14:25:11</message:Extracted>
+	</message:Header>
+	<message:DataSet data:structureRef="STR1" xsi:type="exr:DataSetType" data:dataScope="DataStructure">
+		<Group xsi:type="exr:Group" CURRENCY="USD" CURRENCY_DENOM="EUR" EXR_TYPE="SP00" EXR_SUFFIX="A" DECIMALS="4" UNIT="USD" UNIT_MULT="0" TITLE_COMPL="ECB reference exchange rate, US dollar/Euro, 2:15 pm (C.E.T.)" />
+		<Series FREQ="D" CURRENCY="USD" CURRENCY_DENOM="EUR" EXR_TYPE="SP00" EXR_SUFFIX="A" TIME_FORMAT="P1D" COLLECTION="A">
+			<Obs TIME_PERIOD="1999-01-04" OBS_VALUE="1.1789" OBS_STATUS="A" OBS_CONF="F" />
+			<Obs TIME_PERIOD="1999-01-05" OBS_VALUE="1.1790" OBS_STATUS="A" OBS_CONF="F" />
+			<Obs TIME_PERIOD="1999-01-06" OBS_VALUE="1.1743" OBS_STATUS="A" OBS_CONF="F" />
+			<Obs TIME_PERIOD="1999-01-07" OBS_VALUE="1.1632" OBS_STATUS="A" OBS_CONF="F" />
+			<Obs TIME_PERIOD="1999-01-08" OBS_VALUE="1.1659" OBS_STATUS="A" OBS_CONF="F" />
+			<Obs TIME_PERIOD="1999-01-11" OBS_VALUE="1.1569" OBS_STATUS="A" OBS_CONF="F" />
+		</Series>
+	</message:DataSet>
+</message:StructureSpecificData>
 		
 		private var _structureXML:XML =
 <Structure 

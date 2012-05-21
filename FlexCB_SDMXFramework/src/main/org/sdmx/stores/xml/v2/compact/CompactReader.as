@@ -28,19 +28,12 @@ package org.sdmx.stores.xml.v2.compact
 {
 	import flash.events.IEventDispatcher;
 	
-	import org.sdmx.model.v2.reporting.dataset.CodedObservation;
 	import org.sdmx.model.v2.reporting.dataset.GroupKey;
 	import org.sdmx.model.v2.reporting.dataset.KeyValue;
-	import org.sdmx.model.v2.reporting.dataset.Observation;
-	import org.sdmx.model.v2.reporting.dataset.TimePeriod;
 	import org.sdmx.model.v2.reporting.dataset.TimeseriesKey;
-	import org.sdmx.model.v2.reporting.dataset.UncodedObservation;
-	import org.sdmx.model.v2.structure.code.Code;
-	import org.sdmx.model.v2.structure.code.CodeList;
-	import org.sdmx.model.v2.structure.keyfamily.CodedMeasure;
 	import org.sdmx.model.v2.structure.keyfamily.KeyFamily;
-	import org.sdmx.model.v2.structure.keyfamily.UncodedMeasure;
 	import org.sdmx.stores.xml.v2.DataReaderAdapter;
+	import org.sdmx.stores.xml.v2.GuessSDMXVersion;
 	
 	/**
 	 * Reads an SDMX-ML Compact data file and returns a dataset containing the
@@ -96,7 +89,7 @@ package org.sdmx.stores.xml.v2.compact
 		 */ 
 		override protected function getObservations(xml:XML):XMLList 
 		{
-			return xml.dataSetNS::Obs;
+			return xml.*::Obs;
 		}
 		
 		/**
@@ -167,5 +160,26 @@ package org.sdmx.stores.xml.v2.compact
 				}
 			}
 		}	
+		
+		/**
+		 * @inheritDoc
+		 */
+		override protected function getGroupName(xml:XML):String
+		{
+			if (GuessSDMXVersion.SDMX_v2_1 == GuessSDMXVersion.getSdmxVersion()) {
+				var typeAttr:QName = 
+				new QName("http://www.w3.org/2001/XMLSchema-instance", "type");
+				if (xml.attribute(typeAttr).length() > 0) {
+					var grpName:String = xml.attribute(typeAttr).toString();
+					return grpName.substr(grpName.indexOf(":") + 1, 
+						grpName.length);
+				} else {
+					throw new Error("Could not find group xsi:type attribute" + 
+							" in: " + xml);
+				}
+			} else {
+				return xml.localName() 
+			}
+		}
 	}
 }
