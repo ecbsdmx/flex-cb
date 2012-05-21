@@ -47,9 +47,11 @@ package org.sdmx.stores.xml.v2.generic
 		/*============================Namespaces==============================*/
 		
 		/**
-		 * The SDMX generic namespace 
+		 * The SDMX 2.0 generic namespace 
 		 */
 		protected var genericNS:Namespace;
+		
+		protected var isSDMX21:Boolean;
 		
 		/*===========================Constructor==============================*/
 		
@@ -62,8 +64,6 @@ package org.sdmx.stores.xml.v2.generic
 			target:IEventDispatcher=null)
 		{
 			super(kf, target);
-			genericNS = new Namespace("generic", 
-				"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/generic");
 		}
 		
 		/*=========================Protected methods==========================*/
@@ -74,8 +74,14 @@ package org.sdmx.stores.xml.v2.generic
 		override protected function getDimensionValue(xml:XML, 
 			dimensionId:String):String
 		{
-			return String(
-				xml.*[0].genericNS::Value.(@concept==dimensionId).@value);
+			if (null == genericNS) {
+				genericNS = new Namespace("generic", xml.namespace());
+				isSDMX21 = genericNS.uri.indexOf("v2_1") > -1;
+			}
+			var dimensionValue:String = isSDMX21 ?
+				String(xml.*[0].genericNS::Value.(@id==dimensionId).@value) :
+				String(xml.*[0].genericNS::Value.(@concept==dimensionId).@value);
+			return dimensionValue;
 		}
 		
 		/**
@@ -84,8 +90,15 @@ package org.sdmx.stores.xml.v2.generic
 		override protected function getAttributeValue(xml:XML, 
 			attributeId:String):String
 		{
-			return String(xml.genericNS::Attributes.genericNS::Value.
+			var attrValue:String;
+			if (isSDMX21) {
+				attrValue = String(xml.genericNS::Attributes.genericNS::Value.
+				(@id==attributeId).@value);
+			} else {
+				attrValue = String(xml.genericNS::Attributes.genericNS::Value.
 				(@concept==attributeId).@value);
+			}
+			return attrValue;
 		}
 		
 		/**
@@ -116,7 +129,13 @@ package org.sdmx.stores.xml.v2.generic
 		{
 			var obs:Object = new Object();
 			obs["value"]   = xml.genericNS::ObsValue.attribute("value");
-			obs["period"]  = xml.genericNS::Time.text();
+			var period:String;
+			if (isSDMX21) {
+				period = xml.genericNS::ObsDimension..attribute("value");
+			} else {
+				period = xml.genericNS::Time.text();
+			}
+			obs["period"]  = period;
 			return obs;		
 		}
 		

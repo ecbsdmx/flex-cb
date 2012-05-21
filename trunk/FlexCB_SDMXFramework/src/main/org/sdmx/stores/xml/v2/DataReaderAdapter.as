@@ -174,9 +174,14 @@ package org.sdmx.stores.xml.v2
 		/*============================Namespaces==============================*/
 		
 		/**
-		 * The SDMX message namespace 
+		 * The SDMX 2.0 message namespace 
 		 */
 		protected var messageNS:Namespace;
+		
+		/**
+		 * The SDMX 2.1 message namespace 
+		 */
+		protected var messageNS21:Namespace;
 		
 		/**
 		 * The DataSet namespace 
@@ -185,7 +190,10 @@ package org.sdmx.stores.xml.v2
 		
 		private static var extractedQName:QName = new QName(
 				"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message", 
-				"Extracted")
+				"Extracted");
+		private static var extractedQName21:QName = new QName(
+				"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/message", 
+				"Extracted");		
 		
 		/*===========================Constructor==============================*/
 		
@@ -195,6 +203,8 @@ package org.sdmx.stores.xml.v2
 			super(target);
 			messageNS = new Namespace("message", 
 				"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message");
+			messageNS21 = new Namespace("message", 
+				"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/message");
 			_sdmxDate = new SDMXDate();
 			_optimisationLevel = 0;
 			_sort = new Sort();
@@ -502,6 +512,11 @@ package org.sdmx.stores.xml.v2
 					_sdmxDate.getDate(
 						String(_data.messageNS::Header.messageNS::Extracted));
 			}
+			if (_data.messageNS21::Header.child(extractedQName21).length() > 0) {
+				_dataSet.dataExtractionDate =
+					_sdmxDate.getDate(
+						String(_data.messageNS21::Header.messageNS21::Extracted));
+			}
 			dispatchEvent(new Event(INIT_READY));	
 		}
 		
@@ -575,15 +590,15 @@ package org.sdmx.stores.xml.v2
 						if (_keyValues[dimensionId] == null ) {
 							_keyValues[dimensionId] = new Array();
 						}
-						code = (dimension.localRepresentation as CodeList).
-							codes.getCode(value);
+						code = null != dimension.localRepresentation ? 
+							(dimension.localRepresentation as CodeList).codes.getCode(value) :
+							(dimension.conceptIdentity.coreRepresentation as CodeList).codes.getCode(value);
 						if (null == code) {
 							throw new Error("Could not find value for " + 
 								dimensionId);
 						}
 						_keyValues[dimensionId][value] = 
-							new KeyValue((dimension.localRepresentation as 
-							CodeList).codes.getCode(value), dimension);
+							new KeyValue(code, dimension);
 						values.push(_keyValues[dimensionId][value]);	
 					}
 				}
