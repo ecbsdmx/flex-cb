@@ -61,7 +61,7 @@ package org.sdmx.stores.xml.v2.structure.collection
 						</common:Annotation>
 					</Annotations>
 				</Concept>	
-			var extractor:ConceptExtractor = new ConceptExtractor();
+			var extractor:ConceptExtractor = new ConceptExtractor(null);
 			var item:Concept = extractor.extract(xml) as Concept;
 			assertNotNull("The item cannot be null", item);
 			assertEquals("The IDs should be equal", "ADJU_DETAIL", item.id);
@@ -101,7 +101,7 @@ package org.sdmx.stores.xml.v2.structure.collection
 						</common:Annotation>
 					</Annotations>
 				</Concept>
-			var extractor:ConceptExtractor = new ConceptExtractor();
+			var extractor:ConceptExtractor = new ConceptExtractor(null);
 			try {
 				extractor.extract(xml);
 				fail("Name is mandatory!");

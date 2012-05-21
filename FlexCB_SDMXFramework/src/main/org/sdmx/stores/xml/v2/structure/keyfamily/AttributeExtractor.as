@@ -30,6 +30,7 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 {
 	import org.sdmx.model.v2.base.SDMXArtefact;
 	import org.sdmx.model.v2.base.structure.LengthRange;
+	import org.sdmx.model.v2.base.type.AttachmentLevel;
 	import org.sdmx.model.v2.base.type.ConceptRole;
 	import org.sdmx.model.v2.base.type.DataType;
 	import org.sdmx.model.v2.base.type.XSAttachmentLevel;
@@ -65,6 +66,10 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 		private namespace structure = 
 			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure";		
 		use namespace structure;
+		
+		private namespace structure21 = 
+			"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure";		
+		use namespace structure21;
 		
 		/*===========================Constructor==============================*/
 		
@@ -180,6 +185,111 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 			} else if (items.@crossSectionalAttachDataSet == true) {
 				attribute.xsAttachmentLevel = XSAttachmentLevel.XSDATASET;
 			}
+			return attribute;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function extract21(items:XML):SDMXArtefact {
+			var conceptRef:String = null;
+			var conceptSchemeRef:String = null
+			if (items.ConceptIdentity.Ref.length() > 0) {
+				conceptRef = (items.ConceptIdentity.Ref.attribute("id").
+					length() > 0) ? items.ConceptIdentity.Ref.@id : null;
+				conceptSchemeRef = (items.ConceptIdentity.Ref.
+					attribute("maintainableParentID").length() > 0) ? 
+					items.ConceptIdentity.Ref.@maintainableParentID : null; 
+			} else if (items.ConceptIdentity.URN.length() > 0) {
+				var urn:String = items.ConceptIdentity.URN[0].toString();
+				conceptRef = urn.substring(urn.lastIndexOf(".") + 1, urn.length);
+				conceptSchemeRef = urn.substring(urn.lastIndexOf(":") + 1, urn.indexOf("("));
+			}
+			if (null == conceptRef) {
+				throw new SyntaxError("Could not find the concept reference:" 
+					+ items);
+			}
+			var concept:Concept = 
+				_concepts.getConcept(conceptRef, conceptSchemeRef);
+			if (null == concept) {
+				throw new SyntaxError("Could not find any concept with id: " + 
+					items.@conceptRef);
+			}
+			var attribute:DataAttribute;
+			var codeList:CodeList;
+			if (null != _codeLists) {	
+				var codelistEl:String = null;
+				var codelistVersionEl:String = null;
+				var codelistAgencyEl:String = null;
+				if (items.LocalRepresentation.Enumeration.Ref.length() > 0) {
+					codelistEl = (items.LocalRepresentation.Enumeration.
+						Ref.attribute("id").length() > 0) ? 
+						items.LocalRepresentation.Enumeration.Ref.@id : null;
+					codelistVersionEl = (items.LocalRepresentation.
+						Enumeration.Ref.attribute("version").length() > 0) ? 
+						items.LocalRepresentation.Enumeration.Ref.@version : null;
+					codelistAgencyEl = (items.LocalRepresentation.
+						Enumeration.Ref.attribute("agencyID").length() > 0) ? 
+						items.LocalRepresentation.Enumeration.Ref.@agencyID : null;
+				} else if (items.LocalRepresentation.Enumeration.URN.length() > 0) {
+					var urn:String = 
+						items.LocalRepresentation.Enumeration.URN[0].toString();
+					codelistEl = urn.substring(urn.lastIndexOf(":") + 1, urn.indexOf("("));
+					codelistVersionEl = 
+						urn.substring(urn.indexOf("(") + 1, urn.indexOf(")"));
+					codelistAgencyEl = 
+						urn.substring(urn.indexOf("=") + 1, urn.lastIndexOf(":"));
+				}
+				if (null != codelistEl) {
+					codeList = _codeLists.getCodeList(
+						codelistEl, codelistVersionEl, codelistAgencyEl);
+				} 
+			}	
+			if (null != codeList) {
+				attribute = 
+					new CodedDataAttribute(concept.id, concept, codeList);
+			} else {
+				attribute = 
+					new UncodedDataAttribute(concept.id, concept);
+				var tf:QName = new QName(
+				"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure", 
+				"TextFormat");
+				if (items.LocalRepresentation.child(tf).length() > 0) {
+					if (items.LocalRepresentation.TextFormat.@maxLength) {
+						attribute.localRepresentation = 
+								new LengthRange(0, items.LocalRepresentation.
+									TextFormat.@maxLength, 
+									DataType.INTEGER);
+					} else if (items.LocalRepresentation.TextFormat.
+						attribute("textType").length() == 0) {
+						attribute.localRepresentation = 
+							new LengthRange(NaN, NaN, DataType.STRING);
+					} else {
+						throw new SyntaxError("Unknown local representation: " + 
+							items.LocalRepresentation.TextFormat);
+					}
+				}
+			}
+			
+			if (conceptRef == "TIME_FORMAT") {
+				attribute.conceptRole = ConceptRole.TIME_FORMAT;
+			}
+			attribute.usageStatus = items.@assignmentStatus;
+			var groupLvlName:QName = new QName(
+				"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure", 
+				"Group");
+			var obsLvlName:QName = new QName(
+				"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure", 
+				"PrimaryMeasure");
+			if(items.AttributeRelationship.child(groupLvlName).length() > 0) {
+				attribute.attachmentLevel = AttachmentLevel.GROUP;
+			} else if(items.AttributeRelationship.child(
+				obsLvlName).length() > 0) {
+				attribute.attachmentLevel = AttachmentLevel.OBSERVATION;
+			} else {
+				attribute.attachmentLevel = AttachmentLevel.SERIES;
+			}
+			
 			return attribute;
 		}
 	}

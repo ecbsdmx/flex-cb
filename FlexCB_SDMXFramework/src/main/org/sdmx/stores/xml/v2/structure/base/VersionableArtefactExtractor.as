@@ -44,9 +44,9 @@ package org.sdmx.stores.xml.v2.structure.base
 		
 		/*==============================Fields================================*/
 		
-		private namespace structure = 
+		/*private namespace structure = 
 			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure";		
-		use namespace structure;
+		use namespace structure;*/
 		private var _iaExtractor:IdentifiableArtefactExtractor;
 		private var _sdmxDate:SDMXDate; 
 		private var _identifiableArtefact:IdentifiableArtefact;

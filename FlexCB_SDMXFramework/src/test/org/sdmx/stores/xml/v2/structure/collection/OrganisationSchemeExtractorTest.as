@@ -48,9 +48,9 @@ package org.sdmx.stores.xml.v2.structure.collection
 			return new TestSuite(OrganisationSchemeExtractorTest);
 		}
 		
-		public function testExtractOrganisationScheme():void {
+		public function testExtractOrganisationSchemeSdmx20():void {
 			var xml:XML = 
-				<OrganisationScheme id="ESCB" agencyID="ECB" isFinal="true" uri="http://www.ecb.int" urn="ECB:DESC" validFrom="2007-07-28" validTo="2007-07-29" version="1.0">
+				<OrganisationScheme id="ESCB" agencyID="ECB" isFinal="true" uri="http://www.ecb.int" urn="ECB:DESC" validFrom="2007-07-28" validTo="2007-07-29" version="1.0" xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure">
 					<Name xml:lang="en">The European System of Central Banks</Name>
 					<Description>The European System of Central Banks (Desc)</Description>
 					<Agencies>
@@ -104,6 +104,87 @@ package org.sdmx.stores.xml.v2.structure.collection
 			assertEquals("The IDs for organisation 2 should be equal", "4F0", organisation2.id);
 			assertNotNull("The name for organisation 2 cannot be null", organisation2.name);
 			assertEquals("The name for EN should be equal for organisation 2", "European Central Bank", organisation2.name.localisedStrings.getDescriptionByLocale("en"));
+		}
+		
+		public function testExtractAgencySchemeSdmx21():void {
+			var xml:XML = 
+				<structure:AgencyScheme id="AGENCIES" agencyID="SDMX"
+					isExternalReference="false" version="1.0" 
+					xmlns:structure="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure" 
+					xmlns:common="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common">
+					<common:Name>Maintenance agencies</common:Name>
+					<structure:Agency id="ECB">
+						<common:Name>European Central Bank</common:Name>
+					</structure:Agency>
+					<structure:Agency id="BIS">
+						<common:Name>Bank for International Settlements</common:Name>
+					</structure:Agency>				
+				</structure:AgencyScheme>
+			var extractor:OrganisationSchemeExtractor = new OrganisationSchemeExtractor();
+			var item:OrganisationScheme = extractor.extract(xml) as OrganisationScheme;
+			assertNotNull("The item cannot be null", item);
+			assertEquals("The IDs should be equal", "AGENCIES", item.id);
+			assertEquals("The URIs should be null", null, item.uri);
+			assertEquals("The URNs should be null", null, item.urn);
+			assertEquals("The versions should be equal", "1.0", item.version);
+			assertEquals("The validFrom should be null", null, item.validFrom);
+			assertEquals("The validTo should be null", null, item.validTo);			
+			assertFalse("The isFinal flag should be equal", item.isFinal);
+			assertEquals("SDMX should be the maintenance agency", "SDMX", item.maintainer.id);
+			assertNotNull("The name cannot be null", item.name);
+			assertEquals("There should be 1 localised strings in the name collection", 1, item.name.localisedStrings.length);
+			assertEquals("The names for EN should be equal", "Maintenance agencies", item.name.localisedStrings.getDescriptionByLocale("en"));
+			assertEquals("The description should be null", null, item.description);
+			assertNotNull("The list of organisations cannot be null", item.organisations);
+			assertEquals("There should be 2 organisations in the list", 2, item.organisations.length);
+			var organisation1:Organisation = item.organisations.getItemAt(1) as Organisation;
+			var organisation2:Organisation = item.organisations.getItemAt(0) as Organisation;
+			assertNotNull("The organisation 1 cannot be null", organisation1);
+			assertTrue("The organisation 1 should be an agency", organisation1 is MaintenanceAgency);
+			assertEquals("The IDs for organisation 1 should be equal", "ECB", organisation1.id);
+			assertNotNull("The name for organisation 1 cannot be null", organisation1.name);
+			assertEquals("The name for EN should be equal for organisation 1", "European Central Bank", organisation1.name.localisedStrings.getDescriptionByLocale("en"));
+			assertNotNull("The organisation 2 cannot be null", organisation2);
+			assertTrue("The organisation 2 should be another agency", organisation2 is MaintenanceAgency);
+			assertEquals("The IDs for organisation 2 should be equal", "BIS", organisation2.id);
+			assertNotNull("The name for organisation 2 cannot be null", organisation2.name);
+			assertEquals("The name for EN should be equal for organisation 2", "Bank for International Settlements", organisation2.name.localisedStrings.getDescriptionByLocale("en"));
+		}
+		
+		public function testExtractProviderSchemeSdmx21():void {
+			var xml:XML = 
+				<structure:DataProviderScheme id="DATA_PROVIDERS" agencyID="SDMX"
+					isExternalReference="false" version="1.0" 
+					xmlns:structure="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure" 
+					xmlns:common="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common">
+					<common:Name>Data providers</common:Name>
+					<structure:DataProvider id="ECB">
+						<common:Name>European Central Bank</common:Name>
+					</structure:DataProvider>
+				</structure:DataProviderScheme>	
+			var extractor:OrganisationSchemeExtractor = new OrganisationSchemeExtractor();
+			var item:OrganisationScheme = extractor.extract(xml) as OrganisationScheme;
+			assertNotNull("The item cannot be null", item);
+			assertEquals("The IDs should be equal", "DATA_PROVIDERS", item.id);
+			assertEquals("The URIs should be null", null, item.uri);
+			assertEquals("The URNs should be null", null, item.urn);
+			assertEquals("The versions should be equal", "1.0", item.version);
+			assertEquals("The validFrom should be null", null, item.validFrom);
+			assertEquals("The validTo should be null", null, item.validTo);			
+			assertFalse("The isFinal flag should be equal", item.isFinal);
+			assertEquals("SDMX should be the maintenance agency", "SDMX", item.maintainer.id);
+			assertNotNull("The name cannot be null", item.name);
+			assertEquals("There should be 1 localised strings in the name collection", 1, item.name.localisedStrings.length);
+			assertEquals("The names for EN should be equal", "Data providers", item.name.localisedStrings.getDescriptionByLocale("en"));
+			assertEquals("The description should be null", null, item.description);
+			assertNotNull("The list of organisations cannot be null", item.organisations);
+			assertEquals("There should be 1 organisation in the list", 1, item.organisations.length);
+			var organisation1:Organisation = item.organisations.getItemAt(0) as Organisation;
+			assertNotNull("The organisation 1 cannot be null", organisation1);
+			assertTrue("The organisation 1 should be an agency", organisation1 is DataProvider);
+			assertEquals("The IDs for organisation 1 should be equal", "ECB", organisation1.id);
+			assertNotNull("The name for organisation 1 cannot be null", organisation1.name);
+			assertEquals("The name for EN should be equal for organisation 1", "European Central Bank", organisation1.name.localisedStrings.getDescriptionByLocale("en"));
 		}
 	}
 }

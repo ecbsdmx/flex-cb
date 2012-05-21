@@ -54,6 +54,14 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 		
 		private var _concepts:Concepts;
 		
+		private namespace structure = 
+			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure";		
+		use namespace structure;
+		
+		private namespace structure21 = 
+			"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure";		
+		use namespace structure21;
+		
 		/*===========================Constructor==============================*/
 		
 		public function TimeDimensionExtractor(codeLists:CodeLists, 
@@ -109,6 +117,44 @@ package org.sdmx.stores.xml.v2.structure.keyfamily
 			if (items.@crossSectionalAttachGroup == true) {
 				dimension.xsAttachmentLevel = XSAttachmentLevel.GROUP;
 			}
+			return dimension;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function extract21(items:XML):SDMXArtefact {
+			var conceptRef:String = null;
+			var conceptSchemeRef:String = null
+			if (items.ConceptIdentity.Ref.length() > 0) {
+				conceptRef = (items.ConceptIdentity.Ref.attribute("id").
+					length() > 0) ? items.ConceptIdentity.Ref.@id : null;
+				conceptSchemeRef = (items.ConceptIdentity.Ref.
+					attribute("maintainableParentID").length() > 0) ? 
+					items.ConceptIdentity.Ref.@maintainableParentID : null; 
+			} else if (items.ConceptIdentity.URN.length() > 0) {
+				var urn:String = items.ConceptIdentity.URN[0].toString();
+				conceptRef = urn.substring(urn.lastIndexOf(".") + 1, urn.length);
+				conceptSchemeRef = urn.substring(urn.lastIndexOf(":") + 1, urn.indexOf("("));
+			}
+			if (null == conceptRef) {
+				throw new SyntaxError("Could not find the concept reference:" 
+					+ items);
+			}
+			if (null == conceptRef) {
+				throw new SyntaxError("Could not find the conceptRef attribute:" 
+					+ items);
+			}
+			var concept:Concept = _concepts.getConcept(conceptRef, 
+				conceptSchemeRef);
+			if (null == concept) {
+				throw new SyntaxError("Could not find any concept with id: " + 
+				items.@conceptRef);
+			}
+			var dimension:Dimension = 
+				new Dimension(concept.id, concept);
+			dimension.conceptRole = ConceptRole.TIME;
+			
 			return dimension;
 		}
 	}

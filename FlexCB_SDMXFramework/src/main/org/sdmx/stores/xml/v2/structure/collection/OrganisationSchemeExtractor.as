@@ -34,8 +34,9 @@ package org.sdmx.stores.xml.v2.structure.collection
 	import org.sdmx.model.v2.structure.organisation.MaintenanceAgency;
 	import org.sdmx.model.v2.structure.organisation.Organisation;
 	import org.sdmx.model.v2.structure.organisation.OrganisationScheme;
-	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
+	import org.sdmx.stores.xml.v2.GuessSDMXVersion;
 	import org.sdmx.stores.xml.v2.structure.ExtractorPool;
+	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
 	import org.sdmx.stores.xml.v2.structure.base.MaintainableArtefactExtractor;
 
 	/**
@@ -50,9 +51,12 @@ package org.sdmx.stores.xml.v2.structure.collection
 		
 		/*==============================Fields================================*/
 		
-		private namespace structure = 
-			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure";		
-		use namespace structure;
+		private namespace structure_v2_0 = 
+			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure";	
+		use namespace structure_v2_0;	
+		private namespace structure_v2_1 = 
+			"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure";	
+		use namespace structure_v2_1;
 		
 		/*===========================Constructor==============================*/
 	
@@ -66,6 +70,7 @@ package org.sdmx.stores.xml.v2.structure.collection
 		 * @inheritDoc
 		 */
 		public function extract(items:XML):SDMXArtefact {
+			GuessSDMXVersion.setSdmxVersion(items);
 			var isExtractor:MaintainableArtefactExtractor = 
 				ExtractorPool.getInstance().maintainableArtefactExtractor;
 			var itemScheme:MaintainableArtefact 
@@ -83,7 +88,10 @@ package org.sdmx.stores.xml.v2.structure.collection
 			organisationScheme.annotations = itemScheme.annotations;
 			var organisationExtractor:OrganisationExtractor = 
 				new OrganisationExtractor();
-			for each (var provider:XML in items..DataProvider) {
+			var providers:XMLList = 
+				GuessSDMXVersion.SDMX_v2_0 == GuessSDMXVersion.getSdmxVersion()?
+					items..DataProvider : items.DataProvider;
+			for each (var provider:XML in providers) {
 				organisationScheme.organisations.addItem(
 					castToDataProvider(organisationExtractor.extract(provider) 
 					as Organisation));

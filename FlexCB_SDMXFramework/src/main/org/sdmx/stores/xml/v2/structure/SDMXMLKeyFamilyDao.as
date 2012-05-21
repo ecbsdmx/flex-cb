@@ -121,9 +121,20 @@ package org.sdmx.stores.xml.v2.structure
 		
 		private function validStructureFile(file:XML):Boolean
 		{
+			// Check for 2.0
 			var messageNS:Namespace = new Namespace("message", 
 				"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message");
-			return file.messageNS::KeyFamilies.length() > 0;
+			var valid:Boolean = file.messageNS::KeyFamilies.length() > 0;
+			
+			// Check for 2.1
+			if (!valid) {
+				var messageNS21:Namespace = new Namespace("message", 
+				"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/message");
+				var structureNS21:Namespace = new Namespace("structure", 
+				"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure");
+				valid = file.messageNS21::Structures.structureNS21::DataStructures.length() > 0;
+			} 	
+			return valid;
 		}
 		
 		private function dispatchResults():void

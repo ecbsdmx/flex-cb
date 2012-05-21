@@ -30,9 +30,12 @@ package org.sdmx.stores.xml.v2.structure.collection
 {
 	import org.sdmx.model.v2.base.SDMXArtefact;
 	import org.sdmx.model.v2.base.VersionableArtefact;
+	import org.sdmx.model.v2.structure.code.CodeList;
+	import org.sdmx.model.v2.structure.code.CodeLists;
 	import org.sdmx.model.v2.structure.concept.Concept;
-	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
+	import org.sdmx.stores.xml.v2.GuessSDMXVersion;
 	import org.sdmx.stores.xml.v2.structure.ExtractorPool;
+	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
 
 	/**
 	 * Extracts Concepts out of SDMX-ML structure files.
@@ -53,10 +56,17 @@ package org.sdmx.stores.xml.v2.structure.collection
 			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure";		
 		use namespace structure;
 		
+		private namespace structure21 = 
+			"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure";		
+		use namespace structure21;
+		
+		private var _codeLists:CodeLists;
+		
 		/*===========================Constructor==============================*/
 		
-		public function ConceptExtractor() {
+		public function ConceptExtractor(codeLists:CodeLists) {
 			super();
+			_codeLists = codeLists;
 		}
 		
 		/*==========================Public methods============================*/
@@ -79,6 +89,44 @@ package org.sdmx.stores.xml.v2.structure.collection
 			conceptItem.uri = item.uri;
 			conceptItem.urn = item.urn;
 			conceptItem.version = item.version;
+			
+			if (GuessSDMXVersion.SDMX_v2_1 == GuessSDMXVersion.getSdmxVersion())
+			{
+				if (null != _codeLists) {	
+					var codelistEl:String = null;
+					var codelistVersionEl:String = null;
+					var codelistAgencyEl:String = null;
+					if (xml.CoreRepresentation.Enumeration.Ref.length() > 0) {
+						codelistEl = (xml.CoreRepresentation.Enumeration.
+							Ref.attribute("id").length() > 0) ? 
+							xml.CoreRepresentation.Enumeration.Ref.@id : null;
+						codelistVersionEl = (xml.CoreRepresentation.
+							Enumeration.Ref.attribute("version").length() > 0) ? 
+							xml.CoreRepresentation.Enumeration.Ref.@version : null;
+						codelistAgencyEl = (xml.CoreRepresentation.
+							Enumeration.Ref.attribute("agencyID").length() > 0) ? 
+							xml.CoreRepresentation.Enumeration.Ref.@agencyID : null;
+					} else if (xml.CoreRepresentation.Enumeration.URN.length() > 0) {
+						var urn:String = 
+							xml.CoreRepresentation.Enumeration.URN[0].toString();
+						codelistEl = urn.substring(urn.lastIndexOf(":") + 1, urn.indexOf("("));
+						codelistVersionEl = 
+							urn.substring(urn.indexOf("(") + 1, urn.indexOf(")"));
+						codelistAgencyEl = 
+							urn.substring(urn.indexOf("=") + 1, urn.lastIndexOf(":"));
+					} 
+					if (null != codelistEl) {
+						var codeList:CodeList = _codeLists.getCodeList(
+							codelistEl, codelistVersionEl, codelistAgencyEl);
+						if (null != codeList) {
+							conceptItem.coreRepresentation = codeList;
+						} else {
+							throw new SyntaxError("Could not find any code list" + 
+									" with id: " + codelistEl);
+						}
+					} 
+				}	
+			}
 			return conceptItem;
 		}
 	}

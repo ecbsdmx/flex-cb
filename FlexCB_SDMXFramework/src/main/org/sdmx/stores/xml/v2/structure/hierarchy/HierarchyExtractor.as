@@ -28,9 +28,9 @@ package org.sdmx.stores.xml.v2.structure.hierarchy
 {
 	import org.sdmx.model.v2.base.SDMXArtefact;
 	import org.sdmx.model.v2.base.VersionableArtefact;
-	import org.sdmx.model.v2.structure.code.CodeLists;
 	import org.sdmx.model.v2.structure.hierarchy.CodeAssociationsCollection;
 	import org.sdmx.model.v2.structure.hierarchy.Hierarchy;
+	import org.sdmx.stores.xml.v2.GuessSDMXVersion;
 	import org.sdmx.stores.xml.v2.structure.ExtractorPool;
 	import org.sdmx.stores.xml.v2.structure.ISDMXExtractor;
 	import org.sdmx.stores.xml.v2.structure.base.VersionableArtefactExtractor;
@@ -48,6 +48,10 @@ package org.sdmx.stores.xml.v2.structure.hierarchy
 		private namespace structure = 
 			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure";		
 		use namespace structure;
+		
+		private namespace structure21 = 
+			"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure";		
+		use namespace structure21;
 		
 		private var _codeListRef:Object;
 		
@@ -84,9 +88,16 @@ package org.sdmx.stores.xml.v2.structure.hierarchy
 				new CodeAssociationsCollection();
 			var caExtractor:CodeAssociationExtractor = 
 				new CodeAssociationExtractor(_codeListRef);
-			for each (var codeRefXML:XML in items.CodeRef) {
-				codeAssociations.addItem(caExtractor.extract(codeRefXML));
-			}
+			if ("2.1" == GuessSDMXVersion.getSdmxVersion()) {
+				for each (var codeRefXML:XML in items.HierarchicalCode) {
+					codeAssociations.addItem(caExtractor.extract21(codeRefXML));
+				}
+			} else {
+				for each (var codeRefXML:XML in items.CodeRef) {
+					codeAssociations.addItem(caExtractor.extract(codeRefXML));
+				}
+			}	
+			
 			hierarchy.children = codeAssociations;
 			return hierarchy;
 		}

@@ -69,8 +69,11 @@ package org.sdmx.stores.xml.v2.structure.collection
 		public function extract(xml:XML):SDMXArtefact {
 			_item = _versionableExtactor.extract(xml) as VersionableArtefact;
 			if (null == _item.description) {
-				throw new SyntaxError("The description element is mandatory " + 
-						"for codes!");
+				if (null == _item.name) {
+					throw new SyntaxError("Could not find the code name!");
+				} else {
+					_item.description = _item.name;
+				}
 			}		
 			var code:Code = new Code(_item.id);
 			code.urn = _item.urn;

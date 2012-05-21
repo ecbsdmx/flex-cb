@@ -1,5 +1,3 @@
-// ECB/SIS Public License, version 1.0, document reference SIS/2001/116
-//
 // Copyright (C) 2008 European Central Bank. All rights reserved.
 //
 // Redistribution and use in source and binary forms,
@@ -48,9 +46,12 @@ package org.sdmx.stores.xml.v2.structure.collection
 		
 		/*==============================Fields================================*/
 		
-		private namespace structure = 
-			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure";		
-		use namespace structure;
+		private namespace structure_v2_0 = 
+			"http://www.SDMX.org/resources/SDMXML/schemas/v2_0/structure";	
+		use namespace structure_v2_0;	
+		private namespace structure_v2_1 = 
+			"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure";	
+		use namespace structure_v2_1;
 		private var _isExtractor:MaintainableArtefactExtractor;
 		private var _itemScheme:MaintainableArtefact; 
 		private var _codeExtractor:CodeExtractor;
