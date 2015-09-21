@@ -1,0 +1,5 @@
+The purpose of this project is to create useful visualizations of statistical data from institutions that employ SDMX. A starting point is to reuse the ADOBE FLEX source code already developed by the ECB, kick starting productivity and reducing duplication of effort.
+
+One of the key goals of the project is to collaboratively make improvements to the flex visualizations that may include: improved interoperability with different data sets (real time, calculators output etc...) and improved information support for an expanded user base; and a new channel for interested parties to collaborate and share code with each other and the community (read open CVS); and an improved presentation layer.
+
+A more general purpose is to advance the creation, evolution, promotion, and support of this source code while cultivating an ecosystem of complementary products, capabilities, and services.
